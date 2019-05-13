@@ -23,9 +23,9 @@ class Jumps extends React.Component {
 	}
 	render() {
 		let listItems = [];
-		this.state.items.forEach(i => {
+		this.state.items.forEach((i, index) => {
 			listItems.push((
-				<ListItem button disableRipple>
+				<ListItem button disableRipple key={index}>
 					<Avatar/>
 					<ListItemText primary={i.name} secondary={i.location}/>
 				</ListItem>
