@@ -14,6 +14,15 @@ class Content extends React.Component {
 		}
 	}
 
+	componentDidMount() {
+		this.props.oauthVerify(this.state.headers);
+	}
+	componentWillReceiveProps(nextProps, nextContext) {
+		if(nextProps.isLoggedIn !== this.props.isLoggedIn) {
+			// update()
+		}
+	}
+
 	render() {
 		return <div style={{padding: 20}}>
 			<Grid container spacing={40}>
@@ -27,14 +36,10 @@ class Content extends React.Component {
 		</div>
 	}
 }
-function mapStateToProps(state) {
-	return state;
-}
-function mapDispatchToProps(dispatch) {
-	return {
-		oauthVerify: headers => {
-			dispatch(oauthVerify(headers))
-		}
-	}
-}
+const mapStateToProps = state => ({
+	...state
+});
+const mapDispatchToProps = ({
+	oauthVerify
+});
 export default connect(mapStateToProps, mapDispatchToProps)(Content);

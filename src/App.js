@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import Content from "./components/Content";
-import Nav from "./components/Nav";
+import Content from "./containers/Content";
+import Nav from "./containers/Nav";
 
 function App() {
   return (
