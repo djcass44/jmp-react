@@ -4,13 +4,14 @@ import Jumps from "./content/Jumps";
 import {Route} from "react-router-dom";
 import Login from "./content/Login";
 import {connect} from "react-redux";
-import {oauthVerify} from "../actions/Auth";
+import {oauthRefresh, oauthRequest, oauthVerify} from "../actions/Auth";
 
 class Content extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			headers: {}
+			headers: {},
+			loading: false
 		}
 	}
 
@@ -20,26 +21,34 @@ class Content extends React.Component {
 	componentWillReceiveProps(nextProps, nextContext) {
 		if(nextProps.isLoggedIn !== this.props.isLoggedIn) {
 			// update()
+			this.setState({loading: false});
 		}
 	}
 
 	render() {
-		return <div style={{padding: 20}}>
-			<Grid container spacing={40}>
-				<Grid item sm={3}/>
-				<Grid item xs={12} sm={6}>
-					<Route exact path={"/"} component={Jumps}/>
-					<Route exact path={"/login"} component={Login}/>
+		let content = (<div>Loading...</div>);
+		if(this.state.loading === false) {
+			content = (<div style={{padding: 20}}>
+				<Grid container spacing={40}>
+					<Grid item sm={3}/>
+					<Grid item xs={12} sm={6}>
+						<Route exact path={"/"} component={Jumps}/>
+						<Route exact path={"/login"} component={Login}/>
+					</Grid>
+					<Grid item sm={3}/>
 				</Grid>
-				<Grid item sm={3}/>
-			</Grid>
-		</div>
+			</div>);
+		}
+		return content;
 	}
 }
 const mapStateToProps = state => ({
-	...state
+	headers: state.headers,
+	isLoggedIn: state.isLoggedIn
 });
 const mapDispatchToProps = ({
-	oauthVerify
+	oauthVerify,
+	oauthRequest,
+	oauthRefresh
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Content);

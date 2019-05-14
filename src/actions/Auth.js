@@ -3,6 +3,16 @@ export function oauthVerify(headers) {
 		oauthVerifyDispatch(dispatch, headers);
 	}
 }
+export function oauthRequest(data) {
+	return dispatch => {
+		oauthRequestDispatch(dispatch, data);
+	}
+}
+export function oauthRefresh(refresh, headers) {
+	return dispatch => {
+		oauthRefreshDispatch(dispatch, refresh, headers);
+	}
+}
 
 function oauthVerifyDispatch(dispatch, headers) {
 	dispatch({
@@ -16,27 +26,31 @@ function oauthVerifyDispatch(dispatch, headers) {
 		}
 	})
 }
-export const oauthRequest = (data) => ({
-	type: 'OAUTH_REQUEST',
-	payload: {
-		request: {
-			method: 'POST',
-			headers: {
-				'Authorization': `Basic ${data}`,
-				'Content-Type': 'application/json'
-			},
-			url: '/api/v2/oauth/token',
-			data: {}
+function oauthRequestDispatch(dispatch, data) {
+	dispatch({
+		type: 'OAUTH_REQUEST',
+		payload: {
+			request: {
+				method: 'POST',
+				headers: {
+					'Authorization': `Basic ${data}`,
+					'Content-Type': 'application/json'
+				},
+				url: '/api/v2/oauth/token',
+				data: {}
+			}
 		}
-	}
-});
-export const oauthRefresh = (refresh, headers) => ({
-	type: 'OAUTH_REFRESH',
-	payload: {
-		request: {
-			method: 'GET',
-			headers: headers,
-			url: `/api/v2/oauth/refresh?refreshToken=${refresh}`
+	})
+}
+function oauthRefreshDispatch(dispatch, refresh, headers) {
+	dispatch({
+		type: 'OAUTH_REFRESH',
+		payload: {
+			request: {
+				method: 'GET',
+				headers: headers,
+				url: `/api/v2/oauth/refresh?refreshToken=${refresh}`
+			}
 		}
-	}
-});
+	})
+}
