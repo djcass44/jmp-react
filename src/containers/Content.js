@@ -5,13 +5,13 @@ import {Route} from "react-router-dom";
 import Login from "./content/Login";
 import {connect} from "react-redux";
 import {oauthRefresh, oauthRequest, oauthVerify} from "../actions/Auth";
+import {createErrorSelector, createLoadingSelector} from "../reducers/Tools";
 
 class Content extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			headers: {},
-			loading: false
+			headers: {}
 		}
 	}
 
@@ -21,7 +21,6 @@ class Content extends React.Component {
 	componentWillReceiveProps(nextProps, nextContext) {
 		if(nextProps.isLoggedIn !== this.props.isLoggedIn) {
 			// update()
-			this.setState({loading: false});
 		}
 	}
 
@@ -42,7 +41,10 @@ class Content extends React.Component {
 		return content;
 	}
 }
+const loading = createLoadingSelector(['OAUTH_REQUEST']);
+
 const mapStateToProps = state => ({
+	loading: loading(state),
 	headers: state.headers,
 	isLoggedIn: state.isLoggedIn
 });
