@@ -15,16 +15,7 @@ class Jumps extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			jumps: [
-				{
-					name: 'Google',
-					location: "https://google.com"
-				},
-				{
-					name: 'Reddit',
-					location: "https://reddit.com"
-				}
-			],
+			jumps: [],
 			pageSize: 10
 		};
 	}
@@ -58,7 +49,8 @@ class Jumps extends React.Component {
 				{this.state.jumps.length > this.state.pageSize ?
 					<Center><Pagination limit={this.state.pageSize} offset={0} total={this.state.jumps.length} nextPageLabel={"▶"} previousPageLabel={"◀"}/></Center>
 					:
-					<div/>}
+					<div/>
+				}
 			</div>
 		)
 	}
