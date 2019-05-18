@@ -8,6 +8,7 @@ import {oauthRequest} from "../../actions/Auth";
 import {connect} from "react-redux";
 import {createErrorSelector, createLoadingSelector} from "../../reducers/Tools";
 import {TextValidator, ValidatorForm} from "react-material-ui-form-validator";
+import Center from "react-center";
 
 class Login extends React.Component {
 	constructor(props) {
@@ -44,7 +45,7 @@ class Login extends React.Component {
 						<CardContent>
 							<Grid container spacing={24} alignContent={"center"} justify={"center"} component={ValidatorForm} ref={"form"} onSubmit={this.handleClick}>
 								<Grid item xs={12}>
-									<img src={`${process.env.PUBLIC_URL}/favicon.ico`} alt={"App icon"}/>
+									<Center><img src={`${process.env.PUBLIC_URL}/favicon.ico`} alt={"App icon"}/></Center>
 									<Typography variant={"h2"} align={"center"}>Login</Typography>
 								</Grid>
 								<Grid item xs={12}>

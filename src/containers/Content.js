@@ -1,11 +1,12 @@
 import React from "react";
 import {CircularProgress, Grid} from "@material-ui/core";
 import Jumps from "./content/Jumps";
-import {Route} from "react-router-dom";
+import {Switch, Route} from "react-router-dom";
 import Login from "./content/Login";
 import {connect} from "react-redux";
 import {OAUTH_VERIFY, oauthRefresh, oauthRequest, oauthVerify} from "../actions/Auth";
-import {createErrorSelector, createLoadingSelector} from "../reducers/Tools";
+import {createLoadingSelector} from "../reducers/Tools";
+import NotFound from "./content/NotFound";
 
 class Content extends React.Component {
 	constructor(props) {
@@ -27,8 +28,11 @@ class Content extends React.Component {
 
 	render() {
 		let content = this.state.loading === true ? (<Grid item xs={12} sm={6}><CircularProgress/></Grid>) : (<Grid item xs={12} sm={6}>
-			<Route exact path={"/"} component={Jumps}/>
-			<Route exact path={"/login"} component={Login}/>
+			<Switch>
+				<Route exact path={"/"} component={Jumps}/>
+				<Route exact path={"/login"} component={Login}/>
+				<Route component={NotFound}/>
+			</Switch>
 		</Grid>);
 		return (<div style={{padding: 20}}>
 			<Grid container spacing={40}>
