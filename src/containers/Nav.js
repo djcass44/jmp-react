@@ -10,7 +10,7 @@ import {IconButton, withStyles} from "@material-ui/core";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import {connect} from "react-redux";
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 
 const styles = theme => ({
 	root: {width: '100%'},
@@ -72,8 +72,21 @@ class Nav extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			anchorEl: null
+			anchorEl: null,
+			searchRoutes: ["/", "/users"],
+			showSearch: true
 		};
+	}
+
+	componentWillMount() {
+		this.unlisten = this.props.history.listen(() => {
+			let search = this.state.searchRoutes.includes(window.location.pathname);
+			this.setState({showSearch: search});
+		});
+	}
+
+	componentWillUnmount() {
+		this.unlisten();
 	}
 
 	handleProfileMenuOpen = event => {
@@ -95,12 +108,16 @@ class Nav extends React.Component {
 					<Typography className={classes.title} variant={"h6"} color={"inherit"}>
 						JMP
 					</Typography>
-					<div className={classes.search}>
-						<div className={classes.searchIcon}>
-							<SearchIcon/>
+					{this.state.showSearch === true ?
+						<div className={classes.search}>
+							<div className={classes.searchIcon}>
+								<SearchIcon/>
+							</div>
+							<InputBase placeholder={"Search..."} classes={{root: classes.inputRoot, input: classes.inputInput}}/>
 						</div>
-						<InputBase placeholder={"Search..."} classes={{root: classes.inputRoot, input: classes.inputInput}}/>
-					</div>
+						:
+						<div/>
+					}
 					<div className={classes.grow}/>
 					<div className={classes.sectionDesktop}>
 						<IconButton color={"inherit"} onClick={this.handleProfileMenuOpen} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}>
@@ -131,4 +148,4 @@ const mapStateToProps = state => ({
 	isAdmin: state.isAdmin,
 	username: state.username
 });
-export default connect(mapStateToProps, null)(withStyles(styles)(Nav));
+export default connect(mapStateToProps, null)(withStyles(styles)(withRouter(Nav)));
