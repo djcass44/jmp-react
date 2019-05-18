@@ -1,10 +1,10 @@
 import React from "react";
-import {Grid} from "@material-ui/core";
+import {CircularProgress, Grid} from "@material-ui/core";
 import Jumps from "./content/Jumps";
 import {Route} from "react-router-dom";
 import Login from "./content/Login";
 import {connect} from "react-redux";
-import {oauthRefresh, oauthRequest, oauthVerify} from "../actions/Auth";
+import {OAUTH_VERIFY, oauthRefresh, oauthRequest, oauthVerify} from "../actions/Auth";
 import {createErrorSelector, createLoadingSelector} from "../reducers/Tools";
 
 class Content extends React.Component {
@@ -19,32 +19,30 @@ class Content extends React.Component {
 		this.props.oauthVerify(this.state.headers);
 	}
 	componentWillReceiveProps(nextProps, nextContext) {
-		if(nextProps.isLoggedIn !== this.props.isLoggedIn) {
-			// update()
-		}
+		console.log(`cur: ${this.props.loading}, next: ${nextProps.loading}`);
+		// if(nextProps.isLoggedIn !== this.props.isLoggedIn) {
+		// 	// update()
+		// }
 	}
 
 	render() {
-		let content = (<div>Loading...</div>);
-		if(this.state.loading === false) {
-			content = (<div style={{padding: 20}}>
-				<Grid container spacing={40}>
-					<Grid item sm={3}/>
-					<Grid item xs={12} sm={6}>
-						<Route exact path={"/"} component={Jumps}/>
-						<Route exact path={"/login"} component={Login}/>
-					</Grid>
-					<Grid item sm={3}/>
-				</Grid>
-			</div>);
-		}
-		return content;
+		let content = this.state.loading === true ? (<Grid item xs={12} sm={6}><CircularProgress/></Grid>) : (<Grid item xs={12} sm={6}>
+			<Route exact path={"/"} component={Jumps}/>
+			<Route exact path={"/login"} component={Login}/>
+		</Grid>);
+		return (<div style={{padding: 20}}>
+			<Grid container spacing={40}>
+				<Grid item sm={3}/>
+				{content}
+				<Grid item sm={3}/>
+			</Grid>
+		</div>);
 	}
 }
-const loading = createLoadingSelector(['OAUTH_REQUEST']);
+const loadingSelector = createLoadingSelector([OAUTH_VERIFY]);
 
 const mapStateToProps = state => ({
-	loading: loading(state),
+	loading: loadingSelector(state),
 	headers: state.headers,
 	isLoggedIn: state.isLoggedIn
 });

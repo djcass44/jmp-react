@@ -28,8 +28,8 @@ class Login extends React.Component {
 		this.setState({formData});
 	};
 	handleClick() {
-		console.log(`username: ${this.state.username}`);
-		let data = window.btoa(`${this.state.username}:${this.state.password}`);
+		console.log(`username: ${this.state.formData.username}`);
+		let data = window.btoa(`${this.state.formData.username}:${this.state.formData.password}`);
 		console.log(`basic auth data: ${data}`);
 		this.props.oauthRequest(data);
 	}
@@ -67,11 +67,11 @@ class Login extends React.Component {
 
 }
 const loading = createLoadingSelector(['OAUTH_REQUEST']);
-const errors = createErrorSelector(['OAUTH_REQUEST']);
+// const errors = createErrorSelector(['OAUTH_REQUEST']);
 
 const mapStateToProps = state => ({
 	loading: loading(state),
-	error: errors(state)
+	// error: errors(state)
 });
 const mapDispatchToProps = ({
 	oauthRequest
