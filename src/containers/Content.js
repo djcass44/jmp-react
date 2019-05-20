@@ -7,16 +7,18 @@ import {connect} from "react-redux";
 import {OAUTH_VERIFY, oauthRefresh, oauthRequest, oauthVerify} from "../actions/Auth";
 import {createLoadingSelector} from "../reducers/Tools";
 import NotFound from "./content/NotFound";
+import {LS_HEADERS} from "../constants";
 
 class Content extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			headers: {}
+			headers: JSON.parse(localStorage.getItem(LS_HEADERS)) || {},
 		}
 	}
 
 	componentDidMount() {
+		console.log(this.state.headers);
 		this.props.oauthVerify(this.state.headers);
 	}
 	componentWillReceiveProps(nextProps, nextContext) {

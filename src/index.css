@@ -17,3 +17,26 @@ code {
 	-moz-border-radius: 12px;
 	border-radius: 12px;
 }
+
+@font-face {
+	font-family: 'Manrope';
+	src: local("Manrope"), url(./fonts/manrope-semibold.woff2) format('woff2');
+	font-style: normal;
+	font-weight: 600;
+}
+@font-face {
+	font-family: 'Manrope';
+	src: local("Manrope"), url(./fonts/manrope-medium.woff2) format('woff2');
+	font-style: normal;
+	font-weight: 500;
+}
+@font-face {
+	font-family: 'Manrope';
+	src: local("Manrope"), url(./fonts/manrope-regular.woff2) format('woff2');
+	font-style: normal;
+	font-weight: 400;
+}
+.m2-title {
+	font-family: Manrope, Roboto, serif;
+	font-weight: 500;
+}

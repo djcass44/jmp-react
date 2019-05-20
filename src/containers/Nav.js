@@ -11,6 +11,8 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
+import Avatar from "@material-ui/core/es/Avatar/Avatar";
+import Divider from "@material-ui/core/es/Divider/Divider";
 
 const styles = theme => ({
 	root: {width: '100%'},
@@ -19,7 +21,8 @@ const styles = theme => ({
 		display: 'none',
 		[theme.breakpoints.up('sm')]: {
 			display: 'block'
-		}
+		},
+		fontFamily: "Manrope"
 	},
 	search: {
 		position: 'relative',
@@ -74,8 +77,15 @@ class Nav extends React.Component {
 		this.state = {
 			anchorEl: null,
 			searchRoutes: ["/", "/users"],
-			showSearch: true
+			showSearch: true,
+			searchFilter: '',
+			username: 'Anonymous',
+			isLoggedIn: false
 		};
+	}
+
+	componentWillReceiveProps(nextProps, nextContext) {
+		console.log(`username: ${nextProps.username}`);
 	}
 
 	componentWillMount() {
@@ -97,6 +107,11 @@ class Nav extends React.Component {
 		this.setState({ anchorEl: null });
 	};
 
+	handleSearchChange = e => {
+		console.log(e.target.value);
+		this.setState({searchFilter: e.target.value});
+	};
+
 	render() {
 		const {anchorEl} = this.state;
 		const {classes} = this.props;
@@ -113,7 +128,7 @@ class Nav extends React.Component {
 							<div className={classes.searchIcon}>
 								<SearchIcon/>
 							</div>
-							<InputBase placeholder={"Search..."} classes={{root: classes.inputRoot, input: classes.inputInput}}/>
+							<InputBase placeholder={"Search..."} classes={{root: classes.inputRoot, input: classes.inputInput}} onChange={this.handleSearchChange} value={this.state.searchFilter}/>
 						</div>
 						:
 						<div/>
@@ -132,9 +147,16 @@ class Nav extends React.Component {
 				transformOrigin={{ vertical: 'top', horizontal: 'right' }}
 				open={isMenuOpen}
 				onClose={this.handleMenuClose}>
+				<MenuItem disabled={true}>
+					<div>
+						{/*<Avatar />*/}
+						<span>{this.state.username}</span>
+					</div>
+				</MenuItem>
+				<Divider/>
 				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/users"}>Users &amp; Groups</MenuItem>
 				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/settings"}>Settings</MenuItem>
-				{this.state.isLoggedIn === true ?
+				{this.state.isLoggedIn === false ?
 					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/login"}>Login</MenuItem>
 					:
 					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/logout"}>Logout</MenuItem>
@@ -146,6 +168,7 @@ class Nav extends React.Component {
 const mapStateToProps = state => ({
 	isLoggedIn: state.isLoggedIn,
 	isAdmin: state.isAdmin,
-	username: state.username
+	username: state.username,
+	searchFilter: state.searchFilter
 });
 export default connect(mapStateToProps, null)(withStyles(styles)(withRouter(Nav)));

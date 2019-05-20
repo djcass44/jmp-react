@@ -5,21 +5,22 @@ const auth = (state = {
 	request: localStorage.getItem(LS_REQUEST) || '',
 	refresh: localStorage.getItem(LS_REFRESH) || '',
 	userProfile: localStorage.getItem(LS_USER) || {},
-	headers: localStorage.getItem(LS_HEADERS) || {},
+	headers: JSON.parse(localStorage.getItem(LS_HEADERS)) || {},
 	isLoggedIn: false,
 	isAdmin: false, // This is just an assumption, the API dictates whether you're an admin or not
 	username: ''
 }, action) => {
 	switch(action.type) {
 		case `${OAUTH_VERIFY}_SUCCESS`: {
-			localStorage.setItem(LS_USER, JSON.stringify(action.payload.data));
+			localStorage.setItem(LS_USER, JSON.stringify(action.data));
 			let username = '';
-			if(action.payload.data.username != null) username = action.payload.data.username;
+			if(action.data.username != null) username = action.data.username;
+			console.log(`username: ${username}`);
 			return {...state,
-				userProfile: action.payload.data,
+				userProfile: action.data,
 				username: username,
 				isLoggedIn: true,
-				isAdmin: action.payload.data.role === 'ADMIN'
+				isAdmin: action.data.role === 'ADMIN'
 			}
 		}
 		case `${OAUTH_REFRESH}_SUCCESS`:

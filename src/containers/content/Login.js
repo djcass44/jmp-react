@@ -18,11 +18,21 @@ class Login extends React.Component {
 				username: '',
 				password: ''
 			},
-			submitted: false
+			submitted: false,
+			isLoggedIn: false
 		};
 		this.handleClick = this.handleClick.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 	}
+
+	componentDidMount() {
+		console.log(`loggedIn: ${this.state.isLoggedIn}`);
+		if(this.state.isLoggedIn === true) {
+			// The user is already logged in, we can leave here
+			this.props.history.push('/');
+		}
+	}
+
 	handleChange = (event) => {
 		const {formData} = this.state;
 		formData[event.target.name] = event.target.value;
@@ -45,7 +55,7 @@ class Login extends React.Component {
 						<CardContent>
 							<Grid container spacing={24} alignContent={"center"} justify={"center"} component={ValidatorForm} ref={"form"} onSubmit={this.handleClick}>
 								<Grid item xs={12}>
-									<Center><img src={`${process.env.PUBLIC_URL}/favicon.ico`} alt={"App icon"}/></Center>
+									<Center><img src={`${process.env.PUBLIC_URL}/jmp.png`} alt={"App icon"} height={72}/></Center>
 									<Typography variant={"h2"} align={"center"}>Login</Typography>
 								</Grid>
 								<Grid item xs={12}>
@@ -72,7 +82,8 @@ const loading = createLoadingSelector(['OAUTH_REQUEST']);
 
 const mapStateToProps = state => ({
 	loading: loading(state),
-	// error: errors(state)
+	// error: errors(state),
+	isLoggedIn: state.isLoggedIn
 });
 const mapDispatchToProps = ({
 	oauthRequest

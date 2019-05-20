@@ -9,25 +9,34 @@ import {JUMP_LOAD, listJumps, rmJump} from "../../actions/Jumps";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import Pagination from "material-ui-flat-pagination";
-import Center from "react-center"; // yeah yeah, I know
+import Center from "react-center";
+import {withStyles} from "@material-ui/core"; // yeah yeah, I know
+
+const styles = theme => ({
+	title: {fontFamily: "Manrope"}
+});
 
 class Jumps extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			jumps: [],
-			pageSize: 10
+			pageSize: 10,
+			searchFilter: ''
 		};
 	}
 	componentDidMount() {
+		// Load jumps from the API
 		this.props.listJumps(this.state.headers);
 	}
 	componentWillReceiveProps(nextProps, nextContext) {
-		console.log(nextProps.jumps.jumps);
-		this.setState({jumps: nextProps.jumps.jumps});
+		let filter = nextProps.searchFilter;
+		console.log(nextProps.jumps.jumps, filter);
+		this.setState({jumps: nextProps.jumps.jumps, searchFilter: filter == null ? '' : filter});
 	}
 
 	render() {
+		const {classes} = this.props;
 		let listItems = [];
 		this.state.jumps.forEach((i, index) => {
 			listItems.push((
@@ -40,7 +49,7 @@ class Jumps extends React.Component {
 
 		return (
 			<div>
-				<ListSubheader inset component={"div"}>Jumps</ListSubheader>
+				<ListSubheader className={classes.title} inset component={"div"}>Jumps {this.state.searchFilter}</ListSubheader>
 				<Paper style={{borderRadius: 12, marginBottom: 8}}>
 					<List>
 						{listItems}
@@ -60,11 +69,12 @@ const loadingSelector = createLoadingSelector([JUMP_LOAD]);
 const mapStateToProps = state => ({
 	jumps: state.jumps,
 	loading: loadingSelector(state),
-	headers: state.headers
+	headers: state.headers,
+	searchFilter: state.searchFilter
 });
 const mapDispatchToProps = ({
 	listJumps,
 	rmJump
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Jumps);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Jumps));
