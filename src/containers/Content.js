@@ -49,8 +49,8 @@ const loadingSelector = createLoadingSelector([OAUTH_VERIFY]);
 
 const mapStateToProps = state => ({
 	loading: loadingSelector(state),
-	headers: state.headers,
-	isLoggedIn: state.isLoggedIn
+	headers: state.auth.headers,
+	isLoggedIn: state.auth.isLoggedIn
 });
 const mapDispatchToProps = ({
 	oauthVerify,

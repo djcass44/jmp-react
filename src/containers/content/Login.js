@@ -25,12 +25,16 @@ class Login extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 	}
 
-	componentDidMount() {
+	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log(`loggedIn: ${this.state.isLoggedIn}`);
 		if(this.state.isLoggedIn === true) {
 			// The user is already logged in, we can leave here
 			this.props.history.push('/');
 		}
+	}
+
+	componentWillReceiveProps(nextProps, nextContext) {
+		this.setState({isLoggedIn: nextProps.isLoggedIn});
 	}
 
 	handleChange = (event) => {
@@ -48,7 +52,7 @@ class Login extends React.Component {
 		const {formData, submitted} = this.state;
 		return(
 			<div>
-				{this.props.loading ?
+				{this.props.loading || this.props.isLoggedIn === false ?
 					<CircularProgress/>
 					:
 					<Card>
@@ -83,7 +87,7 @@ const loading = createLoadingSelector(['OAUTH_REQUEST']);
 const mapStateToProps = state => ({
 	loading: loading(state),
 	// error: errors(state),
-	isLoggedIn: state.isLoggedIn
+	isLoggedIn: state.auth.isLoggedIn
 });
 const mapDispatchToProps = ({
 	oauthRequest

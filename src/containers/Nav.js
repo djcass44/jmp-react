@@ -86,6 +86,8 @@ class Nav extends React.Component {
 
 	componentWillReceiveProps(nextProps, nextContext) {
 		console.log(`username: ${nextProps.username}`);
+		this.setState({username: nextProps.username});
+		this.setState({isLoggedIn: nextProps.isLoggedIn});
 	}
 
 	componentWillMount() {
@@ -166,9 +168,9 @@ class Nav extends React.Component {
 	}
 }
 const mapStateToProps = state => ({
-	isLoggedIn: state.isLoggedIn,
-	isAdmin: state.isAdmin,
-	username: state.username,
+	isLoggedIn: state.auth.isLoggedIn,
+	isAdmin: state.auth.isAdmin,
+	username: state.auth.username,
 	searchFilter: state.searchFilter
 });
 export default connect(mapStateToProps, null)(withStyles(styles)(withRouter(Nav)));
