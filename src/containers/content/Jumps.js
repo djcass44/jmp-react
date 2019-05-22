@@ -25,6 +25,7 @@ class Jumps extends React.Component {
 			pageSize: 10,
 			headers: JSON.parse(localStorage.getItem(LS_HEADERS)) || {},
 		};
+		this.filterJump = this.filterJump.bind(this);
 	}
 	componentDidMount() {
 		// Load jumps from the API
@@ -35,10 +36,14 @@ class Jumps extends React.Component {
 		this.setState({...nextProps});
 	}
 
+	filterJump(jump) {
+		return jump.name.includes(this.state.searchFilter) || jump.location.includes(this.state.searchFilter);
+	}
+
 	render() {
 		const {classes} = this.props;
 		let listItems = [];
-		this.state.jumps.forEach((i, index) => {
+		this.state.jumps.filter(this.filterJump).forEach((i, index) => {
 			listItems.push((
 				<ListItem button disableRipple key={index}>
 					<Avatar src={i.image}/>
