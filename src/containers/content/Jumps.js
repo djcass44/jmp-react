@@ -12,6 +12,9 @@ import Center from "react-center";
 import {withStyles} from "@material-ui/core";
 import {LS_HEADERS} from "../../constants";
 import EmptyCard from "../../components/widget/EmptyCard";
+import ReactImageFallback from "react-image-fallback";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import PublicIcon from "@material-ui/icons/Public";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope"}
@@ -33,6 +36,7 @@ class Jumps extends React.Component {
 	}
 	componentWillReceiveProps(nextProps, nextContext) {
 		console.log(nextProps.jumps);
+		// TODO check to see if anything has actually changed...
 		this.setState({...nextProps});
 	}
 
@@ -46,7 +50,9 @@ class Jumps extends React.Component {
 		this.state.jumps.filter(this.filterJump).forEach((i, index) => {
 			listItems.push((
 				<ListItem button disableRipple key={index}>
-					<Avatar src={i.image}/>
+					<Avatar>
+						<ReactImageFallback src={i.image} fallbackImage={i.personal === 0 ? <PublicIcon/> : i.personal === 1 ? <AccountCircleIcon/> : <PublicIcon/>}/>
+					</Avatar>
 					<ListItemText primary={i.name} secondary={i.location}/>
 				</ListItem>
 			));
