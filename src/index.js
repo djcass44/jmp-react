@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import {BrowserRouter} from "react-router-dom";
 import store from "./store";
 import Provider from "react-redux/es/components/Provider";
+import "typeface-roboto";
 
 require('dotenv').config();
 

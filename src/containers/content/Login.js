@@ -4,9 +4,8 @@ import Card from "@material-ui/core/es/Card/Card";
 import {CardContent, Grid} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import {oauthRequest} from "../../actions/Auth";
+import {OAUTH_REQUEST, oauthRequest} from "../../actions/Auth";
 import {connect} from "react-redux";
-import {createErrorSelector, createLoadingSelector} from "../../reducers/Tools";
 import {TextValidator, ValidatorForm} from "react-material-ui-form-validator";
 import Center from "react-center";
 
@@ -18,8 +17,7 @@ class Login extends React.Component {
 				username: '',
 				password: ''
 			},
-			submitted: false,
-			isLoggedIn: false
+			submitted: false
 		};
 		this.handleClick = this.handleClick.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -34,7 +32,7 @@ class Login extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {
-		this.setState({isLoggedIn: nextProps.isLoggedIn});
+		this.setState({...nextProps});
 	}
 
 	handleChange = (event) => {
@@ -50,9 +48,14 @@ class Login extends React.Component {
 	}
 	render() {
 		const {formData, submitted} = this.state;
+
+		const errorMessage = <Center>
+			<span style={{color: "red"}}>{this.state.error}</span>
+		</Center>;
+
 		return(
 			<div>
-				{this.props.loading || this.props.isLoggedIn === true ?
+				{this.state.loading || this.state.isLoggedIn === true ?
 					<CircularProgress/>
 					:
 					<Card>
@@ -72,7 +75,7 @@ class Login extends React.Component {
 									<Button variant={"contained"} color={"primary"} fullWidth size={"large"} type={"submit"} disabled={submitted}>Login</Button>
 								</Grid>
 							</Grid>
-							{this.props.error != null ? <p>{this.state.error}</p> : <div/>}
+							{this.state.error != null ? errorMessage : <div/>}
 						</CardContent>
 					</Card>
 				}
@@ -81,12 +84,10 @@ class Login extends React.Component {
 	}
 
 }
-const loading = createLoadingSelector(['OAUTH_REQUEST']);
-// const errors = createErrorSelector(['OAUTH_REQUEST']);
 
 const mapStateToProps = state => ({
-	loading: loading(state),
-	// error: errors(state),
+	loading: state.loading[OAUTH_REQUEST],
+	error: state.errors[OAUTH_REQUEST],
 	isLoggedIn: state.auth.isLoggedIn
 });
 const mapDispatchToProps = ({

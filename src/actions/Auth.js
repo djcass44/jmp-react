@@ -54,7 +54,7 @@ function oauthRequestDispatch(dispatch, data) {
 		})
 	}).catch(err => {
 		console.log(`request failed: ${err}`);
-		dispatch({type: `${OAUTH_REQUEST}_FAILURE`});
+		dispatch({type: `${OAUTH_REQUEST}_FAILURE`, data: err.toString()});
 	});
 }
 function oauthRefreshDispatch(dispatch, refresh, headers) {
@@ -67,6 +67,6 @@ function oauthRefreshDispatch(dispatch, refresh, headers) {
 		});
 	}).catch(err => {
 		console.log(`refresh failed: ${err}`);
-		dispatch({type: `${OAUTH_REFRESH}_FAILURE`});
+		dispatch({type: `${OAUTH_REFRESH}_FAILURE`, data: err.toString()});
 	});
 }

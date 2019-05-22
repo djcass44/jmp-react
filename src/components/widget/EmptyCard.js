@@ -9,7 +9,7 @@ class EmptyCard extends React.Component {
 		return (
 			<ListItem disableRipple key={"null"}>
 				<Avatar>
-					<SentimentDissatisfied/>
+					<SentimentDissatisfied color={"error"}/>
 				</Avatar>
 				<ListItemText primary={"Nothing could be found."}/>
 			</ListItem>

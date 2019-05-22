@@ -5,10 +5,10 @@ import {Switch, Route} from "react-router-dom";
 import Login from "./content/Login";
 import {connect} from "react-redux";
 import {OAUTH_REFRESH, OAUTH_VERIFY, oauthRefresh, oauthRequest, oauthVerify} from "../actions/Auth";
-import {createLoadingSelector} from "../reducers/Tools";
 import NotFound from "./content/NotFound";
 import {LS_HEADERS} from "../constants";
 import {Banner} from "material-ui-banner";
+import ErrorIcon from "@material-ui/icons/Error";
 
 class Content extends React.Component {
 	constructor(props) {
@@ -28,7 +28,9 @@ class Content extends React.Component {
 
 	render() {
 		let content = this.state.loading === true ? (<Grid item xs={12} sm={6}><CircularProgress/></Grid>) : (<Grid item xs={12} sm={6}>
-			<Banner open={this.state.error === true} label={"An error occurred! This banner is very ugly, please someone fix it :("} paperProps={{elevation: 1}} showDismissButton={false}/>
+			<Banner open={this.state.error != null} label={this.state.error} paperProps={{elevation: 1}} showDismissButton={false} icon={
+				<ErrorIcon color={"error"}/>
+			}/>
 			<Switch>
 				<Route exact path={"/"} component={Jumps}/>
 				<Route exact path={"/login"} component={Login}/>

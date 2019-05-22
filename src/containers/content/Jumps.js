@@ -23,7 +23,6 @@ class Jumps extends React.Component {
 		this.state = {
 			jumps: [],
 			pageSize: 10,
-			searchFilter: '',
 			headers: JSON.parse(localStorage.getItem(LS_HEADERS)) || {},
 		};
 	}
@@ -32,9 +31,8 @@ class Jumps extends React.Component {
 		this.props.listJumps(this.state.refresh, this.state.headers);
 	}
 	componentWillReceiveProps(nextProps, nextContext) {
-		let filter = nextProps.searchFilter;
-		console.log(nextProps.jumps, filter);
-		this.setState({jumps: nextProps.jumps, searchFilter: filter == null ? '' : filter, headers: nextProps.headers});
+		console.log(nextProps.jumps);
+		this.setState({...nextProps});
 	}
 
 	render() {
@@ -70,7 +68,7 @@ const mapStateToProps = state => ({
 	jumps: state.jumps.jumps,
 	loading: state.loading[JUMP_LOAD],
 	headers: state.auth.headers,
-	searchFilter: state.searchFilter
+	searchFilter: state.generic.searchFilter
 });
 const mapDispatchToProps = ({
 	listJumps,

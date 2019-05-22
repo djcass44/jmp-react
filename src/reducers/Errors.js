@@ -6,7 +6,7 @@ const errors = (state = {}, action) => {
 	const [, requestName, requestState] = matches;
 	return {
 		...state,
-		[`${requestName}${action.data && action.data.tag ? `_${action.data.tag}` : ""}`]: requestState === 'FAILURE'
+		[`${requestName}${action.data && action.data.tag ? `_${action.data.tag}` : ""}`]: requestState === 'FAILURE' ? action.data : null
 	}
 };
 export default errors;

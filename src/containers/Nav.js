@@ -11,8 +11,8 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
-import Avatar from "@material-ui/core/es/Avatar/Avatar";
 import Divider from "@material-ui/core/es/Divider/Divider";
+import {setFilter} from "../actions/Generic";
 
 const styles = theme => ({
 	root: {width: '100%'},
@@ -110,8 +110,8 @@ class Nav extends React.Component {
 	};
 
 	handleSearchChange = e => {
-		console.log(e.target.value);
 		this.setState({searchFilter: e.target.value});
+		this.props.setFilter(e.target.value);
 	};
 
 	render() {
@@ -125,6 +125,9 @@ class Nav extends React.Component {
 					<Typography className={classes.title} variant={"h6"} color={"inherit"}>
 						JMP
 					</Typography>
+					{/*<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"inherit"}>*/}
+					{/*	{process.env.REACT_APP_APP_MSG}*/}
+					{/*</Typography>*/}
 					{this.state.showSearch === true ?
 						<div className={classes.search}>
 							<div className={classes.searchIcon}>
@@ -170,7 +173,9 @@ class Nav extends React.Component {
 const mapStateToProps = state => ({
 	isLoggedIn: state.auth.isLoggedIn,
 	isAdmin: state.auth.isAdmin,
-	username: state.auth.username,
-	searchFilter: state.searchFilter
+	username: state.auth.username
 });
-export default connect(mapStateToProps, null)(withStyles(styles)(withRouter(Nav)));
+const mapDispatchToProps = ({
+	setFilter
+});
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(Nav)));
