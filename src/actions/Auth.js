@@ -9,9 +9,9 @@ export const client = axios.create({
 	baseURL: BASE_URL
 });
 
-export function oauthVerify(headers) {
+export function oauthVerify(refresh, headers) {
 	return dispatch => {
-		oauthVerifyDispatch(dispatch, headers);
+		oauthVerifyDispatch(dispatch, refresh, headers);
 	}
 }
 export function oauthRequest(data) {
@@ -25,7 +25,7 @@ export function oauthRefresh(refresh, headers) {
 	}
 }
 
-function oauthVerifyDispatch(dispatch, headers) {
+function oauthVerifyDispatch(dispatch, refresh, headers) {
 	dispatch({type: OAUTH_VERIFY});
 	client.get("/api/v2/oauth/valid", {headers: headers}).then( r => {
 		console.log(`verify valid`);
@@ -35,37 +35,38 @@ function oauthVerifyDispatch(dispatch, headers) {
 		});
 	}).catch(err => {
 		console.log(`verify failed: ${err}`);
-		dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
+		console.log("lets try to refresh first");
+		// dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
+		oauthRefreshDispatch(dispatch, refresh, headers)
 	});
 }
 function oauthRequestDispatch(dispatch, data) {
-	dispatch({
-		type: OAUTH_REQUEST,
-		payload: {
-			request: {
-				method: 'POST',
-				headers: {
-					'Authorization': `Basic ${data}`,
-					'Content-Type': 'application/json'
-				},
-				url: '/api/v2/oauth/token',
-				data: {}
-			}
-		}
-	})
+	let headers = {
+		'Authorization': `Basic ${data}`,
+		'Content-Type': 'application/json'
+	};
+	dispatch({type: OAUTH_REFRESH});
+	client.post("/api/v2/oauth/token", {}, {headers: headers}).then(r => {
+		console.log(`request success`);
+		dispatch({
+			type: `${OAUTH_REQUEST}_SUCCESS`,
+			data: r.data
+		})
+	}).catch(err => {
+		console.log(`request failed: ${err}`);
+		dispatch({type: `${OAUTH_REQUEST}_FAILURE`});
+	});
 }
 function oauthRefreshDispatch(dispatch, refresh, headers) {
-	dispatch({
-		type: OAUTH_REFRESH,
-		payload: {
-			request: {
-				method: 'GET',
-				headers: headers,
-				url: '/api/v2/oauth/refresh',
-				params: {
-					refreshToken: refresh
-				}
-			}
-		}
-	})
+	dispatch({type: OAUTH_REFRESH});
+	client.get("/api/v2/oauth/refresh", {headers: headers, params: {refreshToken: refresh}}).then( r => {
+		console.log(`refresh success`);
+		dispatch({
+			type: `${OAUTH_REFRESH}_SUCCESS`,
+			data: r.data
+		});
+	}).catch(err => {
+		console.log(`refresh failed: ${err}`);
+		dispatch({type: `${OAUTH_REFRESH}_FAILURE`});
+	});
 }

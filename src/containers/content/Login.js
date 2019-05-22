@@ -52,7 +52,7 @@ class Login extends React.Component {
 		const {formData, submitted} = this.state;
 		return(
 			<div>
-				{this.props.loading || this.props.isLoggedIn === false ?
+				{this.props.loading || this.props.isLoggedIn === true ?
 					<CircularProgress/>
 					:
 					<Card>

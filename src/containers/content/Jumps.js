@@ -4,13 +4,14 @@ import ListSubheader from "@material-ui/core/es/ListSubheader/ListSubheader";
 import ListItem from "@material-ui/core/ListItem";
 import Avatar from "@material-ui/core/es/Avatar/Avatar";
 import ListItemText from "@material-ui/core/es/ListItemText/ListItemText";
-import {createLoadingSelector} from "../../reducers/Tools";
 import {JUMP_LOAD, listJumps, rmJump} from "../../actions/Jumps";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import Pagination from "material-ui-flat-pagination";
 import Center from "react-center";
-import {withStyles} from "@material-ui/core"; // yeah yeah, I know
+import {withStyles} from "@material-ui/core";
+import {LS_HEADERS} from "../../constants";
+import EmptyCard from "../../components/widget/EmptyCard";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope"}
@@ -22,17 +23,18 @@ class Jumps extends React.Component {
 		this.state = {
 			jumps: [],
 			pageSize: 10,
-			searchFilter: ''
+			searchFilter: '',
+			headers: JSON.parse(localStorage.getItem(LS_HEADERS)) || {},
 		};
 	}
 	componentDidMount() {
 		// Load jumps from the API
-		this.props.listJumps(this.state.headers);
+		this.props.listJumps(this.state.refresh, this.state.headers);
 	}
 	componentWillReceiveProps(nextProps, nextContext) {
 		let filter = nextProps.searchFilter;
-		console.log(nextProps.jumps.jumps, filter);
-		this.setState({jumps: nextProps.jumps.jumps, searchFilter: filter == null ? '' : filter});
+		console.log(nextProps.jumps, filter);
+		this.setState({jumps: nextProps.jumps, searchFilter: filter == null ? '' : filter, headers: nextProps.headers});
 	}
 
 	render() {
@@ -52,7 +54,7 @@ class Jumps extends React.Component {
 				<ListSubheader className={classes.title} inset component={"div"}>Jumps {this.state.searchFilter}</ListSubheader>
 				<Paper style={{borderRadius: 12, marginBottom: 8}}>
 					<List>
-						{listItems}
+						{listItems.length > 0 ? listItems : <EmptyCard/>}
 					</List>
 				</Paper>
 				{this.state.jumps.length > this.state.pageSize ?
@@ -64,12 +66,10 @@ class Jumps extends React.Component {
 		)
 	}
 }
-const loadingSelector = createLoadingSelector([JUMP_LOAD]);
-
 const mapStateToProps = state => ({
-	jumps: state.jumps,
-	loading: loadingSelector(state),
-	headers: state.headers,
+	jumps: state.jumps.jumps,
+	loading: state.loading[JUMP_LOAD],
+	headers: state.auth.headers,
 	searchFilter: state.searchFilter
 });
 const mapDispatchToProps = ({

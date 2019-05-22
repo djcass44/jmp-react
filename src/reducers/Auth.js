@@ -26,13 +26,13 @@ const auth = (state = {
 		case `${OAUTH_REFRESH}_SUCCESS`:
 		case `${OAUTH_REQUEST}_SUCCESS`: {
 			console.log(action);
-			const headers = {'Authorization': `Bearer ${action.payload.data.request}`};
-			localStorage.setItem(LS_REQUEST, action.payload.data.request);
-			localStorage.setItem(LS_REFRESH, action.payload.data.refresh);
+			const headers = {'Authorization': `Bearer ${action.data.request}`};
+			localStorage.setItem(LS_REQUEST, action.data.request);
+			localStorage.setItem(LS_REFRESH, action.data.refresh);
 			localStorage.setItem(LS_HEADERS, JSON.stringify(headers));
 			return {...state,
-				request: action.payload.data.request,
-				refresh: action.payload.data.refresh,
+				request: action.data.request,
+				refresh: action.data.refresh,
 				headers: headers,
 				isLoggedIn: true
 			}
