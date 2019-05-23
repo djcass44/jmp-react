@@ -7,7 +7,7 @@ import {SentimentDissatisfied} from "@material-ui/icons";
 class EmptyCard extends React.Component {
 	render() {
 		return (
-			<ListItem disableRipple key={"null"}>
+			<ListItem key={"null"}>
 				<Avatar>
 					<SentimentDissatisfied color={"error"}/>
 				</Avatar>

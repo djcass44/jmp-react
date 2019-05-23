@@ -4,6 +4,7 @@ import {BASE_URL} from "../constants";
 export const OAUTH_VERIFY = "OAUTH_VERIFY";
 export const OAUTH_REQUEST = "OAUTH_REQUEST";
 export const OAUTH_REFRESH = "OAUTH_REFRESH";
+export const OAUTH_LOGOUT = "OAUTH_LOGOUT";
 
 export const client = axios.create({
 	baseURL: BASE_URL
@@ -22,6 +23,11 @@ export function oauthRequest(data) {
 export function oauthRefresh(refresh, headers) {
 	return dispatch => {
 		oauthRefreshDispatch(dispatch, refresh, headers);
+	}
+}
+export function oauthLogout() {
+	return dispatch => {
+		oauthLogoutDispatch(dispatch);
 	}
 }
 
@@ -69,4 +75,7 @@ function oauthRefreshDispatch(dispatch, refresh, headers) {
 		console.log(`refresh failed: ${err}`);
 		dispatch({type: `${OAUTH_REFRESH}_FAILURE`, data: err.toString()});
 	});
+}
+function oauthLogoutDispatch(dispatch) {
+	dispatch({type: OAUTH_LOGOUT});
 }

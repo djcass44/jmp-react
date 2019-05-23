@@ -15,9 +15,10 @@ import EmptyCard from "../../components/widget/EmptyCard";
 import ReactImageFallback from "react-image-fallback";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import PublicIcon from "@material-ui/icons/Public";
+import SchemeHighlight from "../../components/widget/SchemeHighlight";
 
 const styles = theme => ({
-	title: {fontFamily: "Manrope"}
+	title: {fontFamily: "Manrope", fontWeight: 500}
 });
 
 class Jumps extends React.Component {
@@ -53,7 +54,7 @@ class Jumps extends React.Component {
 					<Avatar>
 						<ReactImageFallback src={i.image} fallbackImage={i.personal === 0 ? <PublicIcon/> : i.personal === 1 ? <AccountCircleIcon/> : <PublicIcon/>}/>
 					</Avatar>
-					<ListItemText primary={i.name} secondary={i.location}/>
+					<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={<SchemeHighlight text={i.location}/>}/>
 				</ListItem>
 			));
 		});
