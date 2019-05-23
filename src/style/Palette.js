@@ -15,22 +15,40 @@
  *
  */
 
-import React from 'react';
-import './App.css';
-import Content from "./containers/Content";
-import Nav from "./containers/Nav";
-import {MuiThemeProvider} from "@material-ui/core/styles";
-import Theme from "./style/Palette";
+import {createMuiTheme} from "@material-ui/core";
 
-function App() {
-	return (
-		<div className={"App"}>
-			<MuiThemeProvider theme={Theme}>
-				<Nav/>
-				<Content/>
-			</MuiThemeProvider>
-		</div>
-	);
-}
-
-export default App;
+const theme = createMuiTheme({
+	palette: {
+		primary: {
+			main: '#0052CC',
+			light: '#DEEBFF',
+			dark: '#0052CC'
+		},
+		secondary: {
+			main: '#172B4d',
+			light: '#455570',
+			dark: '#101e35'
+		},
+		warning: {
+			main: '#FFAB00',
+			light: '#FFE380',
+			dark: '#FF8B00'
+		},
+		error: {
+			main: '#FF5630',
+			light: '#FFEBE5',
+			dark: '#BF2600'
+		},
+		info: {
+			main: '#6554C0',
+			light: '#EAE6FF',
+			dark: '#5243AA'
+		},
+		success: {
+			main: '#36B37E',
+			light: '#E3FCEF',
+			dark: '#00875A'
+		}
+	}
+});
+export default theme;

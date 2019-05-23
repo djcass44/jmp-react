@@ -26,8 +26,7 @@ import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import Pagination from "material-ui-flat-pagination";
 import Center from "react-center";
-import {withStyles} from "@material-ui/core";
-import {LS_HEADERS} from "../../constants";
+import {withStyles, withTheme} from "@material-ui/core";
 import EmptyCard from "../../components/widget/EmptyCard";
 import ReactImageFallback from "react-image-fallback";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -44,17 +43,16 @@ class Jumps extends React.Component {
 		this.state = {
 			jumps: [],
 			pageSize: 10,
-			headers: JSON.parse(localStorage.getItem(LS_HEADERS)) || {},
 		};
 		this.filterJump = this.filterJump.bind(this);
 	}
-	componentDidMount() {
-		// Load jumps from the API
-		this.props.listJumps(this.state.refresh, this.state.headers);
-	}
 	componentWillReceiveProps(nextProps, nextContext) {
-		console.log(nextProps.jumps);
+		console.log(nextProps);
 		// TODO check to see if anything has actually changed...
+		if(nextProps.headers !== this.state.headers) {
+			// Load jumps from the API
+			this.props.listJumps(nextProps.headers);
+		}
 		this.setState({...nextProps});
 	}
 
@@ -63,13 +61,18 @@ class Jumps extends React.Component {
 	}
 
 	render() {
-		const {classes} = this.props;
+		const {classes, theme} = this.props;
 		let listItems = [];
 		this.state.jumps.filter(this.filterJump).forEach((i, index) => {
+			let avatar = {
+				icon: i.personal === 0 ? <PublicIcon/> : i.personal === 1 ? <AccountCircleIcon/> : <PublicIcon/>,
+				bg: i.personal === 0 ? theme.palette.primary.light : i.personal === 1 ? theme.palette.success.light : theme.palette.info.light,
+				fg: i.personal === 0 ? theme.palette.primary.dark : i.personal === 1 ? theme.palette.success.dark : theme.palette.info.dark
+			};
 			listItems.push((
 				<ListItem button disableRipple key={index}>
-					<Avatar>
-						<ReactImageFallback src={i.image} fallbackImage={i.personal === 0 ? <PublicIcon/> : i.personal === 1 ? <AccountCircleIcon/> : <PublicIcon/>}/>
+					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg}}>
+						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon}/>
 					</Avatar>
 					<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={<SchemeHighlight text={i.location}/>}/>
 				</ListItem>
@@ -104,4 +107,4 @@ const mapDispatchToProps = ({
 	rmJump
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Jumps));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme()(Jumps)));

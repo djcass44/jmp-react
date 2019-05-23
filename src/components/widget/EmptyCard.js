@@ -20,17 +20,19 @@ import Avatar from "@material-ui/core/es/Avatar";
 import ListItemText from "@material-ui/core/es/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import {SentimentDissatisfied} from "@material-ui/icons";
+import {withTheme} from "@material-ui/core";
 
 class EmptyCard extends React.Component {
 	render() {
+		const {theme} = this.props;
 		return (
 			<ListItem key={"null"}>
-				<Avatar>
-					<SentimentDissatisfied color={"error"}/>
+				<Avatar style={{backgroundColor: theme.palette.error.light, color: theme.palette.error.dark}}>
+					<SentimentDissatisfied/>
 				</Avatar>
 				<ListItemText primary={"Nothing could be found."}/>
 			</ListItem>
 		)
 	}
 }
-export default EmptyCard;
+export default withTheme()(EmptyCard);
