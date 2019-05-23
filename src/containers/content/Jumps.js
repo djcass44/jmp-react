@@ -32,9 +32,10 @@ import ReactImageFallback from "react-image-fallback";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import PublicIcon from "@material-ui/icons/Public";
 import SchemeHighlight from "../../components/widget/SchemeHighlight";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const styles = theme => ({
-	title: {fontFamily: "Manrope", fontWeight: 500}
+	title: {fontFamily: "Manrope", fontWeight: 500},
 });
 
 class Jumps extends React.Component {
@@ -64,6 +65,16 @@ class Jumps extends React.Component {
 		return jump.name.includes(this.state.searchFilter) || jump.location.includes(this.state.searchFilter);
 	}
 
+	getAliases(jump) {
+		if(jump.alias.length === 0) return "";
+		let items = [];
+		jump.alias.forEach((i) => {
+			items.push(i.name);
+		});
+		let alias = items.join(', ');
+		return `AKA ${alias}`;
+	}
+
 	render() {
 		const {classes, theme} = this.props;
 		let listItems = [];
@@ -73,12 +84,19 @@ class Jumps extends React.Component {
 				bg: i.personal === 0 ? theme.palette.primary.light : i.personal === 1 ? theme.palette.success.light : theme.palette.info.light,
 				fg: i.personal === 0 ? theme.palette.primary.dark : i.personal === 1 ? theme.palette.success.dark : theme.palette.info.dark
 			};
+			// Generate the secondary text and add the owner (if it exists)
+			let secondary = <span><SchemeHighlight text={i.location}/>{
+				i.owner != null ? <span>&nbsp;&bull;&nbsp;{i.owner}</span> : ""
+			}</span>;
+			let aliases = this.getAliases(i);
 			listItems.push((
 				<ListItem button disableRipple key={index}>
 					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg}}>
 						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon}/>
 					</Avatar>
-					<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={<SchemeHighlight text={i.location}/>}/>
+					<Tooltip disableFocusListener title={aliases} placement={"left"} interactive>
+						<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={secondary}/>
+					</Tooltip>
 				</ListItem>
 			));
 		});

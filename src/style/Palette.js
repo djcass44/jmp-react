@@ -49,6 +49,13 @@ const theme = createMuiTheme({
 			light: '#E3FCEF',
 			dark: '#00875A'
 		}
+	},
+	overrides: {
+		MuiTooltip: {
+			tooltip: {
+				fontSize: "0.9rem"
+			}
+		}
 	}
 });
 export default theme;
