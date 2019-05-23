@@ -46,6 +46,10 @@ class Jumps extends React.Component {
 		};
 		this.filterJump = this.filterJump.bind(this);
 	}
+	componentDidMount() {
+		this.props.listJumps(this.state.headers);
+	}
+
 	componentWillReceiveProps(nextProps, nextContext) {
 		console.log(nextProps);
 		// TODO check to see if anything has actually changed...

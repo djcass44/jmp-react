@@ -16,12 +16,12 @@
  */
 
 import React from "react";
-import {withStyles} from "@material-ui/core";
+import {withStyles, withTheme} from "@material-ui/core";
 
 const styles = theme => ({
-	https: {color: '#36B37E'},
+	https: {color: theme.palette.success.main},
 	http: {
-		color: '#FF5630',
+		color: theme.palette.error.main,
 		textDecorationLine: 'line-through'
 	}
 });
@@ -41,4 +41,4 @@ class SchemeHighlight extends React.Component {
 		return (<span>{highlighted}{domain}</span>)
 	}
 }
-export default withStyles(styles)(SchemeHighlight);
+export default withStyles(styles)(withTheme()(SchemeHighlight));
