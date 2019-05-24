@@ -30,6 +30,10 @@ import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
 import Divider from "@material-ui/core/es/Divider/Divider";
 import {setFilter} from "../actions/Generic";
+import HomeIcon from "@material-ui/icons/HomeOutlined";
+import SettingsIcon from "@material-ui/icons/SettingsOutlined";
+import Icon from "@mdi/react";
+import {mdiAccountGroupOutline, mdiLogin, mdiLogout} from "@mdi/js";
 
 const styles = theme => ({
 	root: {width: '100%'},
@@ -96,13 +100,11 @@ class Nav extends React.Component {
 			searchRoutes: ["/", "/identity"],
 			showSearch: true,
 			searchFilter: '',
-			username: 'Anonymous',
 		};
 	}
-
+	// Why isn't this called on start?
 	componentWillReceiveProps(nextProps, nextContext) {
-		this.setState({username: nextProps.username, isLoggedIn: nextProps.isLoggedIn});
-		this.setState({isLoggedIn: nextProps.isLoggedIn});
+		this.setState({...nextProps});
 	}
 
 	componentWillMount() {
@@ -179,16 +181,21 @@ class Nav extends React.Component {
 				<MenuItem disabled={true}>
 					<div>
 						{/*<Avatar />*/}
-						<span>{this.state.username}</span>
+						<span>{this.state.username !== '' ? this.state.username : 'Anonymous'}</span>
 					</div>
 				</MenuItem>
 				<Divider/>
-				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/identity"}>Users &amp; Groups</MenuItem>
-				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/settings"}>Settings</MenuItem>
-				{this.state.isLoggedIn === false ?
-					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/login"}>Login</MenuItem>
+				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/"}><HomeIcon/>Home</MenuItem>
+				{this.state.isLoggedIn === true ?
+					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/identity"}><Icon path={mdiAccountGroupOutline} size={1}/>Users &amp; Groups</MenuItem>
 					:
-					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/logout"}>Logout</MenuItem>
+					""
+				}
+				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/settings"}><SettingsIcon/>Settings</MenuItem>
+				{this.state.isLoggedIn === false ?
+					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/login"}><Icon path={mdiLogin} size={1}/>Login</MenuItem>
+					:
+					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/logout"}><Icon path={mdiLogout} size={1}/>Logout</MenuItem>
 				}
 			</Menu>
 		</div>

@@ -23,7 +23,7 @@ import Login from "./content/Login";
 import {connect} from "react-redux";
 import {OAUTH_REFRESH, OAUTH_VERIFY, oauthRefresh, oauthRequest, oauthVerify} from "../actions/Auth";
 import NotFound from "./content/NotFound";
-import {LS_HEADERS} from "../constants";
+import {LS_HEADERS, LS_REFRESH} from "../constants";
 import ErrorIcon from "@material-ui/icons/ErrorOutline";
 import Logout from "./content/Logout";
 import {withTheme} from "@material-ui/core";
@@ -35,8 +35,13 @@ class Content extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			refresh: localStorage.getItem(LS_REFRESH) || '',
 			headers: JSON.parse(localStorage.getItem(LS_HEADERS)) || {},
 		}
+	}
+
+	componentDidMount() {
+		this.props.oauthVerify(this.state.refresh, this.state.headers);
 	}
 
 	componentWillMount() {
@@ -49,10 +54,6 @@ class Content extends React.Component {
 		this.unlisten();
 	}
 
-	// componentDidMount() {
-	// 	console.log(this.state.headers);
-	// 	this.props.oauthVerify(this.state.refresh, this.state.headers);
-	// }
 	componentWillReceiveProps(nextProps, nextContext) {
 		this.setState({...nextProps});
 	}

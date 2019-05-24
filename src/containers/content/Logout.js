@@ -21,19 +21,19 @@ import {oauthLogout} from "../../actions/Auth";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
-import HomeIcon from "@material-ui/icons/Home";
+import HomeIcon from "@material-ui/icons/HomeOutlined";
+import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
+import {withTheme} from "@material-ui/core";
 
 class Logout extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			loggingOut: false
-		};
+		this.state = {};
 	}
 
 	componentDidMount() {
 		// Log the user out
-		// if(this.state.isLoggedIn === true) {this.props.oauthLogout()}
+		this.props.oauthLogout();
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {
@@ -41,27 +41,13 @@ class Logout extends React.Component {
 		if(this.state.isLoggedIn === false) {
 			this.props.history.push('/');
 		}
-		else {
-			this.setState({loggingOut: true});
-			this.props.oauthLogout();
-		}
 	}
 
 	render() {
-		const loggedOut = (
-			<div>
-				<h1 className={"m2-title"}>You're already logged out!</h1>
-				<Center>Click below to return home</Center>
-				<Center>
-					<IconButton component={Link} to={"/"} color={"primary"} aria-label={"Return to home"}>
-						<HomeIcon/>
-					</IconButton>
-				</Center>
-			</div>
-		);
 		const loggedIn = (
 			<div>
-				<h1 className={"m2-title"}>Logging you out...</h1>
+				<h1 className={"m2-title"}>Ensuring that you're logged out...</h1>
+				<Center><CircularProgress/></Center>
 				<Center>If you're not redirected in a few seconds, click below</Center>
 				<Center>
 					<IconButton component={Link} to={"/"} color={"primary"} aria-label={"Return to home"}>
@@ -72,7 +58,7 @@ class Logout extends React.Component {
 		);
 		return (
 			<Center>
-				{this.state.loggingOut === true && this.state.isLoggedIn === true ? loggedIn : loggedOut}
+				{loggedIn}
 			</Center>
 		);
 	}
@@ -83,4 +69,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = ({
 	oauthLogout
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Logout);
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme()(Logout));

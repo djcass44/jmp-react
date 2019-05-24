@@ -34,6 +34,8 @@ import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import {pageSize} from "../../../constants";
 import {getGroups, GROUP_LOAD} from "../../../actions/Groups";
+import Icon from "@mdi/react";
+import {mdiAccountGroupOutline} from "@mdi/js";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -77,7 +79,6 @@ class Groups extends React.Component {
 		let listItems = [];
 		this.state.groups.filter(this.filterGroup).forEach((i, index) => {
 			let avatar = {
-				icon: <GroupIcon/>,
 				bg: theme.palette.info.light,
 				fg: theme.palette.info.dark
 			};
@@ -85,7 +86,7 @@ class Groups extends React.Component {
 			listItems.push((
 				<ListItem button disableRipple key={index}>
 					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg}}>
-						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon}/>
+						<Icon path={mdiAccountGroupOutline} size={1} color={avatar.fg}/>
 					</Avatar>
 					<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={secondary}/>
 				</ListItem>
