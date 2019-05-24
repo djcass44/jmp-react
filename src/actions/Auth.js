@@ -34,7 +34,7 @@ export function oauthLogout() {
 function oauthVerifyDispatch(dispatch, refresh, headers) {
 	dispatch({type: OAUTH_VERIFY});
 	client.get("/api/v2/oauth/valid", {headers: headers}).then( r => {
-		console.log(`verify valid`);
+		// console.log(`verify valid`);
 		dispatch({
 			type: `${OAUTH_VERIFY}_SUCCESS`,
 			data: r.data

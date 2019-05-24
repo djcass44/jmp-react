@@ -25,6 +25,7 @@ import {OAUTH_REQUEST, oauthRequest} from "../../actions/Auth";
 import {connect} from "react-redux";
 import {TextValidator, ValidatorForm} from "react-material-ui-form-validator";
 import Center from "react-center";
+import {getVersion} from "../../actions/Generic";
 
 class Login extends React.Component {
 	constructor(props) {
@@ -40,8 +41,11 @@ class Login extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 	}
 
+	componentDidMount() {
+		this.props.getVersion();
+	}
+
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log(`loggedIn: ${this.state.isLoggedIn}`);
 		if(this.state.isLoggedIn === true) {
 			// The user is already logged in, we can leave here
 			this.props.history.push('/');
@@ -76,7 +80,7 @@ class Login extends React.Component {
 					<CircularProgress/>
 					:
 					<Card>
-						<CardContent>
+						<CardContent style={{margin: 12}}>
 							<Grid container spacing={24} alignContent={"center"} justify={"center"} component={ValidatorForm} ref={"form"} onSubmit={this.handleClick}>
 								<Grid item xs={12}>
 									<Center><img src={`${process.env.PUBLIC_URL}/jmp.png`} alt={"App icon"} height={72}/></Center>
@@ -92,6 +96,7 @@ class Login extends React.Component {
 									<Button variant={"contained"} color={"primary"} fullWidth size={"large"} type={"submit"} disabled={submitted}>Login</Button>
 								</Grid>
 							</Grid>
+							<Center>{this.state.version}</Center>
 							{this.state.error != null ? errorMessage : <div/>}
 						</CardContent>
 					</Card>
@@ -105,9 +110,11 @@ class Login extends React.Component {
 const mapStateToProps = state => ({
 	loading: state.loading[OAUTH_REQUEST],
 	error: state.errors[OAUTH_REQUEST],
-	isLoggedIn: state.auth.isLoggedIn
+	isLoggedIn: state.auth.isLoggedIn,
+	version: state.generic.version
 });
 const mapDispatchToProps = ({
-	oauthRequest
+	oauthRequest,
+	getVersion
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -14,21 +14,24 @@
  *    limitations under the License.
  *
  */
+import {client} from "../constants";
 
-import {GENERIC_FILTER_SET, GENERIC_GET_VERSION} from "../actions/Generic";
+export const USER_LOAD = "USER_LOAD";
 
-const generic = (state = {
-	searchFilter: ''
-}, action) => {
-	switch(action.type) {
-		case GENERIC_FILTER_SET: {
-			return {...state, searchFilter: action.data}
-		}
-		case `${GENERIC_GET_VERSION}_SUCCESS`: {
-			return {...state, version: action.data}
-		}
-		default:
-			return state;
+export function getUsers(headers) {
+	return dispatch => {
+		getUsersDispatch(dispatch, headers);
 	}
-};
-export default generic;
+}
+
+function getUsersDispatch(dispatch, headers) {
+	dispatch({type: USER_LOAD});
+	client.get("/api/v2/users?count=9999&offset=0", {headers: headers}).then(r => {
+		dispatch({
+			type: `${USER_LOAD}_SUCCESS`,
+			data: r.data
+		});
+	}).catch(err => {
+		dispatch({type: `${USER_LOAD}_FAILURE`, data: err.toString()});
+	})
+}

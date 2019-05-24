@@ -32,7 +32,7 @@ const auth = (state = {
 			localStorage.setItem(LS_USER, JSON.stringify(action.data));
 			let username = '';
 			if(action.data.username != null) username = action.data.username;
-			console.log(`username: ${username}`);
+			// console.log(`username: ${username}`);
 			return {...state,
 				userProfile: action.data,
 				username: username,

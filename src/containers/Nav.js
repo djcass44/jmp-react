@@ -15,12 +15,12 @@
  *
  */
 
-import React, {useRef} from "react";
+import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
-import AccountCircle from "@material-ui/icons/AccountCircle";
+import AccountCircle from "@material-ui/icons/AccountCircleOutlined";
 import {fade} from "@material-ui/core/styles/colorManipulator";
 import InputBase from "@material-ui/core/InputBase";
 import {IconButton, withStyles} from "@material-ui/core";
@@ -93,17 +93,15 @@ class Nav extends React.Component {
 		super(props);
 		this.state = {
 			anchorEl: null,
-			searchRoutes: ["/", "/users"],
+			searchRoutes: ["/", "/identity"],
 			showSearch: true,
 			searchFilter: '',
 			username: 'Anonymous',
-			isLoggedIn: false
 		};
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {
-		console.log(`username: ${nextProps.username}`);
-		this.setState({username: nextProps.username});
+		this.setState({username: nextProps.username, isLoggedIn: nextProps.isLoggedIn});
 		this.setState({isLoggedIn: nextProps.isLoggedIn});
 	}
 
@@ -127,8 +125,9 @@ class Nav extends React.Component {
 	};
 
 	handleSearchChange = e => {
-		this.setState({searchFilter: e.target.value});
-		this.props.setFilter(e.target.value);
+		let s = e.target.value.toLowerCase();
+		this.setState({searchFilter: s});
+		this.props.setFilter(s);
 	};
 
 	render() {
@@ -176,7 +175,7 @@ class Nav extends React.Component {
 					</div>
 				</MenuItem>
 				<Divider/>
-				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/users"}>Users &amp; Groups</MenuItem>
+				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/identity"}>Users &amp; Groups</MenuItem>
 				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/settings"}>Settings</MenuItem>
 				{this.state.isLoggedIn === false ?
 					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/login"}>Login</MenuItem>

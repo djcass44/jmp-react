@@ -33,9 +33,16 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import PublicIcon from "@material-ui/icons/Public";
 import SchemeHighlight from "../../components/widget/SchemeHighlight";
 import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import AddIcon from "@material-ui/icons/Add";
+import SortIcon from "@material-ui/icons/Sort";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
+	button: {
+		// margin: theme.spacing.unit,
+	},
+	grow: {flexGrow: 1}
 });
 
 class Jumps extends React.Component {
@@ -52,7 +59,6 @@ class Jumps extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {
-		console.log(nextProps);
 		// TODO check to see if anything has actually changed...
 		if(nextProps.headers !== this.state.headers) {
 			// Load jumps from the API
@@ -101,9 +107,16 @@ class Jumps extends React.Component {
 			));
 		});
 
+		const subHeader = (<ListSubheader className={classes.title} inset component={"div"}>
+			Jumps {this.state.searchFilter != null && this.state.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
+			{/*<div className={classes.grow}/>*/}
+			<IconButton className={classes.button} aria-label="Sort"><SortIcon fontSize={"small"}/></IconButton>
+			<IconButton className={classes.button} aria-label="Add"><AddIcon fontSize={"small"}/></IconButton>
+		</ListSubheader>);
+
 		return (
 			<div>
-				<ListSubheader className={classes.title} inset component={"div"}>Jumps {this.state.searchFilter}</ListSubheader>
+				{subHeader}
 				<Paper style={{borderRadius: 12, marginBottom: 8}}>
 					<List>
 						{listItems.length > 0 ? listItems : <EmptyCard/>}

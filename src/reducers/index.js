@@ -21,12 +21,16 @@ import loading from "./Loading";
 import errors from "./Errors";
 import jumps from "./Jumps";
 import generic from "./Generic";
+import users from "./Users";
+import groups from "./Groups";
 
 const main = combineReducers({
 	auth,
 	loading,
 	errors,
 	jumps,
-	generic
+	generic,
+	users,
+	groups
 });
 export default main;

@@ -15,20 +15,20 @@
  *
  */
 
-import {GENERIC_FILTER_SET, GENERIC_GET_VERSION} from "../actions/Generic";
+import {GROUP_LOAD} from "../actions/Groups";
 
-const generic = (state = {
-	searchFilter: ''
+const groups = (state = {
+	groups: []
 }, action) => {
-	switch(action.type) {
-		case GENERIC_FILTER_SET: {
-			return {...state, searchFilter: action.data}
-		}
-		case `${GENERIC_GET_VERSION}_SUCCESS`: {
-			return {...state, version: action.data}
+	switch (action.type) {
+		case `${GROUP_LOAD}_SUCCESS`: {
+			let groups = [];
+			action.data.forEach(i => { groups.push(i) });
+			return {...state, groups: groups}
 		}
 		default:
 			return state;
+
 	}
 };
-export default generic;
+export default groups;
