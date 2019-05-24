@@ -107,13 +107,21 @@ class Nav extends React.Component {
 
 	componentWillMount() {
 		this.unlisten = this.props.history.listen(() => {
-			let search = this.state.searchRoutes.includes(window.location.pathname);
-			this.setState({showSearch: search});
+			this.handleLocationChange();
 		});
 	}
 
 	componentWillUnmount() {
 		this.unlisten();
+	}
+
+	componentDidMount() {
+		this.handleLocationChange();
+	}
+
+	handleLocationChange() {
+		let search = this.state.searchRoutes.includes(window.location.pathname);
+		this.setState({showSearch: search});
 	}
 
 	handleProfileMenuOpen = event => {
