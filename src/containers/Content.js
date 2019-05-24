@@ -29,6 +29,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import Logout from "./content/Logout";
 import {withTheme} from "@material-ui/core";
 import Identity from "./content/Identity";
+import Token from "./content/jmp/Token";
 
 class Content extends React.Component {
 	constructor(props) {
@@ -66,6 +67,7 @@ class Content extends React.Component {
 			<Switch>
 				<Route exact path={"/"} component={Jumps} key={"jumps"}/>
 				<Route exact path={"/identity"} component={Identity} key={"identity"}/>
+				<Route exact path={"/jmp"} component={Token} key={"token"}/>
 				<Route exact path={"/login"} component={Login} key={"login"}/>
 				<Route exact path={"/logout"} component={Logout} key={"logout"}/>
 				<Route component={NotFound} key={"notfound"}/>

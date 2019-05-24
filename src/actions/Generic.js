@@ -2,7 +2,17 @@ import {client} from "./Auth";
 
 export const GENERIC_FILTER_SET = "GENERIC_FILTER_SET";
 export const GENERIC_GET_VERSION = "GENERIC_GET_VERSION";
+export const GENERIC_GET_TOKEN = "GENERIC_GET_TOKEN";
 
+export function getTokenStart() {
+	return dispatch => {dispatch({type: GENERIC_GET_TOKEN});}
+}
+export function getTokenEnd() {
+	return dispatch => {dispatch({type: `${GENERIC_GET_TOKEN}_SUCCESS`});}
+}
+export function getTokenFail(err) {
+	return dispatch => {dispatch({type: `${GENERIC_GET_TOKEN}_FAILURE`, data: err});}
+}
 export function setFilter(filter) {
 	return dispatch => { setFilterDispatch(dispatch, filter) }
 }
