@@ -24,12 +24,12 @@ import {connect} from "react-redux";
 import {OAUTH_REFRESH, OAUTH_VERIFY, oauthRefresh, oauthRequest, oauthVerify} from "../actions/Auth";
 import NotFound from "./content/NotFound";
 import {LS_HEADERS} from "../constants";
-import {Banner} from "material-ui-banner";
-import ErrorIcon from "@material-ui/icons/Error";
+import ErrorIcon from "@material-ui/icons/ErrorOutline";
 import Logout from "./content/Logout";
 import {withTheme} from "@material-ui/core";
 import Identity from "./content/Identity";
 import Token from "./content/jmp/Token";
+import Banner from "../components/widget/Banner";
 
 class Content extends React.Component {
 	constructor(props) {
@@ -61,7 +61,7 @@ class Content extends React.Component {
 		const {theme} = this.props;
 		let content = this.state.loading === true ? (<Grid item xs={12} sm={6}><CircularProgress/></Grid>) : (<Grid item xs={12} sm={6}>
 			{/* TODO fix the background colour of the banner avatar */}
-			<Banner iconProps={{color: theme.palette.error.dark}} open={this.state.error != null} label={this.state.error} paperProps={{elevation: 1}} showDismissButton={false} icon={
+			<Banner avatarStyle={{backgroundColor: theme.palette.error.light, color: theme.palette.error.dark}} open={this.state.error != null} label={this.state.error} icon={
 				<ErrorIcon style={{color: theme.palette.error.dark}}/>
 			}/>
 			<Switch>
