@@ -17,7 +17,7 @@
 
 import {getUsers, USER_LOAD} from "../../../actions/Users";
 import {connect} from "react-redux";
-import {withStyles, withTheme} from "@material-ui/core";
+import {LinearProgress, withStyles, withTheme} from "@material-ui/core";
 import React from "react";
 import AccountCircleIcon from "@material-ui/icons/AccountCircleOutlined";
 import AdminCircleIcon from "@material-ui/icons/SupervisedUserCircleOutlined";
@@ -103,6 +103,7 @@ class Users extends React.Component {
 		return (
 			<div>
 				{subHeader}
+				{this.state.loading === true ? <LinearProgress className={classes.grow} color={"primary"}/> : "" }
 				<Paper style={{borderRadius: 12, marginBottom: 8}}>
 					<List>
 						{listItems.length > 0 ? listItems : <EmptyCard/>}

@@ -23,6 +23,15 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/es/ListItemSecondaryAction/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
 import ClearIcon from "@material-ui/icons/ClearOutlined";
+import {withStyles, withTheme} from "@material-ui/core";
+
+const styles = theme => ({
+	title: {fontFamily: "Manrope", fontWeight: 500},
+	button: {
+		// margin: theme.spacing.unit,
+	},
+	grow: {flexGrow: 1}
+});
 
 class Banner extends React.Component {
 	constructor(props) {
@@ -33,13 +42,14 @@ class Banner extends React.Component {
 	}
 
 	render() {
+		const {classes} = this.props;
 		return <Card style={{borderRadius: 12, marginBottom: 8}}>
 			{this.props.open === true && this.state.visible === true ?
 				<ListItem key={this.props.label}>
 					<Avatar style={this.props.avatarStyle}>
 						{this.props.icon}
 					</Avatar>
-					<ListItemText primary={<span>{this.props.label}</span>}/>
+					<ListItemText primary={<span className={classes.title}>{this.props.label}</span>}/>
 					{this.props.showDismissButton === true ?
 						<ListItemSecondaryAction>
 							<IconButton size={'small'} onClick={() => this.setState({visible: false})}>
@@ -56,4 +66,4 @@ class Banner extends React.Component {
 		</Card>
 	}
 }
-export default Banner;
+export default withStyles(styles)(withTheme()(Banner));

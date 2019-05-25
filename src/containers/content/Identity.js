@@ -18,7 +18,6 @@
 import React from "react";
 import {withStyles, withTheme} from "@material-ui/core";
 import {connect} from "react-redux";
-import {getUsers} from "../../actions/Users";
 import Users from "./identity/Users";
 import Groups from "./identity/Groups";
 

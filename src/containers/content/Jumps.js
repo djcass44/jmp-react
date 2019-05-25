@@ -26,7 +26,7 @@ import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import Pagination from "material-ui-flat-pagination";
 import Center from "react-center";
-import {withStyles, withTheme} from "@material-ui/core";
+import {LinearProgress, withStyles, withTheme} from "@material-ui/core";
 import EmptyCard from "../../components/widget/EmptyCard";
 import ReactImageFallback from "react-image-fallback";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -36,6 +36,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import SortIcon from "@material-ui/icons/Sort";
+import {pageSize} from "../../constants";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -50,7 +51,6 @@ class Jumps extends React.Component {
 		super(props);
 		this.state = {
 			jumps: [],
-			pageSize: 10,
 		};
 		this.filterJump = this.filterJump.bind(this);
 	}
@@ -117,13 +117,14 @@ class Jumps extends React.Component {
 		return (
 			<div>
 				{subHeader}
+				{this.state.loading === true ? <LinearProgress className={classes.grow} color={"primary"}/> : "" }
 				<Paper style={{borderRadius: 12, marginBottom: 8}}>
 					<List>
 						{listItems.length > 0 ? listItems : <EmptyCard/>}
 					</List>
 				</Paper>
-				{this.state.jumps.length > this.state.pageSize ?
-					<Center><Pagination limit={this.state.pageSize} offset={0} total={this.state.jumps.length} nextPageLabel={"▶"} previousPageLabel={"◀"}/></Center>
+				{this.state.jumps.length > pageSize ?
+					<Center><Pagination limit={pageSize} offset={0} total={this.state.jumps.length} nextPageLabel={"▶"} previousPageLabel={"◀"}/></Center>
 					:
 					<div/>
 				}
