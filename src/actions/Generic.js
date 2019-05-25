@@ -1,4 +1,4 @@
-import {client} from "./Auth";
+import {client} from "../constants";
 
 export const GENERIC_FILTER_SET = "GENERIC_FILTER_SET";
 export const GENERIC_GET_VERSION = "GENERIC_GET_VERSION";

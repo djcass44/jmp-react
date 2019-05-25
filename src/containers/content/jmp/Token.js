@@ -54,7 +54,7 @@ class Token extends React.Component {
 			client.get(`/api/v2/jump/${query}`, {headers: this.state.headers}).then(r => {
 				that.props.getTokenEnd();
 				console.log(`token: ${r.data}`);
-				// window.location.replace(r.data);
+				window.location.replace(r.data);
 			}).catch(err => {
 				that.props.getTokenFail(err.toString());
 			});

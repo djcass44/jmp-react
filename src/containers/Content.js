@@ -30,6 +30,7 @@ import {withTheme} from "@material-ui/core";
 import Identity from "./content/Identity";
 import Token from "./content/jmp/Token";
 import Banner from "../components/widget/Banner";
+import Similar from "./content/jmp/Similar";
 
 class Content extends React.Component {
 	constructor(props) {
@@ -69,6 +70,7 @@ class Content extends React.Component {
 				<Route exact path={"/"} component={Jumps} key={"jumps"}/>
 				<Route exact path={"/identity"} component={Identity} key={"identity"}/>
 				<Route exact path={"/jmp"} component={Token} key={"token"}/>
+				<Route exact path={"/similar"} component={Similar} key={"similar"}/>
 				<Route exact path={"/login"} component={Login} key={"login"}/>
 				<Route exact path={"/logout"} component={Logout} key={"logout"}/>
 				<Route component={NotFound} key={"notfound"}/>

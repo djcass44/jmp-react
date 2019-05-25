@@ -1,14 +1,9 @@
-import axios from "axios";
-import {BASE_URL} from "../constants";
+import {client} from "../constants";
 
 export const OAUTH_VERIFY = "OAUTH_VERIFY";
 export const OAUTH_REQUEST = "OAUTH_REQUEST";
 export const OAUTH_REFRESH = "OAUTH_REFRESH";
 export const OAUTH_LOGOUT = "OAUTH_LOGOUT";
-
-export const client = axios.create({
-	baseURL: BASE_URL
-});
 
 export function oauthVerify(refresh, headers) {
 	return dispatch => {
