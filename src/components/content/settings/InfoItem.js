@@ -11,6 +11,10 @@ import ErrorIcon from "@material-ui/icons/ErrorOutline";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
+	content: {
+		fontSize: 14,
+		flex: 1
+	},
 	button: {
 		// margin: theme.spacing.unit,
 	},
@@ -21,13 +25,13 @@ class InfoItem extends React.Component {
 	render() {
 		const {classes, theme} = this.props;
 		return (
-			<ExpansionPanel>
+			<ExpansionPanel defaultExpanded={this.props.open}>
 				<ExpansionPanelSummary expandIcon={<Icon path={mdiChevronDown} size={1}/>} aria-controls="panel1bh-content" id="panel1bh-header">
 					<Typography className={classes.title}>{this.props.title}</Typography>
 				</ExpansionPanelSummary>
 				<ExpansionPanelDetails>
 					<Banner avatarStyle={{backgroundColor: theme.palette.error.light, color: theme.palette.error.dark}} label={this.props.error} open={this.props.error != null} icon={<ErrorIcon style={{color: theme.palette.error.dark}}/>}/>
-					<div>{this.props.content}</div>
+					<div className={classes.content}>{this.props.content}</div>
 				</ExpansionPanelDetails>
 			</ExpansionPanel>
 		);

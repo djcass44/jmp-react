@@ -21,7 +21,7 @@ const generic = (state = {
 	searchFilter: ''
 }, action) => {
 	switch(action.type) {
-		case GENERIC_FILTER_SET: {
+		case `${GENERIC_FILTER_SET}_REQUEST`: {
 			return {...state, searchFilter: action.data}
 		}
 		case `${GENERIC_GET_VERSION}_SUCCESS`: {

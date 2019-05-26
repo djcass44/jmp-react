@@ -6,7 +6,7 @@ export const GENERIC_GET_TOKEN = "GENERIC_GET_TOKEN";
 export const GENERIC_DO_NOTHING = "GENERIC_DO_NOTHING";
 
 export function getTokenStart() {
-	return dispatch => {dispatch({type: GENERIC_GET_TOKEN});}
+	return dispatch => {dispatch({type: `${GENERIC_GET_TOKEN}_REQUEST`});}
 }
 export function getTokenEnd() {
 	return dispatch => {dispatch({type: `${GENERIC_GET_TOKEN}_SUCCESS`});}
@@ -32,7 +32,7 @@ export function getVersion() {
 	}
 }
 function getVersionDispatch(dispatch) {
-	dispatch({type: GENERIC_GET_VERSION});
+	dispatch({type: `${GENERIC_GET_VERSION}_REQUEST`});
 	client.get("/api/v2/version").then( r => {
 		dispatch({
 			type: `${GENERIC_GET_VERSION}_SUCCESS`,
@@ -43,5 +43,5 @@ function getVersionDispatch(dispatch) {
 	});
 }
 function doNothingDispatch(dispatch) {
-	dispatch({type: GENERIC_DO_NOTHING});
+	dispatch({type: `${GENERIC_DO_NOTHING}_REQUEST`});
 }

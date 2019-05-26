@@ -16,7 +16,7 @@ export function getInfoHealth(headers) {
 
 
 function getInfoAppDispatch(dispatch, headers) {
-	dispatch({type: GET_INFO_APP});
+	dispatch({type: `${GET_INFO_APP}_REQUEST`});
 	client.get("/api/v2/info/app", {headers: headers}).then(r => {
 		dispatch({type: `${GET_INFO_APP}_SUCCESS`, data: r.data});
 	}).catch(err => {
@@ -24,7 +24,7 @@ function getInfoAppDispatch(dispatch, headers) {
 	});
 }
 function getInfoSystemDispatch(dispatch, headers) {
-	dispatch({type: GET_INFO_SYS});
+	dispatch({type: `${GET_INFO_SYS}_REQUEST`});
 	client.get("/api/v2/info/system", {headers: headers}).then(r => {
 		dispatch({type: `${GET_INFO_SYS}_SUCCESS`, data: r.data});
 	}).catch(err => {
@@ -32,7 +32,7 @@ function getInfoSystemDispatch(dispatch, headers) {
 	});
 }
 function getInfoStatusDispatch(dispatch, headers) {
-	dispatch({type: GET_INFO_STAT});
+	dispatch({type: `${GET_INFO_STAT}_REQUEST`});
 	client.get("/api/v3/health", {headers: headers}).then(r => {
 		dispatch({type: `${GET_INFO_STAT}_SUCCESS`, data: r.data});
 	}).catch(err => {

@@ -31,7 +31,7 @@ export function oauthUnready() {
 }
 
 function oauthVerifyDispatch(dispatch, refresh, headers) {
-	dispatch({type: OAUTH_VERIFY});
+	dispatch({type: `${OAUTH_VERIFY}_REQUEST`});
 	// Do a quick check to see if the user has purposefully logged out
 	if((refresh == null || refresh === "") || (headers == null || headers === "")) {
 		console.log("Skipping verify (no refresh/headers)");
@@ -56,7 +56,7 @@ function oauthRequestDispatch(dispatch, data) {
 		'Authorization': `Basic ${data}`,
 		'Content-Type': 'application/json'
 	};
-	dispatch({type: OAUTH_REFRESH});
+	dispatch({type: `${OAUTH_REFRESH}_REQUEST`});
 	client.post("/api/v2/oauth/token", {}, {headers: headers}).then(r => {
 		console.log(`request success`);
 		dispatch({
@@ -70,7 +70,7 @@ function oauthRequestDispatch(dispatch, data) {
 }
 function oauthRefreshDispatch(dispatch, refresh, headers) {
 	console.log(`refreshing: ${refresh}, ${headers}`);
-	dispatch({type: OAUTH_REFRESH});
+	dispatch({type: `${OAUTH_REFRESH}_REQUEST`});
 	client.get("/api/v2/oauth/refresh", {headers: headers, params: {refreshToken: refresh}}).then( r => {
 		console.log(`refresh success`);
 		dispatch({
@@ -83,5 +83,5 @@ function oauthRefreshDispatch(dispatch, refresh, headers) {
 	});
 }
 function oauthLogoutDispatch(dispatch) {
-	dispatch({type: OAUTH_LOGOUT});
+	dispatch({type: `${OAUTH_LOGOUT}_REQUEST`});
 }

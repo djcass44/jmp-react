@@ -77,7 +77,7 @@ const auth = (state = {
 				ready: true
 			}
 		}
-		case OAUTH_UNREADY:
+		case `${OAUTH_UNREADY}_REQUEST`:
 			return {...state, ready: false};
 		default:
 			return state;

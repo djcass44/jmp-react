@@ -25,7 +25,7 @@ export function getGroups(headers) {
 }
 
 function getGroupsDispatch(dispatch, headers) {
-	dispatch({type: GROUP_LOAD});
+	dispatch({type: `${GROUP_LOAD}_REQUEST`});
 	client.get("/api/v2_1/groups", {headers: headers}).then(r => {
 		dispatch({
 			type: `${GROUP_LOAD}_SUCCESS`,

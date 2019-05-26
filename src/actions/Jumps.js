@@ -24,20 +24,16 @@ export function getSimilarFail(err) {
 }
 
 function listJumpsDispatch(dispatch, headers) {
-	dispatch({
-		type: JUMP_LOAD,
-		payload: {
-			request: {
-				method: 'GET',
-				headers: headers,
-				url: '/api/v1/jumps'
-			}
-		}
-	})
+	dispatch({type: `${JUMP_LOAD}_REQUEST`});
+	client.get("/api/v1/jumps", {headers: headers}).then(r => {
+		dispatch({type: `${JUMP_LOAD}_SUCCESS`, data: r.data});
+	}).catch(err => {
+		dispatch({type: `${JUMP_LOAD}_FAILURE`, data: err.toString()});
+	});
 }
 function rmJumpDispatch(dispatch, headers, id) {
 	dispatch({
-		type: JUMP_RM,
+		type: `${JUMP_RM}_REQUEST`,
 		payload: {
 			request: {
 				method: 'DELETE',
@@ -48,7 +44,7 @@ function rmJumpDispatch(dispatch, headers, id) {
 	})
 }
 function getSimilarDispatch(dispatch, headers, query) {
-	dispatch({type: GET_SIMILAR});
+	dispatch({type: `${GET_SIMILAR}_REQUEST`});
 	client.get(`/api/v2/similar/${query}`, {headers: headers}).then(r => {
 		dispatch({
 			type: `${GET_SIMILAR}_SUCCESS`,

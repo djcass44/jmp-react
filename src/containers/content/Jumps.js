@@ -37,6 +37,7 @@ import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import SortIcon from "@material-ui/icons/Sort";
 import {pageSize} from "../../constants";
+import {OAUTH_VERIFY} from "../../actions/Auth";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},

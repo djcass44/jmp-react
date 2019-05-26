@@ -25,7 +25,7 @@ export function getUsers(headers) {
 }
 
 function getUsersDispatch(dispatch, headers) {
-	dispatch({type: USER_LOAD});
+	dispatch({type: `${USER_LOAD}_REQUEST`});
 	client.get("/api/v2/users?count=9999&offset=0", {headers: headers}).then(r => {
 		dispatch({
 			type: `${USER_LOAD}_SUCCESS`,
