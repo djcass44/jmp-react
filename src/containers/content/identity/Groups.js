@@ -47,7 +47,8 @@ class Groups extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			groups: []
+			groups: [],
+			offset: 0
 		};
 		this.filterGroup = this.filterGroup.bind(this);
 	}
@@ -67,6 +68,9 @@ class Groups extends React.Component {
 	filterGroup(group) {
 		return group.name.toLowerCase().includes(this.state.searchFilter);
 	}
+	handlePageChange(offset) {
+		this.setState({offset: offset});
+	}
 	static capitalise(text) {
 		if(text == null || text.length === 0) return text;
 		if(text.toLowerCase() === "ldap") return "LDAP";
@@ -75,7 +79,11 @@ class Groups extends React.Component {
 	render() {
 		const {classes, theme} = this.props;
 		let listItems = [];
+		// Tell the loop what our pagination limits are
+		let max = (this.state.offset + pageSize);
+		if(max > this.state.groups.length) max = this.state.groups.length;
 		this.state.groups.filter(this.filterGroup).forEach((i, index) => {
+			if(index < this.state.offset || index > max) return;
 			let avatar = {
 				bg: theme.palette.info.light,
 				fg: theme.palette.info.dark
@@ -107,8 +115,8 @@ class Groups extends React.Component {
 						{listItems.length > 0 ? listItems : <EmptyCard/>}
 					</List>
 				</Paper>
-				{this.state.groups.length > pageSize ?
-					<Center><Pagination limit={pageSize} offset={0} total={this.state.groups.length} nextPageLabel={"▶"} previousPageLabel={"◀"}/></Center>
+				{listItems.length > pageSize || this.state.offset > 0 ?
+					<Center><Pagination limit={pageSize} offset={this.state.offset} total={listItems.length} nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e ,offset) => this.handlePageChange(offset)}/></Center>
 					:
 					<div/>
 				}

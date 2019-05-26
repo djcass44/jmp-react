@@ -48,7 +48,8 @@ class Users extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			users: []
+			users: [],
+			offset: 0
 		};
 		this.filterUser = this.filterUser.bind(this);
 	}
@@ -68,6 +69,9 @@ class Users extends React.Component {
 	filterUser(user) {
 		return user.username.toLowerCase().includes(this.state.searchFilter);
 	}
+	handlePageChange(offset) {
+		this.setState({offset: offset});
+	}
 	static capitalise(text) {
 		if(text == null || text.length === 0) return text;
 		if(text.toLowerCase() === "ldap") return "LDAP"; // hmm
@@ -76,7 +80,11 @@ class Users extends React.Component {
 	render() {
 		const {classes, theme} = this.props;
 		let listItems = [];
+		// Tell the loop what our pagination limits are
+		let max = (this.state.offset + pageSize);
+		if(max > this.state.users.length) max = this.state.users.length;
 		this.state.users.filter(this.filterUser).forEach((i, index) => {
+			if(index < this.state.offset || index > max) return;
 			let avatar = {
 				icon: i.role === 'ADMIN'? <AdminCircleIcon/> : <AccountCircleIcon/>,
 				bg: i.role === 'ADMIN' ? theme.palette.error.light : theme.palette.primary.light,
@@ -109,8 +117,8 @@ class Users extends React.Component {
 						{listItems.length > 0 ? listItems : <EmptyCard/>}
 					</List>
 				</Paper>
-				{this.state.users.length > pageSize ?
-					<Center><Pagination limit={pageSize} offset={0} total={this.state.users.length} nextPageLabel={"▶"} previousPageLabel={"◀"}/></Center>
+				{listItems.length > pageSize ?
+					<Center><Pagination limit={pageSize} offset={this.state.offset} total={listItems.length} nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, offset) => this.handlePageChange(offset)}/></Center>
 					:
 					<div/>
 				}

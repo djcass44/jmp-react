@@ -50,6 +50,10 @@ class Content extends React.Component {
 		this.state = {};
 	}
 
+	componentWillReceiveProps(nextProps, nextContext) {
+		this.setState({...nextProps});
+	}
+
 	render() {
 		const {theme, classes} = this.props;
 		let content = (<Grid item xs={12} sm={6}>

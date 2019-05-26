@@ -51,6 +51,7 @@ class Jumps extends React.Component {
 		super(props);
 		this.state = {
 			jumps: [],
+			offset: 0
 		};
 		this.filterJump = this.filterJump.bind(this);
 	}
@@ -71,6 +72,10 @@ class Jumps extends React.Component {
 		return jump.name.includes(this.state.searchFilter) || jump.location.includes(this.state.searchFilter);
 	}
 
+	handlePageChange(offset) {
+		this.setState({offset: offset});
+	}
+
 	getAliases(jump) {
 		if(jump.alias.length === 0) return "";
 		let items = [];
@@ -84,21 +89,26 @@ class Jumps extends React.Component {
 	render() {
 		const {classes, theme} = this.props;
 		let listItems = [];
+		// Tell the loop what our pagination limits are
+		let max = (this.state.offset + pageSize);
+		if(max > this.state.jumps.length) max = this.state.jumps.length;
+		// Loop-d-loop
 		this.state.jumps.filter(this.filterJump).forEach((i, index) => {
+			if(index < this.state.offset || index > max) return;
 			let avatar = {
-				icon: i.personal === 0 ? <PublicIcon/> : i.personal === 1 ? <AccountCircleIcon/> : <PublicIcon/>,
-				bg: i.personal === 0 ? theme.palette.primary.light : i.personal === 1 ? theme.palette.success.light : theme.palette.info.light,
-				fg: i.personal === 0 ? theme.palette.primary.dark : i.personal === 1 ? theme.palette.success.dark : theme.palette.info.dark
+				icon: i['personal'] === 0 ? <PublicIcon/> : i['personal'] === 1 ? <AccountCircleIcon/> : <PublicIcon/>,
+				bg: i['personal'] === 0 ? theme.palette.primary.light : i['personal'] === 1 ? theme.palette.success.light : theme.palette.info.light,
+				fg: i['personal'] === 0 ? theme.palette.primary.dark : i['personal'] === 1 ? theme.palette.success.dark : theme.palette.info.dark
 			};
 			// Generate the secondary text and add the owner (if it exists)
 			let secondary = <span><SchemeHighlight text={i.location}/>{
-				i.owner != null ? <span>&nbsp;&bull;&nbsp;{i.owner}</span> : ""
+				i['owner'] != null ? <span>&nbsp;&bull;&nbsp;{i['owner']}</span> : ""
 			}</span>;
 			let aliases = this.getAliases(i);
 			listItems.push((
 				<ListItem button disableRipple key={index}>
 					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg}}>
-						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon}/>
+						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon} initialImage={avatar.icon}/>
 					</Avatar>
 					<Tooltip disableFocusListener title={aliases} placement={"left"} interactive>
 						<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={secondary}/>
@@ -123,8 +133,8 @@ class Jumps extends React.Component {
 						{listItems.length > 0 ? listItems : <EmptyCard/>}
 					</List>
 				</Paper>
-				{this.state.jumps.length > pageSize ?
-					<Center><Pagination limit={pageSize} offset={0} total={this.state.jumps.length} nextPageLabel={"▶"} previousPageLabel={"◀"}/></Center>
+				{listItems.length > pageSize || this.state.offset > 0 ?
+					<Center><Pagination limit={pageSize} offset={this.state.offset} total={listItems.length} nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, offset) => this.handlePageChange(offset)}/></Center>
 					:
 					<div/>
 				}
