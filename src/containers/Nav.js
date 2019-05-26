@@ -29,7 +29,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
 import Divider from "@material-ui/core/es/Divider/Divider";
-import {setFilter} from "../actions/Generic";
+import {doNothing, setFilter} from "../actions/Generic";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
 import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 import Icon from "@mdi/react";
@@ -107,6 +107,7 @@ class Nav extends React.Component {
 	}
 
 	componentWillMount() {
+		this.handleLocationChange();
 		this.unlisten = this.props.history.listen(() => {
 			this.handleLocationChange();
 		});
@@ -114,10 +115,6 @@ class Nav extends React.Component {
 
 	componentWillUnmount() {
 		this.unlisten();
-	}
-
-	componentDidMount() {
-		this.handleLocationChange();
 	}
 
 	handleLocationChange() {
@@ -148,7 +145,7 @@ class Nav extends React.Component {
 			<AppBar position={"static"} color={"default"}>
 				<Toolbar>
 					<Typography className={classes.title} variant={"h6"} color={"inherit"}>
-						JMP
+						{process.env.REACT_APP_APP_NAME}
 					</Typography>
 					{/*<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"inherit"}>*/}
 					{/*	{process.env.REACT_APP_APP_MSG}*/}
@@ -179,12 +176,11 @@ class Nav extends React.Component {
 				onClose={this.handleMenuClose}>
 				<MenuItem disabled={true}>
 					<div>
-						{/*<Avatar />*/}
 						<span>{this.state.username !== '' ? this.state.username : 'Anonymous'}</span>
 					</div>
 				</MenuItem>
 				<Divider/>
-				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/"}><HomeIcon/>Home</MenuItem>
+				{window.location.pathname !== "/" ? <MenuItem component={Link} onClick={this.handleMenuClose} to={"/"}><HomeIcon/>Home</MenuItem> : ""}
 				{this.state.isLoggedIn === true ?
 					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/identity"}><Icon path={mdiAccountGroupOutline} size={1}/>Users &amp; Groups</MenuItem>
 					:
