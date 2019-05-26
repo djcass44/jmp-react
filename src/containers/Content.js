@@ -30,6 +30,7 @@ import Identity from "./content/Identity";
 import Token from "./content/jmp/Token";
 import Banner from "../components/widget/Banner";
 import Similar from "./content/jmp/Similar";
+import Settings from "./content/Settings";
 
 const styles = theme => ({
 	container: {
@@ -68,6 +69,7 @@ class Content extends React.Component {
 				<Route exact path={"/similar"} component={Similar} key={"similar"}/>
 				<Route exact path={"/login"} component={Login} key={"login"}/>
 				<Route exact path={"/logout"} component={Logout} key={"logout"}/>
+				<Route exact path={"/settings"} component={Settings} key={"settings"}/>
 				<Route component={NotFound} key={"notfound"}/>
 			</Switch>
 		</Grid>);

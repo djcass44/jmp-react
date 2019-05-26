@@ -23,6 +23,7 @@ import jumps from "./Jumps";
 import generic from "./Generic";
 import users from "./Users";
 import groups from "./Groups";
+import info from "./Info";
 
 const main = combineReducers({
 	auth,
@@ -31,6 +32,7 @@ const main = combineReducers({
 	jumps,
 	generic,
 	users,
-	groups
+	groups,
+	info
 });
 export default main;
