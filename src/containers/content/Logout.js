@@ -69,4 +69,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = ({
 	oauthLogout
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme()(Logout));
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Logout));

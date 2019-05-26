@@ -45,4 +45,4 @@ const mapStateToProps = state => ({
 	searchFilter: state.generic.searchFilter
 });
 const mapDispatchToProps = ({});
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme()(Identity)));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Identity)));

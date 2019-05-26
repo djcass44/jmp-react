@@ -113,4 +113,4 @@ const mapDispatchToProps = ({
 	getSimilar,
 	getSimilarFail
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme()(withRouter(Similar))));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(withRouter(Similar))));

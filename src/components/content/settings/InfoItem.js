@@ -37,4 +37,4 @@ class InfoItem extends React.Component {
 		);
 	}
 }
-export default withStyles(styles)(withTheme()(InfoItem));
+export default withStyles(styles)(withTheme(InfoItem));

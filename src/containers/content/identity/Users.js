@@ -92,8 +92,8 @@ class Users extends React.Component {
 			};
 			let secondary = <span>{Users.capitalise(i.role)}&nbsp;&bull;&nbsp;{Users.capitalise(i.from)}</span>;
 			listItems.push((
-				<ListItem button disableRipple key={index}>
-					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg}}>
+				<ListItem button disableRipple key={index} component={'li'}>
+					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
 						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon}/>
 					</Avatar>
 					<ListItemText primary={<span className={classes.title}>{i.username}</span>} secondary={secondary}/>
@@ -113,7 +113,7 @@ class Users extends React.Component {
 				{subHeader}
 				{this.state.loading === true ? <LinearProgress className={classes.grow} color={"primary"}/> : "" }
 				<Paper style={{borderRadius: 12, marginBottom: 8}}>
-					<List>
+					<List component={'ul'}>
 						{listItems.length > 0 ? listItems : <EmptyCard/>}
 					</List>
 				</Paper>
@@ -138,4 +138,4 @@ const mapDispatchToProps = ({
 	getUsers,
 
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme()(Users)));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Users)));

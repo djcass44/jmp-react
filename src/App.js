@@ -82,4 +82,4 @@ const mapDispatchToProps = ({
 	oauthRequest,
 	oauthUnready
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme()(withRouter(App)));
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(withRouter(App)));

@@ -17,7 +17,7 @@ class Settings extends React.Component {
 		this.setState({...nextProps});
 	}
 	render() {
-		const {classes, theme} = this.props;
+		const {classes} = this.props;
 		return (
 			<div>
 				<Center>
@@ -29,4 +29,4 @@ class Settings extends React.Component {
 		)
 	}
 }
-export default withStyles(styles)(withTheme()(Settings));
+export default withStyles(styles)(withTheme(Settings));

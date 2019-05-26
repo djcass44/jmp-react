@@ -74,7 +74,7 @@ class Content extends React.Component {
 			</Switch>
 		</Grid>);
 		return (<div className={classes.container}>
-			<Grid container spacing={40} className={classes.centred}>
+			<Grid container spacing={5} className={classes.centred}>
 				<Grid item sm={3}/>
 				{content}
 				<Grid item sm={3}/>
@@ -92,4 +92,4 @@ const mapStateToProps = state => ({
 	ready: state.auth.ready
 });
 const mapDispatchToProps = ({});
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme()(withRouter(Content))));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(withRouter(Content))));

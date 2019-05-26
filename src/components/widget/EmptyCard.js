@@ -21,18 +21,28 @@ import ListItemText from "@material-ui/core/es/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import {SentimentDissatisfied} from "@material-ui/icons";
 import {withTheme} from "@material-ui/core";
+import withStyles from "@material-ui/core/styles/withStyles";
+
+const styles = theme => ({
+	title: {fontFamily: "Manrope", fontWeight: 500},
+	avatar: {
+		backgroundColor: theme.palette.error.light,
+		color: theme.palette.error.dark,
+		marginRight: 12
+	}
+});
 
 class EmptyCard extends React.Component {
 	render() {
-		const {theme} = this.props;
+		const {classes} = this.props;
 		return (
-			<ListItem key={"null"}>
-				<Avatar style={{backgroundColor: theme.palette.error.light, color: theme.palette.error.dark}}>
+			<ListItem key={"null"} component={'li'}>
+				<Avatar className={classes.avatar}>
 					<SentimentDissatisfied/>
 				</Avatar>
-				<ListItemText primary={"Nothing could be found."}/>
+				<ListItemText className={classes.title} primary={"Nothing could be found."}/>
 			</ListItem>
 		)
 	}
 }
-export default withTheme()(EmptyCard);
+export default withStyles(styles)(withTheme(EmptyCard));

@@ -83,4 +83,4 @@ const mapDispatchToProps = ({
 	getInfoSystem,
 	getInfoHealth
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme()(Info)));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Info)));

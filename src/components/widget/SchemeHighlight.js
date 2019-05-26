@@ -41,4 +41,4 @@ class SchemeHighlight extends React.Component {
 		return (<span>{highlighted}{domain}</span>)
 	}
 }
-export default withStyles(styles)(withTheme()(SchemeHighlight));
+export default withStyles(styles)(withTheme(SchemeHighlight));

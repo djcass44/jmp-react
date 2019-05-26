@@ -66,4 +66,4 @@ class Banner extends React.Component {
 		</Card>
 	}
 }
-export default withStyles(styles)(withTheme()(Banner));
+export default withStyles(styles)(withTheme(Banner));

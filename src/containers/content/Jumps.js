@@ -37,7 +37,6 @@ import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import SortIcon from "@material-ui/icons/Sort";
 import {pageSize} from "../../constants";
-import {OAUTH_VERIFY} from "../../actions/Auth";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -107,8 +106,8 @@ class Jumps extends React.Component {
 			}</span>;
 			let aliases = this.getAliases(i);
 			listItems.push((
-				<ListItem button disableRipple key={index}>
-					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg}}>
+				<ListItem button disableRipple key={index} component={'li'}>
+					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
 						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon} initialImage={avatar.icon}/>
 					</Avatar>
 					<Tooltip disableFocusListener title={aliases} placement={"left"} interactive>
@@ -121,8 +120,8 @@ class Jumps extends React.Component {
 		const subHeader = (<ListSubheader className={classes.title} inset component={"div"}>
 			Jumps {this.state.searchFilter != null && this.state.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
 			{/*<div className={classes.grow}/>*/}
-			<IconButton className={classes.button} aria-label="Sort"><SortIcon fontSize={"small"}/></IconButton>
-			<IconButton className={classes.button} aria-label="Add"><AddIcon fontSize={"small"}/></IconButton>
+			<IconButton centerRipple={false} className={classes.button} aria-label="Sort"><SortIcon fontSize={"small"}/></IconButton>
+			<IconButton centerRipple={false} className={classes.button} aria-label="Add"><AddIcon fontSize={"small"}/></IconButton>
 		</ListSubheader>);
 
 		return (
@@ -130,7 +129,7 @@ class Jumps extends React.Component {
 				{subHeader}
 				{this.state.loading === true ? <LinearProgress className={classes.grow} color={"primary"}/> : "" }
 				<Paper style={{borderRadius: 12, marginBottom: 8}}>
-					<List>
+					<List component={'ul'}>
 						{listItems.length > 0 ? listItems : <EmptyCard/>}
 					</List>
 				</Paper>
@@ -154,4 +153,4 @@ const mapDispatchToProps = ({
 	rmJump
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme()(Jumps)));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Jumps)));

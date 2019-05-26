@@ -87,4 +87,4 @@ const mapDispatchToProps = ({
 	getTokenFail
 
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme()(Token)));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Token)));
