@@ -96,7 +96,6 @@ class Nav extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			anchorEl: null,
 			searchRoutes: ["/", "/identity"],
 			showSearch: true,
 			searchFilter: '',

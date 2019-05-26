@@ -55,7 +55,7 @@ class Users extends React.Component {
 
 	componentWillReceiveProps(nextProps, nextContext) {
 		// TODO check to see if anything has actually changed...
-		if(nextProps.headers !== this.state.headers) {
+		if(nextProps.headers !== this.state.headers || nextProps.ready !== this.state.ready) {
 			// Load jumps from the API
 			this.props.getUsers(nextProps.headers);
 		}
@@ -123,6 +123,7 @@ const mapStateToProps = state => ({
 	users: state.users.users || [],
 	loading: state.loading[USER_LOAD],
 	headers: state.auth.headers,
+	ready: state.auth.ready || false,
 	searchFilter: state.generic.searchFilter
 });
 const mapDispatchToProps = ({

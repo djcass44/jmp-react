@@ -18,9 +18,7 @@
 import {connect} from "react-redux";
 import {LinearProgress, withStyles, withTheme} from "@material-ui/core";
 import React from "react";
-import GroupIcon from "@material-ui/icons/GroupOutlined";
 import Avatar from "@material-ui/core/es/Avatar";
-import ReactImageFallback from "react-image-fallback";
 import ListItemText from "@material-ui/core/es/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import ListSubheader from "@material-ui/core/es/ListSubheader";

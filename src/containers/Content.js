@@ -16,14 +16,13 @@
  */
 
 import React from "react";
-import {CircularProgress, Grid} from "@material-ui/core";
+import {Grid, withStyles} from "@material-ui/core";
 import Jumps from "./content/Jumps";
 import {Switch, Route, withRouter} from "react-router-dom";
 import Login from "./content/Login";
 import {connect} from "react-redux";
-import {OAUTH_REFRESH, OAUTH_VERIFY, oauthRefresh, oauthRequest, oauthVerify} from "../actions/Auth";
+import {OAUTH_REFRESH, OAUTH_VERIFY} from "../actions/Auth";
 import NotFound from "./content/NotFound";
-import {LS_HEADERS, LS_REFRESH} from "../constants";
 import ErrorIcon from "@material-ui/icons/ErrorOutline";
 import Logout from "./content/Logout";
 import {withTheme} from "@material-ui/core";
@@ -32,36 +31,28 @@ import Token from "./content/jmp/Token";
 import Banner from "../components/widget/Banner";
 import Similar from "./content/jmp/Similar";
 
+const styles = theme => ({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		padding: 20
+	},
+	centred: {
+		flex: 1,
+		justifyContent: 'center'
+	}
+});
+
 class Content extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			refresh: localStorage.getItem(LS_REFRESH) || '',
-			headers: JSON.parse(localStorage.getItem(LS_HEADERS)) || {},
-		}
-	}
-
-	componentDidMount() {
-		this.props.oauthVerify(this.state.refresh, this.state.headers);
-	}
-
-	componentWillMount() {
-		this.unlisten = this.props.history.listen(() => {
-			this.props.oauthVerify(this.state.refresh, this.state.headers);
-		});
-	}
-
-	componentWillUnmount() {
-		this.unlisten();
-	}
-
-	componentWillReceiveProps(nextProps, nextContext) {
-		this.setState({...nextProps});
+		this.state = {};
 	}
 
 	render() {
-		const {theme} = this.props;
-		let content = this.state.loading === true ? (<Grid item xs={12} sm={6}><CircularProgress/></Grid>) : (<Grid item xs={12} sm={6}>
+		const {theme, classes} = this.props;
+		let content = (<Grid item xs={12} sm={6}>
 			{/* TODO fix the background colour of the banner avatar */}
 			<Banner avatarStyle={{backgroundColor: theme.palette.error.light, color: theme.palette.error.dark}} open={this.state.error != null} label={this.state.error} icon={
 				<ErrorIcon style={{color: theme.palette.error.dark}}/>
@@ -76,8 +67,8 @@ class Content extends React.Component {
 				<Route component={NotFound} key={"notfound"}/>
 			</Switch>
 		</Grid>);
-		return (<div style={{padding: 20}}>
-			<Grid container spacing={40}>
+		return (<div className={classes.container}>
+			<Grid container spacing={40} className={classes.centred}>
 				<Grid item sm={3}/>
 				{content}
 				<Grid item sm={3}/>
@@ -91,11 +82,8 @@ const mapStateToProps = state => ({
 	error: state.errors[OAUTH_REFRESH],
 	headers: state.auth.headers,
 	isLoggedIn: state.auth.isLoggedIn,
-	refresh: state.auth.refresh
+	refresh: state.auth.refresh,
+	ready: state.auth.ready
 });
-const mapDispatchToProps = ({
-	oauthVerify,
-	oauthRequest,
-	oauthRefresh
-});
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme()(withRouter(Content)));
+const mapDispatchToProps = ({});
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme()(withRouter(Content))));

@@ -78,7 +78,7 @@ class Similar extends React.Component {
 				fg: i.personal === 0 ? theme.palette.primary.dark : i.personal === 1 ? theme.palette.success.dark : theme.palette.info.dark
 			};
 			return (
-				<Tooltip disableFocusListener title={i.location} placement={"bottom"} interactive key={i.id}>
+				<Tooltip disableFocusListener title={i.location} placement={"bottom"} interactive key={`${i.id}${i.name}`}>
 					<Chip
 						avatar={<Avatar><Icon path={avatar.icon} size={1}/></Avatar>}
 						label={i.name}

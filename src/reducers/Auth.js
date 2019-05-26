@@ -16,7 +16,7 @@
  */
 
 import {LS_HEADERS, LS_REFRESH, LS_REQUEST, LS_USER} from "../constants";
-import {OAUTH_LOGOUT, OAUTH_REFRESH, OAUTH_REQUEST, OAUTH_VERIFY} from "../actions/Auth";
+import {OAUTH_LOGOUT, OAUTH_REFRESH, OAUTH_REQUEST, OAUTH_UNREADY, OAUTH_VERIFY} from "../actions/Auth";
 
 const auth = (state = {
 	request: localStorage.getItem(LS_REQUEST) || '',
@@ -57,7 +57,8 @@ const auth = (state = {
 				ready: true
 			}
 		}
-		case `${OAUTH_VERIFY}_FAILURE`: // probably never sent
+		case `${OAUTH_VERIFY}_FAILURE`:
+			return state;
 		case `${OAUTH_REQUEST}_FAILURE`: // this one shouldn't redirect to /login
 		case `${OAUTH_REFRESH}_FAILURE`:
 		case OAUTH_LOGOUT: {
@@ -76,6 +77,8 @@ const auth = (state = {
 				ready: true
 			}
 		}
+		case OAUTH_UNREADY:
+			return {...state, ready: false};
 		default:
 			return state;
 	}

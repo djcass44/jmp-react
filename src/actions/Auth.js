@@ -4,6 +4,7 @@ export const OAUTH_VERIFY = "OAUTH_VERIFY";
 export const OAUTH_REQUEST = "OAUTH_REQUEST";
 export const OAUTH_REFRESH = "OAUTH_REFRESH";
 export const OAUTH_LOGOUT = "OAUTH_LOGOUT";
+export const OAUTH_UNREADY = "OAUTH_UNREADY";
 
 export function oauthVerify(refresh, headers) {
 	return dispatch => {
@@ -25,9 +26,18 @@ export function oauthLogout() {
 		oauthLogoutDispatch(dispatch);
 	}
 }
+export function oauthUnready() {
+	return dispatch => {dispatch({type: OAUTH_UNREADY});}
+}
 
 function oauthVerifyDispatch(dispatch, refresh, headers) {
 	dispatch({type: OAUTH_VERIFY});
+	// Do a quick check to see if the user has purposefully logged out
+	if((refresh == null || refresh === "") || (headers == null || headers === "")) {
+		console.log("Skipping verify (no refresh/headers)");
+		dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
+		return;
+	}
 	client.get("/api/v2/oauth/valid", {headers: headers}).then( r => {
 		console.log(`verify valid`);
 		dispatch({
@@ -37,7 +47,7 @@ function oauthVerifyDispatch(dispatch, refresh, headers) {
 	}).catch(err => {
 		console.log(`verify failed: ${err}`);
 		console.log("lets try to refresh first");
-		// dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
+		dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
 		oauthRefreshDispatch(dispatch, refresh, headers)
 	});
 }
