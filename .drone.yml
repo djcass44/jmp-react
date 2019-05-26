@@ -1,0 +1,33 @@
+kind: pipeline
+name: frontend
+
+steps:
+  - name: build
+    image: plugins/docker
+    settings:
+      registry: docker.castive.dev
+      repo: docker.castive.dev/jmp-ui
+      tags: next
+      username:
+        from_secret: DOCKER_USERNAME
+      password:
+        from_secret: DOCKER_PASSWORD
+  - name: deploy
+    image: quay.io/honestbee/drone-kubernetes
+    settings:
+      deployment: jmp-ui-next
+      repo: docker.castive.dev/jmp-ui
+      tag: next
+      container: jmp-ui
+      namespace:
+        from_secret: KUBERNETES_NAMESPACE
+      kubernetes_server:
+        from_secret: KUBERNETES_SERVER
+      kubernetes_cert:
+        from_secret: KUBERNETES_CERT
+      kubernetes_token:
+        from_secret: KUBERNETES_TOKEN
+trigger:
+  when:
+    event:
+      - push
