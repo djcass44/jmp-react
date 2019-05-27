@@ -17,7 +17,7 @@
 
 import {GET_SIMILAR, JUMP_LOAD} from "../actions/Jumps";
 
-const jumps = (state = {jumps: []}, action) => {
+const jumps = (state = {jumps: [], similar: []}, action) => {
 	switch (action.type) {
 		case `${JUMP_LOAD}_SUCCESS`: {
 			let items = action.data.map(i => {return i});

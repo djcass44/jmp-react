@@ -48,8 +48,9 @@ class Users extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			users: [],
-			offset: 0
+			users: props.users,
+			offset: 0,
+			headers: props.headers
 		};
 		this.filterUser = this.filterUser.bind(this);
 	}

@@ -50,8 +50,9 @@ class Jumps extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			jumps: [],
-			offset: 0
+			jumps: props.jumps,
+			offset: 0,
+			headers: props.headers
 		};
 		this.filterJump = this.filterJump.bind(this);
 	}

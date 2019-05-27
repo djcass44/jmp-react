@@ -35,7 +35,9 @@ class Login extends React.Component {
 				username: '',
 				password: ''
 			},
-			submitted: false
+			submitted: false,
+			isLoggedIn: props.isLoggedIn,
+			version: props.version
 		};
 		this.handleClick = this.handleClick.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -81,7 +83,7 @@ class Login extends React.Component {
 					:
 					<Card>
 						<CardContent style={{margin: 12}}>
-							<Grid container spacing={24} alignContent={"center"} justify={"center"} component={ValidatorForm} ref={"form"} onSubmit={this.handleClick}>
+							<Grid container spacing={4} alignContent={"center"} justify={"center"} component={ValidatorForm} ref={"form"} onSubmit={this.handleClick}>
 								<Grid item xs={12}>
 									<Center><img src={`${process.env.PUBLIC_URL}/jmp.png`} alt={"App icon"} height={72}/></Center>
 									<Typography variant={"h2"} align={"center"}>Login</Typography>

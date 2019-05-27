@@ -24,16 +24,16 @@ import Theme from "./style/Palette";
 import {withRouter} from "react-router-dom";
 import {OAUTH_REFRESH, OAUTH_VERIFY, oauthRequest, oauthUnready, oauthVerify} from "./actions/Auth";
 import {connect} from "react-redux";
-import {LS_HEADERS, LS_REFRESH} from "./constants";
 import {CircularProgress, Grid} from "@material-ui/core";
 
 class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			refresh: localStorage.getItem(LS_REFRESH) || '',
-			headers: JSON.parse(localStorage.getItem(LS_HEADERS)) || {},
-			ready: false
+			refresh: props.refresh,
+			headers: props.headers,
+			isLoggedIn: props.isLoggedIn,
+			ready: props.ready
 		}
 	}
 

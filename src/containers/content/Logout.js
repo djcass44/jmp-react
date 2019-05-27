@@ -28,7 +28,9 @@ import {withTheme} from "@material-ui/core";
 class Logout extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			isLoggedIn: props.isLoggedIn
+		};
 	}
 
 	componentDidMount() {

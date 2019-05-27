@@ -34,7 +34,11 @@ class Info extends React.Component {
 		super(props);
 		this.state = {
 			expanded: '',
-			status: {}
+			status: {
+				headers: props.headers,
+				isAdmin: props.isAdmin,
+				isLoggedIn: props.isLoggedIn
+			}
 		};
 	}
 

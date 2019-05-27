@@ -48,7 +48,11 @@ const styles = theme => ({
 class Content extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			headers: props.headers,
+			isLoggedIn: props.isLoggedIn,
+			refresh: props.refresh
+		};
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {

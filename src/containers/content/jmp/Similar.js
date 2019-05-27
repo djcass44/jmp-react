@@ -46,7 +46,8 @@ class Similar extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			similar: []
+			similar: props.similar,
+			headers: props.headers
 		};
 	}
 	componentDidMount() {
@@ -104,7 +105,7 @@ class Similar extends React.Component {
 }
 
 const mapStateToProps = state => ({
-	similar: state.jumps.similar || [],
+	similar: state.jumps.similar,
 	loading: state.loading[GET_SIMILAR],
 	error: state.errors[GET_SIMILAR],
 	headers: state.auth.headers,

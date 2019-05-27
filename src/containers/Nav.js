@@ -29,7 +29,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
 import Divider from "@material-ui/core/es/Divider/Divider";
-import {doNothing, setFilter} from "../actions/Generic";
+import {setFilter} from "../actions/Generic";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
 import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 import Icon from "@mdi/react";
@@ -99,11 +99,15 @@ class Nav extends React.Component {
 			searchRoutes: ["/", "/identity"],
 			showSearch: true,
 			searchFilter: '',
+			isLoggedIn: props.isLoggedIn,
+			isAdmin: props.isAdmin,
+			username: props.username
 		};
 	}
 	// Why isn't this called on start?
 	componentWillReceiveProps(nextProps, nextContext) {
 		this.setState({...nextProps});
+		console.log(`nav props updated`);
 	}
 
 	componentWillMount() {
@@ -174,23 +178,23 @@ class Nav extends React.Component {
 				transformOrigin={{ vertical: 'top', horizontal: 'right' }}
 				open={isMenuOpen}
 				onClose={this.handleMenuClose}>
-				<MenuItem disabled={true}>
+				<MenuItem disabled={true} button={false} component={'div'}>
 					<div>
-						<span>{this.state.username !== '' ? this.state.username : 'Anonymous'}</span>
+						<span>{this.state.username != null && this.state.username !== '' ? this.state.username : 'Anonymous'}</span>
 					</div>
 				</MenuItem>
 				<Divider/>
-				{window.location.pathname !== "/" ? <MenuItem component={Link} onClick={this.handleMenuClose} to={"/"}><HomeIcon/>Home</MenuItem> : ""}
+				{window.location.pathname !== "/" ? <MenuItem component={Link} onClick={this.handleMenuClose} to={"/"} button={true}><HomeIcon/>Home</MenuItem> : ""}
 				{this.state.isLoggedIn === true ?
-					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/identity"}><Icon path={mdiAccountGroupOutline} size={1}/>Users &amp; Groups</MenuItem>
+					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/identity"} button={true}><Icon path={mdiAccountGroupOutline} size={1}/>Users &amp; Groups</MenuItem>
 					:
 					""
 				}
-				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/settings"}><SettingsIcon/>Settings</MenuItem>
+				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/settings"} button={true}><SettingsIcon/>Settings</MenuItem>
 				{this.state.isLoggedIn === false ?
-					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/login"}><Icon path={mdiLogin} size={1}/>Login</MenuItem>
+					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/login"} button={true}><Icon path={mdiLogin} size={1}/>Login</MenuItem>
 					:
-					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/logout"}><Icon path={mdiLogout} size={1}/>Logout</MenuItem>
+					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/logout"} button={true}><Icon path={mdiLogout} size={1}/>Logout</MenuItem>
 				}
 			</Menu>
 		</div>

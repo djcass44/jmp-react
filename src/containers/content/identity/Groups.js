@@ -47,8 +47,9 @@ class Groups extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			groups: [],
-			offset: 0
+			groups: props.groups,
+			offset: 0,
+			headers: props.headers
 		};
 		this.filterGroup = this.filterGroup.bind(this);
 	}

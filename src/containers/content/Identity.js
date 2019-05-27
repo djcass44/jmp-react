@@ -29,7 +29,14 @@ const styles = theme => ({
 	grow: {flexGrow: 1}
 });
 
-class Identity extends React.Component{
+class Identity extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			headers: props.headers
+		}
+	}
+
 	render() {
 		return (
 			<div>

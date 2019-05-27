@@ -47,7 +47,6 @@ function oauthVerifyDispatch(dispatch, refresh, headers) {
 	}).catch(err => {
 		console.log(`verify failed: ${err}`);
 		console.log("lets try to refresh first");
-		dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
 		oauthRefreshDispatch(dispatch, refresh, headers)
 	});
 }
@@ -65,6 +64,7 @@ function oauthRequestDispatch(dispatch, data) {
 		})
 	}).catch(err => {
 		console.log(`request failed: ${err}`);
+		dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
 		dispatch({type: `${OAUTH_REQUEST}_FAILURE`, data: err.toString()});
 	});
 }
