@@ -4,6 +4,7 @@ import Center from "react-center";
 import {withTheme, withStyles} from "@material-ui/core";
 import Info from "./settings/Info";
 import BackButton from "../../components/widget/BackButton";
+import General from "./settings/General";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -25,7 +26,8 @@ class Settings extends React.Component {
 				<Center>
 					<Typography variant={"h3"} className={classes.title}>Settings</Typography>
 				</Center>
-				<Center><Typography variant={"subtitle1"}>Manage JMP and its settings to make yourself more at home</Typography></Center>
+				<Center><Typography style={{padding: 24}} variant={"subtitle1"}>Manage JMP and its settings to make yourself more at home</Typography></Center>
+				<General/>
 				<Info/>
 			</div>
 		)

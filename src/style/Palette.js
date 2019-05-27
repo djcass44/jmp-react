@@ -16,6 +16,7 @@
  */
 
 import {createMuiTheme} from "@material-ui/core";
+import {LS_DARK} from "../constants";
 
 const theme = createMuiTheme({
 	palette: {
@@ -48,7 +49,8 @@ const theme = createMuiTheme({
 			main: '#36B37E',
 			light: '#E3FCEF',
 			dark: '#00875A'
-		}
+		},
+		type: localStorage.getItem(LS_DARK) === 'true' ? 'dark' : 'light'
 	},
 	overrides: {
 		MuiTooltip: {
@@ -56,6 +58,6 @@ const theme = createMuiTheme({
 				fontSize: "0.9rem"
 			}
 		}
-	}
+	},
 });
 export default theme;

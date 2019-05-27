@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
-import {withStyles, withTheme} from "@material-ui/core";
+import {ListSubheader, withStyles, withTheme} from "@material-ui/core";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import {
 	GET_INFO_APP,
@@ -11,6 +11,7 @@ import {
 	getInfoSystem
 } from "../../../actions/Info";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
+import JSONPretty from "react-json-pretty";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -26,7 +27,7 @@ const styles = theme => ({
 	statusWarn: {
 		color: theme.palette.warning.main
 	},
-	grow: {flexGrow: 1}
+	grow: {flexGrow: 1},
 });
 
 class Info extends React.Component {
@@ -34,11 +35,10 @@ class Info extends React.Component {
 		super(props);
 		this.state = {
 			expanded: '',
-			status: {
-				headers: props.headers,
-				isAdmin: props.isAdmin,
-				isLoggedIn: props.isLoggedIn
-			}
+			status: {},
+			headers: props.headers,
+			isAdmin: props.isAdmin,
+			isLoggedIn: props.isLoggedIn
 		};
 	}
 
@@ -61,11 +61,14 @@ class Info extends React.Component {
 				<p>LDAP... {this.state.status['ldap'] === true ? <span className={classes.statusOK}>Ok</span> : this.state.status['ldap'] == null ? <span className={classes.statusWarn}>Disabled</span> : <span className={classes.statusFail}>Error</span>}</p>
 			</div>
 		);
+		const appInfo = (<JSONPretty data={JSON.stringify(this.state.appInfo)}/>);
+		const sysInfo = (<JSONPretty data={JSON.stringify(this.state.systemInfo)}/>);
 		return (
 			<div>
+				<ListSubheader className={classes.title} inset component={"div"}>Information &amp; status</ListSubheader>
 				<InfoItem title={"Application health"} content={status} open={true}/>
-				<InfoItem title={"Application information"} content={JSON.stringify(this.state.appInfo)} error={this.state.appInfoError}/>
-				<InfoItem title={"System information"} content={JSON.stringify(this.state.systemInfo)} error={this.state.systemInfoError}/>
+				<InfoItem title={"Application information"} content={appInfo} error={this.state.appInfoError}/>
+				<InfoItem title={"System information"} content={sysInfo} error={this.state.systemInfoError}/>
 			</div>
 		);
 	}

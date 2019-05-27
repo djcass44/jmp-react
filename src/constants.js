@@ -8,6 +8,8 @@ export const LS_LOGIN = "jmpr-login";
 export const LS_ADM = "jmpr-adm";
 export const LS_NAME = "jmpr-name";
 
+export const LS_DARK = "jmpr-dark";
+
 export const pageSize = 8;
 
 export const BASE_URL = `${process.env.REACT_APP_API_SCHEME}://${process.env.REACT_APP_API_URL}`;
