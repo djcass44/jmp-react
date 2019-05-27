@@ -5,6 +5,7 @@ import {withTheme, withStyles} from "@material-ui/core";
 import Info from "./settings/Info";
 import BackButton from "../../components/widget/BackButton";
 import General from "./settings/General";
+import Auth from "./settings/Auth";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -28,6 +29,7 @@ class Settings extends React.Component {
 				</Center>
 				<Center><Typography style={{padding: 24}} variant={"subtitle1"}>Manage JMP and its settings to make yourself more at home</Typography></Center>
 				<General/>
+				<Auth/>
 				<Info/>
 			</div>
 		)

@@ -107,7 +107,6 @@ class Nav extends React.Component {
 	// Why isn't this called on start?
 	componentWillReceiveProps(nextProps, nextContext) {
 		this.setState({...nextProps});
-		console.log(`nav props updated`);
 	}
 
 	componentWillMount() {
