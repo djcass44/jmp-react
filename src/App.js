@@ -24,7 +24,15 @@ import Theme from "./style/Palette";
 import {withRouter} from "react-router-dom";
 import {OAUTH_REFRESH, OAUTH_VERIFY, oauthRequest, oauthUnready, oauthVerify} from "./actions/Auth";
 import {connect} from "react-redux";
-import {CircularProgress, Grid} from "@material-ui/core";
+import withStyles from "@material-ui/core/styles/withStyles";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import Toolbar from "@material-ui/core/Toolbar";
+import AppBar from "@material-ui/core/AppBar";
+import Typography from "@material-ui/core/Typography";
+
+const styles = theme => ({
+	title: {fontFamily: "Manrope", fontWeight: 500},
+});
 
 class App extends React.Component {
 	constructor(props) {
@@ -52,6 +60,20 @@ class App extends React.Component {
 		this.unlisten();
 	}
 	render() {
+		const {classes} = this.props;
+		const loading = (
+			// TODO move this into the Nav component (via a loading === true check)
+			<div>
+				<AppBar position={"static"} color={"default"}>
+					<Toolbar>
+						<Typography className={classes.title} variant={"h6"} color={"inherit"}>
+							{process.env.REACT_APP_APP_NAME}
+						</Typography>
+					</Toolbar>
+				</AppBar>
+				<LinearProgress style={{flex: 1}}/>
+			</div>
+		);
 		return (
 			<div className={"App"}>
 				<MuiThemeProvider theme={Theme}>
@@ -61,7 +83,7 @@ class App extends React.Component {
 							<Content/>
 						</div>
 						:
-						<Grid item xs={12} sm={6}><CircularProgress/></Grid>
+						loading
 					}
 				</MuiThemeProvider>
 			</div>
@@ -82,4 +104,4 @@ const mapDispatchToProps = ({
 	oauthRequest,
 	oauthUnready
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(withRouter(App)));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(withRouter(App))));
