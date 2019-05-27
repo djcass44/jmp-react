@@ -20,6 +20,7 @@ import {withStyles, withTheme} from "@material-ui/core";
 import {connect} from "react-redux";
 import Users from "./identity/Users";
 import Groups from "./identity/Groups";
+import BackButton from "../../components/widget/BackButton";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -40,6 +41,7 @@ class Identity extends React.Component {
 	render() {
 		return (
 			<div>
+				<BackButton label={"Back to home"} to={"/"}/>
 				<Users/>
 				<Groups/>
 			</div>

@@ -3,6 +3,7 @@ import Typography from "@material-ui/core/Typography";
 import Center from "react-center";
 import {withTheme, withStyles} from "@material-ui/core";
 import Info from "./settings/Info";
+import BackButton from "../../components/widget/BackButton";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -20,6 +21,7 @@ class Settings extends React.Component {
 		const {classes} = this.props;
 		return (
 			<div>
+				<BackButton label={"Back to home"} to={"/"}/>
 				<Center>
 					<Typography variant={"h3"} className={classes.title}>Settings</Typography>
 				</Center>
