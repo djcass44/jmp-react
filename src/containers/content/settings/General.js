@@ -16,10 +16,12 @@
  */
 
 import React from "react";
-import {FormControlLabel, ListSubheader, Switch, withStyles} from "@material-ui/core";
+import {FormControlLabel, ListSubheader, Switch, withStyles, withTheme} from "@material-ui/core";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import {LS_DARK} from "../../../constants";
 import Button from "@material-ui/core/Button";
+import Icon from "@mdi/react";
+import {mdiSettingsOutline} from "@mdi/js";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -50,10 +52,10 @@ class General extends React.Component {
 	}
 
 	render() {
-		const {classes} = this.props;
+		const {classes, theme} = this.props;
 		const visual = (
 			<div>
-				<p style={{color: 'red'}}>BETA: This feature is incomplete and will lead to graphical issues.</p>
+				<p style={{color: theme.palette.error.main}}>BETA: This feature is incomplete and will lead to graphical issues.</p>
 				<FormControlLabel control={
 					<Switch checked={this.state.dark} onChange={this.handleDarkChange}/>
 				} label={"Dark theme"}/>
@@ -63,9 +65,11 @@ class General extends React.Component {
 		return (
 			<div>
 				<ListSubheader className={classes.title} inset component={"div"}>General</ListSubheader>
-				<InfoItem title={"Visuals & theme"} content={visual}/>
+				<InfoItem title={"Visuals & theme"} content={visual} icon={
+					<Icon style={{paddingRight: 8}} path={mdiSettingsOutline} size={1} color={theme.palette.primary.main}/>
+				}/>
 			</div>
 		)
 	}
 }
-export default withStyles(styles)(General);
+export default withStyles(styles)(withTheme(General));

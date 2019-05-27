@@ -12,6 +12,8 @@ import {
 } from "../../../actions/Info";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import JSONPretty from "react-json-pretty";
+import {mdiApplication, mdiBugCheckOutline, mdiMemory} from "@mdi/js";
+import Icon from "@mdi/react";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -52,7 +54,7 @@ class Info extends React.Component {
 	}
 
 	render() {
-		const {classes} = this.props;
+		const {classes, theme} = this.props;
 		const status = (
 			<div>
 				{this.state.statusLoad === true ? <LinearProgress/> : ""}
@@ -66,9 +68,15 @@ class Info extends React.Component {
 		return (
 			<div>
 				<ListSubheader className={classes.title} inset component={"div"}>Information &amp; status</ListSubheader>
-				<InfoItem title={"Application health"} content={status} open={true}/>
-				<InfoItem title={"Application information"} content={appInfo} error={this.state.appInfoError}/>
-				<InfoItem title={"System information"} content={sysInfo} error={this.state.systemInfoError}/>
+				<InfoItem title={"Application health"} content={status} open={true} icon={
+					<Icon style={{paddingRight: 8}} path={mdiBugCheckOutline} size={1} color={theme.palette.error.main}/>
+				}/>
+				<InfoItem title={"Application information"} content={appInfo} error={this.state.appInfoError} icon={
+					<Icon style={{paddingRight: 8}} path={mdiApplication} size={1} color={theme.palette.info.main}/>
+				}/>
+				<InfoItem title={"System information"} content={sysInfo} error={this.state.systemInfoError} icon={
+					<Icon style={{paddingRight: 8}} path={mdiMemory} size={1} color={theme.palette.secondary.main}/>
+				}/>
 			</div>
 		);
 	}

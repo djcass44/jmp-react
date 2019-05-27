@@ -27,6 +27,7 @@ class InfoItem extends React.Component {
 		return (
 			<ExpansionPanel defaultExpanded={this.props.open}>
 				<ExpansionPanelSummary expandIcon={<Icon path={mdiChevronDown} size={1}/>} aria-controls="panel1bh-content" id="panel1bh-header">
+					{this.props.icon}
 					<Typography className={classes.title}>{this.props.title}</Typography>
 				</ExpansionPanelSummary>
 				<ExpansionPanelDetails>
