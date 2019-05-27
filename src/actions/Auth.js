@@ -86,4 +86,5 @@ function oauthRefreshDispatch(dispatch, refresh, headers) {
 }
 function oauthLogoutDispatch(dispatch) {
 	dispatch({type: `${OAUTH_LOGOUT}_REQUEST`});
+	dispatch({type: `${OAUTH_LOGOUT}_SUCCESS`});
 }

@@ -65,7 +65,7 @@ const auth = (state = {
 			return state;
 		case `${OAUTH_REQUEST}_FAILURE`: // this one shouldn't redirect to /login
 		case `${OAUTH_REFRESH}_FAILURE`:
-		case OAUTH_LOGOUT: {
+		case `${OAUTH_LOGOUT}_REQUEST`: {
 			localStorage.removeItem(LS_REQUEST);
 			localStorage.removeItem(LS_REFRESH);
 			localStorage.removeItem(LS_HEADERS);

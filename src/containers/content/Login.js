@@ -26,6 +26,7 @@ import {connect} from "react-redux";
 import {TextValidator, ValidatorForm} from "react-material-ui-form-validator";
 import Center from "react-center";
 import {getVersion} from "../../actions/Generic";
+import BackButton from "../../components/widget/BackButton";
 
 class Login extends React.Component {
 	constructor(props) {
@@ -78,6 +79,7 @@ class Login extends React.Component {
 
 		return(
 			<div>
+				<BackButton label={"Back to home"} to={"/"}/>
 				{this.state.loading || this.state.isLoggedIn === true ?
 					<CircularProgress/>
 					:
