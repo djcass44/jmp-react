@@ -34,6 +34,7 @@ import HomeIcon from "@material-ui/icons/HomeOutlined";
 import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline, mdiLogin, mdiLogout} from "@mdi/js";
+import Badge from "@material-ui/core/Badge";
 
 const styles = theme => ({
 	root: {width: '100%'},
@@ -147,9 +148,11 @@ class Nav extends React.Component {
 		return <div className={classes.root}>
 			<AppBar position={"static"} color={"default"}>
 				<Toolbar>
-					<Typography className={classes.title} variant={"h6"} color={"inherit"}>
-						{process.env.REACT_APP_APP_NAME}
-					</Typography>
+					<Badge color={"primary"} badgeContent={"BETA"}>
+						<Typography className={classes.title} variant={"h6"} color={"inherit"}>
+							{process.env.REACT_APP_APP_NAME}
+						</Typography>
+					</Badge>
 					{/*<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"inherit"}>*/}
 					{/*	{process.env.REACT_APP_APP_MSG}*/}
 					{/*</Typography>*/}

@@ -22,6 +22,7 @@ import {LS_DARK} from "../../../constants";
 import Button from "@material-ui/core/Button";
 import Icon from "@mdi/react";
 import {mdiSettingsOutline} from "@mdi/js";
+import Badge from "@material-ui/core/Badge";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -65,7 +66,7 @@ class General extends React.Component {
 		return (
 			<div>
 				<ListSubheader className={classes.title} inset component={"div"}>General</ListSubheader>
-				<InfoItem title={"Visuals & theme"} content={visual} icon={
+				<InfoItem title={<Badge color={"primary"} badgeContent={"BETA"}>Visuals & theme</Badge>} content={visual} icon={
 					<Icon style={{paddingRight: 8}} path={mdiSettingsOutline} size={1} color={theme.palette.primary.main}/>
 				}/>
 			</div>
