@@ -15,7 +15,7 @@ steps:
   - name: deploy
     image: quay.io/honestbee/drone-kubernetes
     settings:
-      deployment: jmp-ui-next
+      deployment: next-jmp-ui
       repo: docker.castive.dev/jmp-ui
       tag: next
       container: jmp-ui
