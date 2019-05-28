@@ -21,7 +21,7 @@ import ListSubheader from "@material-ui/core/es/ListSubheader/ListSubheader";
 import ListItem from "@material-ui/core/ListItem";
 import Avatar from "@material-ui/core/es/Avatar/Avatar";
 import ListItemText from "@material-ui/core/es/ListItemText/ListItemText";
-import {JUMP_LOAD, listJumps, rmJump} from "../../actions/Jumps";
+import {JUMP_LOAD, listJumps, rmJump, subscribeChangesInJumps} from "../../actions/Jumps";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import Pagination from "material-ui-flat-pagination";
@@ -58,6 +58,7 @@ class Jumps extends React.Component {
 	}
 	componentDidMount() {
 		this.props.listJumps(this.state.headers);
+		this.props.subscribeChangesInJumps(this.state.headers);
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {
@@ -151,7 +152,8 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = ({
 	listJumps,
-	rmJump
+	rmJump,
+	subscribeChangesInJumps
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Jumps)));

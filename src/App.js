@@ -29,6 +29,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Toolbar from "@material-ui/core/Toolbar";
 import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
+import {Helmet} from "react-helmet";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -60,7 +61,7 @@ class App extends React.Component {
 		this.unlisten();
 	}
 	render() {
-		const {classes} = this.props;
+		const {classes, theme} = this.props;
 		const loading = (
 			// TODO move this into the Nav component (via a loading === true check)
 			<div>
@@ -77,6 +78,7 @@ class App extends React.Component {
 		return (
 			<div className={"App"}>
 				<MuiThemeProvider theme={Theme}>
+					<Helmet><meta name={"theme-color"} content={theme.palette.primary.main}/></Helmet>
 					{this.state.loading === false ?
 						<div>
 							<Nav/>

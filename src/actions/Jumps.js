@@ -1,8 +1,10 @@
-import {client} from "../constants";
+import {client, socket} from "../constants";
 
 export const JUMP_LOAD = "JUMP_LOAD";
 export const JUMP_RM = "JUMP_RM";
 export const GET_SIMILAR = "GET_SIMILAR";
+
+export const SOCKET_UPDATE_JUMP = "EVENT_UPDATE";
 
 export function listJumps(headers) {
 	return dispatch => {
@@ -21,6 +23,13 @@ export function getSimilar(headers, query) {
 }
 export function getSimilarFail(err) {
 	return dispatch => {dispatch({type: `${GET_SIMILAR}_FAILURE`, data: err});}
+}
+export function subscribeChangesInJumps(headers) {
+	return async dispatch => {
+		socket.on(SOCKET_UPDATE_JUMP, () => {
+			listJumpsDispatch(dispatch, headers);
+		});
+	}
 }
 
 function listJumpsDispatch(dispatch, headers) {
