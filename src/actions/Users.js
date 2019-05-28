@@ -14,13 +14,22 @@
  *    limitations under the License.
  *
  */
-import {client} from "../constants";
+import {client, socket} from "../constants";
 
 export const USER_LOAD = "USER_LOAD";
+
+export const SOCKET_UPDATE_USERS = "EVENT_UPDATE_USER";
 
 export function getUsers(headers) {
 	return dispatch => {
 		getUsersDispatch(dispatch, headers);
+	}
+}
+export function subscribeChangesInUsers(headers) {
+	return async dispatch => {
+		socket.on(SOCKET_UPDATE_USERS, () => {
+			getUsersDispatch(dispatch, headers);
+		});
 	}
 }
 

@@ -15,7 +15,7 @@
  *
  */
 
-import {getUsers, USER_LOAD} from "../../../actions/Users";
+import {getUsers, subscribeChangesInUsers, USER_LOAD} from "../../../actions/Users";
 import {connect} from "react-redux";
 import {LinearProgress, withStyles, withTheme} from "@material-ui/core";
 import React from "react";
@@ -66,6 +66,7 @@ class Users extends React.Component {
 
 	componentDidMount() {
 		this.props.getUsers(this.state.headers);
+		this.props.subscribeChangesInUsers(this.state.headers);
 	}
 	filterUser(user) {
 		return user.username.toLowerCase().includes(this.state.searchFilter);
@@ -137,6 +138,7 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = ({
 	getUsers,
+	subscribeChangesInUsers
 
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Users)));

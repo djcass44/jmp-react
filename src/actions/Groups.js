@@ -14,13 +14,22 @@
  *    limitations under the License.
  *
  */
-import {client} from "../constants";
+import {client, socket} from "../constants";
 
 export const GROUP_LOAD = "GROUP_LOAD";
+
+export const SOCKET_UPDATE_GROUPS = "EVENT_UPDATE_GROUP";
 
 export function getGroups(headers) {
 	return dispatch => {
 		getGroupsDispatch(dispatch, headers);
+	}
+}
+export function subscribeChangesInGroups(headers) {
+	return async dispatch => {
+		socket.on(SOCKET_UPDATE_GROUPS, () => {
+			getGroupsDispatch(dispatch, headers);
+		})
 	}
 }
 
@@ -33,5 +42,5 @@ function getGroupsDispatch(dispatch, headers) {
 		});
 	}).catch(err => {
 		dispatch({type: `${GROUP_LOAD}_FAILURE`, data: err.toString()});
-	})
+	});
 }
