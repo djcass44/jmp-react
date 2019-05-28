@@ -37,6 +37,16 @@ import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import SortIcon from "@material-ui/icons/Sort";
 import {pageSize} from "../../constants";
+import posed, {PoseGroup} from "react-pose";
+
+const Item = posed.div({
+	enter: {opacity: 1},
+	exit: {opacity: 0}
+});
+const LItem = posed.li({
+	enter: {opacity: 1},
+	exit: {opacity: 0}
+});
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -108,7 +118,7 @@ class Jumps extends React.Component {
 			}</span>;
 			let aliases = this.getAliases(i);
 			listItems.push((
-				<ListItem button disableRipple key={index} component={'li'}>
+				<ListItem button disableRipple key={i.id} component={LItem}>
 					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
 						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon} initialImage={avatar.icon}/>
 					</Avatar>
@@ -127,20 +137,22 @@ class Jumps extends React.Component {
 		</ListSubheader>);
 
 		return (
-			<div>
-				{subHeader}
-				{this.state.loading === true ? <LinearProgress className={classes.grow} color={"primary"}/> : "" }
-				<Paper style={{borderRadius: 12, marginBottom: 8}}>
-					<List component={'ul'}>
-						{listItems.length > 0 ? listItems : <EmptyCard/>}
-					</List>
-				</Paper>
-				{listItems.length > pageSize || this.state.offset > 0 ?
-					<Center><Pagination limit={pageSize} offset={this.state.offset} total={listItems.length} nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, offset) => this.handlePageChange(offset)}/></Center>
-					:
-					<div/>
-				}
-			</div>
+			<PoseGroup animateOnMount={true}>
+				<Item key={"root"}>
+					{subHeader}
+					{this.state.loading === true ? <LinearProgress className={classes.grow} color={"primary"}/> : "" }
+					<Paper style={{borderRadius: 12, marginBottom: 8}}>
+						<List component={'ul'}>
+							{listItems.length > 0 ? listItems : <EmptyCard/>}
+						</List>
+					</Paper>
+					{listItems.length > pageSize || this.state.offset > 0 ?
+						<Center><Pagination limit={pageSize} offset={this.state.offset} total={listItems.length} nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, offset) => this.handlePageChange(offset)}/></Center>
+						:
+						<div/>
+					}
+				</Item>
+			</PoseGroup>
 		)
 	}
 }
