@@ -15,7 +15,8 @@
  *
  */
 
-import {GENERIC_FILTER_SET, GENERIC_GET_VERSION} from "../actions/Generic";
+import {GENERIC_FILTER_SET, GENERIC_GET_VERSION, SOCKET_APP_INIT} from "../actions/Generic";
+import {LS_APPID} from "../constants";
 
 const generic = (state = {
 	searchFilter: ''
@@ -26,6 +27,14 @@ const generic = (state = {
 		}
 		case `${GENERIC_GET_VERSION}_SUCCESS`: {
 			return {...state, version: action.data}
+		}
+		case `${SOCKET_APP_INIT}`: {
+			let id = localStorage.getItem(LS_APPID);
+			if(id !== action.data) {
+				localStorage.setItem(LS_APPID, action.data);
+				window.location.reload();
+			}
+			return state;
 		}
 		default:
 			return state;

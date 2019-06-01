@@ -30,6 +30,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import {Helmet} from "react-helmet";
+import {subscribeAppInit} from "./actions/Generic";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -55,6 +56,9 @@ class App extends React.Component {
 			this.props.oauthUnready();
 			this.props.oauthVerify(this.state.refresh, this.state.headers);
 		});
+	}
+	componentDidMount() {
+		this.props.subscribeAppInit();
 	}
 
 	componentWillUnmount() {
@@ -104,6 +108,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = ({
 	oauthVerify,
 	oauthRequest,
-	oauthUnready
+	oauthUnready,
+	subscribeAppInit
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(withRouter(App))));

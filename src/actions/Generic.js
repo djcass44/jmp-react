@@ -1,9 +1,11 @@
-import {client} from "../constants";
+import {client, socket} from "../constants";
 
 export const GENERIC_FILTER_SET = "GENERIC_FILTER_SET";
 export const GENERIC_GET_VERSION = "GENERIC_GET_VERSION";
 export const GENERIC_GET_TOKEN = "GENERIC_GET_TOKEN";
 export const GENERIC_DO_NOTHING = "GENERIC_DO_NOTHING";
+
+export const SOCKET_APP_INIT = "INIT_APP";
 
 export function getTokenStart() {
 	return dispatch => {dispatch({type: `${GENERIC_GET_TOKEN}_REQUEST`});}
@@ -19,6 +21,13 @@ export function setFilter(filter) {
 }
 export function doNothing() {
 	return dispatch => { doNothingDispatch(dispatch) }
+}
+export function subscribeAppInit() {
+	return async dispatch => {
+		socket.on(SOCKET_APP_INIT, r => {
+			dispatch({type: SOCKET_APP_INIT, data: r})
+		});
+	}
 }
 function setFilterDispatch(dispatch, filter) {
 	dispatch({
