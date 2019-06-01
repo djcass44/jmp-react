@@ -1,10 +1,16 @@
 import React from "react";
-import {Collapse, Tooltip, Typography, withStyles, withTheme} from "@material-ui/core";
+import {Collapse, IconButton, Tooltip, Typography, withStyles, withTheme} from "@material-ui/core";
 import Icon from "@mdi/react";
 import Moment from "react-moment";
 import LockIcon from "@material-ui/icons/LockOutlined";
 import LockOpenIcon from "@material-ui/icons/LockOpenOutlined";
-import {mdiFire} from "@mdi/js";
+import {
+	mdiContentCopy,
+	mdiDeleteForeverOutline,
+	mdiFire,
+	mdiOpenInNew,
+	mdiPencilOutline
+} from "@mdi/js";
 
 const styles = theme => ({
 	title: {
@@ -18,6 +24,11 @@ const styles = theme => ({
 });
 
 class JumpContent extends React.Component {
+	// This is a recent API
+	// There WILL be compatability issues with its usage
+	handleCopy(e, text) {
+		navigator.clipboard.writeText(text);
+	}
 	render() {
 		const {jump, classes, theme} = this.props;
 		const secureStatus = jump.location.startsWith("https://") ? {
@@ -38,6 +49,20 @@ class JumpContent extends React.Component {
 				<small className={classes.title}><Icon path={mdiFire} size={1} color={theme.palette.warning.main}/>x{jump.metaUsage}</small>
 				<p>Created <Moment fromNow>{jump.metaCreation}</Moment></p>
 				{jump.metaUpdate !== jump.metaCreation ? <p>Edited <Moment fromNow>{jump.metaUpdate}</Moment></p>: ""}
+				{document.queryCommandSupported("copy") &&
+					<Tooltip title={"Copy URL"}>
+						<IconButton centerRipple={false} onClick={(e) => this.handleCopy(e, jump.location)}><Icon path={mdiContentCopy} size={1} color={theme.palette.primary.main}/></IconButton>
+					</Tooltip>
+				}
+				<Tooltip title={"Edit"}>
+					<IconButton centerRipple={false}><Icon path={mdiPencilOutline} size={1} color={theme.palette.secondary.main}/></IconButton>
+				</Tooltip>
+				<Tooltip title={"Open"}>
+					<IconButton centerRipple={false} target={"_blank"} rel={"noopener noreferrer"} href={`/jmp?query=${jump.name}`}><Icon path={mdiOpenInNew} size={1} color={theme.palette.success.main}/></IconButton>
+				</Tooltip>
+				<Tooltip title={"Delete"}>
+					<IconButton centerRipple={false}><Icon path={mdiDeleteForeverOutline} size={1} color={theme.palette.error.main}/></IconButton>
+				</Tooltip>
 			</Collapse>
 		);
 	}
