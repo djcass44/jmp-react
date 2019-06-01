@@ -35,6 +35,12 @@ import EmptyCard from "../../../components/widget/EmptyCard";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import {pageSize} from "../../../constants";
+import posed, {PoseGroup} from "react-pose";
+
+const Item = posed.div({
+	enter: {opacity: 1},
+	exit: {opacity: 0}
+});
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -114,11 +120,13 @@ class Users extends React.Component {
 			<div>
 				{subHeader}
 				{this.state.loading === true ? <LinearProgress className={classes.grow} color={"primary"}/> : "" }
-				<Paper style={{borderRadius: 12, marginBottom: 8}}>
-					<List component={'ul'}>
-						{listItems.length > 0 ? listItems : <EmptyCard/>}
-					</List>
-				</Paper>
+				<PoseGroup animateOnMount={true}>
+					<Paper key={"root"} component={Item} style={{borderRadius: 12, marginBottom: 8}}>
+						<List component={'ul'}>
+							{listItems.length > 0 ? listItems : <EmptyCard/>}
+						</List>
+					</Paper>
+				</PoseGroup>
 				{listItems.length > pageSize ?
 					<Center><Pagination limit={pageSize} offset={this.state.offset} total={listItems.length} nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, offset) => this.handlePageChange(offset)}/></Center>
 					:
