@@ -23,7 +23,6 @@ import ListItemText from "@material-ui/core/es/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import ListSubheader from "@material-ui/core/es/ListSubheader";
 import IconButton from "@material-ui/core/IconButton";
-import SortIcon from "@material-ui/icons/Sort";
 import AddIcon from "@material-ui/icons/Add";
 import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
@@ -58,6 +57,7 @@ class Groups extends React.Component {
 			groups: props.groups,
 			offset: 0,
 			headers: props.headers,
+			searchFilter: props.searchFilter,
 			sort: localStorage.getItem(LS_SORT),
 			sorts: [
 				{id: 'name', value: "Name"},

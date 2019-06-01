@@ -6,6 +6,7 @@ import Info from "./settings/Info";
 import BackButton from "../../components/widget/BackButton";
 import General from "./settings/General";
 import Auth from "./settings/Auth";
+import {connect} from "react-redux";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -16,6 +17,14 @@ const styles = theme => ({
 });
 
 class Settings extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			isAdmin: props.isAdmin,
+			isLoggedIn: props.isLoggedIn
+		};
+	}
+
 	componentWillReceiveProps(nextProps, nextContext) {
 		this.setState({...nextProps});
 	}
@@ -29,10 +38,20 @@ class Settings extends React.Component {
 				</Center>
 				<Center><Typography style={{padding: 24}} variant={"subtitle1"}>Manage JMP and its settings to make yourself more at home</Typography></Center>
 				<General/>
-				<Auth/>
-				<Info/>
+				{this.state.isAdmin === true ?
+					<div>
+						<Auth/>
+						<Info/>
+					</div>
+					:
+					""
+				}
 			</div>
 		)
 	}
 }
-export default withStyles(styles)(withTheme(Settings));
+const mapStateToProps = state => ({
+	isAdmin: state.auth.isAdmin,
+	isLoggedIn: state.auth.isLoggedIn
+});
+export default connect(mapStateToProps, null)(withStyles(styles)(withTheme(Settings)));

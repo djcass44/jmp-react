@@ -16,42 +16,17 @@
  */
 
 import React from "react";
-import {withStyles, withTheme} from "@material-ui/core";
-import {connect} from "react-redux";
 import Users from "./identity/Users";
 import Groups from "./identity/Groups";
 import BackButton from "../../components/widget/BackButton";
 
-const styles = theme => ({
-	title: {fontFamily: "Manrope", fontWeight: 500},
-	button: {
-		// margin: theme.spacing.unit,
-	},
-	grow: {flexGrow: 1}
-});
-
-class Identity extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			headers: props.headers
-		}
-	}
-
-	render() {
-		return (
-			<div>
-				<BackButton label={"Back to home"} to={"/"}/>
-				<Users/>
-				<Groups/>
-			</div>
-		)
-	}
-
+function Identity() {
+	return (
+		<div>
+			<BackButton label={"Back to home"} to={"/"}/>
+			<Users/>
+			<Groups/>
+		</div>
+	);
 }
-const mapStateToProps = state => ({
-	headers: state.auth.headers,
-	searchFilter: state.generic.searchFilter
-});
-const mapDispatchToProps = ({});
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Identity)));
+export default Identity;
