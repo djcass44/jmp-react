@@ -18,12 +18,11 @@
 import React from "react";
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import Card from "@material-ui/core/es/Card/Card";
-import {CardContent, Grid} from "@material-ui/core";
+import {CardContent, Grid, TextField} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import {OAUTH_REQUEST, oauthRequest} from "../../actions/Auth";
 import {connect} from "react-redux";
-import {TextValidator, ValidatorForm} from "react-material-ui-form-validator";
 import Center from "react-center";
 import {getVersion} from "../../actions/Generic";
 import BackButton from "../../components/widget/BackButton";
@@ -32,16 +31,20 @@ class Login extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			formData: {
-				username: '',
-				password: ''
+			username: {
+				value: '',
+				error: '',
+				regex: new RegExp(/^.{3,}$/)
+			},
+			password: {
+				value: '',
+				error: '',
+				regex: new RegExp(/^.{8,}$/)
 			},
 			submitted: false,
 			isLoggedIn: props.isLoggedIn,
 			version: props.version
 		};
-		this.handleClick = this.handleClick.bind(this);
-		this.handleChange = this.handleChange.bind(this);
 	}
 
 	componentDidMount() {
@@ -59,18 +62,31 @@ class Login extends React.Component {
 		this.setState({...nextProps});
 	}
 
-	handleChange = (event) => {
-		const {formData} = this.state;
-		formData[event.target.name] = event.target.value;
-		this.setState({formData});
-	};
+	handleUsernameChange(e) {
+		let val = e.target.value;
+		const {username} = this.state;
+		username.value = val;
+		if(username.regex.test(val) === false)
+			username.error = 'Username must be a minimum of 3 characters';
+		else
+			username.error = '';
+		this.setState({username});
+	}
+	handlePasswordChange(e) {
+		let val = e.target.value;
+		const {password} = this.state;
+		password.value = val;
+		if(password.regex.test(val) === false)
+			password.error = 'Password must be a minimum of 8 characters';
+		else
+			password.error = '';
+		this.setState({password});
+	}
 	handleClick() {
-		let data = window.btoa(`${this.state.formData.username}:${this.state.formData.password}`);
+		let data = window.btoa(`${this.state.username.value}:${this.state.password.value}`);
 		this.props.oauthRequest(data);
 	}
 	render() {
-		const {formData, submitted} = this.state;
-
 		const errorMessage = <Center>
 			<span style={{color: "red"}}>{this.state.error}</span>
 		</Center>;
@@ -83,19 +99,19 @@ class Login extends React.Component {
 					:
 					<Card>
 						<CardContent style={{margin: 12}}>
-							<Grid container spacing={4} alignContent={"center"} justify={"center"} component={ValidatorForm} ref={"form"} onSubmit={this.handleClick}>
+							<Grid container spacing={4} alignContent={"center"} justify={"center"}>
 								<Grid item xs={12}>
 									<Center><img src={`${process.env.PUBLIC_URL}/jmp.png`} alt={"App icon"} height={72}/></Center>
 									<Typography variant={"h2"} align={"center"}>Login</Typography>
 								</Grid>
 								<Grid item xs={12}>
-									<TextValidator variant={"outlined"} autoComplete={"username"} fullWidth label={"Username"} onChange={this.handleChange} name={"username"} value={formData.username} validators={['required']} errorMessages={['This field is required']}/>
+									<TextField required autoFocus autoComplete={"username"} margin={"dense"} id={"username"} label={"Username"} variant={"outlined"} value={this.state.username.value} fullWidth error={this.state.username.error.length !== 0} helperText={this.state.username.error} onChange={this.handleUsernameChange.bind(this)}/>
 								</Grid>
 								<Grid item xs={12}>
-									<TextValidator variant={"outlined"} autoComplete={"password"} fullWidth label={"Password"} onChange={this.handleChange} name={"password"} value={formData.password} type={"password"} validators={['required']} errorMessages={['This field is required']}/>
+									<TextField required type={"password"} autoComplete={"password"} margin={"dense"} id={"password"} label={"Password"} variant={"outlined"} value={this.state.password.value} fullWidth error={this.state.password.error.length !== 0} helperText={this.state.password.error} onChange={this.handlePasswordChange.bind(this)}/>
 								</Grid>
 								<Grid item xs={12}>
-									<Button variant={"contained"} color={"primary"} fullWidth size={"large"} type={"submit"} disabled={submitted}>Login</Button>
+									<Button onClick={this.handleClick.bind(this)} variant={"contained"} color={"primary"} fullWidth size={"large"} type={"submit"} disabled={this.state.submitted || this.state.username.error !== '' || this.state.password.error !== '' || this.state.username.value.length === 0 || this.state.password.value.length === 0}>Login</Button>
 								</Grid>
 							</Grid>
 							<Center>{this.state.version}</Center>
