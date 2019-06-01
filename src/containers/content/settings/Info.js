@@ -62,7 +62,7 @@ class Info extends React.Component {
 				<p>HTTP Server... {this.state.status.http === "OK" ? <span className={classes.statusOK}>Ok</span> : <span className={classes.statusFail}>Error</span>}</p>
 				<p>Database... {this.state.status['database'] === true ? <span className={classes.statusOK}>Ok</span> : <span className={classes.statusFail}>Error</span>}</p>
 				<p>LDAP... {this.state.status['ldap'] === true ? <span className={classes.statusOK}>Ok</span> : this.state.status['ldap'] == null ? <span className={classes.statusWarn}>Disabled</span> : <span className={classes.statusFail}>Error</span>}</p>
-				<Typography variant={"h5"} className={classes.title}>Recent exceptions</Typography>
+				{/*<Typography variant={"h5"} className={classes.title}>Recent exceptions</Typography>*/}
 				{this.state.errorLoad === true ? <LinearProgress/> : ""}
 			</div>
 		);

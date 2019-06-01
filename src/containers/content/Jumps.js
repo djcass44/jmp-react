@@ -39,6 +39,7 @@ import posed, {PoseGroup} from "react-pose";
 import JumpDialog from "../modal/JumpDialog";
 import Icon from "@mdi/react";
 import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
+import JumpContent from "../../components/content/jmp/JumpContent";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -99,6 +100,20 @@ class Jumps extends React.Component {
 		this.setState({showJumpDialog: false});
 	}
 
+	toggleExpansion(e, id) {
+		let val = id;
+		const {jumps} = this.state;
+		jumps.forEach(i => {
+			if(i.id !== val) {
+				i.expanded = false;
+				return;
+			}
+			if(i.expanded == null) i.expanded = true;
+			else i.expanded = i.expanded !== true;
+		});
+		this.setState({...jumps});
+	}
+
 	getAliases(jump) {
 		if(jump.alias.length === 0) return "";
 		let items = [];
@@ -129,14 +144,17 @@ class Jumps extends React.Component {
 			}</span>;
 			let aliases = this.getAliases(i);
 			listItems.push((
-				<ListItem button disableRipple key={i.id} component={LItem}>
-					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
-						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={<Icon path={avatar.icon} color={avatar.fg} size={1}/>} initialImage={<Icon path={avatar.icon} color={avatar.fg} size={1}/>}/>
-					</Avatar>
-					<Tooltip disableFocusListener title={aliases} placement={"left"} interactive>
-						<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={secondary}/>
-					</Tooltip>
-				</ListItem>
+				<div key={i.id}>
+					<ListItem button disableRipple value={i.id} onClick={(e) => this.toggleExpansion(e, i.id)}>
+						<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
+							<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={<Icon path={avatar.icon} color={avatar.fg} size={1}/>} initialImage={<Icon path={avatar.icon} color={avatar.fg} size={1}/>}/>
+						</Avatar>
+						<Tooltip disableFocusListener title={aliases} placement={"left"} interactive>
+							<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={secondary}/>
+						</Tooltip>
+					</ListItem>
+					<JumpContent jump={i} open={i.expanded === true}/>
+				</div>
 			));
 		});
 
