@@ -11,6 +11,7 @@ export const LS_NAME = "jmpr-name";
 
 export const LS_DARK = "jmpr-dark";
 export const LS_APPID = "jmpr-appid";
+export const LS_SORT = "jmpr-sortBy";
 
 export const pageSize = 8;
 

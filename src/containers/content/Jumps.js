@@ -33,8 +33,7 @@ import SchemeHighlight from "../../components/widget/SchemeHighlight";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
-import SortIcon from "@material-ui/icons/Sort";
-import {pageSize} from "../../constants";
+import {LS_SORT, pageSize} from "../../constants";
 import posed, {PoseGroup} from "react-pose";
 import JumpDialog from "../modal/JumpDialog";
 import Icon from "@mdi/react";
@@ -42,12 +41,10 @@ import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js
 import JumpContent from "../../components/content/jmp/JumpContent";
 import DeleteDialog from "../modal/DeleteDialog";
 import JumpEditDialog from "../modal/JumpEditDialog";
+import {sortItems} from "../../misc/Sort";
+import SortButton from "../../components/widget/SortButton";
 
 const Item = posed.div({
-	enter: {opacity: 1},
-	exit: {opacity: 0}
-});
-const LItem = posed.li({
 	enter: {opacity: 1},
 	exit: {opacity: 0}
 });
@@ -72,7 +69,15 @@ class Jumps extends React.Component {
 			showDeleteDialog: false,
 			showEditDialog: false,
 			editItem: null,
-			deleteItem: null
+			deleteItem: null,
+			sorts: [
+				{id: 'name', value: "Name"},
+				{id: '-name', value: "Name Desc"},
+				{id: 'usage', value: "Usage"},
+				{id: 'creation', value: "Creation"},
+				{id: 'updated', value: "Last edited"}
+			],
+			sort: localStorage.getItem(LS_SORT)
 		};
 		this.filterJump = this.filterJump.bind(this);
 		this.handleJumpShow = this.handleJumpShow.bind(this);
@@ -118,6 +123,11 @@ class Jumps extends React.Component {
 		}
 		this.props.deleteJump(this.state.headers, this.state.deleteItem);
 	}
+	handleSortChange(e, value) {
+		this.setState({sort: value});
+		localStorage.setItem(LS_SORT, value);
+		this.props.listJumps(this.state.headers);
+	}
 
 	toggleExpansion(e, id) {
 		let val = id;
@@ -150,7 +160,8 @@ class Jumps extends React.Component {
 		let max = (this.state.offset + pageSize);
 		if(max > this.state.jumps.length) max = this.state.jumps.length;
 		// Loop-d-loop
-		this.state.jumps.filter(this.filterJump).forEach((i, index) => {
+		let sortedJumps = sortItems(this.state.jumps, this.state.sort);
+		sortedJumps.filter(this.filterJump).forEach((i, index) => {
 			if(index < this.state.offset || index > max) return;
 			let avatar = {
 				icon: i['personal'] === 0 ? mdiEarth : i['personal'] === 1 ? mdiAccountCircleOutline : mdiAccountGroupOutline,
@@ -180,7 +191,7 @@ class Jumps extends React.Component {
 		const subHeader = (<ListSubheader className={classes.title} inset component={"div"}>
 			Jumps {this.state.searchFilter != null && this.state.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
 			{/*<div className={classes.grow}/>*/}
-			<IconButton centerRipple={false} className={classes.button} aria-label="Sort"><SortIcon fontSize={"small"}/></IconButton>
+			<SortButton selectedSort={this.state.sort} sorts={this.state.sorts} onSubmit={(e, value) => {this.handleSortChange(e, value)}}/>
 			{this.state.isLoggedIn === true ? <IconButton centerRipple={false} className={classes.button} aria-label="Add" onClick={this.handleJumpShow}><AddIcon fontSize={"small"}/></IconButton> : ""}
 			<JumpDialog open={this.state.showJumpDialog} onExited={this.handleJumpHide}/>
 		</ListSubheader>);
