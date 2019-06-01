@@ -38,16 +38,28 @@ class JumpContent extends React.Component {
 			title: "This site is insecure",
 			icon: <LockOpenIcon color={"error"}/>
 		};
+		const aliases = jump.alias.map(i => {return i.name}).join(",");
 		return (
 			<Collapse className={classes.main} in={this.props.open} unmountOnExit timeout={"auto"}>
+				{/* TITLE */}
 				<Typography variant={"subtitle1"} className={classes.title}>
 					{jump.title}
 				</Typography>
-				<Tooltip disableFocusListener title={secureStatus.title} placement={"bottom"} interactive>
-					{secureStatus.icon}
-				</Tooltip>
-				<small className={classes.title}><Icon path={mdiFire} size={1} color={theme.palette.warning.main}/>x{jump.metaUsage}</small>
+				<div style={{padding: 8}}>
+					{/* HTTPS STATUS */}
+					<Tooltip disableFocusListener title={secureStatus.title} placement={"bottom"} interactive>
+						{secureStatus.icon}
+					</Tooltip>
+					{/* USAGE COUNT */}
+					<small className={classes.title}><Icon path={mdiFire} size={1} color={theme.palette.warning.main}/>x{jump.metaUsage}</small>
+				</div>
+				{/* ALIASES */}
+				<Typography variant={"body1"}>
+					Aliases: {aliases}
+				</Typography>
+				{/* CREATION */}
 				<p>Created <Moment fromNow>{jump.metaCreation}</Moment></p>
+				{/* EDIT */}
 				{jump.metaUpdate !== jump.metaCreation ? <p>Edited <Moment fromNow>{jump.metaUpdate}</Moment></p>: ""}
 				{document.queryCommandSupported("copy") &&
 					<Tooltip title={"Copy URL"}>
