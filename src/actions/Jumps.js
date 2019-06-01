@@ -4,6 +4,7 @@ export const JUMP_LOAD = "JUMP_LOAD";
 export const JUMP_RM = "JUMP_RM";
 export const GET_SIMILAR = "GET_SIMILAR";
 export const PUT_JUMP = "PUT_JUMP";
+export const DELETE_JUMP = "DELETE_JUMP";
 
 export const SOCKET_UPDATE_JUMP = "EVENT_UPDATE";
 
@@ -12,9 +13,9 @@ export function listJumps(headers) {
 		listJumpsDispatch(dispatch, headers);
 	}
 }
-export function rmJump(headers, id) {
+export function deleteJump(headers, id) {
 	return dispatch => {
-		rmJumpDispatch(dispatch, headers, id);
+		deleteJumpDispatch(dispatch, headers, id);
 	}
 }
 export function putJump(headers, jump, gid) {
@@ -44,16 +45,12 @@ function listJumpsDispatch(dispatch, headers) {
 		dispatch({type: `${JUMP_LOAD}_FAILURE`, data: err.toString()});
 	});
 }
-function rmJumpDispatch(dispatch, headers, id) {
-	dispatch({
-		type: `${JUMP_RM}_REQUEST`,
-		payload: {
-			request: {
-				method: 'DELETE',
-				headers: headers,
-				url: `/api/v1/jump/${id}`
-			}
-		}
+function deleteJumpDispatch(dispatch, headers, id) {
+	dispatch({type: `${DELETE_JUMP}_REQUEST`});
+	client.delete(`/api/v1/jump/${id}`, {headers: headers}).then(r => {
+		dispatch({type: `${DELETE_JUMP}_SUCCESS`, data: r.data});
+	}).catch(err => {
+		dispatch({type: `${DELETE_JUMP}_FAILURE`, data: err.toString()});
 	});
 }
 function getSimilarDispatch(dispatch, headers, query) {

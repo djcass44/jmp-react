@@ -21,7 +21,7 @@ import ListSubheader from "@material-ui/core/es/ListSubheader/ListSubheader";
 import ListItem from "@material-ui/core/ListItem";
 import Avatar from "@material-ui/core/es/Avatar/Avatar";
 import ListItemText from "@material-ui/core/es/ListItemText/ListItemText";
-import {JUMP_LOAD, listJumps, rmJump, subscribeChangesInJumps} from "../../actions/Jumps";
+import {deleteJump, JUMP_LOAD, listJumps, subscribeChangesInJumps} from "../../actions/Jumps";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import Pagination from "material-ui-flat-pagination";
@@ -40,6 +40,7 @@ import JumpDialog from "../modal/JumpDialog";
 import Icon from "@mdi/react";
 import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
 import JumpContent from "../../components/content/jmp/JumpContent";
+import DeleteDialog from "../modal/DeleteDialog";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -66,7 +67,9 @@ class Jumps extends React.Component {
 			offset: 0,
 			headers: props.headers,
 			isLoggedIn: props.isLoggedIn,
-			showJumpDialog: false
+			showJumpDialog: false,
+			showDeleteDialog: false,
+			deleteItem: null
 		};
 		this.filterJump = this.filterJump.bind(this);
 		this.handleJumpShow = this.handleJumpShow.bind(this);
@@ -98,6 +101,16 @@ class Jumps extends React.Component {
 	}
 	handleJumpHide() {
 		this.setState({showJumpDialog: false});
+	}
+	handleDeleteDialog(e, visible, item) {
+		this.setState({showDeleteDialog: visible, deleteItem: item});
+	}
+	handleDeleteJump() {
+		if(this.state.deleteItem == null) {
+			console.log("No item to delete");
+			return;
+		}
+		this.props.deleteJump(this.state.headers, this.state.deleteItem);
 	}
 
 	toggleExpansion(e, id) {
@@ -153,7 +166,7 @@ class Jumps extends React.Component {
 							<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={secondary}/>
 						</Tooltip>
 					</ListItem>
-					<JumpContent jump={i} open={i.expanded === true}/>
+					<JumpContent jump={i} open={i.expanded === true} onDelete={(e, item) => {this.handleDeleteDialog(e, true, item)}}/>
 				</div>
 			));
 		});
@@ -175,6 +188,7 @@ class Jumps extends React.Component {
 						<List component={'ul'}>
 							{listItems.length > 0 ? listItems : <EmptyCard/>}
 						</List>
+						<DeleteDialog open={this.state.showDeleteDialog} onExited={(e) => {this.handleDeleteDialog(e, false, null)}} onSubmit={this.handleDeleteJump.bind(this)}/>
 					</Paper>
 				</PoseGroup>
 				{listItems.length > pageSize || this.state.offset > 0 ?
@@ -195,7 +209,7 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = ({
 	listJumps,
-	rmJump,
+	deleteJump,
 	subscribeChangesInJumps
 });
 

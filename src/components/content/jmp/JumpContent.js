@@ -61,7 +61,7 @@ class JumpContent extends React.Component {
 					<IconButton centerRipple={false} target={"_blank"} rel={"noopener noreferrer"} href={`/jmp?query=${jump.name}`}><Icon path={mdiOpenInNew} size={1} color={theme.palette.success.main}/></IconButton>
 				</Tooltip>
 				<Tooltip title={"Delete"}>
-					<IconButton centerRipple={false}><Icon path={mdiDeleteForeverOutline} size={1} color={theme.palette.error.main}/></IconButton>
+					<IconButton centerRipple={false} onClick={(e) => {this.props.onDelete(e, jump.id)}}><Icon path={mdiDeleteForeverOutline} size={1} color={theme.palette.error.main}/></IconButton>
 				</Tooltip>
 			</Collapse>
 		);
