@@ -30,11 +30,13 @@ import List from "@material-ui/core/List";
 import EmptyCard from "../../../components/widget/EmptyCard";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
-import {pageSize} from "../../../constants";
+import {LS_SORT, pageSize} from "../../../constants";
 import {getGroups, GROUP_LOAD, subscribeChangesInGroups} from "../../../actions/Groups";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline} from "@mdi/js";
 import posed, {PoseGroup} from "react-pose";
+import {sortItems} from "../../../misc/Sort";
+import SortButton from "../../../components/widget/SortButton";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -55,7 +57,14 @@ class Groups extends React.Component {
 		this.state = {
 			groups: props.groups,
 			offset: 0,
-			headers: props.headers
+			headers: props.headers,
+			sort: localStorage.getItem(LS_SORT),
+			sorts: [
+				{id: 'name', value: "Name"},
+				{id: '-name', value: "Name Desc"},
+				{id: 'creation', value: "Creation"},
+				{id: 'updated', value: "Last edited"}
+			]
 		};
 		this.filterGroup = this.filterGroup.bind(this);
 	}
@@ -80,6 +89,11 @@ class Groups extends React.Component {
 	handlePageChange(offset) {
 		this.setState({offset: offset});
 	}
+	handleSortChange(e, value) {
+		this.setState({sort: value});
+		localStorage.setItem(LS_SORT, value);
+		this.props.getGroups(this.state.headers);
+	}
 	static capitalise(text) {
 		if(text == null || text.length === 0) return text;
 		if(text.toLowerCase() === "ldap") return "LDAP";
@@ -91,7 +105,8 @@ class Groups extends React.Component {
 		// Tell the loop what our pagination limits are
 		let max = (this.state.offset + pageSize);
 		if(max > this.state.groups.length) max = this.state.groups.length;
-		this.state.groups.filter(this.filterGroup).forEach((i, index) => {
+		let sortedGroups = sortItems(this.state.groups, this.state.sort);
+		sortedGroups.filter(this.filterGroup).forEach((i, index) => {
 			if(index < this.state.offset || index > max) return;
 			let avatar = {
 				bg: theme.palette.info.light,
@@ -111,7 +126,7 @@ class Groups extends React.Component {
 		const subHeader = (<ListSubheader className={classes.title} inset component={"div"}>
 			Groups {this.state.searchFilter != null && this.state.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
 			{/*<div className={classes.grow}/>*/}
-			<IconButton className={classes.button} aria-label="Sort"><SortIcon fontSize={"small"}/></IconButton>
+			<SortButton selectedSort={this.state.sort} sorts={this.state.sorts} onSubmit={(e, value) => this.handleSortChange(e, value)}/>
 			<IconButton className={classes.button} aria-label="Add"><AddIcon fontSize={"small"}/></IconButton>
 		</ListSubheader>);
 

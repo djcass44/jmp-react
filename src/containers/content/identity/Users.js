@@ -34,8 +34,10 @@ import List from "@material-ui/core/List";
 import EmptyCard from "../../../components/widget/EmptyCard";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
-import {pageSize} from "../../../constants";
+import {LS_SORT, pageSize} from "../../../constants";
 import posed, {PoseGroup} from "react-pose";
+import {sortItems} from "../../../misc/Sort";
+import SortButton from "../../../components/widget/SortButton";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -56,7 +58,14 @@ class Users extends React.Component {
 		this.state = {
 			users: props.users,
 			offset: 0,
-			headers: props.headers
+			headers: props.headers,
+			sort: localStorage.getItem(LS_SORT),
+			sorts: [
+				{id: 'name', value: "Name"},
+				{id: '-name', value: "Name Desc"},
+				{id: 'creation', value: "Creation"},
+				{id: 'updated', value: "Last edited"}
+			]
 		};
 		this.filterUser = this.filterUser.bind(this);
 	}
@@ -82,6 +91,11 @@ class Users extends React.Component {
 	handlePageChange(offset) {
 		this.setState({offset: offset});
 	}
+	handleSortChange(e, value) {
+		this.setState({sort: value});
+		localStorage.setItem(LS_SORT, value);
+		this.props.getUsers(this.state.headers);
+	}
 	static capitalise(text) {
 		if(text == null || text.length === 0) return text;
 		if(text.toLowerCase() === "ldap") return "LDAP"; // hmm
@@ -93,7 +107,8 @@ class Users extends React.Component {
 		// Tell the loop what our pagination limits are
 		let max = (this.state.offset + pageSize);
 		if(max > this.state.users.length) max = this.state.users.length;
-		this.state.users.filter(this.filterUser).forEach((i, index) => {
+		let sortedUsers = sortItems(this.state.users, this.state.sort);
+		sortedUsers.filter(this.filterUser).forEach((i, index) => {
 			if(index < this.state.offset || index > max) return;
 			let avatar = {
 				icon: i.role === 'ADMIN'? <AdminCircleIcon/> : <AccountCircleIcon/>,
@@ -114,7 +129,7 @@ class Users extends React.Component {
 		const subHeader = (<ListSubheader className={classes.title} inset component={"div"}>
 			Users {this.state.searchFilter != null && this.state.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
 			{/*<div className={classes.grow}/>*/}
-			<IconButton className={classes.button} aria-label="Sort"><SortIcon fontSize={"small"}/></IconButton>
+			<SortButton selectedSort={this.state.sort} sorts={this.state.sorts} onSubmit={(e, value) => this.handleSortChange(e, value)}/>
 			<IconButton className={classes.button} aria-label="Add"><AddIcon fontSize={"small"}/></IconButton>
 		</ListSubheader>);
 

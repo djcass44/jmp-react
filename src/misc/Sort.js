@@ -3,7 +3,13 @@ export function sortItems(items, sort) {
 		// case 'name':
 		// 	return jumps.sort((a, b) => a.localeCompare(b));
 		case '-name':
-			return items.sort((a, b) => a.name.localeCompare(b.name) * -1);
+			return items.sort((a, b) => {
+				if(a.name != null)
+					return a.name.localeCompare(b.name) * -1;
+				else if(a.username != null)
+					return a.username.localeCompare(b.username) * -1;
+				else return a;
+			});
 		case 'usage':
 			return items.sort((a, b) => b.metaUsage - a.metaUsage);
 		case 'creation':
@@ -11,6 +17,12 @@ export function sortItems(items, sort) {
 		case 'updated':
 			return items.sort((a, b) => b.metaUpdate - a.metaUpdate);
 		default:
-			return items.sort((a, b) => a.name.localeCompare(b.name));
+			return items.sort((a, b) => {
+				if(a.name != null)
+					return a.name.localeCompare(b.name);
+				else if(a.username != null)
+					return a.username.localeCompare(b.username);
+				else return a;
+			});
 	}
 }
