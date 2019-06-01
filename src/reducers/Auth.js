@@ -47,7 +47,6 @@ const auth = (state = {
 		}
 		case `${OAUTH_REFRESH}_SUCCESS`:
 		case `${OAUTH_REQUEST}_SUCCESS`: {
-			console.log(action);
 			const headers = {'Authorization': `Bearer ${action.data.request}`};
 			localStorage.setItem(LS_REQUEST, action.data.request);
 			localStorage.setItem(LS_REFRESH, action.data.refresh);
@@ -65,6 +64,7 @@ const auth = (state = {
 			return state;
 		case `${OAUTH_REQUEST}_FAILURE`: // this one shouldn't redirect to /login
 		case `${OAUTH_REFRESH}_FAILURE`:
+		case `${OAUTH_LOGOUT}_SUCCESS`:
 		case `${OAUTH_LOGOUT}_REQUEST`: {
 			localStorage.removeItem(LS_REQUEST);
 			localStorage.removeItem(LS_REFRESH);

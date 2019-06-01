@@ -65,9 +65,7 @@ class Login extends React.Component {
 		this.setState({formData});
 	};
 	handleClick() {
-		console.log(`username: ${this.state.formData.username}`);
 		let data = window.btoa(`${this.state.formData.username}:${this.state.formData.password}`);
-		console.log(`basic auth data: ${data}`);
 		this.props.oauthRequest(data);
 	}
 	render() {

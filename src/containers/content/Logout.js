@@ -50,7 +50,7 @@ class Logout extends React.Component {
 			<div>
 				<h1 className={"m2-title"}>Ensuring that you're logged out...</h1>
 				<Center><CircularProgress/></Center>
-				<Center>If you're not redirected in a few seconds, click below</Center>
+				<Center style={{paddingTop: 16}}>If you're not redirected in a few seconds, click below</Center>
 				<Center>
 					<IconButton component={Link} to={"/"} color={"primary"} aria-label={"Return to home"}>
 						<HomeIcon/>
