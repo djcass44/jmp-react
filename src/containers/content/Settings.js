@@ -36,7 +36,7 @@ class Settings extends React.Component {
 				<Center>
 					<Typography variant={"h3"} className={classes.title}>Settings</Typography>
 				</Center>
-				<Center><Typography style={{padding: 24}} variant={"subtitle1"}>Manage JMP and its settings to make yourself more at home</Typography></Center>
+				<Center><Typography style={{padding: 24}} variant={"subtitle1"}>Manage {process.env.REACT_APP_APP_NAME} and its settings to make yourself more at home</Typography></Center>
 				<General/>
 				{this.state.isAdmin === true ?
 					<div>

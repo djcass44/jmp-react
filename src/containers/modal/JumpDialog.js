@@ -116,7 +116,7 @@ class JumpDialog extends React.Component {
 		});
 		return (
 			<Dialog open={this.props.open === true} aria-labelledby={"form-dialog-title"} onClose={this.props.onExited} onEnter={this.handleDialogOpen}>
-				<DialogTitle id={"form-dialog-title"} className={classes.title}>New Jump</DialogTitle>
+				<DialogTitle id={"form-dialog-title"} className={classes.title}>New {process.env.REACT_APP_APP_NOUN}</DialogTitle>
 				<DialogContent>
 					<TextField required autoFocus margin={"dense"} id={"name"} label={"Name"} value={this.state.name.value} fullWidth error={this.state.name.error.length !== 0} helperText={this.state.name.error} onChange={this.handleNameChange.bind(this)}/>
 					<TextField required margin={"dense"} id={"location"} label={"Location"} value={this.state.location.value} autoComplete={"url"} fullWidth error={this.state.location.error.length !== 0} helperText={this.state.location.error} onChange={this.handleUrlChange.bind(this)}/>

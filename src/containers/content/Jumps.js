@@ -189,7 +189,7 @@ class Jumps extends React.Component {
 		});
 
 		const subHeader = (<ListSubheader className={classes.title} inset component={"div"}>
-			Jumps {this.state.searchFilter != null && this.state.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
+			{process.env.REACT_APP_APP_NOUN}s {this.state.searchFilter != null && this.state.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
 			{/*<div className={classes.grow}/>*/}
 			<SortButton selectedSort={this.state.sort} sorts={this.state.sorts} onSubmit={(e, value) => {this.handleSortChange(e, value)}}/>
 			{this.state.isLoggedIn === true ? <IconButton centerRipple={false} className={classes.button} aria-label="Add" onClick={this.handleJumpShow}><AddIcon fontSize={"small"}/></IconButton> : ""}
