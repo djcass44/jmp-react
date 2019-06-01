@@ -39,7 +39,13 @@ const styles = theme => ({
 		fontFamily: "Manrope",
 		fontWeight: 500
 	},
-	grow: {flexGrow: 1}
+	grow: {flexGrow: 1},
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		height: '80vh'
+	}
 });
 
 class Similar extends React.Component {
@@ -81,23 +87,24 @@ class Similar extends React.Component {
 			return (
 				<Tooltip disableFocusListener title={i.location} placement={"bottom"} interactive key={`${i.id}${i.name}`}>
 					<Chip
-						avatar={<Avatar><Icon path={avatar.icon} size={1}/></Avatar>}
+						avatar={<Avatar style={{backgroundColor: avatar.bg, color: avatar.fg}}><Icon path={avatar.icon} size={1} color={avatar.fg}/></Avatar>}
 						label={i.name}
 						clickable
 						component={Link}
 						to={`/jmp?query=${i.name}`}
+						style={{backgroundColor: avatar.bg, color: avatar.fg}}
 						className={classes.chip}/>
 				</Tooltip>
 			)
 		});
-		return <Grid container spacing={40}>
+		return <Grid container spacing={5} className={classes.container}>
 			<Grid item sm={3}/>
 			<Grid item sm={6}>
 				<Center><Typography className={classes.title} variant={"h1"}>Woah</Typography></Center>
-				<Center><Typography variant={"headline"}>Before you go <span role={"img"} aria-label={"Rocket"}>🚀</span></Typography></Center>
+				<Center><Typography variant={"subtitle1"}>Before you go <span role={"img"} aria-label={"Rocket"}>🚀</span></Typography></Center>
 				<Center>{this.state.error == null ? status : this.state.error}</Center>
 				{this.state.loading === true ? <Center><CircularProgress/></Center> : ""}
-				<Center>{chips}</Center>
+				<Center style={{padding: 16}}>{chips}</Center>
 			</Grid>
 			<Grid item sm={3}/>
 		</Grid>;
