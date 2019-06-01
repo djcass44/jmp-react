@@ -75,7 +75,9 @@ class Users extends React.Component {
 		this.props.subscribeChangesInUsers(this.state.headers);
 	}
 	filterUser(user) {
-		return user.username.toLowerCase().includes(this.state.searchFilter);
+		return user.username.toLowerCase().includes(this.state.searchFilter) ||
+			user.role.toLowerCase() === this.state.searchFilter.toLowerCase() ||
+			user.from.toLowerCase() === this.state.searchFilter.toLowerCase();
 	}
 	handlePageChange(offset) {
 		this.setState({offset: offset});

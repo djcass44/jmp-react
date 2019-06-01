@@ -74,7 +74,8 @@ class Groups extends React.Component {
 		this.props.subscribeChangesInGroups(this.state.headers);
 	}
 	filterGroup(group) {
-		return group.name.toLowerCase().includes(this.state.searchFilter);
+		return group.name.toLowerCase().includes(this.state.searchFilter) ||
+			group.from.toLowerCase() === this.state.searchFilter.toLowerCase();
 	}
 	handlePageChange(offset) {
 		this.setState({offset: offset});
