@@ -149,22 +149,22 @@ class Jumps extends React.Component {
 		</ListSubheader>);
 
 		return (
-			<PoseGroup animateOnMount={true}>
-				<Item key={"root"}>
-					{subHeader}
-					{this.state.loading === true ? <LinearProgress className={classes.grow} color={"primary"}/> : "" }
-					<Paper style={{borderRadius: 12, marginBottom: 8}}>
+			<div>
+				{subHeader}
+				{this.state.loading === true ? <LinearProgress className={classes.grow} color={"primary"}/> : "" }
+				<PoseGroup animateOnMount={true}>
+					<Paper component={Item} key={"root"} style={{borderRadius: 12, marginBottom: 8}}>
 						<List component={'ul'}>
 							{listItems.length > 0 ? listItems : <EmptyCard/>}
 						</List>
 					</Paper>
-					{listItems.length > pageSize || this.state.offset > 0 ?
-						<Center><Pagination limit={pageSize} offset={this.state.offset} total={listItems.length} nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, offset) => this.handlePageChange(offset)}/></Center>
-						:
-						<div/>
-					}
-				</Item>
-			</PoseGroup>
+				</PoseGroup>
+				{listItems.length > pageSize || this.state.offset > 0 ?
+					<Center><Pagination limit={pageSize} offset={this.state.offset} total={listItems.length} nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, offset) => this.handlePageChange(offset)}/></Center>
+					:
+					<div/>
+				}
+			</div>
 		)
 	}
 }
