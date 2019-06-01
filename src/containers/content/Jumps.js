@@ -29,8 +29,6 @@ import Center from "react-center";
 import {LinearProgress, withStyles, withTheme} from "@material-ui/core";
 import EmptyCard from "../../components/widget/EmptyCard";
 import ReactImageFallback from "react-image-fallback";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import PublicIcon from "@material-ui/icons/Public";
 import SchemeHighlight from "../../components/widget/SchemeHighlight";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
@@ -38,6 +36,9 @@ import AddIcon from "@material-ui/icons/Add";
 import SortIcon from "@material-ui/icons/Sort";
 import {pageSize} from "../../constants";
 import posed, {PoseGroup} from "react-pose";
+import JumpDialog from "../modal/JumpDialog";
+import Icon from "@mdi/react";
+import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -62,9 +63,13 @@ class Jumps extends React.Component {
 		this.state = {
 			jumps: props.jumps,
 			offset: 0,
-			headers: props.headers
+			headers: props.headers,
+			isLoggedIn: props.isLoggedIn,
+			showJumpDialog: false
 		};
 		this.filterJump = this.filterJump.bind(this);
+		this.handleJumpShow = this.handleJumpShow.bind(this);
+		this.handleJumpHide = this.handleJumpHide.bind(this);
 	}
 	componentDidMount() {
 		this.props.listJumps(this.state.headers);
@@ -87,6 +92,12 @@ class Jumps extends React.Component {
 	handlePageChange(offset) {
 		this.setState({offset: offset});
 	}
+	handleJumpShow() {
+		this.setState({showJumpDialog: true});
+	}
+	handleJumpHide() {
+		this.setState({showJumpDialog: false});
+	}
 
 	getAliases(jump) {
 		if(jump.alias.length === 0) return "";
@@ -108,7 +119,7 @@ class Jumps extends React.Component {
 		this.state.jumps.filter(this.filterJump).forEach((i, index) => {
 			if(index < this.state.offset || index > max) return;
 			let avatar = {
-				icon: i['personal'] === 0 ? <PublicIcon/> : i['personal'] === 1 ? <AccountCircleIcon/> : <PublicIcon/>,
+				icon: i['personal'] === 0 ? mdiEarth : i['personal'] === 1 ? mdiAccountCircleOutline : mdiAccountGroupOutline,
 				bg: i['personal'] === 0 ? theme.palette.primary.light : i['personal'] === 1 ? theme.palette.success.light : theme.palette.info.light,
 				fg: i['personal'] === 0 ? theme.palette.primary.dark : i['personal'] === 1 ? theme.palette.success.dark : theme.palette.info.dark
 			};
@@ -120,7 +131,7 @@ class Jumps extends React.Component {
 			listItems.push((
 				<ListItem button disableRipple key={i.id} component={LItem}>
 					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
-						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon} initialImage={avatar.icon}/>
+						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={<Icon path={avatar.icon} color={avatar.fg} size={1}/>} initialImage={<Icon path={avatar.icon} color={avatar.fg} size={1}/>}/>
 					</Avatar>
 					<Tooltip disableFocusListener title={aliases} placement={"left"} interactive>
 						<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={secondary}/>
@@ -133,7 +144,8 @@ class Jumps extends React.Component {
 			Jumps {this.state.searchFilter != null && this.state.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
 			{/*<div className={classes.grow}/>*/}
 			<IconButton centerRipple={false} className={classes.button} aria-label="Sort"><SortIcon fontSize={"small"}/></IconButton>
-			<IconButton centerRipple={false} className={classes.button} aria-label="Add"><AddIcon fontSize={"small"}/></IconButton>
+			{this.state.isLoggedIn === true ? <IconButton centerRipple={false} className={classes.button} aria-label="Add" onClick={this.handleJumpShow}><AddIcon fontSize={"small"}/></IconButton> : ""}
+			<JumpDialog open={this.state.showJumpDialog} onExited={this.handleJumpHide}/>
 		</ListSubheader>);
 
 		return (
@@ -160,7 +172,8 @@ const mapStateToProps = state => ({
 	jumps: state.jumps.jumps,
 	loading: state.loading[JUMP_LOAD],
 	headers: state.auth.headers,
-	searchFilter: state.generic.searchFilter
+	searchFilter: state.generic.searchFilter,
+	isLoggedIn: state.auth.isLoggedIn
 });
 const mapDispatchToProps = ({
 	listJumps,

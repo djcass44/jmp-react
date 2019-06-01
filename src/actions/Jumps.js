@@ -3,6 +3,7 @@ import {client, socket} from "../constants";
 export const JUMP_LOAD = "JUMP_LOAD";
 export const JUMP_RM = "JUMP_RM";
 export const GET_SIMILAR = "GET_SIMILAR";
+export const PUT_JUMP = "PUT_JUMP";
 
 export const SOCKET_UPDATE_JUMP = "EVENT_UPDATE";
 
@@ -15,6 +16,9 @@ export function rmJump(headers, id) {
 	return dispatch => {
 		rmJumpDispatch(dispatch, headers, id);
 	}
+}
+export function putJump(headers, jump, gid) {
+	return dispatch => {putJumpDispatch(dispatch, headers, jump, gid)};
 }
 export function getSimilar(headers, query) {
 	return dispatch => {
@@ -50,7 +54,7 @@ function rmJumpDispatch(dispatch, headers, id) {
 				url: `/api/v1/jump/${id}`
 			}
 		}
-	})
+	});
 }
 function getSimilarDispatch(dispatch, headers, query) {
 	dispatch({type: `${GET_SIMILAR}_REQUEST`});
@@ -61,5 +65,16 @@ function getSimilarDispatch(dispatch, headers, query) {
 		});
 	}).catch(err => {
 		dispatch({type: `${GET_SIMILAR}_FAILURE`, data: err.toString()});
-	})
+	});
+}
+function putJumpDispatch(dispatch, headers, jump, gid) {
+	dispatch({type: `${PUT_JUMP}_REQUEST`});
+	client.put(`/api/v1/jump${gid}`, jump,{headers: headers}).then(r => {
+		dispatch({
+			type: `${PUT_JUMP}_SUCCESS`,
+			data: r.data
+		});
+	}).catch(err => {
+		dispatch({type: `${PUT_JUMP}_FAILURE`, data: err.toString()});
+	});
 }

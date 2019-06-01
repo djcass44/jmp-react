@@ -15,16 +15,22 @@
  *
  */
 
-import {GROUP_LOAD} from "../actions/Groups";
+import {GET_USER_GROUPS, GROUP_LOAD} from "../actions/Groups";
 
 const groups = (state = {
-	groups: []
+	groups: [],
+	userGroups: []
 }, action) => {
 	switch (action.type) {
 		case `${GROUP_LOAD}_SUCCESS`: {
 			let groups = [];
 			action.data.forEach(i => { groups.push(i) });
 			return {...state, groups: groups}
+		}
+		case `${GET_USER_GROUPS}_SUCCESS`: {
+			let groups = [];
+			action.data.forEach(item => {groups.push(item)});
+			return {...state, userGroups: groups}
 		}
 		default:
 			return state;

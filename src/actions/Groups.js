@@ -17,6 +17,7 @@
 import {client, socket} from "../constants";
 
 export const GROUP_LOAD = "GROUP_LOAD";
+export const GET_USER_GROUPS = "GET_USER_GROUPS";
 
 export const SOCKET_UPDATE_GROUPS = "EVENT_UPDATE_GROUP";
 
@@ -24,6 +25,9 @@ export function getGroups(headers) {
 	return dispatch => {
 		getGroupsDispatch(dispatch, headers);
 	}
+}
+export function getUserGroups(headers, uid) {
+	return dispatch => {getUserGroupsDispatch(dispatch, headers, uid)}
 }
 export function subscribeChangesInGroups(headers) {
 	return async dispatch => {
@@ -42,5 +46,16 @@ function getGroupsDispatch(dispatch, headers) {
 		});
 	}).catch(err => {
 		dispatch({type: `${GROUP_LOAD}_FAILURE`, data: err.toString()});
+	});
+}
+function getUserGroupsDispatch(dispatch, headers, uid) {
+	dispatch({type: `${GET_USER_GROUPS}_REQUEST`});
+	client.get(`/api/v2_1/user/groups?uid=${uid}`, {headers: headers}).then(r => {
+		dispatch({
+			type: `${GET_USER_GROUPS}_SUCCESS`,
+			data: r.data
+		});
+	}).catch(err => {
+		dispatch({type: `${GET_USER_GROUPS}_FAILURE`, data: err.toString()});
 	});
 }

@@ -5,6 +5,7 @@ export const GET_INFO_SYS = "GET_INFO_SYS";
 export const GET_INFO_STAT = "GET_INFO_STAT";
 export const GET_INFO_PROP = "GET_INFO_PROP";
 export const GET_INFO_AUTH = "GET_INFO_AUTH";
+export const GET_INFO_ERROR = "GET_INFO_ERROR";
 
 export function getInfoApp(headers) {
 	return dispatch => {getInfoAppDispatch(dispatch, headers)}
@@ -20,6 +21,9 @@ export function getInfoProp(headers, prop) {
 }
 export function getInfoAuth(headers) {
 	return dispatch => {getInfoAuthDispatch(dispatch, headers)}
+}
+export function getInfoError(headers) {
+	return dispatch => {getInfoErrorDispatch(dispatch, headers)}
 }
 
 
@@ -61,5 +65,13 @@ function getInfoAuthDispatch(dispatch, headers) {
 		dispatch({type: `${GET_INFO_AUTH}_SUCCESS`, data: r.data});
 	}).catch(err => {
 		dispatch({type: `${GET_INFO_AUTH}_FAILURE`, data: err.toString()});
+	});
+}
+function getInfoErrorDispatch(dispatch, headers) {
+	dispatch({type: `${GET_INFO_ERROR}_REQUEST`});
+	client.get(`/api/v2_1/statistics/exception`, {headers: headers}).then(r => {
+		dispatch({type: `${GET_INFO_ERROR}_SUCCESS`, data: r.data});
+	}).catch(err => {
+		dispatch({type: `${GET_INFO_ERROR}_FAILURE`, data: err.toString()});
 	});
 }

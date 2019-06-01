@@ -1,12 +1,12 @@
 import React from "react";
 import {connect} from "react-redux";
-import {ListSubheader, withStyles, withTheme} from "@material-ui/core";
+import {ListSubheader, Typography, withStyles, withTheme} from "@material-ui/core";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import {
-	GET_INFO_APP,
+	GET_INFO_APP, GET_INFO_ERROR,
 	GET_INFO_STAT,
 	GET_INFO_SYS,
-	getInfoApp,
+	getInfoApp, getInfoError,
 	getInfoHealth,
 	getInfoSystem
 } from "../../../actions/Info";
@@ -51,6 +51,7 @@ class Info extends React.Component {
 		this.props.getInfoApp(this.state.headers);
 		this.props.getInfoSystem(this.state.headers);
 		this.props.getInfoHealth(this.state.headers);
+		this.props.getInfoError(this.state.headers);
 	}
 
 	render() {
@@ -61,6 +62,8 @@ class Info extends React.Component {
 				<p>HTTP Server... {this.state.status.http === "OK" ? <span className={classes.statusOK}>Ok</span> : <span className={classes.statusFail}>Error</span>}</p>
 				<p>Database... {this.state.status['database'] === true ? <span className={classes.statusOK}>Ok</span> : <span className={classes.statusFail}>Error</span>}</p>
 				<p>LDAP... {this.state.status['ldap'] === true ? <span className={classes.statusOK}>Ok</span> : this.state.status['ldap'] == null ? <span className={classes.statusWarn}>Disabled</span> : <span className={classes.statusFail}>Error</span>}</p>
+				<Typography variant={"h5"} className={classes.title}>Recent exceptions</Typography>
+				{this.state.errorLoad === true ? <LinearProgress/> : ""}
 			</div>
 		);
 		const appInfo = (<JSONPretty data={JSON.stringify(this.state.appInfo)}/>);
@@ -91,11 +94,14 @@ const mapStateToProps = state => ({
 	systemInfoError: state.errors[GET_INFO_SYS],
 	status: state.info.status,
 	statusCheck: state.info.statusCheck || null,
-	statusLoad: state.loading[GET_INFO_STAT]
+	statusLoad: state.loading[GET_INFO_STAT],
+	error: state.info.error,
+	errorLoad: state.loading[GET_INFO_ERROR]
 });
 const mapDispatchToProps = ({
 	getInfoApp,
 	getInfoSystem,
-	getInfoHealth
+	getInfoHealth,
+	getInfoError
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Info)));

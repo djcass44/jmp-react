@@ -1,11 +1,12 @@
-import {GET_INFO_APP, GET_INFO_AUTH, GET_INFO_PROP, GET_INFO_STAT, GET_INFO_SYS} from "../actions/Info";
+import {GET_INFO_APP, GET_INFO_AUTH, GET_INFO_ERROR, GET_INFO_PROP, GET_INFO_STAT, GET_INFO_SYS} from "../actions/Info";
 
 const info = (state = {
 	appInfo: {},
 	systemInfo: {},
 	status: {},
 	statusCheck: null,
-	auth: {}
+	auth: {},
+	error: []
 }, action) => {
 	switch(action.type) {
 		case `${GET_INFO_APP}_SUCCESS`:
@@ -20,6 +21,8 @@ const info = (state = {
 			return {...state, [action.conf]: 'undefined'};
 		case `${GET_INFO_AUTH}_SUCCESS`:
 			return {...state, auth: action.data};
+		case `${GET_INFO_ERROR}_SUCCESS`:
+			return {...state, error: action.data};
 		default:
 			return state;
 	}

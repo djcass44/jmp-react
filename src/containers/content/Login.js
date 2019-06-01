@@ -91,10 +91,10 @@ class Login extends React.Component {
 									<Typography variant={"h2"} align={"center"}>Login</Typography>
 								</Grid>
 								<Grid item xs={12}>
-									<TextValidator variant={"outlined"} fullWidth label={"Username"} onChange={this.handleChange} name={"username"} value={formData.username} validators={['required']} errorMessages={['This field is required']} />
+									<TextValidator variant={"outlined"} autoComplete={"username"} fullWidth label={"Username"} onChange={this.handleChange} name={"username"} value={formData.username} validators={['required']} errorMessages={['This field is required']}/>
 								</Grid>
 								<Grid item xs={12}>
-									<TextValidator variant={"outlined"} fullWidth label={"Password"} onChange={this.handleChange} name={"password"} value={formData.password} type={"password"} validators={['required']} errorMessages={['This field is required']} />
+									<TextValidator variant={"outlined"} autoComplete={"password"} fullWidth label={"Password"} onChange={this.handleChange} name={"password"} value={formData.password} type={"password"} validators={['required']} errorMessages={['This field is required']}/>
 								</Grid>
 								<Grid item xs={12}>
 									<Button variant={"contained"} color={"primary"} fullWidth size={"large"} type={"submit"} disabled={submitted}>Login</Button>
