@@ -41,6 +41,7 @@ import Icon from "@mdi/react";
 import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
 import JumpContent from "../../components/content/jmp/JumpContent";
 import DeleteDialog from "../modal/DeleteDialog";
+import JumpEditDialog from "../modal/JumpEditDialog";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -69,6 +70,8 @@ class Jumps extends React.Component {
 			isLoggedIn: props.isLoggedIn,
 			showJumpDialog: false,
 			showDeleteDialog: false,
+			showEditDialog: false,
+			editItem: null,
 			deleteItem: null
 		};
 		this.filterJump = this.filterJump.bind(this);
@@ -104,6 +107,9 @@ class Jumps extends React.Component {
 	}
 	handleDeleteDialog(e, visible, item) {
 		this.setState({showDeleteDialog: visible, deleteItem: item});
+	}
+	handleEditDialog(e, visible, item) {
+		this.setState({showEditDialog: visible, editItem: item});
 	}
 	handleDeleteJump() {
 		if(this.state.deleteItem == null) {
@@ -166,7 +172,7 @@ class Jumps extends React.Component {
 							<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={secondary}/>
 						</Tooltip>
 					</ListItem>
-					<JumpContent jump={i} open={i.expanded === true} onDelete={(e, item) => {this.handleDeleteDialog(e, true, item)}}/>
+					<JumpContent jump={i} open={i.expanded === true} onEdit={(e, item) => {this.handleEditDialog(e, true, item)}} onDelete={(e, item) => {this.handleDeleteDialog(e, true, item)}}/>
 				</div>
 			));
 		});
@@ -189,6 +195,7 @@ class Jumps extends React.Component {
 							{listItems.length > 0 ? listItems : <EmptyCard/>}
 						</List>
 						<DeleteDialog open={this.state.showDeleteDialog} onExited={(e) => {this.handleDeleteDialog(e, false, null)}} onSubmit={this.handleDeleteJump.bind(this)}/>
+						<JumpEditDialog jump={this.state.editItem} open={this.state.showEditDialog} onExited={(e) => {this.handleEditDialog(e, false, null)}}/>
 					</Paper>
 				</PoseGroup>
 				{listItems.length > pageSize || this.state.offset > 0 ?

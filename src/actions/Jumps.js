@@ -1,10 +1,10 @@
 import {client, socket} from "../constants";
 
 export const JUMP_LOAD = "JUMP_LOAD";
-export const JUMP_RM = "JUMP_RM";
 export const GET_SIMILAR = "GET_SIMILAR";
 export const PUT_JUMP = "PUT_JUMP";
 export const DELETE_JUMP = "DELETE_JUMP";
+export const PATCH_JUMP = "PATCH_JUMP";
 
 export const SOCKET_UPDATE_JUMP = "EVENT_UPDATE";
 
@@ -20,6 +20,9 @@ export function deleteJump(headers, id) {
 }
 export function putJump(headers, jump, gid) {
 	return dispatch => {putJumpDispatch(dispatch, headers, jump, gid)};
+}
+export function patchJump(headers, jump) {
+	return dispatch => {patchJumpDispatch(dispatch, headers, jump)};
 }
 export function getSimilar(headers, query) {
 	return dispatch => {
@@ -73,5 +76,13 @@ function putJumpDispatch(dispatch, headers, jump, gid) {
 		});
 	}).catch(err => {
 		dispatch({type: `${PUT_JUMP}_FAILURE`, data: err.toString()});
+	});
+}
+function patchJumpDispatch(dispatch, headers, jump) {
+	dispatch({type: `${PATCH_JUMP}_REQUEST`});
+	client.patch(`/api/v1/jump`, jump,{headers: headers}).then(r => {
+		dispatch({type: `${PATCH_JUMP}_SUCCESS`, data: r.data});
+	}).catch(err => {
+		dispatch({type: `${PATCH_JUMP}_FAILURE`, data: err.toString()});
 	});
 }
