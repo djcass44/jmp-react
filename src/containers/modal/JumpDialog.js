@@ -142,7 +142,7 @@ class JumpDialog extends React.Component {
 				</DialogContent>
 				<DialogActions>
 					<Button color={"secondary"} onClick={this.props.onExited}>Cancel</Button>
-					<Button color={"primary"} onClick={this.handleSubmit.bind(this)} disabled={(this.state.type === 2 && this.state.groupId === '') || this.state.type === '' || this.state.name.error !== '' || this.state.location.error !== '' || this.state.loadingSubmit === true || this.state.loadingGroups === true}>Create</Button>
+					<Button color={"primary"} onClick={this.handleSubmit.bind(this)} disabled={(this.state.type === 2 && this.state.groupId === '') || this.state.type === '' || this.state.name.error !== '' || this.state.location.error !== '' || this.state.loadingSubmit === true || this.state.loadingGroups === true || this.state.name.value.length === 0 || this.state.location.value.length === 0}>Create</Button>
 				</DialogActions>
 			</Dialog>
 		);

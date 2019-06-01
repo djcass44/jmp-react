@@ -18,7 +18,7 @@
 import React from "react";
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import Card from "@material-ui/core/es/Card/Card";
-import {CardContent, Grid, TextField} from "@material-ui/core";
+import {CardContent, Grid, TextField, withStyles} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import {OAUTH_REQUEST, oauthRequest} from "../../actions/Auth";
@@ -26,6 +26,18 @@ import {connect} from "react-redux";
 import Center from "react-center";
 import {getVersion} from "../../actions/Generic";
 import BackButton from "../../components/widget/BackButton";
+
+const styles = theme => ({
+	title: {
+		fontFamily: "Manrope",
+		fontWeight: 500,
+	},
+	banner: {
+		fontFamily: "Manrope",
+		fontWeight: 500,
+		color: theme.palette.secondary.main
+	},
+});
 
 class Login extends React.Component {
 	constructor(props) {
@@ -87,6 +99,7 @@ class Login extends React.Component {
 		this.props.oauthRequest(data);
 	}
 	render() {
+		const {classes} = this.props;
 		const errorMessage = <Center>
 			<span style={{color: "red"}}>{this.state.error}</span>
 		</Center>;
@@ -102,7 +115,7 @@ class Login extends React.Component {
 							<Grid container spacing={4} alignContent={"center"} justify={"center"}>
 								<Grid item xs={12}>
 									<Center><img src={`${process.env.PUBLIC_URL}/jmp.png`} alt={"App icon"} height={72}/></Center>
-									<Typography variant={"h2"} align={"center"}>Login</Typography>
+									<Typography className={classes.banner} variant={"h2"} align={"center"}>Login</Typography>
 								</Grid>
 								<Grid item xs={12}>
 									<TextField required autoFocus autoComplete={"username"} margin={"dense"} id={"username"} label={"Username"} variant={"outlined"} value={this.state.username.value} fullWidth error={this.state.username.error.length !== 0} helperText={this.state.username.error} onChange={this.handleUsernameChange.bind(this)}/>
@@ -111,10 +124,10 @@ class Login extends React.Component {
 									<TextField required type={"password"} autoComplete={"password"} margin={"dense"} id={"password"} label={"Password"} variant={"outlined"} value={this.state.password.value} fullWidth error={this.state.password.error.length !== 0} helperText={this.state.password.error} onChange={this.handlePasswordChange.bind(this)}/>
 								</Grid>
 								<Grid item xs={12}>
-									<Button onClick={this.handleClick.bind(this)} variant={"contained"} color={"primary"} fullWidth size={"large"} type={"submit"} disabled={this.state.submitted || this.state.username.error !== '' || this.state.password.error !== '' || this.state.username.value.length === 0 || this.state.password.value.length === 0}>Login</Button>
+									<Button className={classes.title} onClick={this.handleClick.bind(this)} variant={"contained"} color={"primary"} fullWidth size={"large"} type={"submit"} disabled={this.state.submitted || this.state.username.error !== '' || this.state.password.error !== '' || this.state.username.value.length === 0 || this.state.password.value.length === 0}>Login</Button>
 								</Grid>
 							</Grid>
-							<Center>{this.state.version}</Center>
+							<Center className={classes.title} style={{padding: 8}}>{process.env.REACT_APP_APP_NAME}&nbsp;{this.state.version}</Center>
 							{this.state.error != null ? errorMessage : <div/>}
 						</CardContent>
 					</Card>
@@ -135,4 +148,4 @@ const mapDispatchToProps = ({
 	oauthRequest,
 	getVersion
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Login));

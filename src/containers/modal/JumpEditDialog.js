@@ -149,7 +149,7 @@ class JumpEditDialog extends React.Component {
 				</DialogContent>
 				<DialogActions>
 					<Button color={"secondary"} onClick={this.props.onExited}>Cancel</Button>
-					<Button color={"primary"} onClick={this.handleSubmit.bind(this)} disabled={this.state.name.error !== '' || this.state.location.error !== '' || this.state.alias.error !== '' || this.state.loadingSubmit === true}>Update</Button>
+					<Button color={"primary"} onClick={this.handleSubmit.bind(this)} disabled={this.state.name.error !== '' || this.state.location.error !== '' || this.state.alias.error !== '' || this.state.loadingSubmit === true || this.state.name.value.length === 0 || this.state.location.value.length === 0}>Update</Button>
 				</DialogActions>
 			</Dialog>
 		);

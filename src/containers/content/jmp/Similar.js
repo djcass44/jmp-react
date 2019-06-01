@@ -93,7 +93,7 @@ class Similar extends React.Component {
 		return <Grid container spacing={40}>
 			<Grid item sm={3}/>
 			<Grid item sm={6}>
-				<Center><Typography variant={"h1"}>Woah</Typography></Center>
+				<Center><Typography className={classes.title} variant={"h1"}>Woah</Typography></Center>
 				<Center><Typography variant={"headline"}>Before you go <span role={"img"} aria-label={"Rocket"}>🚀</span></Typography></Center>
 				<Center>{this.state.error == null ? status : this.state.error}</Center>
 				{this.state.loading === true ? <Center><CircularProgress/></Center> : ""}
