@@ -24,6 +24,7 @@ import Icon from "@mdi/react";
 import {mdiChevronDown, mdiChevronUp} from "@mdi/js";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import BrowserGuide from "./help/BrowserGuide";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -46,6 +47,10 @@ class Help extends React.Component {
 		super(props);
 		this.state = {
 			qna: [
+				{
+					q: "Browser setup guides",
+					a: <BrowserGuide/>
+				},
 				{
 					q: "Why are some URLs red?",
 					a: <span>HTTP URLs are marked as red to communicate their lack of security. HTTP websites are being phased out all across the internet and your browser probably already shows warnings.<br/><br/>The red highlight is only a warning and doesn't interfere with your ability to access them, however the site wont be indexed and may be missing metadata (e.g. title and favicon).</span>
@@ -94,7 +99,7 @@ class Help extends React.Component {
 						</ListItemSecondaryAction>
 					</ListItem>
 					<Collapse in={i.expanded} unmountOnExit timeout={"auto"}>
-						<Typography className={classes.content} variant={"body1"}>{i.a}</Typography>
+						<Typography component={'div'} className={classes.content} variant={"body1"}>{i.a}</Typography>
 					</Collapse>
 				</div>
 			)
