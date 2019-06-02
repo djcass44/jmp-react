@@ -19,6 +19,24 @@ import React from "react";
 import Users from "./identity/Users";
 import Groups from "./identity/Groups";
 import BackButton from "../../components/widget/BackButton";
+import Center from "react-center";
+import Avatar from "@material-ui/core/Avatar";
+import {Paper, withStyles, withTheme} from "@material-ui/core";
+import Icon from "@mdi/react";
+import {mdiAccountGroupOutline, mdiSettingsOutline} from "@mdi/js";
+import Typography from "@material-ui/core/Typography";
+
+const styles = theme => ({
+	title: {fontFamily: "Manrope", fontWeight: 500},
+	avatar: {
+		backgroundColor: '#FAFAFA',
+		width: 56,
+		height: 56,
+		borderRadius: 100,
+		margin: 24,
+		padding: 6
+	},
+});
 
 class Identity extends React.Component {
 	componentDidMount() {
@@ -26,13 +44,20 @@ class Identity extends React.Component {
 	}
 
 	render() {
+		const {classes, theme} = this.props;
 		return (
 			<div>
 				<BackButton label={"Back to home"} to={"/"}/>
+				<Center>
+					<Avatar className={classes.avatar} component={Paper}><Icon path={mdiAccountGroupOutline} size={2} color={theme.palette.primary.main}/></Avatar>
+				</Center>
+				<Center>
+					<Typography variant={"h4"} className={classes.title}>Users &amp; Groups</Typography>
+				</Center>
 				<Users/>
 				<Groups/>
 			</div>
 		);
 	}
 }
-export default Identity;
+export default withStyles(styles)(withTheme(Identity));

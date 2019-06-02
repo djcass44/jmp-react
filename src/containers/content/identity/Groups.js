@@ -127,7 +127,7 @@ class Groups extends React.Component {
 			Groups {this.state.searchFilter != null && this.state.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
 			{/*<div className={classes.grow}/>*/}
 			<SortButton selectedSort={this.state.sort} sorts={this.state.sorts} onSubmit={(e, value) => this.handleSortChange(e, value)}/>
-			<IconButton className={classes.button} aria-label="Add"><AddIcon fontSize={"small"}/></IconButton>
+			{/*<IconButton className={classes.button} aria-label="Add"><AddIcon fontSize={"small"}/></IconButton>*/}
 		</ListSubheader>);
 
 		return (

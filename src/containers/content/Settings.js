@@ -1,19 +1,30 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import Center from "react-center";
-import {withTheme, withStyles} from "@material-ui/core";
+import {withTheme, withStyles, Paper} from "@material-ui/core";
 import Info from "./settings/Info";
 import BackButton from "../../components/widget/BackButton";
 import General from "./settings/General";
 import Auth from "./settings/Auth";
 import {connect} from "react-redux";
+import Avatar from "@material-ui/core/Avatar";
+import Icon from "@mdi/react";
+import {mdiSettingsOutline} from "@mdi/js";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
 	button: {
 		// margin: theme.spacing.unit,
 	},
-	grow: {flexGrow: 1}
+	grow: {flexGrow: 1},
+	avatar: {
+		backgroundColor: '#FAFAFA',
+		width: 56,
+		height: 56,
+		borderRadius: 100,
+		margin: 24,
+		padding: 6
+	},
 });
 
 class Settings extends React.Component {
@@ -31,14 +42,16 @@ class Settings extends React.Component {
 		this.setState({...nextProps});
 	}
 	render() {
-		const {classes} = this.props;
+		const {classes, theme} = this.props;
 		return (
 			<div>
 				<BackButton label={"Back to home"} to={"/"}/>
 				<Center>
-					<Typography variant={"h3"} className={classes.title}>Settings</Typography>
+					<Avatar className={classes.avatar} component={Paper}><Icon path={mdiSettingsOutline} size={2} color={theme.palette.primary.main}/></Avatar>
 				</Center>
-				<Center><Typography style={{padding: 24}} variant={"subtitle1"}>Manage {process.env.REACT_APP_APP_NAME} and its settings to make yourself more at home</Typography></Center>
+				<Center>
+					<Typography variant={"h4"} className={classes.title}>Settings</Typography>
+				</Center>
 				<General/>
 				{this.state.isAdmin === true ?
 					<div>

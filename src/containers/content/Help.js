@@ -25,6 +25,7 @@ import {mdiChevronDown, mdiChevronUp} from "@mdi/js";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import BrowserGuide from "./help/BrowserGuide";
+import BackButton from "../../components/widget/BackButton";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -106,6 +107,7 @@ class Help extends React.Component {
 		});
 		return (
 			<div>
+				<BackButton label={"Back to home"} to={"/"}/>
 				<Center>
 					<Avatar className={classes.avatar} component={Paper} src={`${process.env.PUBLIC_URL}/jmp.png`} alt={process.env.REACT_APP_APP_NAME}/>
 				</Center>
