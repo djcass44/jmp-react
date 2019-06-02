@@ -40,7 +40,8 @@ class JumpDialog extends React.Component {
 			uid: props.uid,
 			userGroups: props.userGroups,
 			headers: props.headers,
-			submitted: false
+			submitted: false,
+			exiting: false
 		};
 		this.handleTypeChange = this.handleTypeChange.bind(this);
 		this.handleGroupChange = this.handleGroupChange.bind(this);
@@ -48,7 +49,8 @@ class JumpDialog extends React.Component {
 	}
 	componentWillReceiveProps(nextProps, nextContext) {
 		this.setState({...nextProps});
-		if(nextProps.loadingSubmit === false && this.state.submitted === true && nextProps.submitError == null) {
+		if(nextProps.loadingSubmit === false && this.state.submitted === true && nextProps.submitError == null && this.state.exiting === false) {
+			this.setState({exiting: true});
 			this.props.onExited();
 		}
 	}
@@ -70,7 +72,8 @@ class JumpDialog extends React.Component {
 			groupId: '',
 			name: name,
 			location: location,
-			submitted: false
+			submitted: false,
+			exiting: false
 		});
 	}
 

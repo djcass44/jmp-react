@@ -87,8 +87,6 @@ class Jumps extends React.Component {
 			sort: localStorage.getItem(LS_SORT)
 		};
 		this.filterJump = this.filterJump.bind(this);
-		this.handleJumpShow = this.handleJumpShow.bind(this);
-		this.handleJumpHide = this.handleJumpHide.bind(this);
 	}
 	componentDidMount() {
 		window.document.title = `${process.env.REACT_APP_APP_NAME}`;
@@ -114,11 +112,8 @@ class Jumps extends React.Component {
 	handlePageChange(offset) {
 		this.setState({offset: offset});
 	}
-	handleJumpShow() {
-		this.setState({showJumpDialog: true});
-	}
-	handleJumpHide() {
-		this.setState({showJumpDialog: false});
+	handleJumpDialog(e, visible) {
+		this.setState({showJumpDialog: visible});
 	}
 	handleDeleteDialog(e, visible, item) {
 		this.setState({showDeleteDialog: visible, deleteItem: item});
@@ -202,8 +197,8 @@ class Jumps extends React.Component {
 			{process.env.REACT_APP_APP_NOUN}s {this.state.searchFilter != null && this.state.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
 			{/*<div className={classes.grow}/>*/}
 			<SortButton selectedSort={this.state.sort} sorts={this.state.sorts} onSubmit={(e, value) => {this.handleSortChange(e, value)}}/>
-			{this.state.isLoggedIn === true ? <IconButton centerRipple={false} className={classes.button} aria-label="Add" onClick={this.handleJumpShow}><AddIcon fontSize={"small"}/></IconButton> : ""}
-			<JumpDialog open={this.state.showJumpDialog} onExited={this.handleJumpHide}/>
+			{this.state.isLoggedIn === true ? <IconButton centerRipple={false} className={classes.button} aria-label="Add" onClick={(e => {this.handleJumpDialog(e, true)})}><AddIcon fontSize={"small"}/></IconButton> : ""}
+			<JumpDialog open={this.state.showJumpDialog} onExited={(e) => {this.handleJumpDialog(e, false)}}/>
 		</ListSubheader>);
 
 		return (
