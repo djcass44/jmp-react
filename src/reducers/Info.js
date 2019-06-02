@@ -6,7 +6,8 @@ const info = (state = {
 	status: {},
 	statusCheck: null,
 	auth: {},
-	error: []
+	error: [],
+	conf: {}
 }, action) => {
 	switch(action.type) {
 		case `${GET_INFO_APP}_SUCCESS`:
@@ -16,7 +17,9 @@ const info = (state = {
 		case `${GET_INFO_STAT}_SUCCESS`:
 			return {...state, status: action.data, statusCheck: new Date()};
 		case `${GET_INFO_PROP}_SUCCESS`:
-			return {...state, [action.conf]: action.data};
+			const {conf} = state;
+			conf[action.conf] = action.data;
+			return {...state, conf};
 		case `${GET_INFO_PROP}_FAILURE`:
 			return {...state, [action.conf]: 'undefined'};
 		case `${GET_INFO_AUTH}_SUCCESS`:
