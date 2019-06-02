@@ -33,8 +33,7 @@ import {setFilter} from "../actions/Generic";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
 import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 import Icon from "@mdi/react";
-import {mdiAccountGroupOutline, mdiLogin, mdiLogout} from "@mdi/js";
-import Badge from "@material-ui/core/Badge";
+import {mdiAccountGroupOutline, mdiHelpCircleOutline, mdiLogin, mdiLogout} from "@mdi/js";
 
 const styles = theme => ({
 	root: {width: '100%'},
@@ -148,14 +147,12 @@ class Nav extends React.Component {
 		return <div className={classes.root}>
 			<AppBar position={"static"} color={"default"}>
 				<Toolbar>
-					<Badge color={"primary"} badgeContent={"BETA"}>
-						<Typography className={classes.title} variant={"h6"} color={"inherit"}>
-							{process.env.REACT_APP_APP_NAME}
-						</Typography>
-					</Badge>
-					{/*<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"inherit"}>*/}
-					{/*	{process.env.REACT_APP_APP_MSG}*/}
-					{/*</Typography>*/}
+					<Typography className={classes.title} variant={"h6"} color={"inherit"}>
+						{process.env.REACT_APP_APP_NAME}
+					</Typography>
+					<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"inherit"}>
+						{process.env.REACT_APP_APP_MSG}
+					</Typography>
 					{this.state.showSearch === true ?
 						<div className={classes.search}>
 							<div className={classes.searchIcon}>
@@ -168,7 +165,8 @@ class Nav extends React.Component {
 					}
 					<div className={classes.grow}/>
 					<div className={classes.sectionDesktop}>
-						<IconButton color={"inherit"} onClick={this.handleProfileMenuOpen} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}>
+						<IconButton component={Link} centerRipple={false} color={"inherit"} to={"/help"}><Icon path={mdiHelpCircleOutline} size={1}/></IconButton>
+						<IconButton centerRipple={false} color={"inherit"} onClick={this.handleProfileMenuOpen} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}>
 							<AccountCircle/>
 						</IconButton>
 					</div>
