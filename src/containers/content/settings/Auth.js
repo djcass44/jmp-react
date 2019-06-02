@@ -17,7 +17,7 @@
 
 import React from "react";
 import {getInfoAuth, getInfoProp} from "../../../actions/Info";
-import {ListSubheader, withStyles, withTheme} from "@material-ui/core";
+import {FormControlLabel, ListSubheader, Switch, TextField, withStyles, withTheme} from "@material-ui/core";
 import {connect} from "react-redux";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import Icon from "@mdi/react";
@@ -77,10 +77,37 @@ class Auth extends React.Component {
 
 	render() {
 		const {classes, theme} = this.props;
+		// const propItems = [];
+		// console.log(this.state.conf);
+		// for (const it in this.state.conf) {
+		// 	if(!this.state.conf.hasOwnProperty(it)) continue;
+		// 	const key = it.key;
+		// 	const value = it.value;
+		// 	console.log(key, value);
+		// 	if(typeof value === 'boolean') {
+		// 		propItems.push(
+		// 			<div key={key}>
+		// 				<FormControlLabel control={
+		// 					<Switch checked={value}/>
+		// 				} label={key}/>
+		// 			</div>
+		// 		)
+		// 	}
+		// 	else {
+		// 		propItems.push(
+		// 			<div key={key}>
+		// 				<TextField value={value} label={key} fullWidth/>
+		// 			</div>
+		// 		)
+		// 	}
+		// }
 		const auth = (
 			<div>
 				<p>Connected... {this.state.auth['connected'] === true ? <span className={classes.statusOK}>Yes</span> : <span className={classes.statusFail}>No</span>}</p>
 				<p>LDAP is providing {this.state.auth['users']} users and {this.state.auth['groups']} groups.</p>
+				{/*<div>*/}
+				{/*	{propItems}*/}
+				{/*</div>*/}
 			</div>
 		);
 		return (

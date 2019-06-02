@@ -7,7 +7,7 @@ const info = (state = {
 	statusCheck: null,
 	auth: {},
 	error: [],
-	conf: {}
+	conf: []
 }, action) => {
 	switch(action.type) {
 		case `${GET_INFO_APP}_SUCCESS`:
@@ -18,10 +18,24 @@ const info = (state = {
 			return {...state, status: action.data, statusCheck: new Date()};
 		case `${GET_INFO_PROP}_SUCCESS`:
 			const {conf} = state;
-			conf[action.conf] = action.data;
+			let item = {
+				key: action.conf,
+				value: action.data
+			};
+			let i = -1;
+			state.conf.forEach((it, index) => {
+				if(it.key === item.key) i = index;
+			});
+			if(i !== -1) {
+				conf[i] = item;
+			}
+			else
+				conf.push(item);
 			return {...state, conf};
-		case `${GET_INFO_PROP}_FAILURE`:
-			return {...state, [action.conf]: 'undefined'};
+		// case `${GET_INFO_PROP}_FAILURE`:
+		// 	const {conf1} = state;
+		// 	conf1[action.conf] = 'undefined';
+		// 	return {...state, conf1};
 		case `${GET_INFO_AUTH}_SUCCESS`:
 			return {...state, auth: action.data};
 		case `${GET_INFO_ERROR}_SUCCESS`:
