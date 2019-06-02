@@ -5,9 +5,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {withStyles, withTheme} from "@material-ui/core";
+import {Typography, withStyles, withTheme} from "@material-ui/core";
 import {connect} from "react-redux";
-import {getUserGroups} from "../../actions/Groups";
 import {PATCH_JUMP, patchJump} from "../../actions/Jumps";
 
 const styles = theme => ({
@@ -35,15 +34,20 @@ class JumpEditDialog extends React.Component {
 			},
 			isAdmin: props.isAdmin,
 			headers: props.headers,
+			submitted: false,
+			exiting: false
 		};
 		this.handleDialogOpen = this.handleDialogOpen.bind(this);
 	}
 	componentWillReceiveProps(nextProps, nextContext) {
 		this.setState({...nextProps});
+		if(nextProps.loadingSubmit === false && this.state.submitted === true && nextProps.submitError == null && this.state.exiting === false) {
+			this.setState({exiting: true});
+			this.props.onExited();
+		}
 	}
 
 	handleDialogOpen() {
-		this.props.getUserGroups(this.state.headers, this.state.uid);
 		const name = {
 			value: this.props.jump.name,
 			error: '',
@@ -66,7 +70,9 @@ class JumpEditDialog extends React.Component {
 		this.setState({
 			name: name,
 			location: location,
-			alias: alias
+			alias: alias,
+			submitted: false,
+			exiting: false
 		});
 	}
 
@@ -134,7 +140,8 @@ class JumpEditDialog extends React.Component {
 			location: this.state.location.value,
 			alias: aliases
 		}));
-		this.props.onExited();
+		this.setState({submitted: true});
+		// this.props.onExited();
 	}
 
 	render() {
@@ -146,6 +153,7 @@ class JumpEditDialog extends React.Component {
 					<TextField required autoFocus margin={"dense"} id={"name"} label={"Name"} value={this.state.name.value} fullWidth error={this.state.name.error.length !== 0} helperText={this.state.name.error} onChange={this.handleNameChange.bind(this)}/>
 					<TextField required margin={"dense"} id={"location"} label={"Location"} value={this.state.location.value} autoComplete={"url"} fullWidth error={this.state.location.error.length !== 0} helperText={this.state.location.error} onChange={this.handleUrlChange.bind(this)}/>
 					<TextField margin={"dense"} id={"alias"} label={"Aliases (comma separated)"} value={this.state.alias.value} fullWidth error={this.state.alias.error.length !== 0} helperText={this.state.alias.error} onChange={this.handleAliasChange.bind(this)}/>
+					<Typography variant={"caption"} color={"error"}>{this.state.submitError}</Typography>
 				</DialogContent>
 				<DialogActions>
 					<Button color={"secondary"} onClick={this.props.onExited}>Cancel</Button>
@@ -158,10 +166,10 @@ class JumpEditDialog extends React.Component {
 const mapStateToProps = state => ({
 	isAdmin: state.auth.isAdmin,
 	headers: state.auth.headers,
-	loadingSubmit: state.loading[PATCH_JUMP]
+	loadingSubmit: state.loading[PATCH_JUMP],
+	submitError: state.errors[PATCH_JUMP]
 });
 const mapDispatchToProps= ({
-	getUserGroups,
 	patchJump
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(JumpEditDialog)));

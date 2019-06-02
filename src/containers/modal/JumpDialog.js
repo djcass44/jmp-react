@@ -5,7 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {CircularProgress, InputLabel, Select, withStyles, withTheme} from "@material-ui/core";
+import {CircularProgress, InputLabel, Select, Typography, withStyles, withTheme} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import {connect} from "react-redux";
@@ -40,6 +40,7 @@ class JumpDialog extends React.Component {
 			uid: props.uid,
 			userGroups: props.userGroups,
 			headers: props.headers,
+			submitted: false
 		};
 		this.handleTypeChange = this.handleTypeChange.bind(this);
 		this.handleGroupChange = this.handleGroupChange.bind(this);
@@ -47,6 +48,9 @@ class JumpDialog extends React.Component {
 	}
 	componentWillReceiveProps(nextProps, nextContext) {
 		this.setState({...nextProps});
+		if(nextProps.loadingSubmit === false && this.state.submitted === true && nextProps.submitError == null) {
+			this.props.onExited();
+		}
 	}
 
 	handleDialogOpen() {
@@ -65,7 +69,8 @@ class JumpDialog extends React.Component {
 			type: '',
 			groupId: '',
 			name: name,
-			location: location
+			location: location,
+			submitted: false
 		});
 	}
 
@@ -105,7 +110,8 @@ class JumpDialog extends React.Component {
 			personal: this.state.type,
 			alias: []
 		}), gid);
-		this.props.onExited();
+		this.setState({submitted: true});
+		// this.props.onExited();
 	}
 
 	render() {
@@ -139,7 +145,7 @@ class JumpDialog extends React.Component {
 						:
 						""
 					}
-				</DialogContent>
+					<Typography style={{fontWeight: "bold"}} variant={"caption"} color={"error"}>{this.state.submitError}</Typography>				</DialogContent>
 				<DialogActions>
 					<Button color={"secondary"} onClick={this.props.onExited}>Cancel</Button>
 					<Button color={"primary"} onClick={this.handleSubmit.bind(this)} disabled={(this.state.type === 2 && this.state.groupId === '') || this.state.type === '' || this.state.name.error !== '' || this.state.location.error !== '' || this.state.loadingSubmit === true || this.state.loadingGroups === true || this.state.name.value.length === 0 || this.state.location.value.length === 0}>Create</Button>
@@ -154,7 +160,8 @@ const mapStateToProps = state => ({
 	userGroups: state.groups.userGroups,
 	loadingGroups: state.loading[GET_USER_GROUPS],
 	headers: state.auth.headers,
-	loadingSubmit: state.loading[PUT_JUMP]
+	loadingSubmit: state.loading[PUT_JUMP],
+	submitError: state.errors[PUT_JUMP]
 });
 const mapDispatchToProps= ({
 	getUserGroups,
