@@ -17,7 +17,13 @@
 
 export default function processHTTPCode(status) {
 	if(status == null) return status;
-	let maybeCode = parseInt(status.substring(status.length - 3, status.length));
+	let maybeCode = 0;
+	try {
+		maybeCode = parseInt(status.substring(status.length - 3, status.length));
+	}
+	catch (e) {
+		return status;
+	}
 	console.log(maybeCode);
 	if(isNaN(maybeCode)) return status;
 

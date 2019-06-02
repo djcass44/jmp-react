@@ -102,7 +102,9 @@ class Login extends React.Component {
 	render() {
 		const {classes} = this.props;
 		const errorMessage = <Center>
-			<span style={{color: "red"}}>{this.state.error}</span>
+			<span style={{color: "red"}}>
+				{this.state.error != null && this.state.error.startsWith("Unauthorized") ? "Incorrect username or password" : this.state.error}
+			</span>
 		</Center>;
 
 		return(
