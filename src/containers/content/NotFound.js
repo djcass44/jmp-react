@@ -18,37 +18,54 @@
 import React from "react";
 import Typography from "@material-ui/core/es/Typography/Typography";
 import Center from "react-center";
-import {withStyles} from "@material-ui/core";
+import {withStyles, withTheme} from "@material-ui/core";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
-import BackIcon from "@material-ui/icons/ArrowBack";
-import HomeIcon from "@material-ui/icons/Home";
 import {Link} from "react-router-dom";
+import Icon from "@mdi/react";
+import {mdiArrowLeft, mdiHomeOutline} from "@mdi/js";
 
 const styles = theme => ({
 	title: {
 		fontSize: 148,
 		fontWeight: 200,
 		color: "#454545"
+	},
+	subtitle: {
+		textAlign: 'center',
+		fontFamily: "Manrope",
+		fontWeight: 500
+	},
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		height: '80vh'
 	}
 });
 
 class NotFound extends React.Component {
+	componentDidMount() {
+		window.document.title = `404 - ${process.env.REACT_APP_APP_NAME}`;
+	}
+
 	render() {
-		const {classes} = this.props;
-		return <div>
-			<div>
-				<Center><h1 className={classes.title}>404</h1></Center>
-				<Center><Typography style={{textAlign: "center"}} variant={"headline"}>The page you're looking for doesn't exist or the server refused to disclose it.</Typography></Center>
-				<Center>
-					<IconButton color={"secondary"} href={"javascript:window.history.back()"} aria-label={"Go back"}>
-						<BackIcon/>
-					</IconButton>
-					<IconButton component={Link} to={"/"} color={"primary"} aria-label={"Return to home"}>
-						<HomeIcon/>
-					</IconButton>
-				</Center>
+		const {classes, theme} = this.props;
+		return (
+			<div className={classes.container}>
+				<div style={{justifyContent: 'center', alignItems: 'center'}}>
+					<Center><Typography className={classes.title} variant={"h1"}>404</Typography></Center>
+					<Center><Typography className={classes.subtitle} variant={"subtitle1"}>The page you're looking for doesn't exist or the server refused to disclose it.</Typography></Center>
+					<Center>
+						<IconButton color={"secondary"} href={"javascript:window.history.back()"} aria-label={"Go back"}>
+							<Icon path={mdiArrowLeft} size={1} color={theme.palette.secondary.main}/>
+						</IconButton>
+						<IconButton component={Link} to={"/"} color={"primary"} aria-label={"Return to home"}>
+							<Icon path={mdiHomeOutline} size={1} color={theme.palette.primary.main}/>
+						</IconButton>
+					</Center>
+				</div>
 			</div>
-		</div>
+		);
 	}
 }
-export default withStyles(styles)(NotFound);
+export default withStyles(styles)(withTheme(NotFound));

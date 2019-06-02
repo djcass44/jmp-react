@@ -84,6 +84,7 @@ class Jumps extends React.Component {
 		this.handleJumpHide = this.handleJumpHide.bind(this);
 	}
 	componentDidMount() {
+		window.document.title = `${process.env.REACT_APP_APP_NAME}`;
 		this.props.listJumps(this.state.headers);
 		this.props.subscribeChangesInJumps(this.state.headers);
 	}

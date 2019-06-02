@@ -24,7 +24,9 @@ class Settings extends React.Component {
 			isLoggedIn: props.isLoggedIn
 		};
 	}
-
+	componentDidMount() {
+		window.document.title = `Settings - ${process.env.REACT_APP_APP_NAME}`;
+	}
 	componentWillReceiveProps(nextProps, nextContext) {
 		this.setState({...nextProps});
 	}

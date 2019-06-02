@@ -44,6 +44,7 @@ class Token extends React.Component {
 	}
 
 	componentDidMount() {
+		window.document.title = `${process.env.REACT_APP_APP_NAME}`;
 		this.jumpUser();
 	}
 

@@ -34,6 +34,7 @@ class Logout extends React.Component {
 	}
 
 	componentDidMount() {
+		window.document.title = `Logout - ${process.env.REACT_APP_APP_NAME}`;
 		// Log the user out
 		this.props.oauthLogout();
 	}

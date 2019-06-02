@@ -20,13 +20,19 @@ import Users from "./identity/Users";
 import Groups from "./identity/Groups";
 import BackButton from "../../components/widget/BackButton";
 
-function Identity() {
-	return (
-		<div>
-			<BackButton label={"Back to home"} to={"/"}/>
-			<Users/>
-			<Groups/>
-		</div>
-	);
+class Identity extends React.Component {
+	componentDidMount() {
+		window.document.title = `Identity - ${process.env.REACT_APP_APP_NAME}`;
+	}
+
+	render() {
+		return (
+			<div>
+				<BackButton label={"Back to home"} to={"/"}/>
+				<Users/>
+				<Groups/>
+			</div>
+		);
+	}
 }
 export default Identity;

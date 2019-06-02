@@ -60,6 +60,7 @@ class Login extends React.Component {
 	}
 
 	componentDidMount() {
+		window.document.title = `Login - ${process.env.REACT_APP_APP_NAME}`;
 		this.props.getVersion();
 	}
 
