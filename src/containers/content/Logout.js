@@ -19,7 +19,7 @@ import React from "react";
 import Center from "react-center";
 import {oauthLogout} from "../../actions/Auth";
 import {connect} from "react-redux";
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
@@ -41,7 +41,7 @@ class Logout extends React.Component {
 
 	componentWillReceiveProps(nextProps, nextContext) {
 		this.setState({...nextProps});
-		if(this.state.isLoggedIn === false) {
+		if(nextProps.isLoggedIn === false) {
 			this.props.history.push('/');
 		}
 	}
@@ -72,4 +72,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = ({
 	oauthLogout
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Logout));
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(withRouter(Logout)));
