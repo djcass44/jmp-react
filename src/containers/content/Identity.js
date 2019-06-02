@@ -23,7 +23,7 @@ import Center from "react-center";
 import Avatar from "@material-ui/core/Avatar";
 import {Paper, withStyles, withTheme} from "@material-ui/core";
 import Icon from "@mdi/react";
-import {mdiAccountGroupOutline, mdiSettingsOutline} from "@mdi/js";
+import {mdiAccountGroupOutline} from "@mdi/js";
 import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({

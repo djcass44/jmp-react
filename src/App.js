@@ -31,9 +31,19 @@ import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import {Helmet} from "react-helmet";
 import {subscribeAppInit} from "./actions/Generic";
+import {IconButton} from "@material-ui/core";
+import Icon from "@mdi/react";
+import {mdiAccountCircleOutline, mdiHelpCircleOutline} from "@mdi/js";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
+	sectionDesktop: {
+		display: 'none',
+		[theme.breakpoints.up('md')]: {
+			display: 'flex',
+		},
+	},
+	grow: {flexGrow: 1},
 });
 
 class App extends React.Component {
@@ -74,6 +84,18 @@ class App extends React.Component {
 						<Typography className={classes.title} variant={"h6"} color={"inherit"}>
 							{process.env.REACT_APP_APP_NAME}
 						</Typography>
+						<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"inherit"}>
+							{process.env.REACT_APP_APP_MSG}
+						</Typography>
+						<div className={classes.grow}/>
+						<div className={classes.sectionDesktop}>
+							<IconButton color={"inherit"} disabled={true}>
+								<Icon path={mdiHelpCircleOutline} size={1}/>
+							</IconButton>
+							<IconButton color={"inherit"} disabled={true}>
+								<Icon path={mdiAccountCircleOutline} size={1}/>
+							</IconButton>
+						</div>
 					</Toolbar>
 				</AppBar>
 				<LinearProgress style={{flex: 1}}/>
