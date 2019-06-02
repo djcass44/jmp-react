@@ -33,7 +33,7 @@ import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import Pagination from "material-ui-flat-pagination";
 import Center from "react-center";
-import {LinearProgress, withStyles, withTheme} from "@material-ui/core";
+import {LinearProgress, ListItemSecondaryAction, withStyles, withTheme} from "@material-ui/core";
 import EmptyCard from "../../components/widget/EmptyCard";
 import ReactImageFallback from "react-image-fallback";
 import SchemeHighlight from "../../components/widget/SchemeHighlight";
@@ -44,7 +44,7 @@ import {LS_SORT, pageSize} from "../../constants";
 import posed, {PoseGroup} from "react-pose";
 import JumpDialog from "../modal/JumpDialog";
 import Icon from "@mdi/react";
-import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
+import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiChevronDown, mdiChevronUp, mdiEarth} from "@mdi/js";
 import JumpContent from "../../components/content/jmp/JumpContent";
 import DeleteDialog from "../modal/DeleteDialog";
 import JumpEditDialog from "../modal/JumpEditDialog";
@@ -187,6 +187,9 @@ class Jumps extends React.Component {
 						<Tooltip disableFocusListener title={aliases} placement={"left"} interactive>
 							<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={secondary}/>
 						</Tooltip>
+						<ListItemSecondaryAction>
+							<Icon path={i.expanded === true ? mdiChevronUp : mdiChevronDown} size={1} color={theme.palette.primary.main}/>
+						</ListItemSecondaryAction>
 					</ListItem>
 					<JumpContent jump={i} open={i.expanded === true} onEdit={(e, item) => {this.handleEditDialog(e, true, item)}} onDelete={(e, item) => {this.handleDeleteDialog(e, true, item)}}/>
 				</div>
