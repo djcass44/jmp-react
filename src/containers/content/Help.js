@@ -29,6 +29,7 @@ import BackButton from "../../components/widget/BackButton";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
+	name: {fontFamily: "Manrope", fontWeight: 500, color: theme.palette.secondary.main},
 	avatar: {
 		backgroundColor: '#FAFAFA',
 		width: 56,
@@ -112,7 +113,7 @@ class Help extends React.Component {
 					<Avatar className={classes.avatar} component={Paper} src={`${process.env.PUBLIC_URL}/jmp.png`} alt={process.env.REACT_APP_APP_NAME}/>
 				</Center>
 				<Center>
-					<Typography variant={"h4"} className={classes.title}>How can we help you?</Typography>
+					<Typography variant={"h4"} className={classes.name}>How can we help you?</Typography>
 				</Center>
 				<List component={'ul'}>
 					{items}

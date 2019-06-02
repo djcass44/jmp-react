@@ -28,6 +28,7 @@ import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
+	name: {fontFamily: "Manrope", fontWeight: 500, color: theme.palette.secondary.main},
 	avatar: {
 		backgroundColor: '#FAFAFA',
 		width: 56,
@@ -52,7 +53,7 @@ class Identity extends React.Component {
 					<Avatar className={classes.avatar} component={Paper}><Icon path={mdiAccountGroupOutline} size={2} color={theme.palette.primary.main}/></Avatar>
 				</Center>
 				<Center>
-					<Typography variant={"h4"} className={classes.title}>Users &amp; Groups</Typography>
+					<Typography variant={"h4"} className={classes.name}>Users &amp; Groups</Typography>
 				</Center>
 				<Users/>
 				<Groups/>

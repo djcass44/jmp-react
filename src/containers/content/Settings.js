@@ -13,6 +13,7 @@ import {mdiSettingsOutline} from "@mdi/js";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
+	name: {fontFamily: "Manrope", fontWeight: 500, color: theme.palette.secondary.main},
 	button: {
 		// margin: theme.spacing.unit,
 	},
@@ -50,7 +51,7 @@ class Settings extends React.Component {
 					<Avatar className={classes.avatar} component={Paper}><Icon path={mdiSettingsOutline} size={2} color={theme.palette.primary.main}/></Avatar>
 				</Center>
 				<Center>
-					<Typography variant={"h4"} className={classes.title}>Settings</Typography>
+					<Typography variant={"h4"} className={classes.name}>Settings</Typography>
 				</Center>
 				<General/>
 				{this.state.isAdmin === true ?
