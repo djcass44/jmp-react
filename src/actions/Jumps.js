@@ -7,6 +7,8 @@ export const DELETE_JUMP = "DELETE_JUMP";
 export const PATCH_JUMP = "PATCH_JUMP";
 
 export const SOCKET_UPDATE_JUMP = "EVENT_UPDATE";
+export const SOCKET_UPDATE_TITLE = "EVENT_UPDATE_TITLE";
+export const SOCKET_UPDATE_FAVICON = "EVENT_UPDATE_FAVICON";
 
 export function listJumps(headers) {
 	return dispatch => {
@@ -36,6 +38,20 @@ export function subscribeChangesInJumps(headers) {
 	return async dispatch => {
 		socket.on(SOCKET_UPDATE_JUMP, () => {
 			listJumpsDispatch(dispatch, headers);
+		});
+	}
+}
+export function subscribeChangesInTitles() {
+	return async dispatch => {
+		socket.on(SOCKET_UPDATE_TITLE, r => {
+			dispatch({type: SOCKET_UPDATE_TITLE, data: r});
+		});
+	}
+}
+export function subscribeChangesInFavicons() {
+	return async dispatch => {
+		socket.on(SOCKET_UPDATE_FAVICON, r => {
+			dispatch({type: SOCKET_UPDATE_FAVICON, data: r});
 		});
 	}
 }

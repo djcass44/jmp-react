@@ -21,7 +21,14 @@ import ListSubheader from "@material-ui/core/es/ListSubheader/ListSubheader";
 import ListItem from "@material-ui/core/ListItem";
 import Avatar from "@material-ui/core/es/Avatar/Avatar";
 import ListItemText from "@material-ui/core/es/ListItemText/ListItemText";
-import {deleteJump, JUMP_LOAD, listJumps, subscribeChangesInJumps} from "../../actions/Jumps";
+import {
+	deleteJump,
+	JUMP_LOAD,
+	listJumps,
+	subscribeChangesInFavicons,
+	subscribeChangesInJumps,
+	subscribeChangesInTitles
+} from "../../actions/Jumps";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import Pagination from "material-ui-flat-pagination";
@@ -87,6 +94,8 @@ class Jumps extends React.Component {
 		window.document.title = `${process.env.REACT_APP_APP_NAME}`;
 		this.props.listJumps(this.state.headers);
 		this.props.subscribeChangesInJumps(this.state.headers);
+		this.props.subscribeChangesInTitles();
+		this.props.subscribeChangesInFavicons();
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {
@@ -229,7 +238,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = ({
 	listJumps,
 	deleteJump,
-	subscribeChangesInJumps
+	subscribeChangesInJumps,
+	subscribeChangesInTitles,
+	subscribeChangesInFavicons
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Jumps)));

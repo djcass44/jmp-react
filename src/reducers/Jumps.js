@@ -15,7 +15,7 @@
  *
  */
 
-import {GET_SIMILAR, JUMP_LOAD} from "../actions/Jumps";
+import {GET_SIMILAR, JUMP_LOAD, SOCKET_UPDATE_FAVICON, SOCKET_UPDATE_TITLE} from "../actions/Jumps";
 
 const jumps = (state = {jumps: [], similar: []}, action) => {
 	switch (action.type) {
@@ -27,8 +27,34 @@ const jumps = (state = {jumps: [], similar: []}, action) => {
 			let items = action.data.map(i => {return i});
 			return {...state, similar: items}
 		}
+		case SOCKET_UPDATE_TITLE: {
+			let idx = indexFromId(state.jumps, action.data.id);
+			if(idx < 0) {
+				console.error(`${SOCKET_UPDATE_TITLE}: Failed to find item with id: ${action.data.id}`);
+				return state;
+			}
+			const {jumps} = state;
+			jumps[idx].title = action.data.url; // the name is for class reuse api-side
+			return {...state, jumps};
+		}
+		case SOCKET_UPDATE_FAVICON: {
+			let idx = indexFromId(state.jumps, action.data.id);
+			if(idx < 0) {
+				console.error(`${SOCKET_UPDATE_FAVICON}: Failed to find item with id: ${action.data.id}`);
+				return state;
+			}
+			const {jumps} = state;
+			jumps[idx].image = action.data.url; // the name is for class reuse api-side
+			return {...state, jumps};
+		}
 		default:
 			return state;
 	}
 };
+function indexFromId(jumps, id) {
+	for (let i = 0; i < jumps.length; i++) {
+		if(jumps[i].id === id) return i;
+	}
+	return -1;
+}
 export default jumps;

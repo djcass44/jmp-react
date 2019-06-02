@@ -38,7 +38,7 @@ class JumpContent extends React.Component {
 			title: "This site is insecure",
 			icon: <LockOpenIcon color={"error"}/>
 		};
-		const aliases = jump.alias.map(i => {return i.name}).join(",");
+		const aliases = jump.alias.map(i => {return i.name}).join(", ");
 		return (
 			<Collapse className={classes.main} in={this.props.open} unmountOnExit timeout={"auto"}>
 				{/* TITLE */}
