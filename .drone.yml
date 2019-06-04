@@ -5,28 +5,31 @@ steps:
   - name: build
     image: plugins/docker
     settings:
-      registry: docker.castive.dev
-      repo: docker.castive.dev/jmp-ui
-      tags: next
+      registry: core.harbor.castive.dev/jmp
+      repo: core.harbor.castive.dev/jmp/ui
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT_SHA}
       username:
         from_secret: DOCKER_USERNAME
       password:
         from_secret: DOCKER_PASSWORD
-#  - name: deploy
-#    image: quay.io/honestbee/drone-kubernetes
-#    settings:
-#      deployment: jmp-ui
-#      repo: docker.castive.dev/jmp-ui
-#      tag: next
-#      container: jmp-ui
-#      namespace:
-#        from_secret: KUBERNETES_NAMESPACE
-#      kubernetes_server:
-#        from_secret: KUBERNETES_SERVER
-#      kubernetes_cert:
-#        from_secret: KUBERNETES_CERT
-#      kubernetes_token:
-#        from_secret: KUBERNETES_TOKEN
+  - name: deploy
+    image: quay.io/honestbee/drone-kubernetes
+    settings:
+      deployment: jmp-ui
+      repo: core.harbor.castive.dev/jmp/ui
+      tag: ${DRONE_BRANCH}-${DRONE_COMMIT_SHA}
+      container: jmp-ui
+      namespace:
+        from_secret: KUBERNETES_NAMESPACE
+      kubernetes_server:
+        from_secret: KUBERNETES_SERVER
+      kubernetes_cert:
+        from_secret: KUBERNETES_CERT
+      kubernetes_token:
+        from_secret: KUBERNETES_TOKEN
 trigger:
   when:
     event:
