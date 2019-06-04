@@ -30,17 +30,10 @@ const styles = theme => ({
 		paddingTop: 8,
 		paddingBottom: 4
 	},
-	avatar: {
-		backgroundColor: '#FAFAFA',
-		width: 56,
-		height: 56,
-		borderRadius: 100,
-		margin: 24,
-		padding: 6
-	},
 	content: {
-		padding: 16,
-		backgroundColor: theme.palette.primary.light
+		borderRadius: 12,
+		padding: 12,
+		backgroundColor: theme.palette.background.paper
 	}
 });
 
@@ -90,7 +83,7 @@ class BrowserGuide extends React.Component {
 					name: 'Internet Explorer',
 					colour: '#1EBBEE',
 					logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Internet_Explorer_10%2B11_logo.svg/489px-Internet_Explorer_10%2B11_logo.svg.png',
-					content: 'Only IE11 and above are supported likely with compatibility issues. We recommend that you use a better browser such as Firefox, Chrome or Edge',
+					content: 'Only IE11 and above are supported likely with compatibility issues. We recommend that you use a more modern browser such as Firefox, Chrome or Edge',
 					supported: 0
 				}
 			]
@@ -118,8 +111,8 @@ class BrowserGuide extends React.Component {
 					{browsers}
 				</div>
 				{this.state.selected >= 0 ?
-					<div>
-						<Typography variant={"h6"} className={classes.name}>{this.state.browsers[this.state.selected].name}</Typography>
+					<div className={classes.content}>
+						<Typography variant={"h6"} className={classes.name} style={{color: this.state.browsers[this.state.selected].colour}}>{this.state.browsers[this.state.selected].name}</Typography>
 						<Typography variant={"body1"}>{this.state.browsers[this.state.selected].content}</Typography>
 					</div>
 					:

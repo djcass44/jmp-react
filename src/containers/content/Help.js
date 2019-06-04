@@ -40,6 +40,7 @@ const styles = theme => ({
 	},
 	content: {
 		padding: 16,
+		borderRadius: 12,
 		backgroundColor: theme.palette.primary.light
 	}
 });
@@ -55,7 +56,7 @@ class Help extends React.Component {
 				},
 				{
 					q: "Why are some URLs red?",
-					a: <span>HTTP URLs are marked as red to communicate their lack of security. HTTP websites are being phased out all across the internet and your browser probably already shows warnings.<br/><br/>The red highlight is only a warning and doesn't interfere with your ability to access them, however the site wont be indexed and may be missing metadata (e.g. title and favicon).</span>
+					a: <span>HTTP URLs are marked as red to communicate their lack of security. HTTP websites are being phased out all across the internet and your browser probably already shows warnings.<br/><br/>The red highlight is only a warning and doesn't interfere with your ability to access them, however the site wont be indexed and will likely be missing metadata (e.g. title and favicon).</span>
 				},
 				{
 					q: `Why can't I access my personal ${process.env.REACT_APP_APP_NOUN}s sometimes?`,
