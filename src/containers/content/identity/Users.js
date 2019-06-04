@@ -143,7 +143,7 @@ class Users extends React.Component {
 					</Paper>
 				</PoseGroup>
 				{listItems.length > pageSize ?
-					<Center><Pagination limit={pageSize} offset={this.state.offset} total={listItems.length} nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, offset) => this.handlePageChange(offset)}/></Center>
+					<Center><Pagination limit={pageSize} offset={this.state.offset} total={sortedUsers.length} nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, offset) => this.handlePageChange(offset)}/></Center>
 					:
 					<div/>
 				}
