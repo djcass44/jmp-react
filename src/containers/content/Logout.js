@@ -29,14 +29,15 @@ class Logout extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isLoggedIn: props.isLoggedIn
+			isLoggedIn: props.isLoggedIn,
+			headers: props.headers
 		};
 	}
 
 	componentDidMount() {
 		window.document.title = `Logout - ${process.env.REACT_APP_APP_NAME}`;
 		// Log the user out
-		this.props.oauthLogout();
+		this.props.oauthLogout(this.state.headers);
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {
@@ -67,7 +68,8 @@ class Logout extends React.Component {
 	}
 }
 const mapStateToProps = state => ({
-	isLoggedIn: state.auth.isLoggedIn
+	isLoggedIn: state.auth.isLoggedIn,
+	headers: state.auth.headers
 });
 const mapDispatchToProps = ({
 	oauthLogout

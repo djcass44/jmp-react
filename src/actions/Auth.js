@@ -21,9 +21,9 @@ export function oauthRefresh(refresh, headers) {
 		oauthRefreshDispatch(dispatch, refresh, headers);
 	}
 }
-export function oauthLogout() {
+export function oauthLogout(headers) {
 	return dispatch => {
-		oauthLogoutDispatch(dispatch);
+		oauthLogoutDispatch(dispatch, headers);
 	}
 }
 export function oauthUnready() {
@@ -84,7 +84,11 @@ function oauthRefreshDispatch(dispatch, refresh, headers) {
 }
 function oauthLogoutDispatch(dispatch) {
 	dispatch({type: `${OAUTH_LOGOUT}_REQUEST`});
-	dispatch({type: `${OAUTH_LOGOUT}_SUCCESS`});
+	client.post("/api/v2/oauth/logout", {}, {headers: headers}).then( () => {
+		dispatch({type: `${OAUTH_LOGOUT}_SUCCESS`});
+	}).catch(err => {
+		dispatch({type: `${OAUTH_LOGOUT}_FAILURE`, data: err.toString()});
+	});
 }
 
 function getCookie(name) {
