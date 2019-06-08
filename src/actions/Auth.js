@@ -32,15 +32,6 @@ export function oauthUnready() {
 
 function oauthVerifyDispatch(dispatch, refresh, headers) {
 	dispatch({type: `${OAUTH_VERIFY}_REQUEST`});
-	let ssoCookie = getCookie("crowd.token_key");
-	console.log(document.cookie);
-	console.log(`ssoCookie: ${ssoCookie}`);
-	// Do a quick check to see if the user has purposefully logged out
-	if(((refresh == null || refresh === "") || (headers == null || headers === "")) && ssoCookie == null) {
-		console.log("Skipping verify (no refresh/headers)");
-		dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
-		return;
-	}
 	client.get("/api/v2/oauth/valid", {headers: headers}).then( r => {
 		dispatch({
 			type: `${OAUTH_VERIFY}_SUCCESS`,
@@ -55,8 +46,6 @@ function oauthVerifyDispatch(dispatch, refresh, headers) {
 	});
 }
 function oauthRequest2Dispatch(dispatch, headers) {
-	headers['X-Auth-Token-SSO'] = getCookie("crowd.token_key");
-	console.log(`request2 headers: ${headers}`);
 	dispatch({type: `${OAUTH_REQUEST}_REQUEST`});
 	client.post("/api/v2/oauth/token", {}, {headers: headers}).then(r => {
 		dispatch({type: `${OAUTH_REQUEST}_SUCCESS`, data: r.data});
