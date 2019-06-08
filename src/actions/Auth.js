@@ -45,12 +45,23 @@ function oauthVerifyDispatch(dispatch, refresh, headers) {
 			type: `${OAUTH_VERIFY}_SUCCESS`,
 			data: r.data
 		});
+		oauthRequest2Dispatch(dispatch, headers);
 	}).catch(err => {
 		console.log(`verify failed: ${err}`);
 		console.log("lets try to refresh first");
 		dispatch({type: `${OAUTH_VERIFY}_FAILURE`, data: err.toString()});
 		oauthRefreshDispatch(dispatch, refresh, headers)
 	});
+}
+function oauthRequest2Dispatch(dispatch, headers) {
+	headers['X-Auth-Token-SSO'] = getCookie("crowd.token_key");
+	console.log(`request2 headers: ${headers}`);
+	dispatch({type: `${OAUTH_REQUEST}_REQUEST`});
+	client.post("/api/v2/oauth/token", {}, {headers: headers}).then(r => {
+		dispatch({type: `${OAUTH_REQUEST}_SUCCESS`, data: r.data});
+	}).catch(err => {
+		dispatch({type: `${OAUTH_REQUEST}_FAILURE`, data: err.toString()});
+	})
 }
 function oauthRequestDispatch(dispatch, data) {
 	let headers = {
