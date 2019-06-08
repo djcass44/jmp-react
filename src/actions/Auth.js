@@ -82,7 +82,7 @@ function oauthRefreshDispatch(dispatch, refresh, headers) {
 		dispatch({type: `${OAUTH_REFRESH}_FAILURE`, data: err.toString()});
 	});
 }
-function oauthLogoutDispatch(dispatch) {
+function oauthLogoutDispatch(dispatch, headers) {
 	dispatch({type: `${OAUTH_LOGOUT}_REQUEST`});
 	client.post("/api/v2/oauth/logout", {}, {headers: headers}).then( () => {
 		dispatch({type: `${OAUTH_LOGOUT}_SUCCESS`});
