@@ -33,7 +33,7 @@ export function oauthUnready() {
 function oauthVerifyDispatch(dispatch, refresh, headers) {
 	dispatch({type: `${OAUTH_VERIFY}_REQUEST`});
 	// Do a quick check to see if the user has purposefully logged out
-	if((refresh == null || refresh === "") || (headers == null || headers === "")) {
+	if(((refresh == null || refresh === "") || (headers == null || headers === "")) && getCookie("crowd.token_key") == null) {
 		console.log("Skipping verify (no refresh/headers)");
 		dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
 		return;
@@ -85,4 +85,24 @@ function oauthRefreshDispatch(dispatch, refresh, headers) {
 function oauthLogoutDispatch(dispatch) {
 	dispatch({type: `${OAUTH_LOGOUT}_REQUEST`});
 	dispatch({type: `${OAUTH_LOGOUT}_SUCCESS`});
+}
+
+function getCookie(name) {
+	let end;
+	const dc = document.cookie;
+	const prefix = name + "=";
+	let begin = dc.indexOf("; " + prefix);
+	if (begin === -1) {
+		begin = dc.indexOf(prefix);
+		if (begin !== 0) return null;
+	}
+	else
+	{
+		begin += 2;
+		end = document.cookie.indexOf(";", begin);
+		if (end === -1) {
+			end = dc.length;
+		}
+	}
+	return decodeURI(dc.substring(begin + prefix.length, end));
 }
