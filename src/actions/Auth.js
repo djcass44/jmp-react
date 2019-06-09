@@ -33,7 +33,7 @@ function oauthPreverifyDispatch(dispatch, refresh, headers) {
 	let hasCookie = false;
 	client.get("/api/v2/oauth/cookie", {headers: headers}).then(r => {
 		console.log(`cookie result: ${r.data}, type: ${typeof r.data}`);
-		hasCookie = r.data === "true";
+		hasCookie = r.data;
 		console.log(`SSO cookie: ${hasCookie}`);
 		if(shouldVerify(refresh, headers) || hasCookie) {
 			oauthVerifyDispatch(dispatch, refresh, headers);
