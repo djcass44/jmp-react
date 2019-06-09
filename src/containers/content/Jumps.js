@@ -84,7 +84,8 @@ class Jumps extends React.Component {
 				{id: 'creation', value: "Creation"},
 				{id: 'updated', value: "Last edited"}
 			],
-			sort: localStorage.getItem(LS_SORT)
+			sort: localStorage.getItem(LS_SORT),
+			searchFilter: props.searchFilter
 		};
 		this.filterJump = this.filterJump.bind(this);
 	}
