@@ -8,7 +8,7 @@ export const OAUTH_UNREADY = "OAUTH_UNREADY";
 
 export function oauthVerify(refresh, headers) {
 	return dispatch => {
-		oauthVerifyDispatch(dispatch, refresh, headers);
+		oauthPreverifyDispatch(dispatch, refresh, headers);
 	}
 }
 export function oauthRequest(data) {
@@ -29,9 +29,24 @@ export function oauthLogout(headers) {
 export function oauthUnready() {
 	return dispatch => {dispatch({type: OAUTH_UNREADY});}
 }
-
-function oauthVerifyDispatch(dispatch, refresh, headers) {
+function oauthPreverifyDispatch(dispatch, refresh, headers) {
 	dispatch({type: `${OAUTH_VERIFY}_REQUEST`});
+	let hasCookie = false;
+	client.get("/api/v2/oauth/cookie", {headers: headers}).then(r => {
+		hasCookie = r.data === "true";
+		console.log(`SSO cookie: ${hasCookie}`);
+		if(shouldVerify(refresh, headers) || hasCookie) {
+			oauthVerifyDispatch(dispatch, refresh, headers);
+		}
+	}).catch(err => {
+		console.log(`probably no sso setup: ${err.toString()}`);
+		// No sso token, but headers may be okay
+		if(shouldVerify(refresh, headers)) {
+			oauthVerifyDispatch(dispatch, refresh, headers);
+		}
+	});
+}
+function oauthVerifyDispatch(dispatch, refresh, headers) {
 	client.get("/api/v2/oauth/valid", {headers: headers}).then( r => {
 		dispatch({
 			type: `${OAUTH_VERIFY}_SUCCESS`,
@@ -100,4 +115,12 @@ function getCookie(name) {
 	}
 	const match = document.cookie.match(RegExp('(?:^|;\\s*)' + escape(name) + '=([^;]*)'));
 	return match ? match[1] : null;
+}
+function shouldVerify(refresh, headers) {
+	// Do a quick check to see if the user has purposefully logged out
+	if((refresh == null || refresh === "") || (headers == null || headers === "")) {
+		console.log("Skipping verify (no refresh/headers)");
+		return false;
+	}
+	return true;
 }
