@@ -91,7 +91,7 @@ class Similar extends React.Component {
 						label={i.name}
 						clickable
 						component={Link}
-						to={`/jmp?query=${i.name}`}
+						to={`/jmp?query=${i.name}?id=${i.id}`}
 						style={{backgroundColor: avatar.bg, color: avatar.fg}}
 						className={classes.chip}/>
 				</Tooltip>

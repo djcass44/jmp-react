@@ -51,9 +51,13 @@ class Token extends React.Component {
 	jumpUser() {
 		let url = new URL(window.location.href);
 		let query = url.searchParams.get("query");
+		const id = url.searchParams.get("id");
 		if(query != null && query !== '') {
 			this.props.getTokenStart();
 			let that = this;
+			if(id != null && id !== '') {
+				query += `?id=${id}`;
+			}
 			client.get(`/api/v2/jump/${query}`, {headers: this.state.headers}).then(r => {
 				that.props.getTokenEnd();
 				console.log(`token: ${r.data}`);
