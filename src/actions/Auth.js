@@ -30,30 +30,34 @@ export function oauthUnready() {
 	return dispatch => {dispatch({type: OAUTH_UNREADY});}
 }
 function oauthPreverifyDispatch(dispatch, refresh, headers) {
+	dispatch({type: `${OAUTH_VERIFY}_REQUEST`});
 	let hasCookie = false;
 	client.get("/api/v2/oauth/cookie", {headers: headers}).then(r => {
 		console.log(`cookie result: ${r.data}, type: ${typeof r.data}`);
 		hasCookie = r.data;
 		console.log(`SSO cookie: ${hasCookie}`);
 		if(shouldVerify(refresh, headers) || hasCookie) {
-			oauthVerifyDispatch(dispatch, refresh, headers);
+			oauthVerifyDispatch(dispatch, refresh, headers, hasCookie);
 		}
+		else dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
 	}).catch(err => {
 		console.log(`probably no sso setup: ${err.toString()}`);
 		// No sso token, but headers may be okay
 		if(shouldVerify(refresh, headers)) {
-			oauthVerifyDispatch(dispatch, refresh, headers);
+			oauthVerifyDispatch(dispatch, refresh, headers, false);
 		}
+		else dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
 	});
 }
-function oauthVerifyDispatch(dispatch, refresh, headers) {
-	dispatch({type: `${OAUTH_VERIFY}_REQUEST`});
+function oauthVerifyDispatch(dispatch, refresh, headers, hasCookie) {
 	client.get("/api/v2/oauth/valid", {headers: headers}).then( r => {
 		dispatch({
 			type: `${OAUTH_VERIFY}_SUCCESS`,
 			data: r.data
 		});
-		oauthRequest2Dispatch(dispatch, headers);
+		if(hasCookie === true) {
+			oauthRequest2Dispatch(dispatch, headers);
+		}
 	}).catch(err => {
 		console.log(`verify failed: ${err}`);
 		console.log("lets try to refresh first");
@@ -62,6 +66,7 @@ function oauthVerifyDispatch(dispatch, refresh, headers) {
 	});
 }
 function oauthRequest2Dispatch(dispatch, headers) {
+	console.log("making v2 oauth request");
 	dispatch({type: `${OAUTH_REQUEST}_REQUEST`});
 	client.post("/api/v2/oauth/token", {}, {headers: headers}).then(r => {
 		dispatch({type: `${OAUTH_REQUEST}_SUCCESS`, data: r.data});

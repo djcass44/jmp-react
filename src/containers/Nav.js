@@ -98,7 +98,7 @@ class Nav extends React.Component {
 		this.state = {
 			searchRoutes: ["/", "/identity"],
 			showSearch: true,
-			searchFilter: '',
+			searchFilter: props.searchFilter || '',
 			isLoggedIn: props.isLoggedIn,
 			isAdmin: props.isAdmin,
 			username: props.username
@@ -203,7 +203,8 @@ class Nav extends React.Component {
 const mapStateToProps = state => ({
 	isLoggedIn: state.auth.isLoggedIn,
 	isAdmin: state.auth.isAdmin,
-	username: state.auth.username
+	username: state.auth.username,
+	searchFilter: state.generic.searchFilter
 });
 const mapDispatchToProps = ({
 	setFilter
