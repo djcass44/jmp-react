@@ -30,7 +30,6 @@ export function oauthUnready() {
 	return dispatch => {dispatch({type: OAUTH_UNREADY});}
 }
 function oauthPreverifyDispatch(dispatch, refresh, headers) {
-	dispatch({type: `${OAUTH_VERIFY}_REQUEST`});
 	let hasCookie = false;
 	client.get("/api/v2/oauth/cookie", {headers: headers}).then(r => {
 		hasCookie = r.data === "true";
@@ -47,6 +46,7 @@ function oauthPreverifyDispatch(dispatch, refresh, headers) {
 	});
 }
 function oauthVerifyDispatch(dispatch, refresh, headers) {
+	dispatch({type: `${OAUTH_VERIFY}_REQUEST`});
 	client.get("/api/v2/oauth/valid", {headers: headers}).then( r => {
 		dispatch({
 			type: `${OAUTH_VERIFY}_SUCCESS`,
