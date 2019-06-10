@@ -18,7 +18,7 @@
 import React from "react";
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import Card from "@material-ui/core/es/Card/Card";
-import {CardContent, Grid, TextField, withStyles} from "@material-ui/core";
+import {CardContent, Grid, TextField, withStyles, withTheme} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import {OAUTH_REQUEST, oauthRequest} from "../../actions/Auth";
@@ -26,6 +26,9 @@ import {connect} from "react-redux";
 import Center from "react-center";
 import {getVersion} from "../../actions/Generic";
 import BackButton from "../../components/widget/BackButton";
+import Icon from "@mdi/react";
+import {mdiAtlassian, mdiFolderAccountOutline, mdiWindows} from "@mdi/js";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const styles = theme => ({
 	title: {
@@ -100,7 +103,7 @@ class Login extends React.Component {
 		this.props.oauthRequest(data);
 	}
 	render() {
-		const {classes} = this.props;
+		const {classes, theme} = this.props;
 		const errorMessage = <Center>
 			<span style={{color: "red"}}>
 				{this.state.error != null && this.state.error.startsWith("Unauthorized") ? "Incorrect username or password" : this.state.error}
@@ -127,10 +130,18 @@ class Login extends React.Component {
 									<TextField required type={"password"} autoComplete={"password"} margin={"dense"} id={"password"} label={"Password"} variant={"outlined"} value={this.state.password.value} fullWidth error={this.state.password.error.length !== 0} helperText={this.state.password.error} onChange={this.handlePasswordChange.bind(this)}/>
 								</Grid>
 								<Grid item xs={12}>
-									<Button className={classes.title} onClick={this.handleClick.bind(this)} variant={"contained"} color={"primary"} fullWidth size={"large"} type={"submit"} disabled={this.state.submitted || this.state.username.error !== '' || this.state.password.error !== '' || this.state.username.value.length === 0 || this.state.password.value.length === 0}>Login</Button>
+									<Button className={classes.title} onClick={this.handleClick.bind(this)} variant={"contained"} color={"primary"} fullWidth size={"large"} type={"submit"} disabled={this.state.loading === true || this.state.submitted || this.state.username.error !== '' || this.state.password.error !== '' || this.state.username.value.length === 0 || this.state.password.value.length === 0}>Login</Button>
 								</Grid>
 							</Grid>
 							<Center className={classes.title} style={{padding: 8}}>{process.env.REACT_APP_APP_NAME}&nbsp;{this.state.version}</Center>
+							{/*<Center>*/}
+							{/*	<Tooltip title={"You can login using your Active Directory/LDAP credentials"} placement={"bottom"}>*/}
+							{/*		<div><Icon path={mdiWindows} size={1} color={theme.palette.info.main}/></div>*/}
+							{/*	</Tooltip>*/}
+							{/*	<Tooltip title={"You can login using your Atlassian Crowd/Jira credentials"} placement={"bottom"}>*/}
+							{/*		<div><Icon path={mdiAtlassian} size={1} color={theme.palette.primary.main}/></div>*/}
+							{/*	</Tooltip>*/}
+							{/*</Center>*/}
 							{this.state.error != null ? errorMessage : <div/>}
 						</CardContent>
 					</Card>
@@ -151,4 +162,4 @@ const mapDispatchToProps = ({
 	oauthRequest,
 	getVersion
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Login));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Login)));
