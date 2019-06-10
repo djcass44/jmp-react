@@ -77,7 +77,7 @@ class Similar extends React.Component {
 
 	render() {
 		const {classes, theme} = this.props;
-		const status = this.state.similar.length === 0 ? "We couldn't find any matches" : `We found ${this.state.similar.length} match(s)`;
+		const status = this.state.similar.length === 0 ? "We couldn't find any matches" : this.state.similar.length === 1 ? 'We found 1 match' : `We found ${this.state.similar.length} matches`;
 		const chips = this.state.similar.map(i => {
 			let avatar = {
 				icon: i.personal === 0 ? mdiEarth : i.personal === 1 ? mdiAccountCircleOutline : mdiAccountGroupOutline,
