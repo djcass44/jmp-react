@@ -104,7 +104,7 @@ class Auth extends React.Component {
 		const auth = (
 			<div>
 				<p>Connected... {this.state.auth['connected'] === true ? <span className={classes.statusOK}>Yes</span> : <span className={classes.statusFail}>No</span>}</p>
-				<p>LDAP is providing {this.state.auth['users']} users and {this.state.auth['groups']} groups.</p>
+				<p>Identity Provider is providing {this.state.auth['users']} users and {this.state.auth['groups']} groups.</p>
 				{/*<div>*/}
 				{/*	{propItems}*/}
 				{/*</div>*/}
@@ -113,7 +113,7 @@ class Auth extends React.Component {
 		return (
 			<div>
 				<ListSubheader className={classes.title} inset component={"div"}>Authentication</ListSubheader>
-				<InfoItem title={"LDAP (read-only)"} content={auth} icon={
+				<InfoItem title={"Identity Provider (read-only)"} content={auth} icon={
 					<Icon style={{paddingRight: 8}} path={mdiFolderAccountOutline} size={1} color={theme.palette.success.dark}/>
 				}/>
 			</div>

@@ -39,14 +39,18 @@ function oauthPreverifyDispatch(dispatch, refresh, headers) {
 		if(shouldVerify(refresh, headers) || hasCookie) {
 			oauthVerifyDispatch(dispatch, refresh, headers, hasCookie);
 		}
-		else dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
+		else {
+			dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
+		}
 	}).catch(err => {
 		console.log(`probably no sso setup: ${err.toString()}`);
 		// No sso token, but headers may be okay
 		if(shouldVerify(refresh, headers)) {
 			oauthVerifyDispatch(dispatch, refresh, headers, false);
 		}
-		else dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
+		else {
+			dispatch({type: `${OAUTH_VERIFY}_FAILURE`});
+		}
 	});
 }
 function oauthVerifyDispatch(dispatch, refresh, headers, hasCookie) {
