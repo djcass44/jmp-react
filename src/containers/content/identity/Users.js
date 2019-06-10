@@ -15,9 +15,9 @@
  *
  */
 
-import {getUsers, subscribeChangesInUsers, USER_LOAD} from "../../../actions/Users";
+import {getUsers, PATCH_USER_ROLE, patchUserRole, subscribeChangesInUsers, USER_LOAD} from "../../../actions/Users";
 import {connect} from "react-redux";
-import {LinearProgress, withStyles, withTheme} from "@material-ui/core";
+import {LinearProgress, ListItemSecondaryAction, Menu, withStyles, withTheme} from "@material-ui/core";
 import React from "react";
 import AccountCircleIcon from "@material-ui/icons/AccountCircleOutlined";
 import AdminCircleIcon from "@material-ui/icons/SupervisedUserCircleOutlined";
@@ -35,6 +35,10 @@ import {LS_SORT, pageSize} from "../../../constants";
 import posed, {PoseGroup} from "react-pose";
 import {sortItems} from "../../../misc/Sort";
 import SortButton from "../../../components/widget/SortButton";
+import IconButton from "@material-ui/core/IconButton";
+import Icon from "@mdi/react";
+import {mdiDotsVertical, mdiMenu} from "@mdi/js";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -63,7 +67,9 @@ class Users extends React.Component {
 				{id: '-name', value: "Name Desc"},
 				{id: 'creation', value: "Creation"},
 				{id: 'updated', value: "Last edited"}
-			]
+			],
+			isAdmin: props.isAdmin,
+			isLoggedIn: props.isLoggedIn
 		};
 		this.filterUser = this.filterUser.bind(this);
 	}
@@ -81,10 +87,30 @@ class Users extends React.Component {
 		this.props.getUsers(this.state.headers);
 		this.props.subscribeChangesInUsers(this.state.headers);
 	}
+	toggleExpansion(e, id) {
+		let val = id;
+		const {users} = this.state;
+		users.forEach(i => {
+			if(i.id !== val) {
+				i.expanded = false;
+				return;
+			}
+			if(i.expanded == null) i.expanded = true;
+			else i.expanded = i.expanded !== true;
+			i.anchorEl = e.currentTarget;
+		});
+		this.setState({...users});
+	}
 	filterUser(user) {
 		return user.username.toLowerCase().includes(this.state.searchFilter) ||
 			user.role.toLowerCase() === this.state.searchFilter.toLowerCase() ||
 			user.from.toLowerCase() === this.state.searchFilter.toLowerCase();
+	}
+	handlePatchUser(e, user, role) {
+		this.props.patchUserRole(this.state.headers, JSON.stringify({
+			id: user.id,
+			role: role
+		}));
 	}
 	handlePageChange(offset) {
 		this.setState({offset: offset});
@@ -120,6 +146,17 @@ class Users extends React.Component {
 						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon}/>
 					</Avatar>
 					<ListItemText primary={<span className={classes.title}>{i.username}</span>} secondary={secondary}/>
+					{this.state.isAdmin === true ? <ListItemSecondaryAction>
+						<IconButton centerRipple={false} onClick={(e) => this.toggleExpansion(e, i.id)}>
+							<Icon path={mdiDotsVertical} size={1}/>
+							<Menu id={"user-menu"} open={i.expanded === true} anchorEl={i.anchorEl} anchorOrigin={{horizontal: "left", vertical: "top"}} onExit={() => {i.expanded = false}}>
+								{i.role !== 'ADMIN' ? <MenuItem button={true} component={'li'} onClick={(e) => {this.handlePatchUser(e, i, 'ADMIN')}}>Promote to admin</MenuItem> : ""}
+								{i.role === 'ADMIN' && i.username !== "admin" ? <MenuItem button={true} component={'li'} onClick={(e) => {this.handlePatchUser(e, i, 'USER')}}>Demote to user</MenuItem> : ""}
+								<MenuItem button={true} component={'li'}>Modify groups</MenuItem>
+								{i.username !== "admin" && i.from.toLowerCase() === 'local' ? <MenuItem button={true} component={'li'}>Delete</MenuItem> : ""}
+							</Menu>
+						</IconButton>
+					</ListItemSecondaryAction> : ""}
 				</ListItem>
 			));
 		});
@@ -134,7 +171,7 @@ class Users extends React.Component {
 		return (
 			<div>
 				{subHeader}
-				{this.state.loading === true ? <LinearProgress className={classes.grow} color={"primary"}/> : "" }
+				{this.state.loading === true || this.state.loadingPatch === true ? <LinearProgress className={classes.grow} color={"primary"}/> : "" }
 				<PoseGroup animateOnMount={true}>
 					<Paper key={"root"} component={Item} style={{borderRadius: 12, marginBottom: 8}}>
 						<List component={'ul'}>
@@ -155,13 +192,17 @@ class Users extends React.Component {
 const mapStateToProps = state => ({
 	users: state.users.users || [],
 	loading: state.loading[USER_LOAD],
+	loadingPatch: state.loading[PATCH_USER_ROLE],
 	headers: state.auth.headers,
 	ready: state.auth.ready || false,
-	searchFilter: state.generic.searchFilter
+	searchFilter: state.generic.searchFilter,
+	isAdmin: state.auth.isAdmin,
+	isLoggedIn: state.auth.isLoggedIn
 });
 const mapDispatchToProps = ({
 	getUsers,
-	subscribeChangesInUsers
+	subscribeChangesInUsers,
+	patchUserRole
 
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Users)));

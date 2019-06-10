@@ -17,6 +17,7 @@
 import {client, socket} from "../constants";
 
 export const USER_LOAD = "USER_LOAD";
+export const PATCH_USER_ROLE = "PATCH_USER_ROLE";
 
 export const SOCKET_UPDATE_USERS = "EVENT_UPDATE_USER";
 
@@ -24,6 +25,9 @@ export function getUsers(headers) {
 	return dispatch => {
 		getUsersDispatch(dispatch, headers);
 	}
+}
+export function patchUserRole(headers, user) {
+	return dispatch => {patchUserRoleDispatch(dispatch, headers, user)}
 }
 export function subscribeChangesInUsers(headers) {
 	return async dispatch => {
@@ -42,5 +46,17 @@ function getUsersDispatch(dispatch, headers) {
 		});
 	}).catch(err => {
 		dispatch({type: `${USER_LOAD}_FAILURE`, data: err.toString()});
-	})
+	});
+}
+function patchUserRoleDispatch(dispatch, headers, user) {
+	dispatch({type: `${PATCH_USER_ROLE}_REQUEST`});
+	client.patch("/api/v2/user", user, {headers: headers}).then(r => {
+		dispatch({
+			type: `${PATCH_USER_ROLE}_SUCCESS`,
+			data: r.data
+		});
+		getUsersDispatch(dispatch, headers);
+	}).catch(err => {
+		dispatch({type: `${PATCH_USER_ROLE}_FAILURE`, data: err.toString()});
+	});
 }
