@@ -40,7 +40,8 @@ class Info extends React.Component {
 			status: {},
 			headers: props.headers,
 			isAdmin: props.isAdmin,
-			isLoggedIn: props.isLoggedIn
+			isLoggedIn: props.isLoggedIn,
+			error: props.error
 		};
 	}
 
@@ -62,8 +63,9 @@ class Info extends React.Component {
 				<p>HTTP Server... {this.state.status.http === "OK" ? <span className={classes.statusOK}>Ok</span> : <span className={classes.statusFail}>Error</span>}</p>
 				<p>Database... {this.state.status['database'] === true ? <span className={classes.statusOK}>Ok</span> : <span className={classes.statusFail}>Error</span>}</p>
 				<p>Identity Provider... {this.state.status['identityProvider'] === true ? <span className={classes.statusOK}>Ok</span> : this.state.status['ldap'] == null ? <span className={classes.statusWarn}>Disabled</span> : <span className={classes.statusFail}>Error</span>}</p>
-				<p>Active provider: <span className={classes.title}>{this.state.status['providerName']}</span></p>
-				{/*<Typography variant={"h5"} className={classes.title}>Recent exceptions</Typography>*/}
+				<p>Active provider: {this.state.status['providerName']}</p>
+				<Typography variant={"body1"} className={classes.title}>Recent exceptions</Typography>
+				<p>There have been {this.state.error.length} exceptions in the last 5 minutes.</p>
 				{this.state.errorLoad === true ? <LinearProgress/> : ""}
 			</div>
 		);
