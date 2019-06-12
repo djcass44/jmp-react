@@ -22,6 +22,7 @@ import {connect} from "react-redux";
 import {withStyles, withTheme} from "@material-ui/core";
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import Center from "react-center";
+import {withRouter} from "react-router-dom";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -61,7 +62,12 @@ class Token extends React.Component {
 			client.get(`/api/v2/jump/${query}`, {headers: this.state.headers}).then(r => {
 				that.props.getTokenEnd();
 				console.log(`token: ${r.data}`);
-				window.location.replace(r.data);
+				if(r.data['found'] === true) {
+					window.location.replace(r.data['location']);
+				}
+				else {
+					this.props.history.push(r.data['location']);
+				}
 			}).catch(err => {
 				that.props.getTokenFail(err.toString());
 			});
@@ -76,7 +82,7 @@ class Token extends React.Component {
 		const errOrMessage = this.state.error != null ?
 			<Center>{this.state.error}</Center>
 			:
-			<Center>Jump complete! You may close this window</Center>;
+			<Center>Jumping... You can close this window if it stays open</Center>;
 		return this.state.loading === true ?
 			<CircularProgress/>
 			:
@@ -94,4 +100,4 @@ const mapDispatchToProps = ({
 	getTokenFail
 
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Token)));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(withTheme(Token))));
