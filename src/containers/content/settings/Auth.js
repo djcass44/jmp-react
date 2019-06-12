@@ -104,7 +104,7 @@ class Auth extends React.Component {
 		const auth = (
 			<div>
 				<p>Connected... {this.state.auth['connected'] === true ? <span className={classes.statusOK}>Yes</span> : <span className={classes.statusFail}>No</span>}</p>
-				<p>Identity Provider is providing {this.state.auth['users']} users and {this.state.auth['groups']} groups.</p>
+				<p>{this.state.auth['name']} provides {this.state.auth['users']} users and {this.state.auth['groups']} groups.</p>
 				{/*<div>*/}
 				{/*	{propItems}*/}
 				{/*</div>*/}

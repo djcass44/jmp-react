@@ -69,7 +69,7 @@ function getInfoAuthDispatch(dispatch, headers) {
 }
 function getInfoErrorDispatch(dispatch, headers) {
 	dispatch({type: `${GET_INFO_ERROR}_REQUEST`});
-	client.get(`/api/v2_1/statistics/exception`, {headers: headers}).then(r => {
+	client.get(`/api/v2_1/statistics/exception?time=15`, {headers: headers}).then(r => {
 		dispatch({type: `${GET_INFO_ERROR}_SUCCESS`, data: r.data});
 	}).catch(err => {
 		dispatch({type: `${GET_INFO_ERROR}_FAILURE`, data: err.toString()});
