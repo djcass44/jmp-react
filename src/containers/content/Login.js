@@ -26,9 +26,6 @@ import {connect} from "react-redux";
 import Center from "react-center";
 import {getVersion} from "../../actions/Generic";
 import BackButton from "../../components/widget/BackButton";
-import Icon from "@mdi/react";
-import {mdiAtlassian, mdiFolderAccountOutline, mdiWindows} from "@mdi/js";
-import Tooltip from "@material-ui/core/Tooltip";
 
 const styles = theme => ({
 	title: {
@@ -103,7 +100,7 @@ class Login extends React.Component {
 		this.props.oauthRequest(data);
 	}
 	render() {
-		const {classes, theme} = this.props;
+		const {classes} = this.props;
 		const errorMessage = <Center>
 			<span style={{color: "red"}}>
 				{this.state.error != null && this.state.error.startsWith("Unauthorized") ? "Incorrect username or password" : this.state.error}
@@ -134,14 +131,6 @@ class Login extends React.Component {
 								</Grid>
 							</Grid>
 							<Center className={classes.title} style={{padding: 8}}>{process.env.REACT_APP_APP_NAME}&nbsp;{this.state.version}</Center>
-							{/*<Center>*/}
-							{/*	<Tooltip title={"You can login using your Active Directory/LDAP credentials"} placement={"bottom"}>*/}
-							{/*		<div><Icon path={mdiWindows} size={1} color={theme.palette.info.main}/></div>*/}
-							{/*	</Tooltip>*/}
-							{/*	<Tooltip title={"You can login using your Atlassian Crowd/Jira credentials"} placement={"bottom"}>*/}
-							{/*		<div><Icon path={mdiAtlassian} size={1} color={theme.palette.primary.main}/></div>*/}
-							{/*	</Tooltip>*/}
-							{/*</Center>*/}
 							{this.state.error != null ? errorMessage : <div/>}
 						</CardContent>
 					</Card>
