@@ -144,6 +144,14 @@ class Nav extends React.Component {
 		const {classes} = this.props;
 		const isMenuOpen = Boolean(anchorEl);
 
+		const url = window.location.pathname + window.location.search;
+		let loginUrl;
+		if(url !== '') {
+			loginUrl = `/login?target=${url}`;
+		}
+		else
+			loginUrl = '/login';
+
 		return <div className={classes.root}>
 			<AppBar position={"static"} color={"default"}>
 				<Toolbar>
@@ -192,9 +200,9 @@ class Nav extends React.Component {
 				}
 				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/settings"} button={true}><SettingsIcon/>Settings</MenuItem>
 				{this.state.isLoggedIn === false ?
-					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/login"} button={true}><Icon path={mdiLogin} size={1}/>Login</MenuItem>
+					<MenuItem component={Link} onClick={this.handleMenuClose} to={loginUrl} button={true}><Icon path={mdiLogin} size={1}/>Login</MenuItem>
 					:
-					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/logout"} button={true}><Icon path={mdiLogout} size={1}/>Logout</MenuItem>
+					<MenuItem component={Link} onClick={this.handleMenuClose} to={'/logout'} button={true}><Icon path={mdiLogout} size={1}/>Logout</MenuItem>
 				}
 			</Menu>
 		</div>

@@ -67,7 +67,12 @@ class Login extends React.Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		if(this.state.isLoggedIn === true) {
 			// The user is already logged in, we can leave here
-			this.props.history.push('/');
+			const url = new URL(window.location.href);
+			let target = url.searchParams.get("target");
+			if(target != null && target !== '')
+				this.props.history.push(target);
+			else
+				this.props.history.push('/');
 		}
 	}
 
