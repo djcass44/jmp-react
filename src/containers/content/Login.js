@@ -113,27 +113,31 @@ class Login extends React.Component {
 				{this.state.loading || this.state.isLoggedIn === true ?
 					<CircularProgress/>
 					:
-					<Card>
-						<CardContent style={{margin: 12}}>
-							<Grid container spacing={4} alignContent={"center"} justify={"center"}>
-								<Grid item xs={12}>
-									<Center><img src={`${process.env.PUBLIC_URL}/jmp.png`} alt={"App icon"} height={72}/></Center>
-									<Typography className={classes.banner} variant={"h2"} align={"center"}>Login</Typography>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField required autoFocus autoComplete={"username"} margin={"dense"} id={"username"} label={"Username"} variant={"outlined"} value={this.state.username.value} fullWidth error={this.state.username.error.length !== 0} helperText={this.state.username.error} onChange={this.handleUsernameChange.bind(this)}/>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField required type={"password"} autoComplete={"password"} margin={"dense"} id={"password"} label={"Password"} variant={"outlined"} value={this.state.password.value} fullWidth error={this.state.password.error.length !== 0} helperText={this.state.password.error} onChange={this.handlePasswordChange.bind(this)}/>
-								</Grid>
-								<Grid item xs={12}>
-									<Button className={classes.title} onClick={this.handleClick.bind(this)} variant={"contained"} color={"primary"} fullWidth size={"large"} type={"submit"} disabled={this.state.loading === true || this.state.submitted || this.state.username.error !== '' || this.state.password.error !== '' || this.state.username.value.length === 0 || this.state.password.value.length === 0}>Login</Button>
-								</Grid>
+					<div>
+						<Grid container spacing={4} alignContent={"center"} justify={"center"}>
+							<Grid item md={2} sm={false}/>
+							<Grid item md={8} sm={12}>
+								<CardContent style={{margin: 12}}>
+									<Grid container spacing={4} alignContent={"center"} justify={"center"}>
+										<Grid item xs={12}>
+											<Center><img src={`${process.env.PUBLIC_URL}/jmp.png`} alt={"App icon"} height={72}/></Center>
+											<Typography className={classes.banner} variant={"h2"} align={"center"}>{process.env.REACT_APP_APP_NAME}</Typography>
+										</Grid>
+										<Grid item xs={12}>
+											<Card style={{padding: 16}}>
+												<TextField required autoFocus autoComplete={"username"} margin={"dense"} id={"username"} label={"Username"} variant={"outlined"} value={this.state.username.value} fullWidth error={this.state.username.error.length !== 0} helperText={this.state.username.error} onChange={this.handleUsernameChange.bind(this)}/>
+												<TextField required type={"password"} autoComplete={"password"} margin={"dense"} id={"password"} label={"Password"} variant={"outlined"} value={this.state.password.value} fullWidth error={this.state.password.error.length !== 0} helperText={this.state.password.error} onChange={this.handlePasswordChange.bind(this)}/>
+												<Button style={{marginTop: 8}} className={classes.title} onClick={this.handleClick.bind(this)} variant={"contained"} color={"primary"} fullWidth size={"large"} type={"submit"} disabled={this.state.loading === true || this.state.submitted || this.state.username.error !== '' || this.state.password.error !== '' || this.state.username.value.length === 0 || this.state.password.value.length === 0}>Login</Button>
+											</Card>
+										</Grid>
+									</Grid>
+									<Center className={classes.title} style={{padding: 8}}>{process.env.REACT_APP_APP_NAME}&nbsp;{this.state.version}</Center>
+									{this.state.error != null ? errorMessage : <div/>}
+								</CardContent>
 							</Grid>
-							<Center className={classes.title} style={{padding: 8}}>{process.env.REACT_APP_APP_NAME}&nbsp;{this.state.version}</Center>
-							{this.state.error != null ? errorMessage : <div/>}
-						</CardContent>
-					</Card>
+							<Grid item md={2} sm={false}/>
+						</Grid>
+					</div>
 				}
 			</div>
 		);
