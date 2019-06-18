@@ -45,7 +45,7 @@ class Banner extends React.Component {
 		const {classes} = this.props;
 		return <Card style={{borderRadius: 12, marginBottom: 8}}>
 			{this.props.open === true && this.state.visible === true ?
-				<ListItem key={this.props.label}>
+				<ListItem key={this.props.label} component={'li'}>
 					<Avatar style={this.props.avatarStyle}>
 						{this.props.icon}
 					</Avatar>

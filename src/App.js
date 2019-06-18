@@ -19,7 +19,7 @@ import React from 'react';
 import Content from "./containers/Content";
 import Nav from "./containers/Nav";
 import {MuiThemeProvider, withTheme} from "@material-ui/core/styles";
-import Theme from "./style/Palette";
+import Theme from "./style/theme";
 import {withRouter} from "react-router-dom";
 import {OAUTH_REFRESH, OAUTH_VERIFY, oauthRequest, oauthUnready, oauthVerify} from "./actions/Auth";
 import {connect} from "react-redux";

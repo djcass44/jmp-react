@@ -36,7 +36,6 @@ const auth = (state = {
 			let username = '';
 			if(action.data.username != null) username = action.data.username;
 			localStorage.setItem(LS_NAME, username);
-			// console.log(`username: ${username}`);
 			return {...state,
 				userProfile: action.data,
 				username: username,

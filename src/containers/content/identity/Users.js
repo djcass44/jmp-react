@@ -37,7 +37,7 @@ import {sortItems} from "../../../misc/Sort";
 import SortButton from "../../../components/widget/SortButton";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@mdi/react";
-import {mdiDotsVertical, mdiMenu} from "@mdi/js";
+import {mdiDotsVertical} from "@mdi/js";
 import MenuItem from "@material-ui/core/MenuItem";
 
 const Item = posed.div({
@@ -75,7 +75,6 @@ class Users extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {
-		// TODO check to see if anything has actually changed...
 		if(nextProps.headers !== this.state.headers || nextProps.ready !== this.state.ready) {
 			// Load jumps from the API
 			this.props.getUsers(nextProps.headers);
@@ -151,7 +150,13 @@ class Users extends React.Component {
 							<Icon path={mdiDotsVertical} size={1}/>
 							<Menu id={"user-menu"} open={i.expanded === true} anchorEl={i.anchorEl} anchorOrigin={{horizontal: "left", vertical: "top"}} onExit={() => {i.expanded = false}}>
 								{i.role !== 'ADMIN' ? <MenuItem button={true} component={'li'} onClick={(e) => {this.handlePatchUser(e, i, 'ADMIN')}}>Promote to admin</MenuItem> : ""}
-								{i.role === 'ADMIN' && i.username !== "admin" ? <MenuItem button={true} component={'li'} onClick={(e) => {this.handlePatchUser(e, i, 'USER')}}>Demote to user</MenuItem> : ""}
+								{i.role === 'ADMIN' && i.username !== "admin" ?
+									<MenuItem button={true} component={'li'} onClick={(e) => {this.handlePatchUser(e, i, 'USER')}}>
+										Demote to user
+									</MenuItem>
+									:
+									""
+								}
 								<MenuItem button={true} component={'li'}>Modify groups</MenuItem>
 								{i.username !== "admin" && i.from.toLowerCase() === 'local' ? <MenuItem button={true} component={'li'}>Delete</MenuItem> : ""}
 							</Menu>
@@ -180,7 +185,10 @@ class Users extends React.Component {
 					</Paper>
 				</PoseGroup>
 				{listItems.length > pageSize ?
-					<Center><Pagination limit={pageSize} offset={this.state.offset} total={sortedUsers.length} nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, offset) => this.handlePageChange(offset)}/></Center>
+					<Center>
+						<Pagination limit={pageSize} offset={this.state.offset} total={sortedUsers.length}
+	                        nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, offset) => this.handlePageChange(offset)}/>
+					</Center>
 					:
 					<div/>
 				}

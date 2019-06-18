@@ -75,7 +75,6 @@ class Token extends React.Component {
 		else {
 			this.props.getTokenFail("You must specify a query!");
 		}
-		// console.log(`error: ${this.state.error}`);
 	}
 
 	render() {

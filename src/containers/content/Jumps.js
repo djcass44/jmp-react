@@ -219,7 +219,10 @@ class Jumps extends React.Component {
 					</Paper>
 				</PoseGroup>
 				{listItems.length > pageSize || this.state.offset > 0 ?
-					<Center><Pagination limit={pageSize} offset={this.state.offset} total={sortedJumps.length} nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, offset) => this.handlePageChange(offset)}/></Center>
+					<Center>
+						<Pagination limit={pageSize} offset={this.state.offset} total={sortedJumps.length}
+						            nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, offset) => this.handlePageChange(offset)}/>
+					</Center>
 					:
 					<div/>
 				}

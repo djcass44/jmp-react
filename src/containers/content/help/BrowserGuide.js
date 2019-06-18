@@ -48,7 +48,14 @@ class BrowserGuide extends React.Component {
 					colour: '#1da462',
 					name: "Google Chrome",
 					logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Chrome_icon_%28September_2014%29.svg',
-					content: <span>1. Open settings (<code>chrome://settings</code>)<br/>2. Click <b>Manage search engines</b><br/>3. Add new with the following information<br/>&emsp;Search engine = <kbd>{process.env.REACT_APP_APP_NAME}</kbd><br/>&emsp;Keyword = <kbd>{process.env.REACT_APP_APP_KEY}</kbd><br/>&emsp;URL = <kbd>{BASE_URL}/jmp?query=%s</kbd></span>,
+					content: <span>
+						1. Open settings (<code>chrome://settings</code>)<br/>
+						2. Click <b>Manage search engines</b><br/>
+						3. Add new with the following information<br/>
+						&emsp;Search engine = <kbd>{process.env.REACT_APP_APP_NAME}</kbd><br/>
+						&emsp;Keyword = <kbd>{process.env.REACT_APP_APP_KEY}</kbd><br/>
+						&emsp;URL = <kbd>{BASE_URL}/jmp?query=%s</kbd>
+					</span>,
 					info: 'This has only been tested in Google Chrome and Chromium. Its usability in other Chromium-based browsers is unknown.',
 					supported: 2
 				},
@@ -57,7 +64,12 @@ class BrowserGuide extends React.Component {
 					colour: '#ff0039',
 					name: 'Mozilla Firefox',
 					logo: 'https://upload.wikimedia.org/wikipedia/commons/6/67/Firefox_Logo%2C_2017.svg',
-					content: <span>1. Add a new bookmark with the following values<br/>&emsp;Name = <kbd>{process.env.REACT_APP_APP_NAME}</kbd><br/>&emsp;Keyword = <kbd>{process.env.REACT_APP_APP_KEY}</kbd><br/>&emsp;Location = <kbd>{BASE_URL}/jmp?query=%s</kbd></span>,
+					content: <span>
+						Add a new bookmark with the following values<br/>
+						&emsp;Name = <kbd>{process.env.REACT_APP_APP_NAME}</kbd><br/>
+						&emsp;Keyword = <kbd>{process.env.REACT_APP_APP_KEY}</kbd><br/>
+						&emsp;Location = <kbd>{BASE_URL}/jmp?query=%s</kbd>
+					</span>,
 					supported: 2
 				},
 				{
@@ -65,7 +77,11 @@ class BrowserGuide extends React.Component {
 					colour: '#3277bc',
 					name: 'Microsoft Edge (pre-Chromium)',
 					logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Microsoft_Edge_logo.svg/450px-Microsoft_Edge_logo.svg.png',
-					content: <span>1. Open {process.env.REACT_APP_APP_NAME}<br/>2. Open Settings -> Advanced -> Change search provider<br/>3. Set {process.env.REACT_APP_APP_NAME} as default</span>,
+					content: <span>
+						1. Open {process.env.REACT_APP_APP_NAME}<br/>
+						2. Open Settings -> Advanced -> Change search provider<br/>
+						3. Set {process.env.REACT_APP_APP_NAME} as default
+					</span>,
 					info: 'This applies to EdgeHTML and not Edge-Chromium. Edge-Chromium is the same as Google Chrome',
 					supported: 2
 				},
@@ -74,7 +90,10 @@ class BrowserGuide extends React.Component {
 					colour: '#006cff',
 					name: 'Safari',
 					logo: 'https://upload.wikimedia.org/wikipedia/commons/5/52/Safari_browser_logo.svg',
-					content: <span>Safari 10+ is supported, 9 will work with compatibility issues. Due to Apple locking down the search engine choices, you will need to install an extension in order to use {process.env.REACT_APP_APP_NAME}</span>,
+					content: <span>
+						Safari 10+ is supported, 9 will work with compatibility issues.
+						Due to Apple locking down the search engine choices, you will need to install an extension in order to use {process.env.REACT_APP_APP_NAME}
+					</span>,
 					info: 'Safari is only available for macOS',
 					supported: 1
 				},
@@ -112,7 +131,9 @@ class BrowserGuide extends React.Component {
 				</div>
 				{this.state.selected >= 0 ?
 					<div className={classes.content}>
-						<Typography variant={"h6"} className={classes.name} style={{color: this.state.browsers[this.state.selected].colour}}>{this.state.browsers[this.state.selected].name}</Typography>
+						<Typography variant={"h6"} className={classes.name} style={{color: this.state.browsers[this.state.selected].colour}}>
+							{this.state.browsers[this.state.selected].name}
+						</Typography>
 						<Typography variant={"body1"}>{this.state.browsers[this.state.selected].content}</Typography>
 					</div>
 					:

@@ -68,7 +68,6 @@ class Groups extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {
-		// TODO check to see if anything has actually changed...
 		if(nextProps.headers !== this.state.headers) {
 			// Load jumps from the API
 			this.props.getGroups(nextProps.headers);
@@ -140,7 +139,10 @@ class Groups extends React.Component {
 					</Paper>
 				</PoseGroup>
 				{listItems.length > pageSize || this.state.offset > 0 ?
-					<Center><Pagination limit={pageSize} offset={this.state.offset} total={sortedGroups.length} nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e ,offset) => this.handlePageChange(offset)}/></Center>
+					<Center>
+						<Pagination limit={pageSize} offset={this.state.offset} total={sortedGroups.length}
+			                nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e ,offset) => this.handlePageChange(offset)}/>
+					</Center>
 					:
 					<div/>
 				}

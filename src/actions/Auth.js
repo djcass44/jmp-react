@@ -118,14 +118,6 @@ function oauthLogoutDispatch(dispatch, headers) {
 		dispatch({type: `${OAUTH_LOGOUT}_FAILURE`, data: err.toString()});
 	});
 }
-
-function getCookie(name) {
-	function escape(s) {
-		return s.replace(/([.*+?^${}()|\[\]\/\\])/g, '\\$1');
-	}
-	const match = document.cookie.match(RegExp('(?:^|;\\s*)' + escape(name) + '=([^;]*)'));
-	return match ? match[1] : null;
-}
 function shouldVerify(refresh, headers) {
 	// Do a quick check to see if the user has purposefully logged out
 	if((refresh == null || refresh === "") || (headers == null || headers === "")) {

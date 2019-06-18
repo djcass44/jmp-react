@@ -32,10 +32,6 @@ const info = (state = {
 			else
 				conf.push(item);
 			return {...state, conf};
-		// case `${GET_INFO_PROP}_FAILURE`:
-		// 	const {conf1} = state;
-		// 	conf1[action.conf] = 'undefined';
-		// 	return {...state, conf1};
 		case `${GET_INFO_AUTH}_SUCCESS`:
 			return {...state, auth: action.data};
 		case `${GET_INFO_ERROR}_SUCCESS`:

@@ -31,7 +31,8 @@ class InfoItem extends React.Component {
 					<Typography className={classes.title}>{this.props.title}</Typography>
 				</ExpansionPanelSummary>
 				<ExpansionPanelDetails>
-					<Banner avatarStyle={{backgroundColor: theme.palette.error.light, color: theme.palette.error.dark}} label={this.props.error} open={this.props.error != null} icon={<ErrorIcon style={{color: theme.palette.error.dark}}/>}/>
+					<Banner avatarStyle={{backgroundColor: theme.palette.error.light, color: theme.palette.error.dark}}
+				        label={this.props.error} open={this.props.error != null} icon={<ErrorIcon style={{color: theme.palette.error.dark}}/>}/>
 					<div className={classes.content}>{this.props.content}</div>
 				</ExpansionPanelDetails>
 			</ExpansionPanel>

@@ -31,7 +31,9 @@ function SortButton(props) {
 
 	return (
 		<span>
-			<IconButton aria-owns={anchorEl ? 'simple-menu' : undefined} aria-haspopup="true" onClick={handleClick} centerRipple={false} aria-label="Sort"><SortIcon fontSize={"small"}/></IconButton>
+			<IconButton aria-owns={anchorEl ? 'simple-menu' : undefined} aria-haspopup="true" onClick={handleClick} centerRipple={false} aria-label="Sort">
+				<SortIcon fontSize={"small"}/>
+			</IconButton>
 			<Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
 				{items}
 			</Menu>

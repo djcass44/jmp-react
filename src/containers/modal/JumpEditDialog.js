@@ -141,7 +141,6 @@ class JumpEditDialog extends React.Component {
 			alias: aliases
 		}));
 		this.setState({submitted: true});
-		// this.props.onExited();
 	}
 
 	render() {
@@ -150,14 +149,21 @@ class JumpEditDialog extends React.Component {
 			<Dialog open={this.props.open === true} aria-labelledby={"form-dialog-title"} onClose={this.props.onExited} onEnter={this.handleDialogOpen}>
 				<DialogTitle id={"form-dialog-title"} className={classes.title}>Edit {process.env.REACT_APP_APP_NOUN}</DialogTitle>
 				<DialogContent>
-					<TextField required autoFocus margin={"dense"} id={"name"} label={"Name"} value={this.state.name.value} fullWidth error={this.state.name.error.length !== 0} helperText={this.state.name.error} onChange={this.handleNameChange.bind(this)}/>
-					<TextField required margin={"dense"} id={"location"} label={"Location"} value={this.state.location.value} autoComplete={"url"} fullWidth error={this.state.location.error.length !== 0} helperText={this.state.location.error} onChange={this.handleUrlChange.bind(this)}/>
-					<TextField margin={"dense"} id={"alias"} label={"Aliases (comma separated)"} value={this.state.alias.value} fullWidth error={this.state.alias.error.length !== 0} helperText={this.state.alias.error} onChange={this.handleAliasChange.bind(this)}/>
+					<TextField required autoFocus margin={"dense"} id={"name"} label={"Name"} value={this.state.name.value} fullWidth
+					           error={this.state.name.error.length !== 0} helperText={this.state.name.error} onChange={this.handleNameChange.bind(this)}/>
+					<TextField required margin={"dense"} id={"location"} label={"Location"} value={this.state.location.value} autoComplete={"url"} fullWidth
+					           error={this.state.location.error.length !== 0} helperText={this.state.location.error} onChange={this.handleUrlChange.bind(this)}/>
+					<TextField margin={"dense"} id={"alias"} label={"Aliases (comma separated)"} value={this.state.alias.value} fullWidth
+					           error={this.state.alias.error.length !== 0} helperText={this.state.alias.error} onChange={this.handleAliasChange.bind(this)}/>
 					<Typography variant={"caption"} color={"error"}>{this.state.submitError}</Typography>
 				</DialogContent>
 				<DialogActions>
 					<Button color={"secondary"} onClick={this.props.onExited}>Cancel</Button>
-					<Button color={"primary"} onClick={this.handleSubmit.bind(this)} disabled={this.state.name.error !== '' || this.state.location.error !== '' || this.state.alias.error !== '' || this.state.loadingSubmit === true || this.state.name.value.length === 0 || this.state.location.value.length === 0}>Update</Button>
+					<Button color={"primary"} onClick={this.handleSubmit.bind(this)}
+					        disabled={this.state.name.error !== '' || this.state.location.error !== '' || this.state.alias.error !== '' ||
+					        this.state.loadingSubmit === true || this.state.name.value.length === 0 || this.state.location.value.length === 0}>
+						Update
+					</Button>
 				</DialogActions>
 			</Dialog>
 		);

@@ -114,7 +114,6 @@ class JumpDialog extends React.Component {
 			alias: []
 		}), gid);
 		this.setState({submitted: true});
-		// this.props.onExited();
 	}
 
 	render() {
@@ -127,8 +126,10 @@ class JumpDialog extends React.Component {
 			<Dialog open={this.props.open === true} aria-labelledby={"form-dialog-title"} onClose={this.props.onExited} onEnter={this.handleDialogOpen}>
 				<DialogTitle id={"form-dialog-title"} className={classes.title}>New {process.env.REACT_APP_APP_NOUN}</DialogTitle>
 				<DialogContent>
-					<TextField required autoFocus margin={"dense"} id={"name"} label={"Name"} value={this.state.name.value} fullWidth error={this.state.name.error.length !== 0} helperText={this.state.name.error} onChange={this.handleNameChange.bind(this)}/>
-					<TextField required margin={"dense"} id={"location"} label={"Location"} value={this.state.location.value} autoComplete={"url"} fullWidth error={this.state.location.error.length !== 0} helperText={this.state.location.error} onChange={this.handleUrlChange.bind(this)}/>
+					<TextField required autoFocus margin={"dense"} id={"name"} label={"Name"} value={this.state.name.value} fullWidth
+					           error={this.state.name.error.length !== 0} helperText={this.state.name.error} onChange={this.handleNameChange.bind(this)}/>
+					<TextField required margin={"dense"} id={"location"} label={"Location"} value={this.state.location.value} autoComplete={"url"} fullWidth
+					           error={this.state.location.error.length !== 0} helperText={this.state.location.error} onChange={this.handleUrlChange.bind(this)}/>
 					<FormControl fullWidth>
 						<InputLabel htmlFor={"type"}>Type</InputLabel>
 						<Select value={this.state.type} inputProps={{name: 'type', id: 'type'}} onChange={this.handleTypeChange}>
@@ -151,7 +152,12 @@ class JumpDialog extends React.Component {
 					<Typography style={{fontWeight: "bold"}} variant={"caption"} color={"error"}>{this.state.submitError}</Typography>				</DialogContent>
 				<DialogActions>
 					<Button color={"secondary"} onClick={this.props.onExited}>Cancel</Button>
-					<Button color={"primary"} onClick={this.handleSubmit.bind(this)} disabled={(this.state.type === 2 && this.state.groupId === '') || this.state.type === '' || this.state.name.error !== '' || this.state.location.error !== '' || this.state.loadingSubmit === true || this.state.loadingGroups === true || this.state.name.value.length === 0 || this.state.location.value.length === 0}>Create</Button>
+					<Button color={"primary"} onClick={this.handleSubmit.bind(this)}
+					        disabled={(this.state.type === 2 && this.state.groupId === '') || this.state.type === '' || this.state.name.error !== '' ||
+					        this.state.location.error !== '' || this.state.loadingSubmit === true || this.state.loadingGroups === true ||
+					        this.state.name.value.length === 0 || this.state.location.value.length === 0}>
+						Create
+					</Button>
 				</DialogActions>
 			</Dialog>
 		);

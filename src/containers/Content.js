@@ -16,7 +16,7 @@
  */
 
 import React from "react";
-import {Grid, withStyles} from "@material-ui/core";
+import {Grid, withStyles, withTheme} from "@material-ui/core";
 import Jumps from "./content/Jumps";
 import {Switch, Route, withRouter} from "react-router-dom";
 import Login from "./content/Login";
@@ -25,7 +25,6 @@ import {OAUTH_REFRESH, OAUTH_VERIFY} from "../actions/Auth";
 import NotFound from "./content/NotFound";
 import ErrorIcon from "@material-ui/icons/ErrorOutline";
 import Logout from "./content/Logout";
-import {withTheme} from "@material-ui/core";
 import Identity from "./content/Identity";
 import Token from "./content/jmp/Token";
 import Banner from "../components/widget/Banner";
