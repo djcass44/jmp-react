@@ -22,9 +22,9 @@ const users = (state = {
 }, action) => {
 	switch (action.type) {
 		case `${USER_LOAD}_SUCCESS`: {
-			let users = [];
-			action.data['users'].forEach(i => { users.push(i) });
-			return {...state, users: users}
+			let u = [];
+			action.data['users'].forEach(i => { u.push(i) });
+			return {...state, users: u}
 		}
 		default:
 			return state;

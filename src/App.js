@@ -16,7 +16,6 @@
  */
 
 import React from 'react';
-import './App.css';
 import Content from "./containers/Content";
 import Nav from "./containers/Nav";
 import {MuiThemeProvider, withTheme} from "@material-ui/core/styles";

@@ -17,7 +17,7 @@
 
 import React from "react";
 import {getInfoAuth, getInfoProp} from "../../../actions/Info";
-import {FormControlLabel, ListSubheader, Switch, TextField, withStyles, withTheme} from "@material-ui/core";
+import {ListSubheader, withStyles, withTheme} from "@material-ui/core";
 import {connect} from "react-redux";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import Icon from "@mdi/react";

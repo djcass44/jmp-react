@@ -23,14 +23,14 @@ const groups = (state = {
 }, action) => {
 	switch (action.type) {
 		case `${GROUP_LOAD}_SUCCESS`: {
-			let groups = [];
-			action.data.forEach(i => { groups.push(i) });
-			return {...state, groups: groups}
+			let g = [];
+			action.data.forEach(i => { g.push(i) });
+			return {...state, groups: g}
 		}
 		case `${GET_USER_GROUPS}_SUCCESS`: {
-			let groups = [];
-			action.data.forEach(item => {groups.push(item)});
-			return {...state, userGroups: groups}
+			let g = [];
+			action.data.forEach(item => {g.push(item)});
+			return {...state, userGroups: g}
 		}
 		default:
 			return state;
