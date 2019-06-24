@@ -11,6 +11,7 @@ import {
 	mdiOpenInNew,
 	mdiPencilOutline
 } from "@mdi/js";
+import {connect} from "react-redux";
 
 const styles = theme => ({
 	title: {
@@ -24,6 +25,14 @@ const styles = theme => ({
 });
 
 class JumpContent extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			isLoggedIn: props.isLoggedIn,
+			isAdmin: props.isAdmin
+		}
+	}
+
 	// This is a recent API
 	// There WILL be compatability issues with its usage
 	handleCopy(e, text) {
@@ -66,21 +75,33 @@ class JumpContent extends React.Component {
 						<IconButton centerRipple={false} onClick={(e) => this.handleCopy(e, jump.location)}><Icon path={mdiContentCopy} size={1} color={theme.palette.primary.main}/></IconButton>
 					</Tooltip>
 				}
-				<Tooltip title={"Edit"}>
-					<IconButton centerRipple={false} onClick={(e) => {this.props.onEdit(e, jump)}}><Icon path={mdiPencilOutline} size={1} color={theme.palette.secondary.main}/></IconButton>
-				</Tooltip>
+				{this.state.isLoggedIn === true &&
+					<Tooltip title={"Edit"}>
+						<IconButton centerRipple={false} onClick={(e) => {
+							this.props.onEdit(e, jump)
+						}}><Icon path={mdiPencilOutline} size={1} color={theme.palette.secondary.main}/></IconButton>
+					</Tooltip>
+				}
 				<Tooltip title={"Open"}>
 					<IconButton centerRipple={false} target={"_blank"} rel={"noopener noreferrer"} href={`/jmp?query=${jump.name}`}>
 						<Icon path={mdiOpenInNew} size={1} color={theme.palette.success.main}/>
 					</IconButton>
 				</Tooltip>
-				<Tooltip title={"Delete"}>
-					<IconButton centerRipple={false} onClick={(e) => {this.props.onDelete(e, jump.id )}}>
-						<Icon path={mdiDeleteForeverOutline} size={1} color={theme.palette.error.main}/>
-					</IconButton>
-				</Tooltip>
+				{this.state.isLoggedIn === true &&
+					<Tooltip title={"Delete"}>
+						<IconButton centerRipple={false} onClick={(e) => {
+							this.props.onDelete(e, jump.id)
+						}}>
+							<Icon path={mdiDeleteForeverOutline} size={1} color={theme.palette.error.main}/>
+						</IconButton>
+					</Tooltip>
+				}
 			</Collapse>
 		);
 	}
 }
-export default withStyles(styles)(withTheme(JumpContent));
+const mapStateToProps = state => ({
+	isLoggedIn: state.auth.isLoggedIn,
+	isAdmin: state.auth.isAdmin,
+});
+export default connect(mapStateToProps, null)(withStyles(styles)(withTheme(JumpContent)));
