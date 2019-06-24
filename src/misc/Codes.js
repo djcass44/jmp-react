@@ -14,7 +14,17 @@
  *    limitations under the License.
  *
  */
-
+const codes = {
+	"400": "BadRequest: server refused to process the request",
+	"401": "Unauthorized: authentication credentials are invalid",
+	"403": "Forbidden: you are not allowed to access this resource",
+	"404": "Not Found: the requested resource could not be found",
+	"409": "Conflict: the resource already exists",
+	"500": "Internal server error. Something's wrong on our side",
+	"502": "Bad gateway: failed to reach the API",
+	"503": "Service unavailable: the API appears to be overloaded",
+	"504": "Gateway timeout: the API it taking too long to respond"
+};
 export default function processHTTPCode(status) {
 	if(status == null) return status;
 	let maybeCode = 0;
@@ -32,15 +42,3 @@ export default function processHTTPCode(status) {
 	if(resp == null) resp = status;
 	return resp;
 }
-
-const codes = {
-	"400": "BadRequest: you might have messed something up on your side...",
-	"401": "Unauthorized: you probably need to login",
-	"403": "Forbidden: you are not allowed to access this resource",
-	"404": "NotFound: the requested resource could not be found",
-	"409": "Resource already exists!",
-	"500": "Internal server error. Something's wrong on our side",
-	"502": "Bad gateway: failed to reach the API",
-	"503": "Service unavailable: the API appears to be overloaded",
-	"504": "Gateway timeout: the API it taking too long to respond"
-};
