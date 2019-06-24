@@ -48,6 +48,8 @@ class JumpContent extends React.Component {
 			icon: <LockOpenIcon color={"error"}/>
 		};
 		const aliases = jump.alias.map(i => {return i.name}).join(", ");
+		// Only show edit/delete options if the API will let the user action them
+		const hasOwnership = this.state.isAdmin || jump['personal'] > 0;
 		return (
 			<Collapse className={classes.main} in={this.props.open} unmountOnExit timeout={"auto"}>
 				{/* TITLE */}
@@ -60,22 +62,22 @@ class JumpContent extends React.Component {
 						{secureStatus.icon}
 					</Tooltip>
 					{/* USAGE COUNT */}
-					<small className={classes.title}><Icon path={mdiFire} size={1} color={theme.palette.warning.main}/>x{jump.metaUsage}</small>
+					<small className={classes.title}><Icon path={mdiFire} size={1} color={theme.palette.warning.main}/>x{jump['metaUsage']}</small>
 				</div>
 				{/* ALIASES */}
 				<Typography variant={"body1"}>
 					Aliases: {aliases}
 				</Typography>
 				{/* CREATION */}
-				<p>Created <Moment fromNow>{jump.metaCreation}</Moment></p>
+				<p>Created <Moment fromNow>{jump['metaCreation']}</Moment></p>
 				{/* EDIT */}
-				{jump.metaUpdate !== jump.metaCreation ? <p>Edited <Moment fromNow>{jump.metaUpdate}</Moment></p>: ""}
+				{jump['metaUpdate'] !== jump['metaCreation'] ? <p>Edited <Moment fromNow>{jump['metaUpdate']}</Moment></p>: ""}
 				{document.queryCommandSupported("copy") &&
 					<Tooltip title={"Copy URL"}>
 						<IconButton centerRipple={false} onClick={(e) => this.handleCopy(e, jump.location)}><Icon path={mdiContentCopy} size={1} color={theme.palette.primary.main}/></IconButton>
 					</Tooltip>
 				}
-				{this.state.isLoggedIn === true &&
+				{this.state.isLoggedIn === true && hasOwnership === true &&
 					<Tooltip title={"Edit"}>
 						<IconButton centerRipple={false} onClick={(e) => {
 							this.props.onEdit(e, jump)
@@ -87,7 +89,7 @@ class JumpContent extends React.Component {
 						<Icon path={mdiOpenInNew} size={1} color={theme.palette.success.main}/>
 					</IconButton>
 				</Tooltip>
-				{this.state.isLoggedIn === true &&
+				{this.state.isLoggedIn === true && hasOwnership === true &&
 					<Tooltip title={"Delete"}>
 						<IconButton centerRipple={false} onClick={(e) => {
 							this.props.onDelete(e, jump.id)
