@@ -16,7 +16,7 @@
  */
 const codes = {
 	"400": "BadRequest: server refused to process the request",
-	"401": "Unauthorized: authentication credentials are invalid",
+	"401": "Unauthorised: authentication credentials are invalid",
 	"403": "Forbidden: you are not allowed to access this resource",
 	"404": "Not Found: the requested resource could not be found",
 	"409": "Conflict: the resource already exists",

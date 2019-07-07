@@ -34,6 +34,7 @@ import HomeIcon from "@material-ui/icons/HomeOutlined";
 import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline, mdiHelpCircleOutline, mdiLogin, mdiLogout} from "@mdi/js";
+import {Avatar} from "evergreen-ui";
 
 const styles = theme => ({
 	root: {width: '100%'},
@@ -174,9 +175,7 @@ class Nav extends React.Component {
 					<div className={classes.grow}/>
 					<div className={classes.sectionDesktop}>
 						<IconButton component={Link} centerRipple={false} color={"inherit"} to={"/help"}><Icon path={mdiHelpCircleOutline} size={1}/></IconButton>
-						<IconButton centerRipple={false} color={"inherit"} onClick={this.handleProfileMenuOpen} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}>
-							<AccountCircle/>
-						</IconButton>
+						<Avatar name={this.state.username} size={40} style={{marginTop: 4}} onClick={this.handleProfileMenuOpen} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
 					</div>
 				</Toolbar>
 			</AppBar>

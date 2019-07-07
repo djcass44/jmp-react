@@ -16,14 +16,8 @@
  */
 
 import React from "react";
-import Card from "@material-ui/core/es/Card/Card";
-import Avatar from "@material-ui/core/es/Avatar/Avatar";
-import ListItemText from "@material-ui/core/es/ListItemText";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/es/ListItemSecondaryAction/ListItemSecondaryAction";
-import IconButton from "@material-ui/core/IconButton";
-import ClearIcon from "@material-ui/icons/ClearOutlined";
 import {withStyles, withTheme} from "@material-ui/core";
+import {Alert} from "evergreen-ui";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -43,27 +37,10 @@ class Banner extends React.Component {
 
 	render() {
 		const {classes} = this.props;
-		return <Card style={{borderRadius: 12, marginBottom: 8}}>
-			{this.props.open === true && this.state.visible === true ?
-				<ListItem key={this.props.label} component={'li'}>
-					<Avatar style={this.props.avatarStyle}>
-						{this.props.icon}
-					</Avatar>
-					<ListItemText primary={<span className={classes.title}>{this.props.label}</span>}/>
-					{this.props.showDismissButton === true ?
-						<ListItemSecondaryAction>
-							<IconButton size={'small'} onClick={() => this.setState({visible: false})}>
-								<ClearIcon/>
-							</IconButton>
-						</ListItemSecondaryAction>
-						:
-						""
-					}
-				</ListItem>
+		return this.props.open === true && this.state.visible === true ?
+				<Alert intent={"danger"} title={this.props.label} style={{marginBottom: 32, borderRadius: 8}} />
 				:
 				<div/>
-			}
-		</Card>
 	}
 }
 export default withStyles(styles)(withTheme(Banner));

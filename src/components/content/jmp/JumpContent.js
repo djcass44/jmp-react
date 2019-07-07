@@ -6,12 +6,13 @@ import LockIcon from "@material-ui/icons/LockOutlined";
 import LockOpenIcon from "@material-ui/icons/LockOpenOutlined";
 import {
 	mdiContentCopy,
-	mdiDeleteForeverOutline,
+	mdiDeleteOutline,
 	mdiFire,
 	mdiOpenInNew,
 	mdiPencilOutline
 } from "@mdi/js";
 import {connect} from "react-redux";
+import {Badge} from "evergreen-ui";
 
 const styles = theme => ({
 	title: {
@@ -41,9 +42,11 @@ class JumpContent extends React.Component {
 	render() {
 		const {jump, classes, theme} = this.props;
 		const secureStatus = jump.location.startsWith("https://") ? {
+			secure: true,
 			title: "This site is encrypted.",
 			icon: <LockIcon style={{color: theme.palette.success.main}}/>
 		} : {
+			secure: false,
 			title: "This site is insecure",
 			icon: <LockOpenIcon color={"error"}/>
 		};
@@ -57,36 +60,31 @@ class JumpContent extends React.Component {
 					{jump.title}
 				</Typography>
 				<div style={{padding: 8}}>
-					{/* HTTPS STATUS */}
-					<Tooltip disableFocusListener title={secureStatus.title} placement={"bottom"} interactive>
-						{secureStatus.icon}
-					</Tooltip>
 					{/* USAGE COUNT */}
-					<small className={classes.title}><Icon path={mdiFire} size={1} color={theme.palette.warning.main}/>x{jump['metaUsage']}</small>
+					<small className={classes.title}><Icon path={mdiFire} size={0.85} color={theme.palette.warning.main}/>x{jump['metaUsage']}</small>
 				</div>
+				<Badge color={secureStatus.secure === true ? "green" : "red"}>{secureStatus.secure === true ? "Secure" : "Insecure"}</Badge>
 				{/* ALIASES */}
-				<Typography variant={"body1"}>
-					Aliases: {aliases}
-				</Typography>
+				{aliases.length > 0 ? <Typography variant={"body1"}>Aliases: {aliases}</Typography> : ""}
 				{/* CREATION */}
 				<p>Created <Moment fromNow>{jump['metaCreation']}</Moment></p>
 				{/* EDIT */}
 				{jump['metaUpdate'] !== jump['metaCreation'] ? <p>Edited <Moment fromNow>{jump['metaUpdate']}</Moment></p>: ""}
 				{document.queryCommandSupported("copy") &&
 					<Tooltip title={"Copy URL"}>
-						<IconButton centerRipple={false} onClick={(e) => this.handleCopy(e, jump.location)}><Icon path={mdiContentCopy} size={1} color={theme.palette.primary.main}/></IconButton>
+						<IconButton centerRipple={false} onClick={(e) => this.handleCopy(e, jump.location)}><Icon path={mdiContentCopy} size={0.85}/></IconButton>
 					</Tooltip>
 				}
 				{this.state.isLoggedIn === true && hasOwnership === true &&
 					<Tooltip title={"Edit"}>
 						<IconButton centerRipple={false} onClick={(e) => {
 							this.props.onEdit(e, jump)
-						}}><Icon path={mdiPencilOutline} size={1} color={theme.palette.secondary.main}/></IconButton>
+						}}><Icon path={mdiPencilOutline} size={0.85}/></IconButton>
 					</Tooltip>
 				}
 				<Tooltip title={"Open"}>
 					<IconButton centerRipple={false} target={"_blank"} rel={"noopener noreferrer"} href={`/jmp?query=${jump.name}`}>
-						<Icon path={mdiOpenInNew} size={1} color={theme.palette.success.main}/>
+						<Icon path={mdiOpenInNew} size={0.85}/>
 					</IconButton>
 				</Tooltip>
 				{this.state.isLoggedIn === true && hasOwnership === true &&
@@ -94,7 +92,7 @@ class JumpContent extends React.Component {
 						<IconButton centerRipple={false} onClick={(e) => {
 							this.props.onDelete(e, jump.id)
 						}}>
-							<Icon path={mdiDeleteForeverOutline} size={1} color={theme.palette.error.main}/>
+							<Icon path={mdiDeleteOutline} size={0.85}/>
 						</IconButton>
 					</Tooltip>
 				}

@@ -39,6 +39,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Icon from "@mdi/react";
 import {mdiDotsVertical} from "@mdi/js";
 import MenuItem from "@material-ui/core/MenuItem";
+import {Badge} from "evergreen-ui";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -133,12 +134,14 @@ class Users extends React.Component {
 		let sortedUsers = sortItems(this.state.users, this.state.sort);
 		sortedUsers.filter(this.filterUser).forEach((i, index) => {
 			if(index < this.state.offset || index > max) return;
+			const isAdmin = i.role === 'ADMIN';
 			let avatar = {
-				icon: i.role === 'ADMIN'? <AdminCircleIcon/> : <AccountCircleIcon/>,
-				bg: i.role === 'ADMIN' ? theme.palette.error.light : theme.palette.primary.light,
-				fg: i.role === 'ADMIN' ? theme.palette.error.dark : theme.palette.primary.dark
+				icon: isAdmin ? <AdminCircleIcon/> : <AccountCircleIcon/>,
+				bg: isAdmin ? theme.palette.error.light : theme.palette.primary.light,
+				fg: isAdmin ? theme.palette.error.dark : theme.palette.primary.dark,
+				banner: isAdmin ? <Badge color="red">Admin</Badge> : ""
 			};
-			let secondary = <span>{Users.capitalise(i.role)}&nbsp;&bull;&nbsp;{Users.capitalise(i.from)}</span>;
+			let secondary = <span>{Users.capitalise(i.role)}&nbsp;&bull;&nbsp;{Users.capitalise(i.from)}&nbsp;{avatar.banner}</span>;
 			listItems.push((
 				<ListItem button disableRipple key={index} component={'li'}>
 					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
