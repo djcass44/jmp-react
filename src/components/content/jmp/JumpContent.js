@@ -43,12 +43,12 @@ class JumpContent extends React.Component {
 		const {jump, classes, theme} = this.props;
 		const secureStatus = jump.location.startsWith("https://") ? {
 			secure: true,
-			title: "This site is encrypted.",
-			icon: <LockIcon style={{color: theme.palette.success.main}}/>
+			title: "Secure",
+			colour: "green"
 		} : {
 			secure: false,
-			title: "This site is insecure",
-			icon: <LockOpenIcon color={"error"}/>
+			title: "Insecure",
+			colour: "red"
 		};
 		const aliases = jump.alias.map(i => {return i.name}).join(", ");
 		// Only show edit/delete options if the API will let the user action them
@@ -63,7 +63,7 @@ class JumpContent extends React.Component {
 					{/* USAGE COUNT */}
 					<small className={classes.title}><Icon path={mdiFire} size={0.85} color={theme.palette.warning.main}/>x{jump['metaUsage']}</small>
 				</div>
-				<Badge color={secureStatus.secure === true ? "green" : "red"}>{secureStatus.secure === true ? "Secure" : "Insecure"}</Badge>
+				<Badge color={secureStatus.colour}>{secureStatus.title}</Badge>
 				{/* ALIASES */}
 				{aliases.length > 0 ? <Typography variant={"body1"}>Aliases: {aliases}</Typography> : ""}
 				{/* CREATION */}

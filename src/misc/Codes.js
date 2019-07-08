@@ -34,8 +34,7 @@ export default function processHTTPCode(status) {
 	catch (e) {
 		return status;
 	}
-	console.log(maybeCode);
-	if(isNaN(maybeCode)) return status;
+	if(isNaN(maybeCode)) return status.toString();
 
 	let resp = codes[maybeCode.toString()];
 	console.log(resp);

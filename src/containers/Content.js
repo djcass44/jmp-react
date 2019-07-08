@@ -31,6 +31,7 @@ import Banner from "../components/widget/Banner";
 import Similar from "./content/jmp/Similar";
 import Settings from "./content/Settings";
 import Help from "./content/Help";
+import {JUMP_LOAD} from "../actions/Jumps";
 
 const styles = theme => ({
 	container: {
@@ -90,7 +91,7 @@ class Content extends React.Component {
 
 const mapStateToProps = state => ({
 	loading: state.loading[OAUTH_VERIFY],
-	error: state.errors[OAUTH_REFRESH],
+	error: state.errors[OAUTH_REFRESH] || state.errors[JUMP_LOAD],
 	headers: state.auth.headers,
 	isLoggedIn: state.auth.isLoggedIn,
 	refresh: state.auth.refresh,
