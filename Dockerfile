@@ -2,12 +2,18 @@
 FROM node:lts-alpine as BUILDER
 LABEL maintainer="Django Cass <dj.cass44@gmail.com>"
 
+# disable spammy donation messages
+ENV DISABLE_OPENCOLLECTIVE=true
+
 WORKDIR /app
 
 COPY package*.json ./
 RUN npm install --quiet
 
-COPY . ./
+COPY ./public ./public
+COPY ./src ./src
+COPY .env.* ./
+
 RUN npm run build
 
 # STAGE 2 - RUN
@@ -19,7 +25,12 @@ COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=BUILDER /app/build /var/www/html
 
-RUN chown nginx:nginx -R /var/www/html
+RUN touch /tmp/nginx.pid && \
+  chown -R nginx:nginx /tmp/nginx.pid && \
+  chown -R nginx:nginx /var/cache/nginx && \
+  chown -R nginx:nginx /var/www/html
 
-EXPOSE 80
+USER nginx
+
+EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
