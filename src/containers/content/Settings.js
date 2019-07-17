@@ -46,7 +46,6 @@ class Settings extends React.Component {
 		const {classes, theme} = this.props;
 		return (
 			<div>
-				<BackButton label={"Back to home"} to={"/"}/>
 				<Center>
 					<Avatar className={classes.avatar} component={Paper}><Icon path={mdiSettingsOutline} size={2} color={theme.palette.primary.main}/></Avatar>
 				</Center>

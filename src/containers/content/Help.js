@@ -123,7 +123,6 @@ class Help extends React.Component {
 		});
 		return (
 			<div>
-				<BackButton label={"Back to home"} to={"/"}/>
 				<Center>
 					<Avatar className={classes.avatar} component={Paper} src={`${process.env.PUBLIC_URL}/jmp.png`} alt={process.env.REACT_APP_APP_NAME}/>
 				</Center>

@@ -120,7 +120,6 @@ class Login extends React.Component {
 
 		return(
 			<div>
-				<BackButton label={"Back to home"} to={"/"}/>
 				{this.state.loading || this.state.isLoggedIn === true ?
 					<CircularProgress/>
 					:

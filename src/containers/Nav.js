@@ -35,6 +35,7 @@ import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline, mdiHelpCircleOutline, mdiLogin, mdiLogout} from "@mdi/js";
 import {Avatar} from "evergreen-ui";
+import BackButton from "../components/widget/BackButton";
 
 const styles = theme => ({
 	root: {width: '100%'},
@@ -159,6 +160,7 @@ class Nav extends React.Component {
 		return <div className={classes.root}>
 			<AppBar position={"static"} color={"default"}>
 				<Toolbar>
+					{window.location.pathname !== "/" ? <BackButton label={""} to={"/"}/> : ""}
 					<Typography className={classes.title} variant={"h6"} color={"inherit"}>
 						{process.env.REACT_APP_APP_NAME}
 					</Typography>
