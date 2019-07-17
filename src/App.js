@@ -32,7 +32,8 @@ import {Helmet} from "react-helmet";
 import {subscribeAppInit} from "./actions/Generic";
 import {IconButton} from "@material-ui/core";
 import Icon from "@mdi/react";
-import {mdiAccountCircleOutline, mdiHelpCircleOutline} from "@mdi/js";
+import {mdiHelpCircleOutline} from "@mdi/js";
+import {Avatar} from "evergreen-ui";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -88,12 +89,8 @@ class App extends React.Component {
 						</Typography>
 						<div className={classes.grow}/>
 						<div className={classes.sectionDesktop}>
-							<IconButton color={"inherit"} disabled={true}>
-								<Icon path={mdiHelpCircleOutline} size={1}/>
-							</IconButton>
-							<IconButton color={"inherit"} disabled={true}>
-								<Icon path={mdiAccountCircleOutline} size={1}/>
-							</IconButton>
+							<IconButton centerRipple={false} color={"inherit"}><Icon path={mdiHelpCircleOutline} size={1}/></IconButton>
+							<Avatar size={40} style={{marginTop: 4}} />
 						</div>
 					</Toolbar>
 				</AppBar>

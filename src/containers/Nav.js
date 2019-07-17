@@ -145,6 +145,9 @@ class Nav extends React.Component {
 		const {classes} = this.props;
 		const isMenuOpen = Boolean(anchorEl);
 
+		let name = this.state.username;
+		if (name != null)
+			name = name.replace(".", " ");
 		const url = window.location.pathname + window.location.search;
 		let loginUrl;
 		if(url !== '') {
@@ -175,7 +178,7 @@ class Nav extends React.Component {
 					<div className={classes.grow}/>
 					<div className={classes.sectionDesktop}>
 						<IconButton component={Link} centerRipple={false} color={"inherit"} to={"/help"}><Icon path={mdiHelpCircleOutline} size={1}/></IconButton>
-						<Avatar name={this.state.username} size={40} style={{marginTop: 4}} onClick={this.handleProfileMenuOpen} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
+						<Avatar name={name} size={40} style={{marginTop: 4}} onClick={this.handleProfileMenuOpen} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
 					</div>
 				</Toolbar>
 			</AppBar>

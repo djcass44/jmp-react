@@ -141,7 +141,7 @@ class Users extends React.Component {
 				fg: isAdmin ? theme.palette.error.dark : theme.palette.primary.dark,
 				banner: isAdmin ? <Badge color="red">Admin</Badge> : ""
 			};
-			let secondary = <span>{Users.capitalise(i.role)}&nbsp;&bull;&nbsp;{Users.capitalise(i.from)}&nbsp;{avatar.banner}</span>;
+			let secondary = <span>{Users.capitalise(i.from)}&nbsp;{avatar.banner}</span>;
 			listItems.push((
 				<ListItem button disableRipple key={index} component={'li'}>
 					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
