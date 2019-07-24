@@ -20,7 +20,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
-import AccountCircle from "@material-ui/icons/AccountCircleOutlined";
 import {fade} from "@material-ui/core/styles/colorManipulator";
 import InputBase from "@material-ui/core/InputBase";
 import {IconButton, withStyles} from "@material-ui/core";

@@ -65,9 +65,12 @@ const auth = (state = {
 		case `${OAUTH_REFRESH}_FAILURE`:
 		case `${OAUTH_LOGOUT}_SUCCESS`:
 		case `${OAUTH_LOGOUT}_REQUEST`: {
-			localStorage.removeItem(LS_REQUEST);
-			localStorage.removeItem(LS_REFRESH);
-			localStorage.removeItem(LS_HEADERS);
+			// Only clear localstorage if we truly want to logout
+			if(action.type === `${OAUTH_LOGOUT}_SUCCESS` || action.type === `${OAUTH_LOGOUT}_REQUEST`) {
+				localStorage.removeItem(LS_REQUEST);
+				localStorage.removeItem(LS_REFRESH);
+				localStorage.removeItem(LS_HEADERS);
+			}
 			localStorage.removeItem(LS_USER);
 			localStorage.removeItem(LS_LOGIN);
 			localStorage.removeItem(LS_ADM);

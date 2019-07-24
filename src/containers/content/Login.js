@@ -25,7 +25,6 @@ import {OAUTH_REQUEST, oauthRequest} from "../../actions/Auth";
 import {connect} from "react-redux";
 import Center from "react-center";
 import {getVersion} from "../../actions/Generic";
-import BackButton from "../../components/widget/BackButton";
 
 const styles = theme => ({
 	title: {

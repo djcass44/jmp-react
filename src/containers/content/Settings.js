@@ -3,7 +3,6 @@ import Typography from "@material-ui/core/Typography";
 import Center from "react-center";
 import {withTheme, withStyles, Paper} from "@material-ui/core";
 import Info from "./settings/Info";
-import BackButton from "../../components/widget/BackButton";
 import General from "./settings/General";
 import Auth from "./settings/Auth";
 import {connect} from "react-redux";

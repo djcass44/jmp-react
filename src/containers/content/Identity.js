@@ -18,7 +18,6 @@
 import React from "react";
 import Users from "./identity/Users";
 import Groups from "./identity/Groups";
-import BackButton from "../../components/widget/BackButton";
 import Center from "react-center";
 import Avatar from "@material-ui/core/Avatar";
 import {Paper, withStyles, withTheme} from "@material-ui/core";

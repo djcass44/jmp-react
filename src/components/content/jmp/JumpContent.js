@@ -2,8 +2,6 @@ import React from "react";
 import {Collapse, IconButton, Tooltip, Typography, withStyles, withTheme} from "@material-ui/core";
 import Icon from "@mdi/react";
 import Moment from "react-moment";
-import LockIcon from "@material-ui/icons/LockOutlined";
-import LockOpenIcon from "@material-ui/icons/LockOpenOutlined";
 import {
 	mdiContentCopy,
 	mdiDeleteOutline,
@@ -35,7 +33,7 @@ class JumpContent extends React.Component {
 	}
 
 	// This is a recent API
-	// There WILL be compatability issues with its usage
+	// There WILL be compatibility issues with its usage
 	handleCopy(e, text) {
 		navigator.clipboard.writeText(text);
 	}

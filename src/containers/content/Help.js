@@ -25,7 +25,6 @@ import {mdiChevronDown, mdiChevronUp} from "@mdi/js";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import BrowserGuide from "./help/BrowserGuide";
-import BackButton from "../../components/widget/BackButton";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
