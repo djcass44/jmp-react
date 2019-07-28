@@ -18,6 +18,7 @@
 import * as React from "react";
 import {Button, withStyles} from "@material-ui/core";
 import Icon from "@mdi/react";
+import {BASE_URL} from "../../constants";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -26,7 +27,7 @@ const styles = theme => ({
 class SocialButton extends React.Component {
 	render() {
 		const {classes} = this.props;
-		return (<Button href={`/api/v2/oauth2?provider=${this.props.id}`} classes={classes.title} style={{color: this.props.colour, margin: 4}}>
+		return (<Button href={`${BASE_URL}/api/v2/oauth2/authorise?provider=${this.props.id}`} classes={classes.title} style={{color: this.props.colour, margin: 4}}>
 			<Icon path={this.props.icon} size={1} color={this.props.colour}/>{this.props.name}
 		</Button>);
 	}

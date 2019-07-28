@@ -17,6 +17,7 @@
 
 import {LS_ADM, LS_HEADERS, LS_LOGIN, LS_NAME, LS_REFRESH, LS_REQUEST, LS_USER} from "../constants";
 import {OAUTH_LOGOUT, OAUTH_REFRESH, OAUTH_REQUEST, OAUTH_UNREADY, OAUTH_VERIFY} from "../actions/Auth";
+import {OAUTH2_CALLBACK, OAUTH2_LOGOUT, OAUTH2_REFRESH} from "../actions/Oauth";
 
 const auth = (state = {
 	request: localStorage.getItem(LS_REQUEST) || '',
@@ -44,6 +45,8 @@ const auth = (state = {
 				ready: true
 			}
 		}
+		case `${OAUTH2_CALLBACK}_SUCCESS`:
+		case `${OAUTH2_REFRESH}_SUCCESS`:
 		case `${OAUTH_REFRESH}_SUCCESS`:
 		case `${OAUTH_REQUEST}_SUCCESS`: {
 			const headers = {'Authorization': `Bearer ${action.data.request}`};
@@ -63,6 +66,8 @@ const auth = (state = {
 			return state;
 		case `${OAUTH_REQUEST}_FAILURE`: // this one shouldn't redirect to /login
 		case `${OAUTH_REFRESH}_FAILURE`:
+		case `${OAUTH2_LOGOUT}_SUCCESS`:
+		case `${OAUTH2_LOGOUT}_REQUEST`:
 		case `${OAUTH_LOGOUT}_SUCCESS`:
 		case `${OAUTH_LOGOUT}_REQUEST`: {
 			// Only clear localstorage if we truly want to logout
