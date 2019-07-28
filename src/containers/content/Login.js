@@ -25,6 +25,8 @@ import {OAUTH_REQUEST, oauthRequest} from "../../actions/Auth";
 import {connect} from "react-redux";
 import Center from "react-center";
 import {getVersion} from "../../actions/Generic";
+import SocialButton from "../../components/widget/SocialButton";
+import {mdiGithubCircle, mdiGoogle} from "@mdi/js";
 
 const styles = theme => ({
 	title: {
@@ -150,6 +152,10 @@ class Login extends React.Component {
 									</Grid>
 									<Center className={classes.title} style={{padding: 8}}>{process.env.REACT_APP_APP_NAME}&nbsp;{this.state.version}</Center>
 									{errorMessage}
+									<div>
+										{process.env.REACT_APP_SHOW_OAUTH === "true" ? <SocialButton id={"github"} name={"GitHub"} colour={"#171516"} icon={mdiGithubCircle}/> : ""}
+										{process.env.REACT_APP_SHOW_OAUTH === "true" ? <SocialButton id={"google"} name={"Google"} colour={"#4285f4"} icon={mdiGoogle}/> : ""}
+									</div>
 								</CardContent>
 							</Grid>
 							<Grid item md={2} sm={false}/>
