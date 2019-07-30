@@ -57,7 +57,7 @@ class Callback extends React.Component {
 		const params = new URLSearchParams(this.props.location.search);
 		console.log(`params: ${params}`);
 		// Create the callback request to the backend
-		const {provider} = this.props.match.params;
+		const provider = this.props.location.pathname.split("/callback-")[1];
 		console.log(`Using provider: ${provider}`);
 		const headers = this.state.headers;
 		headers['X-Auth-Source'] = provider;
@@ -65,7 +65,6 @@ class Callback extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {
-		console.log(nextProps);
 		if(nextProps.loading === false && nextProps.error == null) {
 			this.props.history.push('/');
 		}
