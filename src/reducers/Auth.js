@@ -15,13 +15,14 @@
  *
  */
 
-import {LS_ADM, LS_HEADERS, LS_LOGIN, LS_NAME, LS_REFRESH, LS_REQUEST, LS_USER} from "../constants";
+import {LS_ADM, LS_HEADERS, LS_LOGIN, LS_NAME, LS_REFRESH, LS_REQUEST, LS_SOURCE, LS_USER} from "../constants";
 import {OAUTH_LOGOUT, OAUTH_REFRESH, OAUTH_REQUEST, OAUTH_UNREADY, OAUTH_VERIFY} from "../actions/Auth";
 import {OAUTH2_CALLBACK, OAUTH2_LOGOUT, OAUTH2_REFRESH} from "../actions/Oauth";
 
 const auth = (state = {
 	request: localStorage.getItem(LS_REQUEST) || '',
 	refresh: localStorage.getItem(LS_REFRESH) || '',
+	source: localStorage.getItem(LS_SOURCE) || '',
 	userProfile: localStorage.getItem(LS_USER) || {},
 	headers: JSON.parse(localStorage.getItem(LS_HEADERS)) || {},
 	isLoggedIn: localStorage.getItem(LS_LOGIN) === 'true' || false,
@@ -49,14 +50,17 @@ const auth = (state = {
 		case `${OAUTH2_REFRESH}_SUCCESS`:
 		case `${OAUTH_REFRESH}_SUCCESS`:
 		case `${OAUTH_REQUEST}_SUCCESS`: {
-			const headers = {'Authorization': `Bearer ${action.data.request}`};
+			const source = action.data.source || '';
+			const headers = {'Authorization': `Bearer ${action.data.request}`, 'X-Auth-Source': source};
 			localStorage.setItem(LS_REQUEST, action.data.request);
 			localStorage.setItem(LS_REFRESH, action.data.refresh);
+			localStorage.setItem(LS_SOURCE, source); // will be null if not using OAuth2
 			localStorage.setItem(LS_HEADERS, JSON.stringify(headers));
 			localStorage.setItem(LS_LOGIN, "true");
 			return {...state,
 				request: action.data.request,
 				refresh: action.data.refresh,
+				source: source,
 				headers: headers,
 				isLoggedIn: true,
 				ready: true
@@ -74,6 +78,7 @@ const auth = (state = {
 			if(action.type === `${OAUTH_LOGOUT}_SUCCESS` || action.type === `${OAUTH_LOGOUT}_REQUEST`) {
 				localStorage.removeItem(LS_REQUEST);
 				localStorage.removeItem(LS_REFRESH);
+				localStorage.removeItem(LS_SOURCE);
 				localStorage.removeItem(LS_HEADERS);
 			}
 			localStorage.removeItem(LS_USER);
@@ -83,6 +88,7 @@ const auth = (state = {
 			return {...state,
 				request: '',
 				refresh: '',
+				source: '',
 				userProfile: {},
 				headers: {},
 				isLoggedIn: false,

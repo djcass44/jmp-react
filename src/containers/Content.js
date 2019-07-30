@@ -77,7 +77,7 @@ class Content extends React.Component {
 				<Route exact path={"/logout"} component={Logout} key={"logout"}/>
 				<Route exact path={"/settings"} component={Settings} key={"settings"}/>
 				<Route exact path={"/help"} component={Help} key={"help"}/>
-				<Route exact path={"/callback"} component={Callback} key={"callback"}/>
+				<Route exact path={"/callback/:provider"} component={Callback} key={"callback"}/>
 				<Route component={NotFound} key={"notfound"}/>
 			</Switch>
 		</Grid>);

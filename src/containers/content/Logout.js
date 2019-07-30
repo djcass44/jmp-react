@@ -32,7 +32,8 @@ class Logout extends React.Component {
 		this.state = {
 			isLoggedIn: props.isLoggedIn,
 			headers: props.headers,
-			request: props.request
+			request: props.request,
+			source: props.source
 		};
 	}
 
@@ -40,7 +41,7 @@ class Logout extends React.Component {
 		window.document.title = `Logout - ${process.env.REACT_APP_APP_NAME}`;
 		// Log the user out
 		this.props.oauthLogout(this.state.headers);
-		this.props.oauth2Logout(this.state.request, this.state.headers);
+		this.props.oauth2Logout(this.state.request, this.state.source, this.state.headers);
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {
@@ -73,7 +74,8 @@ class Logout extends React.Component {
 const mapStateToProps = state => ({
 	isLoggedIn: state.auth.isLoggedIn,
 	headers: state.auth.headers,
-	request: state.auth.request
+	request: state.auth.request,
+	source: state.auth.source,
 });
 const mapDispatchToProps = ({
 	oauthLogout,

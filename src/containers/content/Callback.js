@@ -57,7 +57,11 @@ class Callback extends React.Component {
 		const params = new URLSearchParams(this.props.location.search);
 		console.log(`params: ${params}`);
 		// Create the callback request to the backend
-		this.props.oauth2Callback(params, this.state.headers);
+		const {provider} = this.props.match.params;
+		console.log(`Using provider: ${provider}`);
+		const headers = this.state.headers;
+		headers['X-Auth-Source'] = provider;
+		this.props.oauth2Callback(params, headers);
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {

@@ -21,20 +21,19 @@ export const OAUTH2_REFRESH = "OAUTH2_REFRESH";
 export const OAUTH2_CALLBACK = "OAUTH2_CALLBACK";
 export const OAUTH2_LOGOUT = "OAUTH2_LOGOUT";
 
-export function oauth2Refresh(refresh, headers) {
-	return dispatch => { oauth2RefreshDispatch(dispatch, refresh, headers) }
+export function oauth2Refresh(refresh, source, headers) {
+	return dispatch => { oauth2RefreshDispatch(dispatch, refresh, source, headers) }
 }
-// TODO create oauth2 callback page
 export function oauth2Callback(query, headers) {
 	return dispatch => { oauth2CallbackDispatch(dispatch, query, headers) }
 }
-export function oauth2Logout(accessToken, headers) {
-	return dispatch => { oauth2LogoutDispatch(dispatch, accessToken, headers) }
+export function oauth2Logout(accessToken, source, headers) {
+	return dispatch => { oauth2LogoutDispatch(dispatch, accessToken, source, headers) }
 }
 
-function oauth2RefreshDispatch(dispatch, refresh, headers) {
+function oauth2RefreshDispatch(dispatch, refresh, source, headers) {
 	dispatch({type: `${OAUTH2_REFRESH}_REQUEST`});
-	client.get("/api/v2/oauth2/refresh", {headers: headers, params: {refreshToken: refresh}}).then(r => {
+	client.get("/api/v2/oauth2/refresh", {headers: headers, params: {refreshToken: refresh, provider: source}}).then(r => {
 		console.log("v2: refresh success");
 		dispatch({
 			type: `${OAUTH2_REFRESH}_SUCCESS`,
@@ -58,9 +57,9 @@ function oauth2CallbackDispatch(dispatch, query, headers) {
 		dispatch({type: `${OAUTH2_CALLBACK}_FAILURE`, data: err.toString()});
 	});
 }
-function oauth2LogoutDispatch(dispatch, accessToken, headers) {
+function oauth2LogoutDispatch(dispatch, accessToken, source, headers) {
 	dispatch({type: `${OAUTH2_LOGOUT}_REQUEST`});
-	client.post("/api/v2/oauth2/logout", {}, {headers: headers, params: {accessToken: accessToken}}).then(r => {
+	client.post("/api/v2/oauth2/logout", {}, {headers: headers, params: {accessToken: accessToken, provider: source}}).then(r => {
 		console.log("v2: logout success");
 		dispatch({
 			type: `${OAUTH2_LOGOUT}_SUCCESS`,
