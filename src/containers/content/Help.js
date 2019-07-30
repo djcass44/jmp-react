@@ -54,6 +54,13 @@ class Help extends React.Component {
 					a: <BrowserGuide/>
 				},
 				{
+					q: "What data is collected?",
+					a: <span>
+						When you log in with a federated identity provider (e.g. GitHub, Google) we ask for your username, name and avatar which is used for personalisation of the application.
+						This data is never sold to any 3rd parties, nor is it used for marketing.
+					</span>
+				},
+				{
 					q: "Why are some URLs red?",
 					a: <span>HTTP URLs are marked as red to communicate their lack of security. HTTP websites are being phased out all across the internet and your browser probably already shows warnings.<br/><br/>The red highlight is only a warning and doesn't interfere with your ability to access them, however the site wont be indexed and will likely be missing metadata (e.g. title and favicon).</span>
 				},

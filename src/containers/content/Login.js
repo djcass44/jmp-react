@@ -154,7 +154,7 @@ class Login extends React.Component {
 									{errorMessage}
 									<div>
 										{process.env.REACT_APP_SHOW_OAUTH === "true" ? <SocialButton id={"github"} name={"GitHub"} colour={"#171516"} icon={mdiGithubCircle}/> : ""}
-										{/*{process.env.REACT_APP_SHOW_OAUTH === "true" ? <SocialButton id={"google"} name={"Google"} colour={"#4285f4"} icon={mdiGoogle}/> : ""}*/}
+										{process.env.REACT_APP_SHOW_OAUTH === "true" ? <SocialButton id={"google"} name={"Google"} colour={"#4285f4"} icon={mdiGoogle}/> : ""}
 									</div>
 								</CardContent>
 							</Grid>
