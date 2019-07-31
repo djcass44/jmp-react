@@ -20,6 +20,7 @@ import {client} from "../constants";
 export const OAUTH2_REFRESH = "OAUTH2_REFRESH";
 export const OAUTH2_CALLBACK = "OAUTH2_CALLBACK";
 export const OAUTH2_LOGOUT = "OAUTH2_LOGOUT";
+export const OAUTH2_DISCOVER = "OAUTH2_DISCOVER";
 
 export function oauth2Refresh(refresh, source, headers) {
 	return dispatch => { oauth2RefreshDispatch(dispatch, refresh, source, headers) }
@@ -29,6 +30,9 @@ export function oauth2Callback(query, headers) {
 }
 export function oauth2Logout(accessToken, source, headers) {
 	return dispatch => { oauth2LogoutDispatch(dispatch, accessToken, source, headers) }
+}
+export function oauth2Discover(provider) {
+	return dispatch => { oauth2DiscoverDispatch(dispatch, provider) }
 }
 
 function oauth2RefreshDispatch(dispatch, refresh, source, headers) {
@@ -68,5 +72,16 @@ function oauth2LogoutDispatch(dispatch, accessToken, source, headers) {
 	}).catch(err => {
 		console.log(`v2: logout failed: ${err}`);
 		dispatch({type: `${OAUTH2_LOGOUT}_FAILURE`, data: err.toString()});
+	});
+}
+function oauth2DiscoverDispatch(dispatch, provider) {
+	dispatch({type: `${OAUTH2_DISCOVER}_REQUEST`});
+	client.head("/api/v2/oauth2/authorise", {params: {provider: provider}}).then(r => {
+		dispatch({
+			type: `${OAUTH2_DISCOVER}_SUCCESS`,
+			data: {provider: provider, active: true}
+		});
+	}).catch(() => {
+		dispatch({type: `${OAUTH2_DISCOVER}_SUCCESS`, data: {provider: provider, active: false}});
 	});
 }

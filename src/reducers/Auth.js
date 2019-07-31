@@ -17,7 +17,7 @@
 
 import {LS_ADM, LS_HEADERS, LS_LOGIN, LS_NAME, LS_REFRESH, LS_REQUEST, LS_SOURCE, LS_USER} from "../constants";
 import {OAUTH_LOGOUT, OAUTH_REFRESH, OAUTH_REQUEST, OAUTH_UNREADY, OAUTH_VERIFY} from "../actions/Auth";
-import {OAUTH2_CALLBACK, OAUTH2_LOGOUT, OAUTH2_REFRESH} from "../actions/Oauth";
+import {OAUTH2_CALLBACK, OAUTH2_DISCOVER, OAUTH2_LOGOUT, OAUTH2_REFRESH} from "../actions/Oauth";
 
 const auth = (state = {
 	request: localStorage.getItem(LS_REQUEST) || '',
@@ -28,7 +28,8 @@ const auth = (state = {
 	isLoggedIn: localStorage.getItem(LS_LOGIN) === 'true' || false,
 	isAdmin: localStorage.getItem(LS_ADM) === 'true' || false, // This is just an assumption, the API dictates whether you're an admin or not
 	username: localStorage.getItem(LS_NAME) || '',
-	ready: false
+	ready: false,
+	providers: {}
 }, action) => {
 	switch(action.type) {
 		case `${OAUTH_VERIFY}_SUCCESS`: {
@@ -99,6 +100,12 @@ const auth = (state = {
 		}
 		case `${OAUTH_UNREADY}_REQUEST`:
 			return {...state, ready: false};
+		case `${OAUTH2_DISCOVER}_SUCCESS`: {
+			// Attempt to set the provider status
+			const {providers} = state;
+			providers[action.data['provider']] = action.data['active'];
+			return {...state, providers};
+		}
 		default:
 			return state;
 	}
