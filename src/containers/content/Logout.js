@@ -24,13 +24,16 @@ import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import {withTheme} from "@material-ui/core";
+import {oauth2Logout} from "../../actions/Oauth";
 
 class Logout extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			isLoggedIn: props.isLoggedIn,
-			headers: props.headers
+			headers: props.headers,
+			request: props.request,
+			source: props.source
 		};
 	}
 
@@ -38,6 +41,7 @@ class Logout extends React.Component {
 		window.document.title = `Logout - ${process.env.REACT_APP_APP_NAME}`;
 		// Log the user out
 		this.props.oauthLogout(this.state.headers);
+		this.props.oauth2Logout(this.state.request, this.state.source, this.state.headers);
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {
@@ -69,9 +73,12 @@ class Logout extends React.Component {
 }
 const mapStateToProps = state => ({
 	isLoggedIn: state.auth.isLoggedIn,
-	headers: state.auth.headers
+	headers: state.auth.headers,
+	request: state.auth.request,
+	source: state.auth.source,
 });
 const mapDispatchToProps = ({
-	oauthLogout
+	oauthLogout,
+	oauth2Logout
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(withRouter(Logout)));

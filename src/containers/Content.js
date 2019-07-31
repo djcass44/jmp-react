@@ -32,6 +32,7 @@ import Similar from "./content/jmp/Similar";
 import Settings from "./content/Settings";
 import Help from "./content/Help";
 import {JUMP_LOAD} from "../actions/Jumps";
+import Callback from "./content/Callback";
 
 const styles = theme => ({
 	container: {
@@ -76,6 +77,7 @@ class Content extends React.Component {
 				<Route exact path={"/logout"} component={Logout} key={"logout"}/>
 				<Route exact path={"/settings"} component={Settings} key={"settings"}/>
 				<Route exact path={"/help"} component={Help} key={"help"}/>
+				<Route exact path={"/callback-*"} component={Callback} key={"callback"}/>
 				<Route component={NotFound} key={"notfound"}/>
 			</Switch>
 		</Grid>);

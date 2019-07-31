@@ -25,6 +25,9 @@ import {OAUTH_REQUEST, oauthRequest} from "../../actions/Auth";
 import {connect} from "react-redux";
 import Center from "react-center";
 import {getVersion} from "../../actions/Generic";
+import SocialButton from "../../components/widget/SocialButton";
+import {mdiGithubCircle, mdiGoogle} from "@mdi/js";
+import {oauth2Discover} from "../../actions/Oauth";
 
 const styles = theme => ({
 	title: {
@@ -54,13 +57,16 @@ class Login extends React.Component {
 			},
 			submitted: false,
 			isLoggedIn: props.isLoggedIn,
-			version: props.version
+			version: props.version,
+			providers: props.providers
 		};
 	}
 
 	componentDidMount() {
 		window.document.title = `Login - ${process.env.REACT_APP_APP_NAME}`;
 		this.props.getVersion();
+		this.props.oauth2Discover("github");
+		this.props.oauth2Discover("google");
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -116,7 +122,6 @@ class Login extends React.Component {
 		else {
 			errorMessage = <div/>;
 		}
-
 		return(
 			<div>
 				{this.state.loading || this.state.isLoggedIn === true ?
@@ -150,6 +155,10 @@ class Login extends React.Component {
 									</Grid>
 									<Center className={classes.title} style={{padding: 8}}>{process.env.REACT_APP_APP_NAME}&nbsp;{this.state.version}</Center>
 									{errorMessage}
+									<div>
+										{this.state.providers['github'] === true ? <SocialButton id={"github"} name={"GitHub"} colour={"#171516"} icon={mdiGithubCircle}/> : ""}
+										{this.state.providers['google'] === true ? <SocialButton id={"google"} name={"Google"} colour={"#4285f4"} icon={mdiGoogle}/> : ""}
+									</div>
 								</CardContent>
 							</Grid>
 							<Grid item md={2} sm={false}/>
@@ -163,6 +172,7 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = state => ({
+	providers: {...state.auth.providers},
 	loading: state.loading[OAUTH_REQUEST],
 	error: state.errors[OAUTH_REQUEST],
 	isLoggedIn: state.auth.isLoggedIn,
@@ -170,6 +180,7 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = ({
 	oauthRequest,
+	oauth2Discover,
 	getVersion
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Login)));

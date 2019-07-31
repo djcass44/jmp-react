@@ -102,7 +102,8 @@ class Nav extends React.Component {
 			searchFilter: props.searchFilter || '',
 			isLoggedIn: props.isLoggedIn,
 			isAdmin: props.isAdmin,
-			username: props.username
+			username: props.username,
+			userProfile: props.userProfile
 		};
 	}
 	// Why isn't this called on start?
@@ -145,9 +146,11 @@ class Nav extends React.Component {
 		const {classes} = this.props;
 		const isMenuOpen = Boolean(anchorEl);
 
-		let name = this.state.username;
+		let name = this.state.userProfile['displayName'];
+		if(name === "") name = this.state.username;
+		let name2 = name;
 		if (name != null)
-			name = name.replace(".", " ");
+			name2 = name.replace(".", " ");
 		const url = window.location.pathname + window.location.search;
 		let loginUrl;
 		if(url !== '') {
@@ -179,7 +182,7 @@ class Nav extends React.Component {
 					<div className={classes.grow}/>
 					<div className={classes.sectionDesktop}>
 						<IconButton component={Link} centerRipple={false} color={"inherit"} to={"/help"}><Icon path={mdiHelpCircleOutline} size={1}/></IconButton>
-						<Avatar name={name} size={40} style={{marginTop: 4}} onClick={this.handleProfileMenuOpen} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
+						<Avatar name={name2} src={this.state.userProfile['avatarUrl']} size={40} style={{marginTop: 4}} onClick={this.handleProfileMenuOpen} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
 					</div>
 				</Toolbar>
 			</AppBar>
@@ -191,7 +194,7 @@ class Nav extends React.Component {
 				onClose={this.handleMenuClose}>
 				<MenuItem disabled={true} button={false} component={'div'}>
 					<div>
-						<span>{this.state.username != null && this.state.username !== '' ? this.state.username : 'Anonymous'}</span>
+						<span>{name != null && name !== '' ? name : 'Anonymous'}</span>
 					</div>
 				</MenuItem>
 				<Divider/>
@@ -215,6 +218,7 @@ const mapStateToProps = state => ({
 	isLoggedIn: state.auth.isLoggedIn,
 	isAdmin: state.auth.isAdmin,
 	username: state.auth.username,
+	userProfile: state.auth.userProfile,
 	searchFilter: state.generic.searchFilter
 });
 const mapDispatchToProps = ({
