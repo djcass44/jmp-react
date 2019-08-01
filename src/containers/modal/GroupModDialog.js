@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {CircularProgress, Typography, withStyles, withTheme} from "@material-ui/core";
 import List from "@material-ui/core/List";
-import {getGroups, GROUP_LOAD} from "../../actions/Groups";
+import {GET_USER_GROUPS, getGroups, getUserGroups, GROUP_LOAD} from "../../actions/Groups";
 import {connect} from "react-redux";
 import {sortItems} from "../../misc/Sort";
 import ListItem from "@material-ui/core/ListItem";
@@ -24,17 +24,45 @@ class GroupModDialog extends React.Component {
 		super(props);
 		this.state = {
 			groups: props.groups,
+			userMap: [],
+			userMapRO: [], // used to determine the delta
+			userGroups: props.userGroups,
 			loading: props.loading,
-			headers: props.headers
+			headers: props.headers,
 		};
-	}
-
-	componentDidMount() {
-		this.props.getGroups(this.state.headers);
+		this.loadData = this.loadData.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {
 		this.setState({...nextProps});
+		if(this.props.open === true)
+			this.updateGroupMappings(nextProps);
+	}
+
+	componentDidMount() {
+		this.loadData();
+	}
+
+	updateGroupMappings(nextProps) {
+		let mapping = [];
+		// Check whether the user is in each group and build a mapping array
+		this.state.groups.forEach(g => {
+			const g2 = JSON.parse(JSON.stringify(g));
+			g2.checked = nextProps.userGroups.some(e => e.name === g.name);
+			mapping.push(g2);
+		});
+		this.setState({userMap: mapping, userMapRO: mapping});
+	}
+
+	loadData() {
+		if(this.props.user == null) return;
+		this.props.getUserGroups(this.state.headers, this.props.user.id);
+	}
+
+	handleCheckChange(e, index) {
+		const {userMap} = this.state;
+		userMap[index].checked = !userMap[index].checked;
+		this.setState({...userMap});
 	}
 
 	handleSubmit(e) {
@@ -46,20 +74,20 @@ class GroupModDialog extends React.Component {
 
 	render() {
 		const {classes, theme} = this.props;
-		let sortedGroups = sortItems(this.state.groups, 'name');
+		let sortedGroups = sortItems(this.state.userMap, 'name');
 		let listItems = [];
-		sortedGroups.forEach(i => {
+		sortedGroups.forEach((i, index) => {
 			listItems.push((
-				<ListItem key={i.id} component={'li'} role={undefined} dense button>
+				<ListItem key={i.id} component={'li'} role={undefined} dense>
 					<ListItemIcon>
-						<Checkbox edge="start" checked={true} tabIndex={-1} disableRipple/>
+						<Checkbox color={"primary"} edge="start" checked={i.checked === true} tabIndex={-1} onChange={e => {this.handleCheckChange(e, index)}}/>
 					</ListItemIcon>
 					<ListItemText id={i.id} primary={i.name}/>
 				</ListItem>
 			))
 		});
 		return (
-			<Dialog open={this.props.open === true} aria-labelledby={"form-dialog-title"} onClose={this.props.onExited}>
+			<Dialog open={this.props.open === true} aria-labelledby={"form-dialog-title"} onClose={this.props.onExited} onEnter={this.loadData}>
 				<DialogTitle id={"form-dialog-title"} className={classes.title}>Modify groups</DialogTitle>
 				<DialogContent>
 					<Typography variant={"body1"}>
@@ -83,10 +111,12 @@ class GroupModDialog extends React.Component {
 }
 const mapStateToProps = state => ({
 	groups: state.groups.groups || [],
-	loading: state.loading[GROUP_LOAD],
-	headers: state.auth.headers,
+	userGroups: state.groups.userGroups || [],
+	loading: state.loading[GROUP_LOAD] || state.loading[GET_USER_GROUPS],
+	headers: state.auth.headers
 });
 const mapDispatchToProps = ({
-	getGroups
+	getGroups,
+	getUserGroups
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(GroupModDialog)));
