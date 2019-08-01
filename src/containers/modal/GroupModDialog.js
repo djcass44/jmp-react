@@ -6,7 +6,14 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {CircularProgress, Typography, withStyles, withTheme} from "@material-ui/core";
 import List from "@material-ui/core/List";
-import {GET_USER_GROUPS, getGroups, getUserGroups, GROUP_LOAD} from "../../actions/Groups";
+import {
+	GET_USER_GROUPS,
+	getGroups,
+	getUserGroups,
+	GROUP_LOAD,
+	SET_USER_GROUPS,
+	setUserGroups
+} from "../../actions/Groups";
 import {connect} from "react-redux";
 import {sortItems} from "../../misc/Sort";
 import ListItem from "@material-ui/core/ListItem";
@@ -19,6 +26,12 @@ const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
 });
 
+class GroupModPayload {
+	constructor(add, rm) {
+		this.add = add;
+		this.rm = rm;
+	}
+}
 class GroupModDialog extends React.Component {
 	constructor(props) {
 		super(props);
@@ -51,7 +64,7 @@ class GroupModDialog extends React.Component {
 			g2.checked = nextProps.userGroups.some(e => e.name === g.name);
 			mapping.push(g2);
 		});
-		this.setState({userMap: mapping, userMapRO: mapping});
+		this.setState({userMap: mapping, userMapRO: JSON.parse(JSON.stringify(mapping))});
 	}
 
 	loadData() {
@@ -66,6 +79,25 @@ class GroupModDialog extends React.Component {
 	}
 
 	handleSubmit(e) {
+		let add = [];
+		let rm = [];
+		this.state.userMap.forEach((i, index) => {
+			console.log(JSON.stringify(i), JSON.stringify(this.state.userMapRO[index]));
+			if(i.checked === true && this.state.userMapRO[index].checked === false) {
+				// Add the user to this group
+				add.push(i.id);
+			}
+			else if(i.checked === false && this.state.userMapRO[index].checked === true) {
+				// Remove the user from this group
+				rm.push(i.id);
+			}
+		});
+		const payload = new GroupModPayload(add, rm);
+		console.log(JSON.stringify(payload));
+		this.props.setUserGroups(this.state.headers, this.props.user.id, JSON.stringify(payload));
+	}
+
+	handleGroupModSuccess(e) {
 		if(typeof(this.props.onSubmit) === 'function')
 			this.props.onSubmit(e);
 		if(typeof(this.props.onExited) === 'function')
@@ -103,7 +135,7 @@ class GroupModDialog extends React.Component {
 				</DialogContent>
 				<DialogActions>
 					<Button color={"secondary"} onClick={this.props.onExited}>Cancel</Button>
-					<Button style={{color: theme.palette.error.main}} onClick={this.handleSubmit.bind(this)} >Update</Button>
+					<Button style={{color: theme.palette.error.main}} onClick={this.handleSubmit.bind(this)} disabled={this.state.loadingMod}>Update</Button>
 				</DialogActions>
 			</Dialog>
 		);
@@ -113,10 +145,12 @@ const mapStateToProps = state => ({
 	groups: state.groups.groups || [],
 	userGroups: state.groups.userGroups || [],
 	loading: state.loading[GROUP_LOAD] || state.loading[GET_USER_GROUPS],
+	loadingMod: state.loading[SET_USER_GROUPS],
 	headers: state.auth.headers
 });
 const mapDispatchToProps = ({
 	getGroups,
-	getUserGroups
+	getUserGroups,
+	setUserGroups
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(GroupModDialog)));

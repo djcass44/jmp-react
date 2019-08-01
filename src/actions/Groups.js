@@ -18,6 +18,7 @@ import {client, socket} from "../constants";
 
 export const GROUP_LOAD = "GROUP_LOAD";
 export const GET_USER_GROUPS = "GET_USER_GROUPS";
+export const SET_USER_GROUPS = "SET_USER_GROUPS";
 
 export const SOCKET_UPDATE_GROUPS = "EVENT_UPDATE_GROUP";
 
@@ -28,6 +29,9 @@ export function getGroups(headers) {
 }
 export function getUserGroups(headers, uid) {
 	return dispatch => {getUserGroupsDispatch(dispatch, headers, uid)}
+}
+export function setUserGroups(headers, uid, payload) {
+	return dispatch => {setUserGroupsDispatch(dispatch, headers, uid, payload)}
 }
 export function subscribeChangesInGroups(headers) {
 	return async dispatch => {
@@ -57,5 +61,16 @@ function getUserGroupsDispatch(dispatch, headers, uid) {
 		});
 	}).catch(err => {
 		dispatch({type: `${GET_USER_GROUPS}_FAILURE`, data: err.toString()});
+	});
+}
+function setUserGroupsDispatch(dispatch, headers, uid, payload) {
+	dispatch({type: `${SET_USER_GROUPS}_REQUEST`});
+	client.patch('/api/v2_1/groupmod', payload, {headers: headers, params: {uid: uid}}).then(r => {
+		dispatch({
+			type: `${SET_USER_GROUPS}_SUCCESS`,
+			data: r.data
+		});
+	}).catch(err => {
+		dispatch({type: `${SET_USER_GROUPS}_FAILURE`, data: err.toString()});
 	});
 }

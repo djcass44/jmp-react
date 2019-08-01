@@ -127,13 +127,6 @@ class Users extends React.Component {
 	handleModDialog(e, visible, item) {
 		this.setState({showModDialog: visible, modifyUser: item});
 	}
-	handleModUser() {
-		if(this.state.modifyUser == null) {
-			console.log("No user to modify");
-			return;
-		}
-		// TODO modify user groups
-	}
 	static capitalise(text) {
 		if(text == null || text.length === 0) return text;
 		if(text.toLowerCase() === "ldap") return "LDAP"; // hmm
@@ -199,7 +192,7 @@ class Users extends React.Component {
 						<List component={'ul'}>
 							{listItems.length > 0 ? listItems : <EmptyCard/>}
 						</List>
-						<GroupModDialog user={this.state.modifyUser} open={this.state.showModDialog} onExited={(e) => {this.handleModDialog(e, false, null)}} onSubmit={this.handleModUser.bind(this)}/>
+						<GroupModDialog user={this.state.modifyUser} open={this.state.showModDialog} onExited={(e) => {this.handleModDialog(e, false, null)}}/>
 					</Paper>
 				</PoseGroup>
 				{listItems.length > pageSize ?
