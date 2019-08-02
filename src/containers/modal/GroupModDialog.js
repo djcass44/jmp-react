@@ -125,17 +125,19 @@ class GroupModDialog extends React.Component {
 					<Typography variant={"body1"}>
 						Here you can modify the groups that {this.props.user != null ? this.props.user.username || 'the user' : 'the user'} is in.
 					</Typography>
+					<div style={{margin: 12}}>
 					{this.state.loading ?
-						<CircularProgress/>
+						<Center><CircularProgress/></Center>
 						:
 						<List component={'ul'}>
 							{listItems.length > 0 ? listItems : <Center>There are no groups</Center>}
 						</List>
 					}
+					</div>
 				</DialogContent>
 				<DialogActions>
 					<Button color={"secondary"} onClick={this.props.onExited}>Cancel</Button>
-					<Button style={{color: theme.palette.error.main}} onClick={this.handleSubmit.bind(this)} disabled={this.state.loadingMod}>Update</Button>
+					<Button style={{color: theme.palette.error.main}} onClick={this.handleSubmit.bind(this)} disabled={this.state.loadingMod || this.state.userMap.length === 0}>Update</Button>
 				</DialogActions>
 			</Dialog>
 		);
