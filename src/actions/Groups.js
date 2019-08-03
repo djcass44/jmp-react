@@ -70,6 +70,8 @@ function setUserGroupsDispatch(dispatch, headers, uid, payload) {
 			type: `${SET_USER_GROUPS}_SUCCESS`,
 			data: r.data
 		});
+		// Automatically reload the group memberships
+		getUserGroupsDispatch(dispatch, headers, uid);
 	}).catch(err => {
 		dispatch({type: `${SET_USER_GROUPS}_FAILURE`, data: err.toString()});
 	});

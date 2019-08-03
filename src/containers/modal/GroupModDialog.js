@@ -21,6 +21,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
 import Center from "react-center";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -73,48 +74,42 @@ class GroupModDialog extends React.Component {
 	}
 
 	handleCheckChange(e, index) {
-		const {userMap} = this.state;
-		userMap[index].checked = !userMap[index].checked;
-		this.setState({...userMap});
+		const checked = !this.state.userMap[index].checked;
+		this.handleChange(index, checked)
 	}
 
-	handleSubmit(e) {
+	/**
+	 * Add or remove the user from a group
+	 * @param index: position of the group in the userMap
+	 * @param checked: whether the group should be added or removed
+	 */
+	handleChange(index, checked) {
+		const {userMap} = this.state;
+		const item = userMap[index];
 		let add = [];
 		let rm = [];
-		this.state.userMap.forEach((i, index) => {
-			console.log(JSON.stringify(i), JSON.stringify(this.state.userMapRO[index]));
-			if(i.checked === true && this.state.userMapRO[index].checked === false) {
-				// Add the user to this group
-				add.push(i.id);
-			}
-			else if(i.checked === false && this.state.userMapRO[index].checked === true) {
-				// Remove the user from this group
-				rm.push(i.id);
-			}
-		});
+		if(checked === true)
+			add.push(item.id);
+		else
+			rm.push(item.id);
 		const payload = new GroupModPayload(add, rm);
-		console.log(JSON.stringify(payload));
+		item['loading'] = true;
+		this.setState({...userMap});
 		this.props.setUserGroups(this.state.headers, this.props.user.id, JSON.stringify(payload));
 	}
 
-	handleGroupModSuccess(e) {
-		if(typeof(this.props.onSubmit) === 'function')
-			this.props.onSubmit(e);
-		if(typeof(this.props.onExited) === 'function')
-			this.props.onExited(e);
-	}
-
 	render() {
-		const {classes, theme} = this.props;
+		const {classes} = this.props;
 		let sortedGroups = sortItems(this.state.userMap, 'name');
 		let listItems = [];
 		sortedGroups.forEach((i, index) => {
 			listItems.push((
 				<ListItem key={i.id} component={'li'} role={undefined} dense>
 					<ListItemIcon>
-						<Checkbox color={"primary"} edge="start" checked={i.checked === true} tabIndex={-1} onChange={e => {this.handleCheckChange(e, index)}}/>
+						<Checkbox color={"primary"} edge="start" checked={i.checked === true} disabled={this.state.loading === true || i['loading'] === true} tabIndex={-1} onChange={e => {this.handleCheckChange(e, index)}}/>
 					</ListItemIcon>
 					<ListItemText id={i.id} primary={i.name}/>
+					{this.state.loading === true || i['loading'] === true ? <ListItemSecondaryAction><CircularProgress size={15}/></ListItemSecondaryAction> : ""}
 				</ListItem>
 			))
 		});
@@ -126,7 +121,7 @@ class GroupModDialog extends React.Component {
 						Here you can modify the groups that {this.props.user != null ? this.props.user.username || 'the user' : 'the user'} is in.
 					</Typography>
 					<div style={{margin: 12}}>
-					{this.state.loading ?
+					{this.state.loading === true && this.state.userMap.length === 0 ?
 						<Center><CircularProgress/></Center>
 						:
 						<List component={'ul'}>
@@ -136,8 +131,7 @@ class GroupModDialog extends React.Component {
 					</div>
 				</DialogContent>
 				<DialogActions>
-					<Button color={"secondary"} onClick={this.props.onExited}>Cancel</Button>
-					<Button style={{color: theme.palette.error.main}} onClick={this.handleSubmit.bind(this)} disabled={this.state.loadingMod || this.state.userMap.length === 0}>Update</Button>
+					<Button color={"secondary"} onClick={this.props.onExited}>Done</Button>
 				</DialogActions>
 			</Dialog>
 		);
