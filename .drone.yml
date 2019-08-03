@@ -19,3 +19,6 @@ trigger:
   when:
     event:
       - push
+    branch:
+      - master
+      - develop
