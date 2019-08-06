@@ -33,13 +33,6 @@ export function getUserGroups(headers, uid) {
 export function setUserGroups(headers, uid, payload) {
 	return dispatch => {setUserGroupsDispatch(dispatch, headers, uid, payload)}
 }
-export function subscribeChangesInGroups(headers) {
-	return async dispatch => {
-		socket.on(SOCKET_UPDATE_GROUPS, () => {
-			getGroupsDispatch(dispatch, headers);
-		})
-	}
-}
 
 function getGroupsDispatch(dispatch, headers) {
 	dispatch({type: `${GROUP_LOAD}_REQUEST`});

@@ -15,7 +15,7 @@
  *
  */
 
-import {getUsers, PATCH_USER_ROLE, patchUserRole, subscribeChangesInUsers, USER_LOAD} from "../../../actions/Users";
+import {getUsers, PATCH_USER_ROLE, patchUserRole, USER_LOAD} from "../../../actions/Users";
 import {connect} from "react-redux";
 import {LinearProgress, ListItemSecondaryAction, Menu, withStyles, withTheme} from "@material-ui/core";
 import React from "react";
@@ -89,7 +89,6 @@ class Users extends React.Component {
 
 	componentDidMount() {
 		this.props.getUsers(this.state.headers);
-		this.props.subscribeChangesInUsers(this.state.headers);
 	}
 	toggleExpansion(e, id) {
 		let val = id;
@@ -220,7 +219,6 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = ({
 	getUsers,
-	subscribeChangesInUsers,
 	patchUserRole
 
 });

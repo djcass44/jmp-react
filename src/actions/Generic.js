@@ -22,13 +22,6 @@ export function setFilter(filter) {
 export function doNothing() {
 	return dispatch => { doNothingDispatch(dispatch) }
 }
-export function subscribeAppInit() {
-	return async dispatch => {
-		socket.on(SOCKET_APP_INIT, r => {
-			dispatch({type: SOCKET_APP_INIT, data: r})
-		});
-	}
-}
 function setFilterDispatch(dispatch, filter) {
 	dispatch({
 		type: GENERIC_FILTER_SET,

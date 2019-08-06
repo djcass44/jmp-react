@@ -30,7 +30,7 @@ require('dotenv').config();
 ReactDOM.render(
 	<Provider store={store}>
 		<BrowserRouter basename={"/"}>
-			<App/>
+			<App store={store}/>
 		</BrowserRouter>
 	</Provider>,
 	document.getElementById('root'));

@@ -36,6 +36,14 @@ const generic = (state = {
 			}
 			return state;
 		}
+		case "REDUX_WEBSOCKET::MESSAGE": {
+			const payload = JSON.parse(action.payload.message);
+			const {tag} = payload;
+			const {data} = payload;
+			// Trigger a new dispatch action base on the websocket contents
+			action.asyncDispatch({type: tag, data: data});
+			return state;
+		}
 		default:
 			return state;
 	}

@@ -25,9 +25,6 @@ import {
 	deleteJump,
 	JUMP_LOAD,
 	listJumps,
-	subscribeChangesInFavicons,
-	subscribeChangesInJumps,
-	subscribeChangesInTitles
 } from "../../actions/Jumps";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
@@ -92,9 +89,6 @@ class Jumps extends React.Component {
 	componentDidMount() {
 		window.document.title = `${process.env.REACT_APP_APP_NAME}`;
 		this.props.listJumps(this.state.headers);
-		this.props.subscribeChangesInJumps(this.state.headers);
-		this.props.subscribeChangesInTitles();
-		this.props.subscribeChangesInFavicons();
 	}
 
 	componentWillReceiveProps(nextProps, nextContext) {
@@ -239,10 +233,7 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = ({
 	listJumps,
-	deleteJump,
-	subscribeChangesInJumps,
-	subscribeChangesInTitles,
-	subscribeChangesInFavicons
+	deleteJump
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Jumps)));
