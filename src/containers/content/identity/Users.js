@@ -40,6 +40,7 @@ import Icon from "@mdi/react";
 import {mdiDotsVertical} from "@mdi/js";
 import MenuItem from "@material-ui/core/MenuItem";
 import {Badge} from "evergreen-ui";
+import GroupModDialog from "../../modal/GroupModDialog";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -70,7 +71,10 @@ class Users extends React.Component {
 				{id: 'updated', value: "Last edited"}
 			],
 			isAdmin: props.isAdmin,
-			isLoggedIn: props.isLoggedIn
+			isLoggedIn: props.isLoggedIn,
+			// Used by the 'Modify groups' dialog
+			showModDialog: false,
+			modifyUser: null
 		};
 		this.filterUser = this.filterUser.bind(this);
 	}
@@ -120,6 +124,9 @@ class Users extends React.Component {
 		localStorage.setItem(LS_SORT, value);
 		this.props.getUsers(this.state.headers);
 	}
+	handleModDialog(e, visible, item) {
+		this.setState({showModDialog: visible, modifyUser: item});
+	}
 	static capitalise(text) {
 		if(text == null || text.length === 0) return text;
 		if(text.toLowerCase() === "ldap") return "LDAP"; // hmm
@@ -160,7 +167,7 @@ class Users extends React.Component {
 									:
 									""
 								}
-								<MenuItem button={true} component={'li'}>Modify groups</MenuItem>
+								<MenuItem button={true} component={'li'} onClick={(e) => {this.handleModDialog(e, true, i)}}>Modify groups</MenuItem>
 								{i.username !== "admin" && i.from.toLowerCase() === 'local' ? <MenuItem button={true} component={'li'}>Delete</MenuItem> : ""}
 							</Menu>
 						</IconButton>
@@ -185,6 +192,7 @@ class Users extends React.Component {
 						<List component={'ul'}>
 							{listItems.length > 0 ? listItems : <EmptyCard/>}
 						</List>
+						<GroupModDialog user={this.state.modifyUser} open={this.state.showModDialog} onExited={(e) => {this.handleModDialog(e, false, null)}}/>
 					</Paper>
 				</PoseGroup>
 				{listItems.length > pageSize ?
