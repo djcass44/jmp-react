@@ -14,7 +14,7 @@
  *    limitations under the License.
  *
  */
-import {client, socket} from "../constants";
+import {client} from "../constants";
 
 export const USER_LOAD = "USER_LOAD";
 export const PATCH_USER_ROLE = "PATCH_USER_ROLE";

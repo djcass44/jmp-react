@@ -14,7 +14,7 @@
  *    limitations under the License.
  *
  */
-import {client, socket} from "../constants";
+import {client} from "../constants";
 
 export const GROUP_LOAD = "GROUP_LOAD";
 export const GET_USER_GROUPS = "GET_USER_GROUPS";

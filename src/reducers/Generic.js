@@ -30,18 +30,10 @@ const generic = (state = {
 		}
 		case `${SOCKET_APP_INIT}`: {
 			let id = localStorage.getItem(LS_APPID);
-			if(id !== action.data) {
-				localStorage.setItem(LS_APPID, action.data);
+			if(id !== action.payload) {
+				localStorage.setItem(LS_APPID, action.payload);
 				window.location.reload();
 			}
-			return state;
-		}
-		case "REDUX_WEBSOCKET::MESSAGE": {
-			const payload = JSON.parse(action.payload.message);
-			const {tag} = payload;
-			const {data} = payload;
-			// Trigger a new dispatch action base on the websocket contents
-			action.asyncDispatch({type: tag, data: data});
 			return state;
 		}
 		default:

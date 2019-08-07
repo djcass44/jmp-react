@@ -76,7 +76,7 @@ function oauth2LogoutDispatch(dispatch, accessToken, source, headers) {
 }
 function oauth2DiscoverDispatch(dispatch, provider) {
 	dispatch({type: `${OAUTH2_DISCOVER}_REQUEST`});
-	client.head("/api/v2/oauth2/authorise", {params: {provider: provider}}).then(r => {
+	client.head("/api/v2/oauth2/authorise", {params: {provider: provider}}).then(() => {
 		dispatch({
 			type: `${OAUTH2_DISCOVER}_SUCCESS`,
 			data: {provider: provider, active: true}
