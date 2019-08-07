@@ -36,7 +36,6 @@ class Banner extends React.Component {
 	}
 
 	render() {
-		const {classes} = this.props;
 		return this.props.open === true && this.state.visible === true ?
 				<Alert intent={"danger"} title={this.props.label} style={{marginBottom: 32, borderRadius: 8}} />
 				:
