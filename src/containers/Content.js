@@ -21,7 +21,7 @@ import Jumps from "./content/Jumps";
 import {Switch, Route, withRouter} from "react-router-dom";
 import Login from "./content/Login";
 import {connect} from "react-redux";
-import {OAUTH_REFRESH, OAUTH_VERIFY} from "../actions/Auth";
+import {OAUTH_REFRESH} from "../actions/Auth";
 import NotFound from "./content/NotFound";
 import ErrorIcon from "@material-ui/icons/ErrorOutline";
 import Logout from "./content/Logout";
@@ -47,57 +47,36 @@ const styles = theme => ({
 	}
 });
 
-class Content extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			headers: props.headers,
-			isLoggedIn: props.isLoggedIn,
-			refresh: props.refresh
-		};
-	}
-
-	componentWillReceiveProps(nextProps, nextContext) {
-		this.setState({...nextProps});
-	}
-
-	render() {
-		const {theme, classes} = this.props;
-		let content = (<Grid item xs={12} sm={6}>
-			{/* TODO fix the background colour of the banner avatar */}
-			<Banner avatarStyle={{backgroundColor: theme.palette.error.light, color: theme.palette.error.dark}} open={this.state.error != null} label={this.state.error} icon={
-				<ErrorIcon style={{color: theme.palette.error.dark}}/>
-			}/>
-			<Switch>
-				<Route exact path={"/"} component={Jumps} key={"jumps"}/>
-				<Route exact path={"/identity"} component={Identity} key={"identity"}/>
-				<Route exact path={"/jmp"} component={Token} key={"token"}/>
-				<Route exact path={"/similar"} component={Similar} key={"similar"}/>
-				<Route exact path={"/login"} component={Login} key={"login"}/>
-				<Route exact path={"/logout"} component={Logout} key={"logout"}/>
-				<Route exact path={"/settings"} component={Settings} key={"settings"}/>
-				<Route exact path={"/help"} component={Help} key={"help"}/>
-				<Route exact path={"/callback-*"} component={Callback} key={"callback"}/>
-				<Route component={NotFound} key={"notfound"}/>
-			</Switch>
-		</Grid>);
-		return (<div className={classes.container}>
-			<Grid container spacing={5} className={classes.centred}>
-				<Grid item sm={3}/>
-				{content}
-				<Grid item sm={3}/>
-			</Grid>
-		</div>);
-	}
-}
+export const Content = props => {
+	const {theme, classes} = props;
+	let content = (<Grid item xs={12} sm={6}>
+		{/* TODO fix the background colour of the banner avatar */}
+		<Banner avatarStyle={{backgroundColor: theme.palette.error.light, color: theme.palette.error.dark}} open={props.error != null} label={props.error} icon={
+			<ErrorIcon style={{color: theme.palette.error.dark}}/>
+		}/>
+		<Switch>
+			<Route exact path={"/"} component={Jumps} key={"jumps"}/>
+			<Route exact path={"/identity"} component={Identity} key={"identity"}/>
+			<Route exact path={"/jmp"} component={Token} key={"token"}/>
+			<Route exact path={"/similar"} component={Similar} key={"similar"}/>
+			<Route exact path={"/login"} component={Login} key={"login"}/>
+			<Route exact path={"/logout"} component={Logout} key={"logout"}/>
+			<Route exact path={"/settings"} component={Settings} key={"settings"}/>
+			<Route exact path={"/help"} component={Help} key={"help"}/>
+			<Route exact path={"/callback-*"} component={Callback} key={"callback"}/>
+			<Route component={NotFound} key={"notfound"}/>
+		</Switch>
+	</Grid>);
+	return (<div className={classes.container}>
+		<Grid container spacing={5} className={classes.centred}>
+			<Grid item sm={3}/>
+			{content}
+			<Grid item sm={3}/>
+		</Grid>
+	</div>);
+};
 
 const mapStateToProps = state => ({
-	loading: state.loading[OAUTH_VERIFY],
 	error: state.errors[OAUTH_REFRESH] || state.errors[JUMP_LOAD],
-	headers: state.auth.headers,
-	isLoggedIn: state.auth.isLoggedIn,
-	refresh: state.auth.refresh,
-	ready: state.auth.ready
 });
-const mapDispatchToProps = ({});
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(withRouter(Content))));
+export default connect(mapStateToProps, null)(withStyles(styles)(withTheme(withRouter(Content))));

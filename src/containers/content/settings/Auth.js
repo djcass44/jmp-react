@@ -15,8 +15,8 @@
  *
  */
 
-import React from "react";
-import {getInfoAuth, getInfoProp} from "../../../actions/Info";
+import React, {useEffect} from "react";
+import {getInfoAuth} from "../../../actions/Info";
 import {ListSubheader, withStyles, withTheme} from "@material-ui/core";
 import {connect} from "react-redux";
 import InfoItem from "../../../components/content/settings/InfoItem";
@@ -38,96 +38,32 @@ const styles = theme => ({
 	},
 });
 
-class Auth extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			headers: props.headers,
-			conf: props.conf,
-			auth: props.auth,
-			props: [
-				'ldap',
-				'ldap.host',
-				'ldap.port',
-				'ldap.context',
-				'ldap.user',
-				'jmp.ldap.max_failure',
-				'jmp.ldap.remove_stale',
-				'jmp.ldap.sync_rate',
-				'jmp.ldap.user_query',
-				'jmp.ldap.user_id',
-				'jmp.ldap.group_query',
-				'jmp.ldap.group_filter',
-				'jmp.ldap.group_uid',
-				'jmp.ldap.auth_reconnect',
-				'jmp.ext.block_local'
-			]
-		}
-	}
-	componentDidMount() {
-		this.props.getInfoAuth(this.state.headers);
-		this.state.props.forEach(i => {
-			this.props.getInfoProp(this.state.headers, i);
-		});
-	}
+const Auth = props => {
+	useEffect(() => {
+		props.getInfoAuth(props.headers);
+	});
 
-	componentWillReceiveProps(nextProps, nextContext) {
-		this.setState({...nextProps});
-	}
-
-	render() {
-		const {classes, theme} = this.props;
-		// const propItems = [];
-		// console.log(this.state.conf);
-		// for (const it in this.state.conf) {
-		// 	if(!this.state.conf.hasOwnProperty(it)) continue;
-		// 	const key = it.key;
-		// 	const value = it.value;
-		// 	console.log(key, value);
-		// 	if(typeof value === 'boolean') {
-		// 		propItems.push(
-		// 			<div key={key}>
-		// 				<FormControlLabel control={
-		// 					<Switch checked={value}/>
-		// 				} label={key}/>
-		// 			</div>
-		// 		)
-		// 	}
-		// 	else {
-		// 		propItems.push(
-		// 			<div key={key}>
-		// 				<TextField value={value} label={key} fullWidth/>
-		// 			</div>
-		// 		)
-		// 	}
-		// }
-		const auth = (
-			<div>
-				<p>Connected... {this.state.auth['connected'] === true ? <span className={classes.statusOK}>Yes</span> : <span className={classes.statusFail}>No</span>}</p>
-				<p>{this.state.auth['name']} provides {this.state.auth['users']} users and {this.state.auth['groups']} groups.</p>
-				{/*<div>*/}
-				{/*	{propItems}*/}
-				{/*</div>*/}
-			</div>
-		);
-		return (
-			<div>
-				<ListSubheader className={classes.title} inset component={"div"}>Authentication</ListSubheader>
-				<InfoItem title={"Identity Provider (read-only)"} content={auth} icon={
-					<Icon style={{paddingRight: 8}} path={mdiFolderAccountOutline} size={1} color={theme.palette.success.dark}/>
-				}/>
-			</div>
-		);
-	}
-
-}
+	const {classes, theme} = props;
+	const auth = (
+		<div>
+			<p>Connected... {props.auth['connected'] === true ? <span className={classes.statusOK}>Yes</span> : <span className={classes.statusFail}>No</span>}</p>
+			<p>{props.auth['name']} provides {props.auth['users']} users and {props.auth['groups']} groups.</p>
+		</div>
+	);
+	return (
+		<div>
+			<ListSubheader className={classes.title} inset component={"div"}>Authentication</ListSubheader>
+			<InfoItem title={"Identity Provider (read-only)"} content={auth} icon={
+				<Icon style={{paddingRight: 8}} path={mdiFolderAccountOutline} size={1} color={theme.palette.success.dark}/>
+			}/>
+		</div>
+	);
+};
 const mapStateToProps = state => ({
-	conf: state.info.conf,
 	auth: state.info.auth,
 	headers: state.auth.headers
 });
 const mapDispatchToProps = ({
-	getInfoProp,
 	getInfoAuth
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Auth)));

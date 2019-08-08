@@ -15,7 +15,7 @@
  *
  */
 
-import React from "react";
+import React, {useEffect} from "react";
 import Typography from "@material-ui/core/es/Typography/Typography";
 import Center from "react-center";
 import {withStyles, withTheme} from "@material-ui/core";
@@ -43,29 +43,27 @@ const styles = theme => ({
 	}
 });
 
-class NotFound extends React.Component {
-	componentDidMount() {
+export const NotFound = props => {
+	useEffect(() => {
 		window.document.title = `404 - ${process.env.REACT_APP_APP_NAME}`;
-	}
+	});
 
-	render() {
-		const {classes, theme} = this.props;
-		return (
-			<div className={classes.container}>
-				<div style={{justifyContent: 'center', alignItems: 'center'}}>
-					<Center><Typography className={classes.title} variant={"h1"}>404</Typography></Center>
-					<Center><Typography className={classes.subtitle} variant={"subtitle1"}>The page you're looking for doesn't exist or the server refused to disclose it.</Typography></Center>
-					<Center>
-						<IconButton color={"secondary"} href={"javascript:window.history.back()"} aria-label={"Go back"}>
-							<Icon path={mdiArrowLeft} size={1} color={theme.palette.secondary.main}/>
-						</IconButton>
-						<IconButton component={Link} to={"/"} color={"primary"} aria-label={"Return to home"}>
-							<Icon path={mdiHomeOutline} size={1} color={theme.palette.primary.main}/>
-						</IconButton>
-					</Center>
-				</div>
+	const {classes, theme} = props;
+	return (
+		<div className={classes.container}>
+			<div style={{justifyContent: 'center', alignItems: 'center'}}>
+				<Center><Typography className={classes.title} variant={"h1"}>404</Typography></Center>
+				<Center><Typography className={classes.subtitle} variant={"subtitle1"}>The page you're looking for doesn't exist or the server refused to disclose it.</Typography></Center>
+				<Center>
+					<IconButton color={"secondary"} href={"javascript:window.history.back()"} aria-label={"Go back"}>
+						<Icon path={mdiArrowLeft} size={1} color={theme.palette.secondary.main}/>
+					</IconButton>
+					<IconButton component={Link} to={"/"} color={"primary"} aria-label={"Return to home"}>
+						<Icon path={mdiHomeOutline} size={1} color={theme.palette.primary.main}/>
+					</IconButton>
+				</Center>
 			</div>
-		);
-	}
-}
+		</div>
+	);
+};
 export default withStyles(styles)(withTheme(NotFound));

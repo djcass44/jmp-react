@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Typography from "@material-ui/core/Typography";
 import Center from "react-center";
 import {withTheme, withStyles, Paper} from "@material-ui/core";
@@ -27,45 +27,35 @@ const styles = theme => ({
 	},
 });
 
-class Settings extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			isAdmin: props.isAdmin,
-			isLoggedIn: props.isLoggedIn
-		};
-	}
-	componentDidMount() {
+export const Settings = props => {
+	useEffect(() => {
 		window.document.title = `Settings - ${process.env.REACT_APP_APP_NAME}`;
-	}
-	componentWillReceiveProps(nextProps, nextContext) {
-		this.setState({...nextProps});
-	}
-	render() {
-		const {classes, theme} = this.props;
-		return (
-			<div>
-				<Center>
-					<Avatar className={classes.avatar} component={Paper}><Icon path={mdiSettingsOutline} size={2} color={theme.palette.primary.main}/></Avatar>
-				</Center>
-				<Center>
-					<Typography variant={"h4"} className={classes.name}>Settings</Typography>
-				</Center>
-				<General/>
-				{this.state.isAdmin === true ?
-					<div>
-						<Auth/>
-						<Info/>
-					</div>
-					:
-					""
-				}
-			</div>
-		)
-	}
-}
+	});
+
+	const {classes, theme} = props;
+	return (
+		<div>
+			<Center>
+				<Avatar className={classes.avatar} component={Paper}>
+					<Icon path={mdiSettingsOutline} size={2} color={theme.palette.primary.main}/>
+				</Avatar>
+			</Center>
+			<Center>
+				<Typography variant={"h4"} className={classes.name}>Settings</Typography>
+			</Center>
+			<General/>
+			{props.isAdmin === true ?
+				<div>
+					<Auth/>
+					<Info/>
+				</div>
+				:
+				""
+			}
+		</div>
+	);
+};
 const mapStateToProps = state => ({
-	isAdmin: state.auth.isAdmin,
-	isLoggedIn: state.auth.isLoggedIn
+	isAdmin: state.auth.isAdmin
 });
 export default connect(mapStateToProps, null)(withStyles(styles)(withTheme(Settings)));

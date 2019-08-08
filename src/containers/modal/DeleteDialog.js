@@ -10,38 +10,31 @@ const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
 });
 
-class DeleteDialog extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			defaultTitle: "Delete",
-			defaultBody: "Are you sure? This action is immediate and cannot be undone. If you are an admin, be aware that this change may impact functionality for users."
-		};
-	}
+export const DeleteDialog = props => {
+	const defaultTitle = "Delete";
+	const defaultBody = "Are you sure? This action is immediate and cannot be undone. If you are an admin, be aware that this change may impact functionality for users.";
 
-	handleSubmit(e) {
-		if(typeof(this.props.onSubmit) === 'function')
-			this.props.onSubmit(e);
-		if(typeof(this.props.onExited) === 'function')
-			this.props.onExited(e);
-	}
+	const handleSubmit = e => {
+		if(typeof(props.onSubmit) === 'function')
+			props.onSubmit(e);
+		if(typeof(props.onExited) === 'function')
+			props.onExited(e);
+	};
 
-	render() {
-		const {classes, theme} = this.props;
-		return (
-			<Dialog open={this.props.open === true} aria-labelledby={"form-dialog-title"} onClose={this.props.onExited}>
-				<DialogTitle id={"form-dialog-title"} className={classes.title}>{this.props.title != null ? this.props.title : this.state.defaultTitle}</DialogTitle>
-				<DialogContent>
-					<Typography variant={"body1"}>
-						{this.props.body != null ? this.props.body : this.state.defaultBody}
-					</Typography>
-				</DialogContent>
-				<DialogActions>
-					<Button color={"secondary"} onClick={this.props.onExited}>Cancel</Button>
-					<Button style={{color: theme.palette.error.main}} onClick={this.handleSubmit.bind(this)} >Delete</Button>
-				</DialogActions>
-			</Dialog>
-		);
-	}
-}
+	const {classes, theme} = props;
+	return (
+		<Dialog open={props.open === true} aria-labelledby={"form-dialog-title"} onClose={props.onExited}>
+			<DialogTitle id={"form-dialog-title"} className={classes.title}>{props.title != null ? props.title : defaultTitle}</DialogTitle>
+			<DialogContent>
+				<Typography variant={"body1"}>
+					{props.body != null ? props.body : defaultBody}
+				</Typography>
+			</DialogContent>
+			<DialogActions>
+				<Button color={"secondary"} onClick={props.onExited}>Cancel</Button>
+				<Button style={{color: theme.palette.error.main}} onClick={handleSubmit}>Delete</Button>
+			</DialogActions>
+		</Dialog>
+	);
+};
 export default withStyles(styles)(withTheme(DeleteDialog));

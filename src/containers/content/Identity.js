@@ -15,7 +15,7 @@
  *
  */
 
-import React from "react";
+import React, {useEffect} from "react";
 import Users from "./identity/Users";
 import Groups from "./identity/Groups";
 import Center from "react-center";
@@ -38,25 +38,23 @@ const styles = theme => ({
 	},
 });
 
-class Identity extends React.Component {
-	componentDidMount() {
+export const Identity = props => {
+	useEffect(() => {
 		window.document.title = `Identity - ${process.env.REACT_APP_APP_NAME}`;
-	}
+	});
 
-	render() {
-		const {classes, theme} = this.props;
-		return (
-			<div>
-				<Center>
-					<Avatar className={classes.avatar} component={Paper}><Icon path={mdiAccountGroupOutline} size={2} color={theme.palette.primary.main}/></Avatar>
-				</Center>
-				<Center>
-					<Typography variant={"h4"} className={classes.name}>Users &amp; Groups</Typography>
-				</Center>
-				<Users/>
-				<Groups/>
-			</div>
-		);
-	}
-}
+	const {classes, theme} = props;
+	return (
+		<div>
+			<Center>
+				<Avatar className={classes.avatar} component={Paper}><Icon path={mdiAccountGroupOutline} size={2} color={theme.palette.primary.main}/></Avatar>
+			</Center>
+			<Center>
+				<Typography variant={"h4"} className={classes.name}>Users &amp; Groups</Typography>
+			</Center>
+			<Users/>
+			<Groups/>
+		</div>
+	);
+};
 export default withStyles(styles)(withTheme(Identity));

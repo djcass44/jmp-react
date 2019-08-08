@@ -97,6 +97,5 @@ const mapDispatchToProps = ({
 	getTokenStart,
 	getTokenEnd,
 	getTokenFail
-
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(withTheme(Token))));
