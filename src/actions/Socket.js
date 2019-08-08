@@ -27,7 +27,6 @@ function connectWebSocket(dispatch, headers) {
 		const data = JSON.parse(ev.data);
 		const {type} = data;
 		const {payload} = data;
-		console.log(type);
 		checkType(dispatch, type, payload, headers);
 	});
 }
