@@ -35,7 +35,7 @@ const jumps = (state = {jumps: [], similar: []}, action) => {
 				return state;
 			}
 			const j = state.jumps;
-			j[idx].title = action.data.url; // the name is for class reuse api-side
+			j[idx].title = payload.url; // the name is for class reuse api-side
 			return {...state, j};
 		}
 		case SOCKET_UPDATE_FAVICON: {
