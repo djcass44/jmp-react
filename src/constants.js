@@ -1,5 +1,4 @@
 import axios from "axios";
-import openSocket from "socket.io-client";
 
 export const LS_REQUEST = "jmpr-request";
 export const LS_REFRESH = "jmpr-refresh";
@@ -17,12 +16,8 @@ export const LS_SORT = "jmpr-sortBy";
 export const pageSize = 8;
 
 export const BASE_URL = `${process.env.REACT_APP_API_SCHEME}://${process.env.REACT_APP_API_URL}`;
+export const SOCKET_URL = `${process.env.NODE_ENV === "production" ? "wss" : "ws"}://${process.env.REACT_APP_SOCKET_URL}`;
 
 export const client = axios.create({
 	baseURL: BASE_URL
-});
-export const socket = openSocket(process.env.REACT_APP_SOCKET_URL, {
-	secure: process.env.NODE_ENV === 'production',
-	// Start with websockets and downgrade to polling if we have to
-	transports: ['websocket', 'polling']
 });

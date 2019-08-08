@@ -14,7 +14,7 @@
  *    limitations under the License.
  *
  */
-import {client, socket} from "../constants";
+import {client} from "../constants";
 
 export const GROUP_LOAD = "GROUP_LOAD";
 export const GET_USER_GROUPS = "GET_USER_GROUPS";
@@ -32,13 +32,6 @@ export function getUserGroups(headers, uid) {
 }
 export function setUserGroups(headers, uid, payload) {
 	return dispatch => {setUserGroupsDispatch(dispatch, headers, uid, payload)}
-}
-export function subscribeChangesInGroups(headers) {
-	return async dispatch => {
-		socket.on(SOCKET_UPDATE_GROUPS, () => {
-			getGroupsDispatch(dispatch, headers);
-		})
-	}
 }
 
 function getGroupsDispatch(dispatch, headers) {

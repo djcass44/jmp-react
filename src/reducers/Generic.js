@@ -30,8 +30,8 @@ const generic = (state = {
 		}
 		case `${SOCKET_APP_INIT}`: {
 			let id = localStorage.getItem(LS_APPID);
-			if(id !== action.data) {
-				localStorage.setItem(LS_APPID, action.data);
+			if(id !== action.payload) {
+				localStorage.setItem(LS_APPID, action.payload);
 				window.location.reload();
 			}
 			return state;

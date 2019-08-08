@@ -28,7 +28,7 @@ import EmptyCard from "../../../components/widget/EmptyCard";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import {LS_SORT, pageSize} from "../../../constants";
-import {getGroups, GROUP_LOAD, subscribeChangesInGroups} from "../../../actions/Groups";
+import {getGroups, GROUP_LOAD} from "../../../actions/Groups";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline} from "@mdi/js";
 import posed, {PoseGroup} from "react-pose";
@@ -77,7 +77,6 @@ class Groups extends React.Component {
 
 	componentDidMount() {
 		this.props.getGroups(this.state.headers);
-		this.props.subscribeChangesInGroups(this.state.headers);
 	}
 	filterGroup(group) {
 		return group.name.toLowerCase().includes(this.state.searchFilter) ||
@@ -158,8 +157,7 @@ const mapStateToProps = state => ({
 	searchFilter: state.generic.searchFilter
 });
 const mapDispatchToProps = ({
-	getGroups,
-	subscribeChangesInGroups
+	getGroups
 
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Groups)));

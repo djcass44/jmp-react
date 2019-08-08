@@ -28,23 +28,25 @@ const jumps = (state = {jumps: [], similar: []}, action) => {
 			return {...state, similar: items}
 		}
 		case SOCKET_UPDATE_TITLE: {
-			let idx = indexFromId(state.jumps, action.data.id);
+			const {payload} = action;
+			let idx = indexFromId(state.jumps, payload.id);
 			if(idx < 0) {
-				console.error(`${SOCKET_UPDATE_TITLE}: Failed to find item with id: ${action.data.id}`);
+				console.error(`${SOCKET_UPDATE_TITLE}: Failed to find item with id: ${payload.id}`);
 				return state;
 			}
 			const j = state.jumps;
-			j[idx].title = action.data.url; // the name is for class reuse api-side
+			j[idx].title = payload.url; // the name is for class reuse api-side
 			return {...state, j};
 		}
 		case SOCKET_UPDATE_FAVICON: {
-			let idx = indexFromId(state.jumps, action.data.id);
+			const {payload} = action;
+			let idx = indexFromId(state.jumps, payload.id);
 			if(idx < 0) {
-				console.error(`${SOCKET_UPDATE_FAVICON}: Failed to find item with id: ${action.data.id}`);
+				console.error(`${SOCKET_UPDATE_FAVICON}: Failed to find item with id: ${payload.id}`);
 				return state;
 			}
 			const j = state.jumps;
-			j[idx].image = action.data.url; // the name is for class reuse api-side
+			j[idx].image = payload.url; // the name is for class reuse api-side
 			return {...state, j};
 		}
 		default:

@@ -14,7 +14,7 @@
  *    limitations under the License.
  *
  */
-import {client, socket} from "../constants";
+import {client} from "../constants";
 
 export const USER_LOAD = "USER_LOAD";
 export const PATCH_USER_ROLE = "PATCH_USER_ROLE";
@@ -28,13 +28,6 @@ export function getUsers(headers) {
 }
 export function patchUserRole(headers, user) {
 	return dispatch => {patchUserRoleDispatch(dispatch, headers, user)}
-}
-export function subscribeChangesInUsers(headers) {
-	return async dispatch => {
-		socket.on(SOCKET_UPDATE_USERS, () => {
-			getUsersDispatch(dispatch, headers);
-		});
-	}
 }
 
 function getUsersDispatch(dispatch, headers) {

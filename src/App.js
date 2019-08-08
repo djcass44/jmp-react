@@ -29,11 +29,11 @@ import Toolbar from "@material-ui/core/Toolbar";
 import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import {Helmet} from "react-helmet";
-import {subscribeAppInit} from "./actions/Generic";
 import {IconButton} from "@material-ui/core";
 import Icon from "@mdi/react";
 import {mdiHelpCircleOutline} from "@mdi/js";
 import {Avatar} from "evergreen-ui";
+import {wsClose, wsOpen} from "./actions/Socket";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -68,11 +68,12 @@ class App extends React.Component {
 		});
 	}
 	componentDidMount() {
-		this.props.subscribeAppInit();
+		this.props.store.dispatch(wsOpen(this.state.headers));
 	}
 
 	componentWillUnmount() {
 		this.unlisten();
+		this.props.store.dispatch(wsClose);
 	}
 	render() {
 		const {classes, theme} = this.props;
@@ -127,6 +128,5 @@ const mapDispatchToProps = ({
 	oauthVerify,
 	oauthRequest,
 	oauthUnready,
-	subscribeAppInit
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(withRouter(App))));
