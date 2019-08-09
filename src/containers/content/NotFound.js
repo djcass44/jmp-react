@@ -24,7 +24,7 @@ import {Link} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHomeOutline} from "@mdi/js";
 
-const styles = theme => ({
+const styles = () => ({
 	title: {
 		fontSize: 148,
 		fontWeight: 200,

@@ -24,7 +24,6 @@ import {Paper, withStyles, withTheme} from "@material-ui/core";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline} from "@mdi/js";
 import Typography from "@material-ui/core/Typography";
-import PropTypes from "prop-types";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -57,8 +56,5 @@ export const Identity = props => {
 			<Groups/>
 		</div>
 	);
-};
-Identity.propTypes = {
-	props: PropTypes.object.isRequired
 };
 export default withStyles(styles)(withTheme(Identity));

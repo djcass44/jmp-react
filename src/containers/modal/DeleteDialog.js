@@ -5,9 +5,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {Typography, withStyles, withTheme} from "@material-ui/core";
-import PropTypes from "prop-types";
 
-const styles = theme => ({
+const styles = () => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
 });
 
@@ -37,8 +36,5 @@ export const DeleteDialog = props => {
 			</DialogActions>
 		</Dialog>
 	);
-};
-DeleteDialog.propTypes = {
-	props: PropTypes.object.isRequired
 };
 export default withStyles(styles)(withTheme(DeleteDialog));

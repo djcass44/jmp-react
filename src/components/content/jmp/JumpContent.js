@@ -12,7 +12,7 @@ import {
 import {connect} from "react-redux";
 import {Badge} from "evergreen-ui";
 
-const styles = theme => ({
+const styles = () => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
@@ -23,81 +23,71 @@ const styles = theme => ({
 	}
 });
 
-class JumpContent extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			isLoggedIn: props.isLoggedIn,
-			isAdmin: props.isAdmin
-		}
-	}
-
+export const JumpContent = props => {
 	// This is a recent API
 	// There WILL be compatibility issues with its usage
-	handleCopy(e, text) {
+	const handleCopy = (e, text) => {
 		navigator.clipboard.writeText(text);
-	}
-	render() {
-		const {jump, classes, theme} = this.props;
-		const secureStatus = jump.location.startsWith("https://") ? {
-			secure: true,
-			title: "Secure",
-			colour: "green"
-		} : {
-			secure: false,
-			title: "Insecure",
-			colour: "red"
-		};
-		const aliases = jump.alias.map(i => {return i.name}).join(", ");
-		// Only show edit/delete options if the API will let the user action them
-		const hasOwnership = this.state.isAdmin || jump['personal'] > 0;
-		return (
-			<Collapse className={classes.main} in={this.props.open} unmountOnExit timeout={"auto"}>
-				{/* TITLE */}
-				<Typography variant={"subtitle1"} className={classes.title}>
-					{jump.title}
-				</Typography>
-				<div style={{padding: 8}}>
-					{/* USAGE COUNT */}
-					<small className={classes.title}><Icon path={mdiFire} size={0.85} color={theme.palette.warning.main}/>x{jump['metaUsage']}</small>
-				</div>
-				<Badge color={secureStatus.colour}>{secureStatus.title}</Badge>
-				{/* ALIASES */}
-				{aliases.length > 0 ? <Typography variant={"body1"}>Aliases: {aliases}</Typography> : ""}
-				{/* CREATION */}
-				<p>Created <Moment fromNow>{jump['metaCreation']}</Moment></p>
-				{/* EDIT */}
-				{jump['metaUpdate'] !== jump['metaCreation'] ? <p>Edited <Moment fromNow>{jump['metaUpdate']}</Moment></p>: ""}
-				{document.queryCommandSupported("copy") &&
-					<Tooltip title={"Copy URL"}>
-						<IconButton centerRipple={false} onClick={(e) => this.handleCopy(e, jump.location)}><Icon path={mdiContentCopy} size={0.85}/></IconButton>
-					</Tooltip>
-				}
-				{this.state.isLoggedIn === true && hasOwnership === true &&
-					<Tooltip title={"Edit"}>
-						<IconButton centerRipple={false} onClick={(e) => {
-							this.props.onEdit(e, jump)
-						}}><Icon path={mdiPencilOutline} size={0.85}/></IconButton>
-					</Tooltip>
-				}
-				<Tooltip title={"Open"}>
-					<IconButton centerRipple={false} target={"_blank"} rel={"noopener noreferrer"} href={`/jmp?query=${jump.name}`}>
-						<Icon path={mdiOpenInNew} size={0.85}/>
+	};
+	const {jump, classes, theme} = props;
+	const secureStatus = jump.location.startsWith("https://") ? {
+		secure: true,
+		title: "Secure",
+		colour: "green"
+	} : {
+		secure: false,
+		title: "Insecure",
+		colour: "red"
+	};
+	const aliases = jump.alias.map(i => {return i.name}).join(", ");
+	// Only show edit/delete options if the API will let the user action them
+	const hasOwnership = props.isAdmin || jump['personal'] > 0;
+	return (
+		<Collapse className={classes.main} in={props.open} unmountOnExit timeout={"auto"}>
+			{/* TITLE */}
+			<Typography variant={"subtitle1"} className={classes.title}>
+				{jump.title}
+			</Typography>
+			<div style={{padding: 8}}>
+				{/* USAGE COUNT */}
+				<small className={classes.title}><Icon path={mdiFire} size={0.85} color={theme.palette.warning.main}/>x{jump['metaUsage']}</small>
+			</div>
+			<Badge color={secureStatus.colour}>{secureStatus.title}</Badge>
+			{/* ALIASES */}
+			{aliases.length > 0 ? <Typography variant={"body1"}>Aliases: {aliases}</Typography> : ""}
+			{/* CREATION */}
+			<p>Created <Moment fromNow>{jump['metaCreation']}</Moment></p>
+			{/* EDIT */}
+			{jump['metaUpdate'] !== jump['metaCreation'] ? <p>Edited <Moment fromNow>{jump['metaUpdate']}</Moment></p>: ""}
+			{document.queryCommandSupported("copy") &&
+				<Tooltip title={"Copy URL"}>
+					<IconButton centerRipple={false} onClick={(e) => {handleCopy(e, jump.location)}}><Icon path={mdiContentCopy} size={0.85}/></IconButton>
+				</Tooltip>
+			}
+			{props.isLoggedIn === true && hasOwnership === true &&
+				<Tooltip title={"Edit"}>
+					<IconButton centerRipple={false} onClick={(e) => {
+						props.onEdit(e, jump)
+					}}><Icon path={mdiPencilOutline} size={0.85}/></IconButton>
+				</Tooltip>
+			}
+			<Tooltip title={"Open"}>
+				<IconButton centerRipple={false} target={"_blank"} rel={"noopener noreferrer"} href={`/jmp?query=${jump.name}`}>
+					<Icon path={mdiOpenInNew} size={0.85}/>
+				</IconButton>
+			</Tooltip>
+			{props.isLoggedIn === true && hasOwnership === true &&
+				<Tooltip title={"Delete"}>
+					<IconButton centerRipple={false} onClick={(e) => {
+						props.onDelete(e, jump.id)
+					}}>
+						<Icon path={mdiDeleteOutline} size={0.85}/>
 					</IconButton>
 				</Tooltip>
-				{this.state.isLoggedIn === true && hasOwnership === true &&
-					<Tooltip title={"Delete"}>
-						<IconButton centerRipple={false} onClick={(e) => {
-							this.props.onDelete(e, jump.id)
-						}}>
-							<Icon path={mdiDeleteOutline} size={0.85}/>
-						</IconButton>
-					</Tooltip>
-				}
-			</Collapse>
-		);
-	}
-}
+			}
+		</Collapse>
+	);
+};
 const mapStateToProps = state => ({
 	isLoggedIn: state.auth.isLoggedIn,
 	isAdmin: state.auth.isAdmin,

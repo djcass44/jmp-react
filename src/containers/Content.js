@@ -33,7 +33,6 @@ import Settings from "./content/Settings";
 import Help from "./content/Help";
 import {JUMP_LOAD} from "../actions/Jumps";
 import Callback from "./content/Callback";
-import PropTypes from "prop-types";
 
 const styles = () => ({
 	container: {
@@ -75,9 +74,6 @@ export const Content = props => {
 			<Grid item sm={3}/>
 		</Grid>
 	</div>);
-};
-Content.propTypes = {
-	props: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
 	error: state.errors[OAUTH_REFRESH] || state.errors[JUMP_LOAD],

@@ -9,7 +9,6 @@ import {connect} from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import Icon from "@mdi/react";
 import {mdiSettingsOutline} from "@mdi/js";
-import PropTypes from "prop-types";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -55,9 +54,6 @@ export const Settings = props => {
 			}
 		</div>
 	);
-};
-Settings.propTypes = {
-	props: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

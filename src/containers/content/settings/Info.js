@@ -1,19 +1,22 @@
 import React from "react";
 import {connect} from "react-redux";
-import {ListSubheader, Typography, withStyles, withTheme} from "@material-ui/core";
+import {ListSubheader, Typography, withStyles, withTheme,} from "@material-ui/core";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import {
 	GET_INFO_APP, GET_INFO_ERROR,
-	GET_INFO_STAT,
 	GET_INFO_SYS,
 	getInfoApp, getInfoError,
-	getInfoHealth,
 	getInfoSystem
 } from "../../../actions/Info";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import JSONPretty from "react-json-pretty";
-import {mdiApplication, mdiBugCheckOutline, mdiMemory} from "@mdi/js";
+import {
+	mdiApplication,
+	mdiBugCheckOutline,
+	mdiMemory
+} from "@mdi/js";
 import Icon from "@mdi/react";
+import Status from "./Status";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -37,7 +40,6 @@ class Info extends React.Component {
 		super(props);
 		this.state = {
 			expanded: '',
-			status: {},
 			headers: props.headers,
 			isAdmin: props.isAdmin,
 			isLoggedIn: props.isLoggedIn,
@@ -51,7 +53,6 @@ class Info extends React.Component {
 	componentDidMount() {
 		this.props.getInfoApp(this.state.headers);
 		this.props.getInfoSystem(this.state.headers);
-		this.props.getInfoHealth(this.state.headers);
 		this.props.getInfoError(this.state.headers);
 	}
 
@@ -59,11 +60,7 @@ class Info extends React.Component {
 		const {classes, theme} = this.props;
 		const status = (
 			<div>
-				{this.state.statusLoad === true ? <LinearProgress/> : ""}
-				<p>HTTP Server... {this.state.status.http === "OK" ? <span className={classes.statusOK}>Ok</span> : <span className={classes.statusFail}>Error</span>}</p>
-				<p>Database... {this.state.status['database'] === true ? <span className={classes.statusOK}>Ok</span> : <span className={classes.statusFail}>Error</span>}</p>
-				<p>Identity Provider... {this.state.status['identityProvider'] === true ? <span className={classes.statusOK}>Ok</span> : this.state.status['identityProvider'] == null ? <span className={classes.statusWarn}>Disabled</span> : <span className={classes.statusFail}>Error</span>}</p>
-				<p>Active provider: {this.state.status['providerName']}</p>
+				<Status showReload={true}/>
 				<Typography variant={"body1"} className={classes.title}>Recent exceptions</Typography>
 				<p>There have been {this.state.error.length} exceptions in the last 15 minutes.</p>
 				{this.state.errorLoad === true ? <LinearProgress/> : ""}
@@ -95,16 +92,12 @@ const mapStateToProps = state => ({
 	appInfoError: state.errors[GET_INFO_APP],
 	systemInfo: state.info.systemInfo,
 	systemInfoError: state.errors[GET_INFO_SYS],
-	status: state.info.status,
-	statusCheck: state.info.statusCheck || null,
-	statusLoad: state.loading[GET_INFO_STAT],
 	error: state.info.error,
 	errorLoad: state.loading[GET_INFO_ERROR]
 });
 const mapDispatchToProps = ({
 	getInfoApp,
 	getInfoSystem,
-	getInfoHealth,
 	getInfoError
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Info)));
