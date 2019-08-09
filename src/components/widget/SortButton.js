@@ -4,23 +4,23 @@ import {Menu} from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import SortIcon from "@material-ui/icons/Sort";
 import CheckIcon from "@material-ui/icons/Check";
+import PropTypes from "prop-types";
 
-function SortButton(props) {
+export const SortButton = props => {
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
-	function handleClick(event) {
-		setAnchorEl(event.currentTarget);
-	}
+	const handleClick = e => {
+		setAnchorEl(e.currentTarget);
+	};
 
-	function handleClose() {
+	const handleClose = () => {
 		setAnchorEl(null);
-	}
-	function handleSubmit(e, value) {
-		if(typeof props.onSubmit === 'function') {
-			props.onSubmit(e, value);
-			handleClose();
-		}
-	}
+	};
+
+	const handleSubmit = (e, value) => {
+		props.onSubmit(e, value);
+		handleClose();
+	};
 
 	const items = props.sorts.map(s => {
 		return <MenuItem onClick={(e) => {handleSubmit(e, s.id)}} component={'li'} button={true} key={s.id} value={s.id}>
@@ -39,5 +39,10 @@ function SortButton(props) {
 			</Menu>
 		</span>
 	)
-}
+};
+SortButton.propTypes = {
+	selectedSort: PropTypes.string.isRequired,
+	onSubmit: PropTypes.func.isRequired,
+	sorts: PropTypes.array.isRequired
+};
 export default SortButton;

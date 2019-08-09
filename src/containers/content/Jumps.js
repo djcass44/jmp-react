@@ -53,7 +53,7 @@ const Item = posed.div({
 	exit: {opacity: 0}
 });
 
-const styles = theme => ({
+const styles = () => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
 	button: {
 		// margin: theme.spacing.unit,

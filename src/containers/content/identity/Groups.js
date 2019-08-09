@@ -34,13 +34,16 @@ import {mdiAccountGroupOutline} from "@mdi/js";
 import posed, {PoseGroup} from "react-pose";
 import {sortItems} from "../../../misc/Sort";
 import SortButton from "../../../components/widget/SortButton";
+import {IconButton} from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import CreateGroupDialog from "../../modal/CreateGroupDialog";
 
 const Item = posed.div({
 	enter: {opacity: 1},
 	exit: {opacity: 0}
 });
 
-const styles = theme => ({
+const styles = () => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
 	button: {
 		// margin: theme.spacing.unit,
@@ -62,7 +65,8 @@ class Groups extends React.Component {
 				{id: '-name', value: "Name Desc"},
 				{id: 'creation', value: "Creation"},
 				{id: 'updated', value: "Last edited"}
-			]
+			],
+			showCreateDialog: false,
 		};
 		this.filterGroup = this.filterGroup.bind(this);
 	}
@@ -90,6 +94,9 @@ class Groups extends React.Component {
 		localStorage.setItem(LS_SORT, value);
 		this.props.getGroups(this.state.headers);
 	}
+	setCreateDialog = (visible) => {
+		this.setState({showCreateDialog: visible});
+	};
 	static capitalise(text) {
 		if(text == null || text.length === 0) return text;
 		if(text.toLowerCase() === "ldap") return "LDAP";
@@ -123,7 +130,8 @@ class Groups extends React.Component {
 			Groups {this.state.searchFilter != null && this.state.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
 			{/*<div className={classes.grow}/>*/}
 			<SortButton selectedSort={this.state.sort} sorts={this.state.sorts} onSubmit={(e, value) => this.handleSortChange(e, value)}/>
-			{/*<IconButton className={classes.button} aria-label="Add"><AddIcon fontSize={"small"}/></IconButton>*/}
+			{/*<IconButton centerRipple={false} className={classes.button} aria-label="Add" onClick={() => {this.setCreateDialog(true)}}><AddIcon fontSize={"small"}/></IconButton>*/}
+			{/*<CreateGroupDialog open={this.state.showCreateDialog} onExited={(e) => {this.setCreateDialog(false)}}/>*/}
 		</ListSubheader>);
 
 		return (
