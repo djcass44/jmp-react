@@ -1,22 +1,10 @@
-import {Button, withStyles, withTheme} from "@material-ui/core";
+import {Button, withTheme} from "@material-ui/core";
 import {mdiAccountNetworkOutline, mdiDatabase, mdiHexagon, mdiImageSearchOutline} from "@mdi/js";
 import React, {useEffect} from "react";
 import {GET_INFO_STAT, getInfoHealth} from "../../../actions/Info";
 import {connect} from "react-redux";
 import StatusIcon from "../../../components/widget/StatusIcon";
-
-const styles = theme => ({
-	title: {fontFamily: "Manrope", fontWeight: 500},
-	statusOK: {
-		color: theme.palette.success.main
-	},
-	statusFail: {
-		color: theme.palette.error.main
-	},
-	statusWarn: {
-		color: theme.palette.warning.main
-	},
-});
+import PropTypes from "prop-types";
 
 const Status = props => {
 	useEffect(() => {
@@ -37,6 +25,11 @@ const Status = props => {
 		</div>
 	);
 };
+Status.propTypes = {
+	loading: PropTypes.bool,
+	headers: PropTypes.object,
+	status: PropTypes.object
+};
 const mapStateToProps = state => ({
 	status: state.info.status,
 	statusCheck: state.info.statusCheck || null,
@@ -49,4 +42,4 @@ const mapDispatchToProps = ({
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withStyles(styles)(withTheme(Status)));
+)(withTheme(Status));

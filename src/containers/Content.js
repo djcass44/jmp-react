@@ -16,7 +16,7 @@
  */
 
 import React from "react";
-import {Grid, withStyles, withTheme} from "@material-ui/core";
+import {Grid, makeStyles, withStyles, withTheme} from "@material-ui/core";
 import Jumps from "./content/Jumps";
 import {Switch, Route, withRouter} from "react-router-dom";
 import Login from "./content/Login";
@@ -34,7 +34,7 @@ import Help from "./content/Help";
 import {JUMP_LOAD} from "../actions/Jumps";
 import Callback from "./content/Callback";
 
-const styles = () => ({
+const useStyles = makeStyles(() => ({
 	container: {
 		flex: 1,
 		justifyContent: 'center',
@@ -45,14 +45,16 @@ const styles = () => ({
 		flex: 1,
 		justifyContent: 'center'
 	}
-});
+}));
 
 export const Content = props => {
-	const {theme, classes} = props;
+	const classes = useStyles();
+	const {theme} = props;
+	const {error} = theme.palette;
 	let content = (<Grid item xs={12} sm={6}>
 		{/* TODO fix the background colour of the banner avatar */}
-		<Banner avatarStyle={{backgroundColor: theme.palette.error.light, color: theme.palette.error.dark}} open={props.error != null} label={props.error} icon={
-			<ErrorIcon style={{color: theme.palette.error.dark}}/>
+		<Banner avatarStyle={{backgroundColor: error.light, color: error.dark}} open={props.error != null} label={props.error} icon={
+			<ErrorIcon style={{color: error.dark}}/>
 		}/>
 		<Switch>
 			<Route exact path={"/"} component={Jumps} key={"jumps"}/>
@@ -78,4 +80,4 @@ export const Content = props => {
 const mapStateToProps = state => ({
 	error: state.errors[OAUTH_REFRESH] || state.errors[JUMP_LOAD],
 });
-export default connect(mapStateToProps, null)(withStyles(styles)(withTheme(withRouter(Content))));
+export default connect(mapStateToProps, null)(withTheme(withRouter(Content)));

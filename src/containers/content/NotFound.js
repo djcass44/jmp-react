@@ -18,13 +18,13 @@
 import React, {useEffect} from "react";
 import Typography from "@material-ui/core/es/Typography/Typography";
 import Center from "react-center";
-import {withStyles, withTheme} from "@material-ui/core";
+import {makeStyles, withTheme} from "@material-ui/core";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
 import {Link} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHomeOutline} from "@mdi/js";
 
-const styles = () => ({
+const useStyles = makeStyles(() => ({
 	title: {
 		fontSize: 148,
 		fontWeight: 200,
@@ -41,14 +41,15 @@ const styles = () => ({
 		alignItems: 'center',
 		height: '80vh'
 	}
-});
+}));
 
 export const NotFound = props => {
 	useEffect(() => {
 		window.document.title = `404 - ${process.env.REACT_APP_APP_NAME}`;
 	}, []);
 
-	const {classes, theme} = props;
+	const classes = useStyles();
+	const {theme} = props;
 	return (
 		<div className={classes.container}>
 			<div style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -66,4 +67,4 @@ export const NotFound = props => {
 		</div>
 	);
 };
-export default withStyles(styles)(withTheme(NotFound));
+export default(withTheme(NotFound));

@@ -1,5 +1,5 @@
 import React from "react";
-import {Collapse, IconButton, Tooltip, Typography, withStyles, withTheme} from "@material-ui/core";
+import {Collapse, IconButton, makeStyles, Tooltip, Typography, withTheme} from "@material-ui/core";
 import Icon from "@mdi/react";
 import Moment from "react-moment";
 import {
@@ -11,8 +11,9 @@ import {
 } from "@mdi/js";
 import {connect} from "react-redux";
 import {Badge} from "evergreen-ui";
+import PropTypes from "prop-types";
 
-const styles = () => ({
+const useStyles = makeStyles(() => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
@@ -21,15 +22,16 @@ const styles = () => ({
 		padding: 16,
 		backgroundColor: "#F5F5F5"
 	}
-});
+}));
 
 export const JumpContent = props => {
+	const classes = useStyles();
 	// This is a recent API
 	// There WILL be compatibility issues with its usage
 	const handleCopy = (e, text) => {
-		navigator.clipboard.writeText(text);
+		navigator.clipboard.writeText(text).then(r => { console.log("copied link") });
 	};
-	const {jump, classes, theme} = props;
+	const {jump, theme} = props;
 	const secureStatus = jump.location.startsWith("https://") ? {
 		secure: true,
 		title: "Secure",
@@ -88,8 +90,15 @@ export const JumpContent = props => {
 		</Collapse>
 	);
 };
+JumpContent.propTypes = {
+	jump: PropTypes.object.isRequired,
+	isAdmin: PropTypes.bool.isRequired,
+	isLoggedIn: PropTypes.bool.isRequired,
+	onDelete: PropTypes.func.isRequired,
+	onEdit: PropTypes.func.isRequired
+};
 const mapStateToProps = state => ({
 	isLoggedIn: state.auth.isLoggedIn,
 	isAdmin: state.auth.isAdmin,
 });
-export default connect(mapStateToProps, null)(withStyles(styles)(withTheme(JumpContent)));
+export default connect(mapStateToProps, null)(withTheme(JumpContent));

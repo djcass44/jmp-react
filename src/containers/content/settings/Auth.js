@@ -53,7 +53,7 @@ const Auth = props => {
 	return (
 		<div>
 			<ListSubheader className={classes.title} inset component={"div"}>Authentication</ListSubheader>
-			<InfoItem title={"Identity Provider (read-only)"} content={auth} icon={
+			<InfoItem title={<span>Identity Provider (read-only)</span>} content={auth} icon={
 				<Icon style={{paddingRight: 8}} path={mdiFolderAccountOutline} size={1} color={theme.palette.success.dark}/>
 			}/>
 		</div>

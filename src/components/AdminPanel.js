@@ -1,9 +1,9 @@
 import React from "react";
 import Status from "../containers/content/settings/Status";
 import {connect} from "react-redux";
-import {Card, withStyles} from "@material-ui/core";
+import {Card, makeStyles} from "@material-ui/core";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
 	root: {
 		position: 'absolute',
 		bottom: theme.spacing(2),
@@ -12,10 +12,10 @@ const styles = theme => ({
 	card: {
 		padding: 8
 	}
-});
+}));
 
 export const AdminPanel = props => {
-	const {classes} = props;
+	const classes = useStyles();
 
 	if(props.isAdmin === false) return "";
 	return (
@@ -33,4 +33,4 @@ const mapStateToProps = state => ({
 export default connect(
 	mapStateToProps,
 	null
-)(withStyles(styles)(AdminPanel));
+)(AdminPanel);

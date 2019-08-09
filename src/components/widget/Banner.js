@@ -16,30 +16,13 @@
  */
 
 import React from "react";
-import {withStyles, withTheme} from "@material-ui/core";
 import {Alert} from "evergreen-ui";
 
-const styles = theme => ({
-	title: {fontFamily: "Manrope", fontWeight: 500},
-	button: {
-		// margin: theme.spacing.unit,
-	},
-	grow: {flexGrow: 1}
-});
+export const Banner = props => {
 
-class Banner extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			visible: true
-		};
-	}
-
-	render() {
-		return this.props.open === true && this.state.visible === true ?
-				<Alert intent={"danger"} title={this.props.label} style={{marginBottom: 32, borderRadius: 8}} />
-				:
-				<div/>
-	}
-}
-export default withStyles(styles)(withTheme(Banner));
+	return props.open === true && props.visible === true ?
+			<Alert intent={"danger"} title={props.label} style={{marginBottom: 32, borderRadius: 8}} />
+			:
+			<div/>
+};
+export default Banner;

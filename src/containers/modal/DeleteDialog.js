@@ -4,24 +4,24 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {Typography, withStyles, withTheme} from "@material-ui/core";
+import {makeStyles, Typography, withTheme} from "@material-ui/core";
+import PropTypes from "prop-types";
 
-const styles = () => ({
+const useStyles = makeStyles(() => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
-});
+}));
 
 export const DeleteDialog = props => {
 	const defaultTitle = "Delete";
 	const defaultBody = "Are you sure? This action is immediate and cannot be undone. If you are an admin, be aware that this change may impact functionality for users.";
 
 	const handleSubmit = e => {
-		if(typeof(props.onSubmit) === 'function')
-			props.onSubmit(e);
-		if(typeof(props.onExited) === 'function')
-			props.onExited(e);
+		props.onSubmit(e);
+		props.onExited(e);
 	};
 
-	const {classes, theme} = props;
+	const classes = useStyles();
+	const {theme} = props;
 	return (
 		<Dialog open={props.open === true} aria-labelledby={"form-dialog-title"} onClose={props.onExited}>
 			<DialogTitle id={"form-dialog-title"} className={classes.title}>{props.title != null ? props.title : defaultTitle}</DialogTitle>
@@ -37,4 +37,11 @@ export const DeleteDialog = props => {
 		</Dialog>
 	);
 };
-export default withStyles(styles)(withTheme(DeleteDialog));
+DeleteDialog.propTypes = {
+	open: PropTypes.bool,
+	title: PropTypes.object,
+	body: PropTypes.object,
+	onSubmit: PropTypes.func.isRequired,
+	onExited: PropTypes.func.isRequired
+};
+export default withTheme(DeleteDialog);

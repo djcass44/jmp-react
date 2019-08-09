@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-function BackButton(props) {
+export const BackButton = props => {
 	const classes = useStyles();
 	return (
 		<div>
@@ -36,5 +36,5 @@ function BackButton(props) {
 			<span className={classes.title}>{props.label != null ? props.label : "Back"}</span>
 		</div>
 	)
-}
+};
 export default withRouter(BackButton);

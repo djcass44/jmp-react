@@ -16,20 +16,24 @@
  */
 
 import * as React from "react";
-import {Button, withStyles} from "@material-ui/core";
+import {Button, makeStyles} from "@material-ui/core";
 import Icon from "@mdi/react";
 import {BASE_URL} from "../../constants";
+import PropTypes from "prop-types";
 
-const styles = theme => ({
+const useStyles = makeStyles(() => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
-});
+}));
 
-class SocialButton extends React.Component {
-	render() {
-		const {classes} = this.props;
-		return (<Button href={`${BASE_URL}/api/v2/oauth2/authorise?provider=${this.props.id}`} className={classes.title} style={{color: this.props.colour, margin: 4}}>
-			<Icon path={this.props.icon} size={1} color={this.props.colour}/>{this.props.name}
-		</Button>);
-	}
-}
-export default withStyles(styles)(SocialButton);
+export const SocialButton = props => {
+	const classes = useStyles();
+	return (<Button href={`${BASE_URL}/api/v2/oauth2/authorise?provider=${props.id}`} className={classes.title} style={{color: props.colour, margin: 4}}>
+		<Icon path={props.icon} size={1} color={props.colour}/>{props.name}
+	</Button>);
+};
+SocialButton.propTypes = {
+	icon: PropTypes.string.isRequired,
+	colour: PropTypes.string.isRequired,
+	name: PropTypes.string.isRequired
+};
+export default SocialButton;

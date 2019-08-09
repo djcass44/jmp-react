@@ -16,29 +16,24 @@
  */
 
 import React from "react";
-import {withStyles, withTheme} from "@material-ui/core";
+import {makeStyles, withTheme} from "@material-ui/core";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
 	https: {color: theme.palette.success.main},
 	http: {
 		color: theme.palette.error.main,
 		textDecorationLine: 'line-through'
 	}
-});
+}));
 
-class SchemeHighlight extends React.Component {
-	render() {
-		// This can likely be done in a much better way
-		const {classes} = this.props;
-		const split = this.props.text.split("://");
-		const type = split[0];
-		const domain = split[1];
-		let highlighted;
-		if(type === "https")
-			highlighted = <span className={classes.https}>https://</span>;
-		else
-			highlighted = <span className={classes.http}>http://</span>;
-		return (<span>{highlighted}{domain}</span>)
-	}
-}
-export default withStyles(styles)(withTheme(SchemeHighlight));
+export const SchemeHighlight = props => {
+	const classes = useStyles();
+	const split = props.text.split("://");
+	const type = split[0];
+	const domain = split[1];
+	let highlighted = <span className={classes.http}>http://</span>;
+	if(type === "https")
+		highlighted = <span className={classes.https}>https://</span>;
+	return (<span>{highlighted}{domain}</span>)
+};
+export default withTheme(SchemeHighlight);

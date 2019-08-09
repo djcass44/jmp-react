@@ -71,13 +71,13 @@ class Info extends React.Component {
 		return (
 			<div>
 				<ListSubheader className={classes.title} inset component={"div"}>Information &amp; status</ListSubheader>
-				<InfoItem title={"Application health"} content={status} open={true} icon={
+				<InfoItem title={<span>Application health</span>} content={status} open={true} icon={
 					<Icon style={{paddingRight: 8}} path={mdiBugCheckOutline} size={1} color={theme.palette.error.main}/>
 				}/>
-				<InfoItem title={"Application information"} content={appInfo} error={this.state.appInfoError} icon={
+				<InfoItem title={<span>Application information</span>} content={appInfo} error={this.state.appInfoError} icon={
 					<Icon style={{paddingRight: 8}} path={mdiApplication} size={1} color={theme.palette.info.main}/>
 				}/>
-				<InfoItem title={"System information"} content={sysInfo} error={this.state.systemInfoError} icon={
+				<InfoItem title={<span>System information</span>} content={sysInfo} error={this.state.systemInfoError} icon={
 					<Icon style={{paddingRight: 8}} path={mdiMemory} size={1} color={theme.palette.secondary.main}/>
 				}/>
 			</div>
