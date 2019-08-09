@@ -22,6 +22,7 @@ import {connect} from "react-redux";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import Icon from "@mdi/react";
 import {mdiFolderAccountOutline} from "@mdi/js";
+import PropTypes from "prop-types";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -58,6 +59,9 @@ const Auth = props => {
 			}/>
 		</div>
 	);
+};
+Auth.propTypes = {
+	props: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
 	auth: state.info.auth,

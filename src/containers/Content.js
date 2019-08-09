@@ -33,8 +33,9 @@ import Settings from "./content/Settings";
 import Help from "./content/Help";
 import {JUMP_LOAD} from "../actions/Jumps";
 import Callback from "./content/Callback";
+import PropTypes from "prop-types";
 
-const styles = theme => ({
+const styles = () => ({
 	container: {
 		flex: 1,
 		justifyContent: 'center',
@@ -75,7 +76,9 @@ export const Content = props => {
 		</Grid>
 	</div>);
 };
-
+Content.propTypes = {
+	props: PropTypes.object.isRequired
+};
 const mapStateToProps = state => ({
 	error: state.errors[OAUTH_REFRESH] || state.errors[JUMP_LOAD],
 });

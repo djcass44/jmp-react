@@ -15,6 +15,7 @@
     "material-ui-banner": "^1.2.1",
     "material-ui-flat-pagination": "^3.2.0",
     "moment": "^2.24.0",
+    "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-center": "^1.1.1",
     "react-dom": "^16.8.6",
