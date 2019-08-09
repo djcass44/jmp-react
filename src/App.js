@@ -15,12 +15,11 @@
  *
  */
 
-import React, {useEffect, useContext} from 'react';
+import React from 'react';
 import Content from "./containers/Content";
 import Nav from "./containers/Nav";
 import {MuiThemeProvider, withTheme} from "@material-ui/core/styles";
 import Theme from "./style/theme";
-import {__RouterContext} from "react-router-dom";
 import {OAUTH_REFRESH, OAUTH_VERIFY, oauthRequest, oauthUnready, oauthVerify} from "./actions/Auth";
 import {connect} from "react-redux";
 import {Helmet} from "react-helmet";
@@ -28,41 +27,58 @@ import {wsClose, wsOpen} from "./actions/Socket";
 import AdminPanel from "./components/AdminPanel";
 import PropTypes from "prop-types";
 import NavLoading from "./components/NavLoading";
+import {withRouter} from "react-router-dom";
 
-export const App = props => {
-	const routerContext = useContext(__RouterContext);
-
-	useEffect(() => {
-		props.oauthVerify(props.refresh, props.headers);
-		const unlisten = routerContext.history.listen(() => {
-			props.oauthUnready();
-			props.oauthVerify(props.refresh, props.headers);
-		});
-		props.store.dispatch(wsOpen(props.headers));
-		return () => {
-			unlisten();
-			props.store.dispatch(wsClose);
+class App extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			refresh: props.refresh,
+			headers: props.headers,
+			isLoggedIn: props.isLoggedIn,
+			ready: props.ready
 		}
-	}, []);
+	}
 
-	const {theme} = props;
-	return (
-		<div className={"App"}>
-			<MuiThemeProvider theme={Theme}>
-				<Helmet><meta name={"theme-color"} content={theme.palette.primary.main}/></Helmet>
-				{props.loading === false ?
-					<div>
-						<Nav/>
-						<Content/>
-						<AdminPanel/>
-					</div>
-					:
-					<NavLoading/>
-				}
-			</MuiThemeProvider>
-		</div>
-	);
-};
+	componentWillReceiveProps(nextProps, nextContext) {
+		this.setState({...nextProps});
+	}
+	componentWillMount() {
+		this.props.oauthVerify(this.state.refresh, this.state.headers);
+		this.unlisten = this.props.history.listen(() => {
+			this.props.oauthUnready();
+			this.props.oauthVerify(this.state.refresh, this.state.headers);
+		});
+	}
+	componentDidMount() {
+		this.props.store.dispatch(wsOpen(this.state.headers));
+	}
+
+	componentWillUnmount() {
+		this.unlisten();
+		this.props.store.dispatch(wsClose);
+	}
+
+	render() {
+		const {theme} = this.props;
+		return (
+			<div className={"App"}>
+				<MuiThemeProvider theme={Theme}>
+					<Helmet><meta name={"theme-color"} content={theme.palette.primary.main}/></Helmet>
+					{this.state.loading === false ?
+						<div>
+							<Nav/>
+							<Content/>
+							<AdminPanel/>
+						</div>
+						:
+						<NavLoading/>
+					}
+				</MuiThemeProvider>
+			</div>
+		);
+	}
+}
 App.propTypes = {
 	loading: PropTypes.bool,
 };
@@ -73,11 +89,10 @@ const mapStateToProps = state => ({
 	headers: state.auth.headers,
 	isLoggedIn: state.auth.isLoggedIn,
 	refresh: state.auth.refresh,
-	ready: state.auth.ready
 });
 const mapDispatchToProps = ({
 	oauthVerify,
 	oauthRequest,
 	oauthUnready,
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(App));
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(withRouter(App)));
