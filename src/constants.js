@@ -16,7 +16,7 @@ export const LS_SORT = "jmpr-sortBy";
 export const pageSize = 8;
 
 export const BASE_URL = `${process.env.REACT_APP_API_SCHEME}://${process.env.REACT_APP_API_URL}`;
-export const SOCKET_URL = `${process.env.NODE_ENV === "production" ? "wss" : "ws"}://${process.env.REACT_APP_SOCKET_URL}`;
+export const SOCKET_URL = `${process.env.NODE_ENV === "production" ? "wss" : "ws"}://${process.env.REACT_APP_API_URL}/api/ws2`;
 
 export const client = axios.create({
 	baseURL: BASE_URL
