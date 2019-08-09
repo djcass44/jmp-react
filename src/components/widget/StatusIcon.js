@@ -8,7 +8,7 @@ export const StatusIcon = props => {
 	const colourName = props.active === true ? "primary" : "secondary";
 	return (
 		<Tooltip title={props.title}>
-			<IconButton color={colourName} centerRipple={false}>
+			<IconButton color={colourName}>
 				<Icon component={'div'} path={props.icon} size={1} color={colour}/>
 			</IconButton>
 		</Tooltip>
@@ -16,6 +16,7 @@ export const StatusIcon = props => {
 };
 StatusIcon.propTypes = {
 	active: PropTypes.bool.isRequired,
-	title: PropTypes.string.isRequired
+	title: PropTypes.string.isRequired,
+	icon: PropTypes.string.isRequired
 };
 export default withTheme(StatusIcon);

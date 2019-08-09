@@ -34,6 +34,7 @@ import Icon from "@mdi/react";
 import {mdiHelpCircleOutline} from "@mdi/js";
 import {Avatar} from "evergreen-ui";
 import {wsClose, wsOpen} from "./actions/Socket";
+import AdminPanel from "./components/AdminPanel";
 
 const styles = theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -106,6 +107,7 @@ class App extends React.Component {
 						<div>
 							<Nav/>
 							<Content/>
+							<AdminPanel/>
 						</div>
 						:
 						loading
