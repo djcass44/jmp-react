@@ -42,7 +42,7 @@ const styles = theme => ({
 const Auth = props => {
 	useEffect(() => {
 		props.getInfoAuth(props.headers);
-	});
+	}, []);
 
 	const {classes, theme} = props;
 	const auth = (

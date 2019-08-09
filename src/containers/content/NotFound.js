@@ -46,7 +46,7 @@ const styles = theme => ({
 export const NotFound = props => {
 	useEffect(() => {
 		window.document.title = `404 - ${process.env.REACT_APP_APP_NAME}`;
-	});
+	}, []);
 
 	const {classes, theme} = props;
 	return (

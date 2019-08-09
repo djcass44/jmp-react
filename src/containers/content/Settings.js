@@ -31,7 +31,7 @@ const styles = theme => ({
 export const Settings = props => {
 	useEffect(() => {
 		window.document.title = `Settings - ${process.env.REACT_APP_APP_NAME}`;
-	});
+	}, []);
 
 	const {classes, theme} = props;
 	return (

@@ -42,7 +42,7 @@ const styles = theme => ({
 export const Identity = props => {
 	useEffect(() => {
 		window.document.title = `Identity - ${process.env.REACT_APP_APP_NAME}`;
-	});
+	}, []);
 
 	const {classes, theme} = props;
 	return (
