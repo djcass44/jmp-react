@@ -11,7 +11,7 @@ export const WS_CLOSE_USER = "WS_CLOSE_USER"; // user requested
 let socket = null;
 
 export const wsOpen = headers => dispatch => connectWebSocket(dispatch, headers);
-export const wsClose = dispatch => closeWebSocket(dispatch);
+export const wsClose = () => dispatch => closeWebSocket(dispatch);
 
 function connectWebSocket(dispatch, headers) {
 	socket = new WebSocket(SOCKET_URL);

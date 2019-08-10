@@ -15,84 +15,42 @@
  *
  */
 
-import React from 'react';
-import Content from "./containers/Content";
-import Nav from "./containers/Nav";
+import React, {useEffect} from 'react';
 import {MuiThemeProvider, withTheme} from "@material-ui/core/styles";
 import Theme from "./style/theme";
-import {OAUTH_REFRESH, OAUTH_VERIFY, oauthRequest, oauthUnready, oauthVerify} from "./actions/Auth";
 import {connect} from "react-redux";
 import {Helmet} from "react-helmet";
 import {wsClose, wsOpen} from "./actions/Socket";
-import AdminPanel from "./components/AdminPanel";
-import PropTypes from "prop-types";
-import NavLoading from "./components/NavLoading";
-import {withRouter} from "react-router-dom";
+import Body from "./containers/Body";
 
-class App extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			refresh: props.refresh,
-			headers: props.headers,
-			isLoggedIn: props.isLoggedIn,
-			ready: props.ready
+export const App = props => {
+	useEffect(() => {
+		props.wsOpen(props.headers);
+		return () => {
+			props.wsClose();
 		}
-	}
+	});
 
-	componentWillReceiveProps(nextProps, nextContext) {
-		this.setState({...nextProps});
-	}
-	componentWillMount() {
-		this.props.oauthVerify(this.state.refresh, this.state.headers);
-		this.unlisten = this.props.history.listen(() => {
-			this.props.oauthUnready();
-			this.props.oauthVerify(this.state.refresh, this.state.headers);
-		});
-	}
-	componentDidMount() {
-		this.props.store.dispatch(wsOpen(this.state.headers));
-	}
-
-	componentWillUnmount() {
-		this.unlisten();
-		this.props.store.dispatch(wsClose);
-	}
-
-	render() {
-		const {theme} = this.props;
-		return (
-			<div className={"App"}>
-				<MuiThemeProvider theme={Theme}>
-					<Helmet><meta name={"theme-color"} content={theme.palette.primary.main}/></Helmet>
-					{this.state.loading === false ?
-						<div>
-							<Nav/>
-							<Content/>
-							<AdminPanel/>
-						</div>
-						:
-						<NavLoading/>
-					}
-				</MuiThemeProvider>
-			</div>
-		);
-	}
-}
-App.propTypes = {
-	loading: PropTypes.bool,
+	const {theme} = props;
+	return (
+		<div className={"App"}>
+			<MuiThemeProvider theme={Theme}>
+				<Helmet><meta name={"theme-color"} content={theme.palette.primary.main}/></Helmet>
+				<Body/>
+			</MuiThemeProvider>
+		</div>
+	);
 };
 
 const mapStateToProps = state => ({
-	loading: state.loading[OAUTH_VERIFY],
-	error: state.errors[OAUTH_REFRESH],
 	headers: state.auth.headers,
-	isLoggedIn: state.auth.isLoggedIn,
 	refresh: state.auth.refresh,
 });
 const mapDispatchToProps = ({
-	oauthVerify,
-	oauthRequest,
-	oauthUnready,
+	wsOpen,
+	wsClose
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(withRouter(App)));
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(withTheme(App));
