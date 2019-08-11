@@ -24,6 +24,7 @@ import generic from "./Generic";
 import users from "./Users";
 import groups from "./Groups";
 import info from "./Info";
+import modal from "./Modal";
 
 const main = combineReducers({
 	auth,
@@ -33,6 +34,7 @@ const main = combineReducers({
 	generic,
 	users,
 	groups,
-	info
+	info,
+	modal
 });
 export default main;

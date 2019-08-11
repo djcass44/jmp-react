@@ -15,21 +15,35 @@
  *
  */
 
-import {GET_SIMILAR, JUMP_LOAD, SOCKET_UPDATE_FAVICON, SOCKET_UPDATE_TITLE} from "../actions/Jumps";
+import {
+	GET_SIMILAR,
+	JUMP_LOAD,
+	JUMP_SET,
+	JUMP_SET_EXPAND,
+	SOCKET_UPDATE_FAVICON,
+	SOCKET_UPDATE_TITLE
+} from "../actions/Jumps";
 
 const initialState = {
 	jumps: [],
-	similar: []
+	similar: [],
+	expanded: null
 };
 
 const jumps = (state = initialState, action) => {
 	switch (action.type) {
-		case `${JUMP_LOAD}_SUCCESS`: {
-			return {...state, jumps: action.payload}
+		case JUMP_SET_EXPAND: {
+			const {payload} = action;
+			if(state.expanded === payload)
+				return {...state, expanded: null};
+			else
+				return {...state, expanded: payload};
 		}
-		case `${GET_SIMILAR}_SUCCESS`: {
-			return {...state, similar: action.payload}
-		}
+		case JUMP_SET:
+		case `${JUMP_LOAD}_SUCCESS`:
+			return {...state, jumps: action.payload};
+		case `${GET_SIMILAR}_SUCCESS`:
+			return {...state, similar: action.payload};
 		case SOCKET_UPDATE_TITLE: {
 			const {payload} = action;
 			let idx = indexFromId(state.jumps, payload.id);

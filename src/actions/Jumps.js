@@ -1,6 +1,8 @@
 import {client} from "../constants";
 
 export const JUMP_LOAD = "JUMP_LOAD";
+export const JUMP_SET = "JUMP_SET";
+export const JUMP_SET_EXPAND = "JUMP_SET_EXPAND";
 export const GET_SIMILAR = "GET_SIMILAR";
 export const PUT_JUMP = "PUT_JUMP";
 export const DELETE_JUMP = "DELETE_JUMP";
@@ -14,6 +16,7 @@ export const listJumps = headers => dispatch => listJumpsDispatch(dispatch, head
 export const deleteJump = (headers, id) => dispatch => deleteJumpDispatch(dispatch, headers, id);
 export const putJump = (headers, jump, gid) => dispatch => putJumpDispatch(dispatch, headers, jump, gid);
 export const patchJump = (headers, jump) => dispatch => patchJumpDispatch(dispatch, headers, jump);
+export const setJumpExpand = id => dispatch => dispatch({type: JUMP_SET_EXPAND, payload: id});
 
 export const getSimilar = (headers, query) => dispatch => getSimilarDispatch(dispatch, headers, query);
 export const getSimilarFail = error => dispatch => dispatch({type: `${GET_SIMILAR}_FAILURE`, payload: error, error: true});

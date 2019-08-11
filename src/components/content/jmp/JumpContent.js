@@ -28,8 +28,8 @@ export const JumpContent = props => {
 	const classes = useStyles();
 	// This is a recent API
 	// There WILL be compatibility issues with its usage
-	const handleCopy = (e, text) => {
-		navigator.clipboard.writeText(text).then(r => { console.log("copied link") });
+	const handleCopy = text => {
+		navigator.clipboard.writeText(text).then(() => { console.log("copied link") });
 	};
 	const {jump, theme} = props;
 	const secureStatus = jump.location.startsWith("https://") ? {
@@ -45,7 +45,7 @@ export const JumpContent = props => {
 	// Only show edit/delete options if the API will let the user action them
 	const hasOwnership = props.isAdmin || jump['personal'] > 0;
 	return (
-		<Collapse className={classes.main} in={props.open} unmountOnExit timeout={"auto"}>
+		<Collapse className={classes.main} in={jump.id === props.expanded} unmountOnExit timeout={"auto"}>
 			{/* TITLE */}
 			<Typography variant={"subtitle1"} className={classes.title}>
 				{jump.title}
@@ -61,15 +61,16 @@ export const JumpContent = props => {
 			<p>Created <Moment fromNow>{jump['metaCreation']}</Moment></p>
 			{/* EDIT */}
 			{jump['metaUpdate'] !== jump['metaCreation'] ? <p>Edited <Moment fromNow>{jump['metaUpdate']}</Moment></p>: ""}
+			{/* check this browser supports copy before showing the button */}
 			{document.queryCommandSupported("copy") &&
 				<Tooltip title={"Copy URL"}>
-					<IconButton centerRipple={false} onClick={(e) => {handleCopy(e, jump.location)}}><Icon path={mdiContentCopy} size={0.85}/></IconButton>
+					<IconButton centerRipple={false} onClick={() => {handleCopy(jump.location)}}><Icon path={mdiContentCopy} size={0.85}/></IconButton>
 				</Tooltip>
 			}
 			{props.isLoggedIn === true && hasOwnership === true &&
 				<Tooltip title={"Edit"}>
-					<IconButton centerRipple={false} onClick={(e) => {
-						props.onEdit(e, jump)
+					<IconButton centerRipple={false} onClick={() => {
+						props.onEdit(jump)
 					}}><Icon path={mdiPencilOutline} size={0.85}/></IconButton>
 				</Tooltip>
 			}
@@ -81,7 +82,7 @@ export const JumpContent = props => {
 			{props.isLoggedIn === true && hasOwnership === true &&
 				<Tooltip title={"Delete"}>
 					<IconButton centerRipple={false} onClick={(e) => {
-						props.onDelete(e, jump.id)
+						props.onDelete(jump.id)
 					}}>
 						<Icon path={mdiDeleteOutline} size={0.85}/>
 					</IconButton>
@@ -100,5 +101,6 @@ JumpContent.propTypes = {
 const mapStateToProps = state => ({
 	isLoggedIn: state.auth.isLoggedIn,
 	isAdmin: state.auth.isAdmin,
+	expanded: state.jumps.expanded
 });
 export default connect(mapStateToProps, null)(withTheme(JumpContent));
