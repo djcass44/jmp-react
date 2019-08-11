@@ -25,7 +25,7 @@ const codes = {
 	"503": "Service unavailable: the API appears to be overloaded",
 	"504": "Gateway timeout: the API it taking too long to respond"
 };
-export default function processHTTPCode(status) {
+export default status => {
 	if(status == null) return status;
 	let maybeCode = 0;
 	try {

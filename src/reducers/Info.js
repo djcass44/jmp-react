@@ -1,6 +1,6 @@
 import {GET_INFO_APP, GET_INFO_AUTH, GET_INFO_ERROR, GET_INFO_PROP, GET_INFO_STAT, GET_INFO_SYS} from "../actions/Info";
 
-const info = (state = {
+const initialState = {
 	appInfo: {},
 	systemInfo: {},
 	status: {},
@@ -8,19 +8,21 @@ const info = (state = {
 	auth: {},
 	error: [],
 	conf: []
-}, action) => {
+};
+
+const info = (state = initialState, action) => {
 	switch(action.type) {
 		case `${GET_INFO_APP}_SUCCESS`:
-			return {...state, appInfo: action.data};
+			return {...state, appInfo: action.payload};
 		case `${GET_INFO_SYS}_SUCCESS`:
-			return {...state, systemInfo: action.data};
+			return {...state, systemInfo: action.payload};
 		case `${GET_INFO_STAT}_SUCCESS`:
-			return {...state, status: action.data, statusCheck: new Date()};
+			return {...state, status: action.payload, statusCheck: new Date()};
 		case `${GET_INFO_PROP}_SUCCESS`:
 			const {conf} = state;
 			let item = {
 				key: action.conf,
-				value: action.data
+				value: action.payload
 			};
 			let i = -1;
 			state.conf.forEach((it, index) => {
@@ -33,9 +35,9 @@ const info = (state = {
 				conf.push(item);
 			return {...state, conf};
 		case `${GET_INFO_AUTH}_SUCCESS`:
-			return {...state, auth: action.data};
+			return {...state, auth: action.payload};
 		case `${GET_INFO_ERROR}_SUCCESS`:
-			return {...state, error: action.data};
+			return {...state, error: action.payload};
 		default:
 			return state;
 	}

@@ -18,15 +18,17 @@
 import {GENERIC_FILTER_SET, GENERIC_GET_VERSION, SOCKET_APP_INIT} from "../actions/Generic";
 import {LS_APPID} from "../constants";
 
-const generic = (state = {
+const initialState = {
 	searchFilter: ''
-}, action) => {
+};
+
+const generic = (state = initialState, action) => {
 	switch(action.type) {
 		case `${GENERIC_FILTER_SET}`: {
-			return {...state, searchFilter: action.data}
+			return {...state, searchFilter: action.payload}
 		}
 		case `${GENERIC_GET_VERSION}_SUCCESS`: {
-			return {...state, version: action.data}
+			return {...state, version: action.payload}
 		}
 		case `${SOCKET_APP_INIT}`: {
 			let id = localStorage.getItem(LS_APPID);

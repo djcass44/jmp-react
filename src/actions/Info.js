@@ -7,71 +7,59 @@ export const GET_INFO_PROP = "GET_INFO_PROP";
 export const GET_INFO_AUTH = "GET_INFO_AUTH";
 export const GET_INFO_ERROR = "GET_INFO_ERROR";
 
-export function getInfoApp(headers) {
-	return dispatch => {getInfoAppDispatch(dispatch, headers)}
-}
-export function getInfoSystem(headers) {
-	return dispatch => {getInfoSystemDispatch(dispatch, headers)}
-}
-export function getInfoHealth(headers) {
-	return dispatch => {getInfoStatusDispatch(dispatch, headers)}
-}
-export function getInfoProp(headers, prop) {
-	return dispatch => {getPropDispatch(dispatch, headers, prop)}
-}
-export function getInfoAuth(headers) {
-	return dispatch => {getInfoAuthDispatch(dispatch, headers)}
-}
-export function getInfoError(headers) {
-	return dispatch => {getInfoErrorDispatch(dispatch, headers)}
-}
+export const getInfoApp = headers => dispatch => getInfoAppDispatch(dispatch, headers);
+export const getInfoSystem = headers => dispatch => getInfoSystemDispatch(dispatch, headers);
+export const getInfoHealth = headers => dispatch => getInfoStatusDispatch(dispatch, headers);
+export const getInfoProp = (headers, prop) => dispatch => getPropDispatch(dispatch, headers, prop);
+export const getInfoAuth = headers => dispatch => getInfoAuthDispatch(dispatch, headers);
+export const getInfoError = headers => dispatch => getInfoErrorDispatch(dispatch, headers);
 
 
-function getInfoAppDispatch(dispatch, headers) {
+const getInfoAppDispatch = (dispatch, headers) => {
 	dispatch({type: `${GET_INFO_APP}_REQUEST`});
 	client.get("/api/v2/info/app", {headers: headers}).then(r => {
-		dispatch({type: `${GET_INFO_APP}_SUCCESS`, data: r.data});
+		dispatch({type: `${GET_INFO_APP}_SUCCESS`, payload: r.data});
 	}).catch(err => {
-		dispatch({type: `${GET_INFO_APP}_FAILURE`, data: err.toString()})
+		dispatch({type: `${GET_INFO_APP}_FAILURE`, payload: err, error: true})
 	});
-}
-function getInfoSystemDispatch(dispatch, headers) {
+};
+const getInfoSystemDispatch = (dispatch, headers) => {
 	dispatch({type: `${GET_INFO_SYS}_REQUEST`});
 	client.get("/api/v2/info/system", {headers: headers}).then(r => {
-		dispatch({type: `${GET_INFO_SYS}_SUCCESS`, data: r.data});
+		dispatch({type: `${GET_INFO_SYS}_SUCCESS`, payload: r.data});
 	}).catch(err => {
-		dispatch({type: `${GET_INFO_SYS}_FAILURE`, data: err.toString()})
+		dispatch({type: `${GET_INFO_SYS}_FAILURE`, payload: err, error: true})
 	});
-}
-function getInfoStatusDispatch(dispatch, headers) {
+};
+const getInfoStatusDispatch = (dispatch, headers) => {
 	dispatch({type: `${GET_INFO_STAT}_REQUEST`});
 	client.get("/api/v3/health", {headers: headers}).then(r => {
-		dispatch({type: `${GET_INFO_STAT}_SUCCESS`, data: r.data});
+		dispatch({type: `${GET_INFO_STAT}_SUCCESS`, payload: r.data});
 	}).catch(err => {
-		dispatch({type: `${GET_INFO_STAT}_FAILURE`, data: err.toString()})
+		dispatch({type: `${GET_INFO_STAT}_FAILURE`, payload: err, error: true})
 	});
-}
-function getPropDispatch(dispatch, headers, prop) {
+};
+const getPropDispatch = (dispatch, headers, prop) => {
 	dispatch({type: `${GET_INFO_PROP}_REQUEST`});
 	client.get(`/api/v2_1/prop/${prop}`, {headers: headers}).then(r => {
-		dispatch({type: `${GET_INFO_PROP}_SUCCESS`, data: r.data, conf: prop});
+		dispatch({type: `${GET_INFO_PROP}_SUCCESS`, payload: r.data, conf: prop});
 	}).catch(err => {
-		dispatch({type: `${GET_INFO_PROP}_FAILURE`, data: err.toString(), conf: prop});
+		dispatch({type: `${GET_INFO_PROP}_FAILURE`, payload: err, error: true, conf: prop});
 	});
-}
-function getInfoAuthDispatch(dispatch, headers) {
+};
+const getInfoAuthDispatch = (dispatch, headers) => {
 	dispatch({type: `${GET_INFO_AUTH}_REQUEST`});
 	client.get(`/api/v2_1/provider/main`, {headers: headers}).then(r => {
-		dispatch({type: `${GET_INFO_AUTH}_SUCCESS`, data: r.data});
+		dispatch({type: `${GET_INFO_AUTH}_SUCCESS`, payload: r.data});
 	}).catch(err => {
-		dispatch({type: `${GET_INFO_AUTH}_FAILURE`, data: err.toString()});
+		dispatch({type: `${GET_INFO_AUTH}_FAILURE`, payload: err, error: true});
 	});
-}
-function getInfoErrorDispatch(dispatch, headers) {
+};
+const getInfoErrorDispatch = (dispatch, headers) => {
 	dispatch({type: `${GET_INFO_ERROR}_REQUEST`});
 	client.get(`/api/v2_1/statistics/exception?time=15`, {headers: headers}).then(r => {
-		dispatch({type: `${GET_INFO_ERROR}_SUCCESS`, data: r.data});
+		dispatch({type: `${GET_INFO_ERROR}_SUCCESS`, payload: r.data});
 	}).catch(err => {
-		dispatch({type: `${GET_INFO_ERROR}_FAILURE`, data: err.toString()});
+		dispatch({type: `${GET_INFO_ERROR}_FAILURE`, payload: err, error: true});
 	});
-}
+};

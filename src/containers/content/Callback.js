@@ -23,7 +23,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import {connect} from "react-redux";
 import {OAUTH2_CALLBACK, oauth2Callback} from "../../actions/Oauth";
 
-const styles = theme => ({
+const styles = () => ({
 	title: {
 		fontSize: 148,
 		fontWeight: 200,

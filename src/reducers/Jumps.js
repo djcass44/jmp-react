@@ -17,15 +17,18 @@
 
 import {GET_SIMILAR, JUMP_LOAD, SOCKET_UPDATE_FAVICON, SOCKET_UPDATE_TITLE} from "../actions/Jumps";
 
-const jumps = (state = {jumps: [], similar: []}, action) => {
+const initialState = {
+	jumps: [],
+	similar: []
+};
+
+const jumps = (state = initialState, action) => {
 	switch (action.type) {
 		case `${JUMP_LOAD}_SUCCESS`: {
-			let items = action.data.map(i => {return i});
-			return {...state, jumps: items}
+			return {...state, jumps: action.payload}
 		}
 		case `${GET_SIMILAR}_SUCCESS`: {
-			let items = action.data.map(i => {return i});
-			return {...state, similar: items}
+			return {...state, similar: action.payload}
 		}
 		case SOCKET_UPDATE_TITLE: {
 			const {payload} = action;

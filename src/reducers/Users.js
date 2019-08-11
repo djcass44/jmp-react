@@ -17,14 +17,14 @@
 
 import {USER_LOAD} from "../actions/Users";
 
-const users = (state = {
+const initialState = {
 	users: []
-}, action) => {
+};
+
+const users = (state = initialState, action) => {
 	switch (action.type) {
 		case `${USER_LOAD}_SUCCESS`: {
-			let u = [];
-			action.data['users'].forEach(i => { u.push(i) });
-			return {...state, users: u}
+			return {...state, users: action.payload['users']}
 		}
 		default:
 			return state;

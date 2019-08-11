@@ -19,7 +19,7 @@ import {LS_ADM, LS_HEADERS, LS_LOGIN, LS_NAME, LS_REFRESH, LS_REQUEST, LS_SOURCE
 import {OAUTH_LOGOUT, OAUTH_REFRESH, OAUTH_REQUEST, OAUTH_UNREADY, OAUTH_VERIFY} from "../actions/Auth";
 import {OAUTH2_CALLBACK, OAUTH2_DISCOVER, OAUTH2_LOGOUT, OAUTH2_REFRESH} from "../actions/Oauth";
 
-const auth = (state = {
+const initialState = {
 	request: localStorage.getItem(LS_REQUEST) || '',
 	refresh: localStorage.getItem(LS_REFRESH) || '',
 	source: localStorage.getItem(LS_SOURCE) || '',
@@ -30,20 +30,22 @@ const auth = (state = {
 	username: localStorage.getItem(LS_NAME) || '',
 	ready: false,
 	providers: {}
-}, action) => {
+};
+
+const auth = (state = initialState, action) => {
 	switch(action.type) {
 		case `${OAUTH_VERIFY}_SUCCESS`: {
-			localStorage.setItem(LS_USER, JSON.stringify(action.data));
+			localStorage.setItem(LS_USER, JSON.stringify(action.payload));
 			localStorage.setItem(LS_LOGIN, "true");
-			localStorage.setItem(LS_ADM, (action.data.role === 'ADMIN').toString());
+			localStorage.setItem(LS_ADM, (action.payload.role === 'ADMIN').toString());
 			let username = '';
-			if(action.data.username != null) username = action.data.username;
+			if(action.payload.username != null) username = action.payload.username;
 			localStorage.setItem(LS_NAME, username);
 			return {...state,
-				userProfile: action.data,
+				userProfile: action.payload,
 				username: username,
 				isLoggedIn: true,
-				isAdmin: action.data.role === 'ADMIN',
+				isAdmin: action.payload.role === 'ADMIN',
 				ready: true
 			}
 		}
@@ -51,16 +53,16 @@ const auth = (state = {
 		case `${OAUTH2_REFRESH}_SUCCESS`:
 		case `${OAUTH_REFRESH}_SUCCESS`:
 		case `${OAUTH_REQUEST}_SUCCESS`: {
-			const source = action.data.source || '';
-			const headers = {'Authorization': `Bearer ${action.data.request}`, 'X-Auth-Source': source};
-			localStorage.setItem(LS_REQUEST, action.data.request);
-			localStorage.setItem(LS_REFRESH, action.data.refresh);
+			const source = action.payload.source || '';
+			const headers = {'Authorization': `Bearer ${action.payload.request}`, 'X-Auth-Source': source};
+			localStorage.setItem(LS_REQUEST, action.payload.request);
+			localStorage.setItem(LS_REFRESH, action.payload.refresh);
 			localStorage.setItem(LS_SOURCE, source); // will be null if not using OAuth2
 			localStorage.setItem(LS_HEADERS, JSON.stringify(headers));
 			localStorage.setItem(LS_LOGIN, "true");
 			return {...state,
-				request: action.data.request,
-				refresh: action.data.refresh,
+				request: action.payload.request,
+				refresh: action.payload.refresh,
 				source: source,
 				headers: headers,
 				isLoggedIn: true,
@@ -103,7 +105,7 @@ const auth = (state = {
 		case `${OAUTH2_DISCOVER}_SUCCESS`: {
 			// Attempt to set the provider status
 			const {providers} = state;
-			providers[action.data['provider']] = action.data['active'];
+			providers[action.payload['provider']] = action.payload['active'];
 			return {...state, providers};
 		}
 		default:

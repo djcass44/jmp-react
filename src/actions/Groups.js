@@ -22,50 +22,42 @@ export const SET_USER_GROUPS = "SET_USER_GROUPS";
 
 export const SOCKET_UPDATE_GROUPS = "EVENT_UPDATE_GROUP";
 
-export function getGroups(headers) {
-	return dispatch => {
-		getGroupsDispatch(dispatch, headers);
-	}
-}
-export function getUserGroups(headers, uid) {
-	return dispatch => {getUserGroupsDispatch(dispatch, headers, uid)}
-}
-export function setUserGroups(headers, uid, payload) {
-	return dispatch => {setUserGroupsDispatch(dispatch, headers, uid, payload)}
-}
+export const getGroups = (headers) => dispatch => getGroupsDispatch(dispatch, headers);
+export const getUserGroups = (headers, uid) => dispatch => getUserGroupsDispatch(dispatch, headers, uid);
+export const setUserGroups = (headers, uid, payload) => dispatch => setUserGroupsDispatch(dispatch, headers, uid, payload);
 
-function getGroupsDispatch(dispatch, headers) {
+const getGroupsDispatch = (dispatch, headers) => {
 	dispatch({type: `${GROUP_LOAD}_REQUEST`});
 	client.get("/api/v2_1/groups", {headers: headers}).then(r => {
 		dispatch({
 			type: `${GROUP_LOAD}_SUCCESS`,
-			data: r.data
+			payload: r.data
 		});
 	}).catch(err => {
-		dispatch({type: `${GROUP_LOAD}_FAILURE`, data: err.toString()});
+		dispatch({type: `${GROUP_LOAD}_FAILURE`, payload: err, error: true});
 	});
-}
-function getUserGroupsDispatch(dispatch, headers, uid) {
+};
+const getUserGroupsDispatch = (dispatch, headers, uid) => {
 	dispatch({type: `${GET_USER_GROUPS}_REQUEST`});
 	client.get(`/api/v2_1/user/groups?uid=${uid}`, {headers: headers}).then(r => {
 		dispatch({
 			type: `${GET_USER_GROUPS}_SUCCESS`,
-			data: r.data
+			payload: r.data
 		});
 	}).catch(err => {
-		dispatch({type: `${GET_USER_GROUPS}_FAILURE`, data: err.toString()});
+		dispatch({type: `${GET_USER_GROUPS}_FAILURE`, payload: err, error: true});
 	});
-}
-function setUserGroupsDispatch(dispatch, headers, uid, payload) {
+};
+const setUserGroupsDispatch = (dispatch, headers, uid, payload) => {
 	dispatch({type: `${SET_USER_GROUPS}_REQUEST`});
 	client.patch('/api/v2_1/groupmod', payload, {headers: headers, params: {uid: uid}}).then(r => {
 		dispatch({
 			type: `${SET_USER_GROUPS}_SUCCESS`,
-			data: r.data
+			payload: r.data
 		});
 		// Automatically reload the group memberships
 		getUserGroupsDispatch(dispatch, headers, uid);
 	}).catch(err => {
-		dispatch({type: `${SET_USER_GROUPS}_FAILURE`, data: err.toString()});
+		dispatch({type: `${SET_USER_GROUPS}_FAILURE`, payload: err, error: true});
 	});
-}
+};
