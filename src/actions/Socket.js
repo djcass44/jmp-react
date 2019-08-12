@@ -2,6 +2,7 @@ import {SOCKET_URL} from "../constants";
 import {listJumps, SOCKET_UPDATE_JUMP} from "./Jumps";
 import {getGroups, SOCKET_UPDATE_GROUPS} from "./Groups";
 import {getUsers, SOCKET_UPDATE_USERS} from "./Users";
+import {addSnackbar, closeSnackbar} from "./Snackbar";
 
 export const WS_OPEN = "WS_OPEN";
 export const WS_RECONNECT = "WS_RECONNECT";
@@ -15,13 +16,17 @@ export const wsClose = () => dispatch => closeWebSocket(dispatch);
 
 function connectWebSocket(dispatch, headers) {
 	socket = new WebSocket(SOCKET_URL);
-	socket.addEventListener('open', () => dispatch({type: WS_OPEN}));
+	socket.addEventListener('open', () => {
+		dispatch(closeSnackbar(WS_CLOSE));
+		dispatch({type: WS_OPEN})
+	});
 	socket.addEventListener('close', () => {
 		setTimeout(() => {
 			connectWebSocket(dispatch, headers);
 			dispatch({type: WS_RECONNECT});
 		}, 2000);
 		dispatch({type: WS_CLOSE});
+		dispatch(addSnackbar({message: "Trouble reaching servers", options: {key: WS_CLOSE, variant: "warning", persist: true}}));
 	});
 	socket.addEventListener('message', ev => {
 		const data = JSON.parse(ev.data);

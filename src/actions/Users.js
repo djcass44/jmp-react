@@ -15,6 +15,7 @@
  *
  */
 import {client} from "../constants";
+import {addSnackbar} from "./Snackbar";
 
 export const USER_LOAD = "USER_LOAD";
 export const PATCH_USER_ROLE = "PATCH_USER_ROLE";
@@ -32,6 +33,7 @@ function getUsersDispatch(dispatch, headers) {
 			payload: r.data
 		});
 	}).catch(err => {
+		dispatch(addSnackbar({message: "Failed to load users", options: {key: `${USER_LOAD}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${USER_LOAD}_FAILURE`, data: err, error: true});
 	});
 }
@@ -44,6 +46,7 @@ function patchUserRoleDispatch(dispatch, headers, user) {
 		});
 		getUsersDispatch(dispatch, headers);
 	}).catch(err => {
+		dispatch(addSnackbar({message: "Failed to update user role", options: {key: `${PATCH_USER_ROLE}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${PATCH_USER_ROLE}_FAILURE`, payload: err, error: true});
 	});
 }

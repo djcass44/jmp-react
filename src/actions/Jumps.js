@@ -1,4 +1,5 @@
-import {client} from "../constants";
+import {APP_NOUN, client} from "../constants";
+import {addSnackbar} from "./Snackbar";
 
 export const JUMP_LOAD = "JUMP_LOAD";
 export const JUMP_SET = "JUMP_SET";
@@ -26,6 +27,7 @@ const listJumpsDispatch = (dispatch, headers) => {
 	client.get("/api/v1/jumps", {headers: headers}).then(r => {
 		dispatch({type: `${JUMP_LOAD}_SUCCESS`, payload: r.data});
 	}).catch(err => {
+		dispatch(addSnackbar({message: `Failed to load ${APP_NOUN}s`, options: {key: `${JUMP_LOAD}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${JUMP_LOAD}_FAILURE`, payload: err, error: true});
 	});
 };
@@ -33,7 +35,9 @@ const deleteJumpDispatch = (dispatch, headers, id) => {
 	dispatch({type: `${DELETE_JUMP}_REQUEST`});
 	client.delete(`/api/v1/jump/${id}`, {headers: headers}).then(r => {
 		dispatch({type: `${DELETE_JUMP}_SUCCESS`, payload: r.data});
+		dispatch(addSnackbar({message: `Deleted ${APP_NOUN}`, options: {key: `${DELETE_JUMP}_SUCCESS`, variant: "success"}}));
 	}).catch(err => {
+		dispatch(addSnackbar({message: `Failed to delete ${APP_NOUN}`, options: {key: `${DELETE_JUMP}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${DELETE_JUMP}_FAILURE`, payload: err, error: true});
 	});
 };
@@ -45,6 +49,7 @@ const getSimilarDispatch = (dispatch, headers, query) => {
 			payload: r.data
 		});
 	}).catch(err => {
+		dispatch(addSnackbar({message: `Failed to load ${APP_NOUN}`, options: {key: `${GET_SIMILAR}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${GET_SIMILAR}_FAILURE`, payload: err, error: true});
 	});
 };
@@ -55,7 +60,9 @@ const putJumpDispatch = (dispatch, headers, jump, gid) => {
 			type: `${PUT_JUMP}_SUCCESS`,
 			payload: r.data
 		});
+		dispatch(addSnackbar({message: "Created Jump", options: {key: `${PUT_JUMP}_SUCCESS`, variant: "success"}}));
 	}).catch(err => {
+		dispatch(addSnackbar({message: `Failed to create ${APP_NOUN}`, options: {key: `${PUT_JUMP}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${PUT_JUMP}_FAILURE`, payload: err, error: true});
 	});
 };
@@ -63,7 +70,9 @@ const patchJumpDispatch = (dispatch, headers, jump) => {
 	dispatch({type: `${PATCH_JUMP}_REQUEST`});
 	client.patch(`/api/v1/jump`, jump,{headers: headers}).then(r => {
 		dispatch({type: `${PATCH_JUMP}_SUCCESS`, payload: r.data});
+		dispatch(addSnackbar({message: `Updated ${APP_NOUN}`, options: {key: `${PATCH_JUMP}_SUCCESS`, variant: "success"}}));
 	}).catch(err => {
+		dispatch(addSnackbar({message: `Failed to update ${APP_NOUN}`, options: {key: `${PATCH_JUMP}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${PATCH_JUMP}_FAILURE`, payload: err, error: true});
 	});
 };

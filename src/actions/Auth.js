@@ -1,4 +1,5 @@
 import {client} from "../constants";
+import {addSnackbar} from "./Snackbar";
 
 export const OAUTH_VERIFY = "OAUTH_VERIFY";
 export const OAUTH_REQUEST = "OAUTH_REQUEST";
@@ -75,6 +76,7 @@ function oauthRequest2Dispatch(dispatch, headers) {
 	client.post("/api/v2/oauth/token", {}, {headers: headers}).then(r => {
 		dispatch({type: `${OAUTH_REQUEST}_SUCCESS`, payload: r.data});
 	}).catch(err => {
+		dispatch(addSnackbar({message: "Failed to authenticate", options: {key: `${OAUTH_REQUEST}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${OAUTH_REQUEST}_FAILURE`, payload: err, error: true});
 	})
 }
@@ -93,7 +95,7 @@ function oauthRequestDispatch(dispatch, data) {
 		// Retry verification
 		oauthVerifyDispatch(dispatch, r.data['refresh'], {'Authorization': `Bearer ${r.data.request}`});
 	}).catch(err => {
-		console.log(`request failed: ${err}`);
+		dispatch(addSnackbar({message: "Failed to authenticate", options: {key: `${OAUTH_REQUEST}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${OAUTH_REQUEST}_FAILURE`, payload: err, error: true});
 	});
 }
@@ -106,7 +108,7 @@ function oauthRefreshDispatch(dispatch, refresh, headers) {
 			payload: r.data
 		});
 	}).catch(err => {
-		console.log(`refresh failed: ${err}`);
+		dispatch(addSnackbar({message: "Failed to refresh token", options: {key: `${OAUTH_REFRESH}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${OAUTH_REFRESH}_FAILURE`, payload: err, error: true});
 	});
 }
@@ -115,6 +117,7 @@ function oauthLogoutDispatch(dispatch, headers) {
 	client.post("/api/v2/oauth/logout", {}, {headers: headers}).then( () => {
 		dispatch({type: `${OAUTH_LOGOUT}_SUCCESS`});
 	}).catch(err => {
+		dispatch(addSnackbar({message: "Failed to logout", options: {key: `${OAUTH_LOGOUT}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${OAUTH_LOGOUT}_FAILURE`, payload: err, error: true});
 	});
 }

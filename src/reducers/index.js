@@ -25,6 +25,7 @@ import users from "./Users";
 import groups from "./Groups";
 import info from "./Info";
 import modal from "./Modal";
+import snackbar from "./Snackbar";
 
 const main = combineReducers({
 	auth,
@@ -35,6 +36,7 @@ const main = combineReducers({
 	users,
 	groups,
 	info,
-	modal
+	modal,
+	snackbar
 });
 export default main;

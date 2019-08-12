@@ -15,6 +15,7 @@
  *
  */
 import {client} from "../constants";
+import {addSnackbar} from "./Snackbar";
 
 export const GROUP_LOAD = "GROUP_LOAD";
 export const GET_USER_GROUPS = "GET_USER_GROUPS";
@@ -34,6 +35,7 @@ const getGroupsDispatch = (dispatch, headers) => {
 			payload: r.data
 		});
 	}).catch(err => {
+		dispatch(addSnackbar({message: "Failed to load groups", options: {key: `${GROUP_LOAD}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${GROUP_LOAD}_FAILURE`, payload: err, error: true});
 	});
 };
@@ -45,6 +47,7 @@ const getUserGroupsDispatch = (dispatch, headers, uid) => {
 			payload: r.data
 		});
 	}).catch(err => {
+		dispatch(addSnackbar({message: "Failed to load group memberships", options: {key: `${GET_USER_GROUPS}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${GET_USER_GROUPS}_FAILURE`, payload: err, error: true});
 	});
 };
@@ -55,9 +58,11 @@ const setUserGroupsDispatch = (dispatch, headers, uid, payload) => {
 			type: `${SET_USER_GROUPS}_SUCCESS`,
 			payload: r.data
 		});
+		dispatch(addSnackbar({message: "Updated group membership", options: {key: `${SET_USER_GROUPS}_SUCCESS`, variant: "success"}}));
 		// Automatically reload the group memberships
 		getUserGroupsDispatch(dispatch, headers, uid);
 	}).catch(err => {
+		dispatch(addSnackbar({message: "Failed to update group membership", options: {key: `${SET_USER_GROUPS}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${SET_USER_GROUPS}_FAILURE`, payload: err, error: true});
 	});
 };

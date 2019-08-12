@@ -16,6 +16,7 @@
  */
 
 import {client} from "../constants";
+import {addSnackbar} from "./Snackbar";
 
 export const OAUTH2_REFRESH = "OAUTH2_REFRESH";
 export const OAUTH2_CALLBACK = "OAUTH2_CALLBACK";
@@ -36,6 +37,7 @@ function oauth2CallbackDispatch(dispatch, query, headers) {
 		});
 	}).catch(err => {
 		console.log(`v2: callback failed: ${err}`);
+		dispatch(addSnackbar({message: "OAuth callback failed", options: {key: `${OAUTH2_CALLBACK}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${OAUTH2_CALLBACK}_FAILURE`, payload: err, error: true});
 	});
 }
@@ -48,7 +50,7 @@ function oauth2LogoutDispatch(dispatch, accessToken, source, headers) {
 			payload: r.data
 		});
 	}).catch(err => {
-		console.log(`v2: logout failed: ${err}`);
+		dispatch(addSnackbar({message: "Failed to logout", options: {key: `${OAUTH2_LOGOUT}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${OAUTH2_LOGOUT}_FAILURE`, payload: err, error: true});
 	});
 }

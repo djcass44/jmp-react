@@ -22,6 +22,8 @@ import {connect} from "react-redux";
 import {Helmet} from "react-helmet";
 import {wsClose, wsOpen} from "./actions/Socket";
 import Body from "./containers/Body";
+import {SnackbarProvider} from "notistack";
+import Snackbar from "./containers/Snackbar";
 
 export const App = props => {
 	useEffect(() => {
@@ -35,8 +37,11 @@ export const App = props => {
 	return (
 		<div className={"App"}>
 			<MuiThemeProvider theme={Theme}>
-				<Helmet><meta name={"theme-color"} content={theme.palette.primary.main}/></Helmet>
-				<Body/>
+				<SnackbarProvider maxSnack={3}>
+					<Helmet><meta name={"theme-color"} content={theme.palette.primary.main}/></Helmet>
+					<Body/>
+					<Snackbar/>
+				</SnackbarProvider>
 			</MuiThemeProvider>
 		</div>
 	);
@@ -44,7 +49,6 @@ export const App = props => {
 
 const mapStateToProps = state => ({
 	headers: state.auth.headers,
-	refresh: state.auth.refresh,
 });
 const mapDispatchToProps = ({
 	wsOpen,

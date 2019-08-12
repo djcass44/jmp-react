@@ -82,13 +82,7 @@ const Jumps = props => {
 	const handleEditDialog = (visible, item) => {
 		props.setJumpEdit(visible, item);
 	};
-	const handleDeleteJump = () => {
-		if(props.delete.item == null) {
-			console.log("No item to delete");
-			return;
-		}
-		props.deleteJump(props.headers, props.delete.item.id);
-	};
+	const handleDeleteJump = () => props.deleteJump(props.headers, props.delete.item.id);
 	const handleSortChange = value => {
 		props.setSort(value);
 		props.listJumps(props.headers);
