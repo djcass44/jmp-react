@@ -18,9 +18,6 @@
 import React, {useEffect} from "react";
 import List from "@material-ui/core/List";
 import ListSubheader from "@material-ui/core/es/ListSubheader/ListSubheader";
-import ListItem from "@material-ui/core/ListItem";
-import Avatar from "@material-ui/core/es/Avatar/Avatar";
-import ListItemText from "@material-ui/core/es/ListItemText/ListItemText";
 import {
 	deleteJump,
 	JUMP_LOAD,
@@ -30,25 +27,20 @@ import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import Pagination from "material-ui-flat-pagination";
 import Center from "react-center";
-import {LinearProgress, ListItemSecondaryAction, makeStyles, withTheme} from "@material-ui/core";
+import {LinearProgress, makeStyles, withTheme} from "@material-ui/core";
 import EmptyCard from "../../components/widget/EmptyCard";
-import ReactImageFallback from "react-image-fallback";
-import SchemeHighlight from "../../components/widget/SchemeHighlight";
-import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import { pageSize} from "../../constants";
 import posed, {PoseGroup} from "react-pose";
 import JumpDialog from "../modal/JumpDialog";
-import Icon from "@mdi/react";
-import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiChevronDown, mdiChevronUp, mdiEarth} from "@mdi/js";
-import JumpContent from "../../components/content/jmp/JumpContent";
 import DeleteDialog from "../modal/DeleteDialog";
 import JumpEditDialog from "../modal/JumpEditDialog";
 import {sortItems} from "../../misc/Sort";
 import SortButton from "../../components/widget/SortButton";
 import {setOffset, setSort} from "../../actions/Generic";
 import {setJumpDelete, setJumpEdit, setJumpNew} from "../../actions/Modal";
+import JumpItem from "./jmp/JumpItem";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -95,26 +87,12 @@ const Jumps = props => {
 			console.log("No item to delete");
 			return;
 		}
-		props.deleteJump(props.headers, props.delete.item);
+		props.deleteJump(props.headers, props.delete.item.id);
 	};
 	const handleSortChange = value => {
 		props.setSort(value);
 		props.listJumps(props.headers);
 	};
-
-	const toggleExpansion = id => props.setJumpExpand(id);
-
-	const getAliases = (jump) => {
-		if(jump.alias.length === 0) return "";
-		let items = [];
-		jump.alias.forEach((i) => {
-			items.push(i.name);
-		});
-		let alias = items.join(', ');
-		return `AKA ${alias}`;
-	};
-	
-	const {theme} = props;
 	const classes = useStyles();
 	let listItems = [];
 	// Tell the loop what our pagination limits are
@@ -124,34 +102,7 @@ const Jumps = props => {
 	let sortedJumps = sortItems(props.jumps, props.sort);
 	sortedJumps.filter(filterJump).forEach((i, index) => {
 		if(index < props.offset || index > max) return;
-		let avatar = {
-			icon: i['personal'] === 0 ? mdiEarth : i['personal'] === 1 ? mdiAccountCircleOutline : mdiAccountGroupOutline,
-			bg: i['personal'] === 0 ? theme.palette.primary.light : i['personal'] === 1 ? theme.palette.success.light : theme.palette.info.light,
-			fg: i['personal'] === 0 ? theme.palette.primary.dark : i['personal'] === 1 ? theme.palette.success.dark : theme.palette.info.dark
-		};
-		// Generate the secondary text and add the owner (if it exists)
-		let secondary = <span><SchemeHighlight text={i.location}/>{
-			i['owner'] != null ? <span>&nbsp;&bull;&nbsp;{i['owner']}</span> : ""
-		}</span>;
-		const aliases = getAliases(i);
-		listItems.push((
-			<div key={i.id}>
-				<ListItem button disableRipple value={i.id} onClick={() => toggleExpansion(i.id)}>
-					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
-						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={<Icon path={avatar.icon} color={avatar.fg} size={1}/>} initialImage={<Icon path={avatar.icon} color={avatar.fg} size={1}/>}/>
-					</Avatar>
-					<Tooltip disableFocusListener title={aliases} placement={"left"} interactive>
-						<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={secondary}/>
-					</Tooltip>
-					<ListItemSecondaryAction>
-						<IconButton centerRipple={false} onClick={() => toggleExpansion(i.id)}>
-							<Icon path={i.id === props.expanded ? mdiChevronUp : mdiChevronDown} size={1} color={theme.palette.primary.main}/>
-						</IconButton>
-					</ListItemSecondaryAction>
-				</ListItem>
-				<JumpContent jump={i} onEdit={(e, item) => {handleEditDialog(true, item)}} onDelete={(e, item) => {handleDeleteDialog(true, item)}}/>
-			</div>
-		));
+		listItems.push(<JumpItem jump={i} key={i.id} id={i.id}/>);
 	});
 
 	const subHeader = (<ListSubheader className={classes.title} inset component={"div"}>

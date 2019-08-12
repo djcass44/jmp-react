@@ -5,7 +5,14 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {CircularProgress, InputLabel, Select, Typography, withStyles, withTheme} from "@material-ui/core";
+import {
+	InputLabel,
+	LinearProgress,
+	Select,
+	Typography,
+	withStyles,
+	withTheme
+} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import {connect} from "react-redux";
@@ -138,7 +145,7 @@ class JumpDialog extends React.Component {
 							<MenuItem value={2} disabled={this.state.userGroups.length === 0}>Group</MenuItem>
 						</Select>
 					</FormControl>
-					{this.state.loadingGroups === true ? <CircularProgress/> : ""}
+					{this.state.loadingGroups === true ? <LinearProgress/> : ""}
 					{this.state.type === 2 && this.state.userGroups.length > 0 ?
 						<FormControl fullWidth>
 							<InputLabel htmlFor={"group"}>Group</InputLabel>
