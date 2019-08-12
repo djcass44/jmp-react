@@ -1,66 +1,68 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {bindActionCreators} from "redux";
 import {removeSnackbar} from "../actions/Snackbar";
 import {withSnackbar} from "notistack";
 import {connect} from "react-redux";
+import PropTypes from "prop-types";
 
-class Snackbar extends React.Component {
-	displayed = [];
+const Snackbar = (props) => {
+	let displayed = [];
 
-	storeDisplayed = (id) => {
-		this.displayed = [...this.displayed, id];
+	const storeDisplayed = (id) => {
+		displayed = [...displayed, id];
 	};
 
-	shouldComponentUpdate({ notifications: newSnacks = [] }) {
+	const shouldComponentUpdate = ({notify: newSnacks = []}) => {
 		if (!newSnacks.length) {
-			this.displayed = [];
+			displayed = [];
 			return false;
 		}
 
-		const { notifications: currentSnacks } = this.props;
+		const {notify: currentSnacks} = props;
 		let notExists = false;
 		for (let i = 0; i < newSnacks.length; i += 1) {
 			const newSnack = newSnacks[i];
 			if (newSnack.dismissed) {
-				this.props.closeSnackbar(newSnack.key);
-				this.props.removeSnackbar(newSnack.key);
+				props.closeSnackbar(newSnack.key);
+				props.removeSnackbar(newSnack.key);
 			}
 
-			if (notExists) continue;
+			if(notExists) continue;
 			notExists = notExists || !currentSnacks.filter(({ key }) => newSnack.key === key).length;
 		}
 		return notExists;
-	}
+	};
 
-	componentDidUpdate() {
-		const { notifications = [] } = this.props;
-
-		notifications.forEach(({ key, message, options = {} }) => {
+	useEffect(() => {
+		const {notify = []} = props;
+		notify.forEach(({key, message, options = {}}) => {
 			// Do nothing if snackbar is already displayed
-			if (this.displayed.includes(key)) return;
+			if (displayed.includes(key)) return;
 			// Display snackbar using notistack
-			this.props.enqueueSnackbar(message, {
+			props.enqueueSnackbar(message, {
 				...options,
 				onClose: (event, reason, key) => {
-					if (options.onClose) {
+					if (options.onClose)
 						options.onClose(event, reason, key);
-					}
 					// Dispatch action to remove snackbar from redux store
-					this.props.removeSnackbar(key);
+					props.removeSnackbar(key);
 				}
 			});
 			// Keep track of snackbars that we've displayed
-			this.storeDisplayed(key);
+			storeDisplayed(key);
 		});
-	}
-
-	render() {
-		return null;
-	}
-}
-
+	}, [shouldComponentUpdate]);
+	// we don't actually render anything, so just return null
+	return null;
+};
+Snackbar.propTypes = {
+	notify: PropTypes.array
+};
+Snackbar.defaultProps = {
+	notify: []
+};
 const mapStateToProps = store => ({
-	notifications: store.snackbar.notify,
+	notify: store.snackbar.notify,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({removeSnackbar}, dispatch);

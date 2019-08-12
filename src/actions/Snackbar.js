@@ -8,7 +8,7 @@ export const addSnackbar = notify => {
 		type: ADD_SNACKBAR,
 		notify: {
 			...notify,
-			key: key || new Date().getTime() + Math.random()
+			key: key || new Date().getTime() + Math.random() // ensure that the key is not-null
 		}
 	};
 };
@@ -17,7 +17,4 @@ export const closeSnackbar = key => ({
 	dismissAll: !key, // dismiss all if no key is given
 	key
 });
-export const removeSnackbar = key => ({
-	type: REMOVE_SNACKBAR,
-	key
-});
+export const removeSnackbar = key => ({type: REMOVE_SNACKBAR, key});
