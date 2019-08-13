@@ -33,23 +33,30 @@ const useStyles = makeStyles(() => ({
 	}
 }));
 
+const initialName = {
+	value: '',
+	error: '',
+	regex: new RegExp('^[a-zA-Z0-9_.-]*$')
+};
+const initialUrl = {
+	value: '',
+	error: '',
+	regex: new RegExp('https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)')
+};
+
 const JumpDialog = ({open, headers, ...props}) => {
-	const [name, setName] = useState({
-		value: '',
-		error: '',
-		regex: new RegExp('^[a-zA-Z0-9_.-]*$')
-	});
-	const [url, setUrl] = useState({
-		value: '',
-		error: '',
-		regex: new RegExp('https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)')
-	});
+	const [name, setName] = useState(initialName);
+	const [url, setUrl] = useState(initialUrl);
 	const [type, setType] = useState('');
 	const [groupId, setGroupId] = useState('');
 
 	useEffect(() => {
 		props.getUserGroups(headers, props.uid);
 	}, []);
+	useEffect(() => {
+		setName(initialName);
+		setUrl(initialUrl);
+	}, [open]);
 
 	const onNameChange = (e) => {
 		const {value} = e.target;

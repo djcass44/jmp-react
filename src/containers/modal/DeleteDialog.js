@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -26,6 +26,10 @@ export const DeleteDialog = ({open, title, body, requireApproval, ...props}) => 
 
 	const defaultTitle = "Delete";
 	const defaultBody = `Are you sure? This action is immediate and cannot be undone. ${requireApproval === true ? "Since this change will likely impact functionality for users, you will need to be certain of your actions." : ""}`;
+
+	useEffect(() => {
+		setAck(false);
+	}, [open]);
 
 	const onSubmit = () => {
 		props.onSubmit();
