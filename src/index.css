@@ -24,6 +24,12 @@ code {
 
 @font-face {
 	font-family: 'Manrope';
+	src: local("Manrope"), url(./fonts/manrope-bold.woff2) format('woff2');
+	font-style: normal;
+	font-weight: bold;
+}
+@font-face {
+	font-family: 'Manrope';
 	src: local("Manrope"), url(./fonts/manrope-semibold.woff2) format('woff2');
 	font-style: normal;
 	font-weight: 600;

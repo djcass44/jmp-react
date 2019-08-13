@@ -24,12 +24,10 @@ const initialState = {
 
 const groups = (state = initialState, action) => {
 	switch (action.type) {
-		case `${GROUP_LOAD}_SUCCESS`: {
-			return {...state, groups: action.payload}
-		}
-		case `${GET_USER_GROUPS}_SUCCESS`: {
-			return {...state, userGroups: action.payload}
-		}
+		case `${GROUP_LOAD}_SUCCESS`:
+			return {...state, groups: action.payload};
+		case `${GET_USER_GROUPS}_SUCCESS`:
+			return {...state, userGroups: action.payload};
 		default:
 			return state;
 

@@ -18,12 +18,14 @@ import {client} from "../constants";
 import {addSnackbar} from "./Snackbar";
 
 export const GROUP_LOAD = "GROUP_LOAD";
+export const PUT_GROUP = "PUT_GROUP";
 export const GET_USER_GROUPS = "GET_USER_GROUPS";
 export const SET_USER_GROUPS = "SET_USER_GROUPS";
 
 export const SOCKET_UPDATE_GROUPS = "EVENT_UPDATE_GROUP";
 
 export const getGroups = (headers) => dispatch => getGroupsDispatch(dispatch, headers);
+export const putGroup = (headers, name) => dispatch => putGroupDispatch(dispatch, headers, name);
 export const getUserGroups = (headers, uid) => dispatch => getUserGroupsDispatch(dispatch, headers, uid);
 export const setUserGroups = (headers, uid, payload) => dispatch => setUserGroupsDispatch(dispatch, headers, uid, payload);
 
@@ -37,6 +39,19 @@ const getGroupsDispatch = (dispatch, headers) => {
 	}).catch(err => {
 		dispatch(addSnackbar({message: "Failed to load groups", options: {key: `${GROUP_LOAD}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${GROUP_LOAD}_FAILURE`, payload: err, error: true});
+	});
+};
+const putGroupDispatch = (dispatch, headers, name) => {
+	dispatch({type: `${PUT_GROUP}_REQUEST`});
+	client.put("/api/v2_1/group", {name}, {headers: headers}).then(r => {
+		dispatch({
+			type: `${PUT_GROUP}_SUCCESS`,
+			payload: r.data
+		});
+		dispatch(addSnackbar({message: "Created group", options: {key: `${PUT_GROUP}_SUCCESS`, variant: "success"}}));
+	}).catch(err => {
+		dispatch(addSnackbar({message: "Failed to create group", options: {key: `${PUT_GROUP}_FAILURE`, variant: "error"}}));
+		dispatch({type: `${PUT_GROUP}_FAILURE`, payload: err, error: true});
 	});
 };
 const getUserGroupsDispatch = (dispatch, headers, uid) => {

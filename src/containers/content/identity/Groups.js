@@ -37,6 +37,7 @@ import SortButton from "../../../components/widget/SortButton";
 import {IconButton} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
+import {setGroupNew} from "../../../actions/Modal";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -130,8 +131,8 @@ class Groups extends React.Component {
 			Groups {this.state.searchFilter != null && this.state.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
 			{/*<div className={classes.grow}/>*/}
 			<SortButton selectedSort={this.state.sort} sorts={this.state.sorts} onSubmit={(e, value) => this.handleSortChange(e, value)}/>
-			{/*<IconButton centerRipple={false} className={classes.button} aria-label="Add" onClick={() => {this.setCreateDialog(true)}}><AddIcon fontSize={"small"}/></IconButton>*/}
-			{/*<CreateGroupDialog open={this.state.showCreateDialog} onExited={(e) => {this.setCreateDialog(false)}}/>*/}
+			<IconButton centerRipple={false} className={classes.button} aria-label="Add" onClick={() => this.props.setGroupNew(true)}><AddIcon fontSize={"small"}/></IconButton>
+			<CreateGroupDialog/>
 		</ListSubheader>);
 
 		return (
@@ -165,7 +166,7 @@ const mapStateToProps = state => ({
 	searchFilter: state.generic.searchFilter
 });
 const mapDispatchToProps = ({
-	getGroups
-
+	getGroups,
+	setGroupNew
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Groups)));
