@@ -1,13 +1,16 @@
-import {MODAL_GROUP_NEW, MODAL_JUMP_DELETE, MODAL_JUMP_EDIT, MODAL_JUMP_NEW} from "../actions/Modal";
+import {MODAL_DELETE, MODAL_GROUP_NEW, MODAL_JUMP_EDIT, MODAL_JUMP_NEW} from "../actions/Modal";
 
 const initialState = {
+	generic: {
+		delete: {
+			open: false,
+			item: null,
+			requireApproval: false
+		}
+	},
 	jump: {
 		new: {
 			open: false
-		},
-		delete: {
-			open: false,
-			item: null
 		},
 		edit: {
 			open: false,
@@ -29,9 +32,9 @@ export default (state = initialState, action) => {
 			const {open, item} = action.payload;
 			return {...state, jump: {...state.jump, edit: {...state.jump.edit, open, item}}};
 		}
-		case MODAL_JUMP_DELETE: {
-			const {open, item} = action.payload;
-			return {...state, jump: {...state.jump, delete: {...state.jump.delete, open, item}}};
+		case MODAL_DELETE: {
+			const {open, item, requireApproval} = action.payload;
+			return {...state, generic: {...state.generic, delete: {...state.generic.delete, open, item, requireApproval}}};
 		}
 		case MODAL_GROUP_NEW:
 			return {...state, group: {...state.group, new: {...state.group.new, open: action.payload}}};

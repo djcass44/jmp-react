@@ -10,7 +10,7 @@ import React from "react";
 import ListItemText from "@material-ui/core/ListItemText";
 import SchemeHighlight from "../../../components/widget/SchemeHighlight";
 import PropTypes from "prop-types";
-import {setJumpDelete, setJumpEdit, setJumpNew} from "../../../actions/Modal";
+import {setDelete, setJumpEdit, setJumpNew} from "../../../actions/Modal";
 import {deleteJump, setJumpExpand} from "../../../actions/Jumps";
 import {connect} from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
@@ -59,7 +59,7 @@ const JumpItem = ({jump, ...props}) => {
 					</IconButton>
 				</ListItemSecondaryAction>
 			</ListItem>
-			<JumpContent jump={jump} onEdit={() => props.setJumpEdit(true, jump)} onDelete={() => {props.setJumpDelete(true, jump)}}/>
+			<JumpContent jump={jump} onEdit={() => props.setJumpEdit(true, jump)} onDelete={() => {props.setDelete(true, jump, jump.personal === 0)}}/>
 		</div>
 	)
 };
@@ -72,7 +72,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = ({
 	setJumpNew,
 	setJumpEdit,
-	setJumpDelete,
+	setDelete,
 	setJumpExpand,
 	deleteJump
 });

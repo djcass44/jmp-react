@@ -39,7 +39,7 @@ import JumpEditDialog from "../modal/JumpEditDialog";
 import {sortItems} from "../../misc/Sort";
 import SortButton from "../../components/widget/SortButton";
 import {setOffset, setSort} from "../../actions/Generic";
-import {setJumpDelete, setJumpEdit, setJumpNew} from "../../actions/Modal";
+import {setDelete, setJumpEdit, setJumpNew} from "../../actions/Modal";
 import JumpItem from "./jmp/JumpItem";
 
 const Item = posed.div({
@@ -77,7 +77,7 @@ const Jumps = props => {
 		props.setJumpNew(visible);
 	};
 	const handleDeleteDialog = (visible, item) => {
-		props.setJumpDelete(visible, item);
+		props.setDelete(visible, item);
 	};
 	const handleEditDialog = (visible, item) => {
 		props.setJumpEdit(visible, item);
@@ -122,7 +122,7 @@ const Jumps = props => {
 					<List component={'ul'}>
 						{listItems.length > 0 ? listItems : <EmptyCard/>}
 					</List>
-					<DeleteDialog open={props.delete.open} onExited={() => {handleDeleteDialog(false, null)}} onSubmit={() => handleDeleteJump()}/>
+					<DeleteDialog onExited={() => {handleDeleteDialog(false, null)}} onSubmit={() => handleDeleteJump()}/>
 					<JumpEditDialog jump={props.edit.item} open={props.edit.open} onExited={() => {handleEditDialog(false, null)}}/>
 				</Paper>
 			</PoseGroup>
@@ -148,7 +148,7 @@ const mapStateToProps = state => ({
 	offset: state.generic.offset,
 	new: state.modal.jump.new,
 	edit: state.modal.jump.edit,
-	delete: state.modal.jump.delete
+	delete: state.modal.generic.delete
 });
 const mapDispatchToProps = ({
 	listJumps,
@@ -156,7 +156,7 @@ const mapDispatchToProps = ({
 	setSort,
 	setJumpNew,
 	setJumpEdit,
-	setJumpDelete,
+	setDelete,
 	setOffset,
 	setJumpExpand
 });
