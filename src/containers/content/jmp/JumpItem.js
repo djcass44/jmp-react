@@ -14,6 +14,7 @@ import {setDelete, setJumpEdit, setJumpNew} from "../../../actions/Modal";
 import {deleteJump, setJumpExpand} from "../../../actions/Jumps";
 import {connect} from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
+import getAvatarScheme from "../../../style/getAvatarScheme";
 
 const useStyles = makeStyles(() => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
@@ -21,11 +22,12 @@ const useStyles = makeStyles(() => ({
 
 const JumpItem = ({jump, ...props}) => {
 	const classes = useStyles();
-	const {palette} = props.theme;
+	const {theme} = props;
+	const scheme = getAvatarScheme(theme, jump['personal']);
 	const avatar = {
 		icon: jump['personal'] === 0 ? mdiEarth : jump['personal'] === 1 ? mdiAccountCircleOutline : mdiAccountGroupOutline,
-		bg: jump['personal'] === 0 ? palette.primary.light : jump['personal'] === 1 ? palette.success.light : palette.info.light,
-		fg: jump['personal'] === 0 ? palette.primary.dark : jump['personal'] === 1 ? palette.success.dark : palette.info.dark
+		bg: scheme[0],
+		fg: scheme[1]
 	};
 	// Generate the secondary text and add the owner (if it exists)
 	let secondary = (
@@ -55,7 +57,7 @@ const JumpItem = ({jump, ...props}) => {
 				</Tooltip>
 				<ListItemSecondaryAction>
 					<IconButton centerRipple={false} onClick={() => props.setJumpExpand(jump.id)}>
-						<Icon path={jump.id === props.expanded ? mdiChevronUp : mdiChevronDown} size={1} color={palette.primary.main}/>
+						<Icon path={jump.id === props.expanded ? mdiChevronUp : mdiChevronDown} size={1} color={theme.palette.primary.main}/>
 					</IconButton>
 				</ListItemSecondaryAction>
 			</ListItem>

@@ -18,7 +18,7 @@ import Icon from "@mdi/react";
 import {mdiArrowLeft} from "@mdi/js";
 import IconButton from "@material-ui/core/IconButton";
 import React from "react";
-import {makeStyles} from "@material-ui/core";
+import {makeStyles, withTheme} from "@material-ui/core";
 import {Link, withRouter} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
@@ -30,11 +30,14 @@ const useStyles = makeStyles(theme => ({
 
 export const BackButton = props => {
 	const classes = useStyles();
+	const {theme} = props;
 	return (
 		<div>
-			<IconButton component={Link} to={props.to} centerRipple={false}><Icon path={mdiArrowLeft} size={1}/></IconButton>
+			<IconButton component={Link} to={props.to} centerRipple={false}>
+				<Icon path={mdiArrowLeft} size={1} color={theme.palette.getContrastText(theme.palette.background.default)}/>
+			</IconButton>
 			<span className={classes.title}>{props.label != null ? props.label : "Back"}</span>
 		</div>
 	)
 };
-export default withRouter(BackButton);
+export default withTheme(withRouter(BackButton));

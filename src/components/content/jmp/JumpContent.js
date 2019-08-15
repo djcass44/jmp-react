@@ -13,14 +13,14 @@ import {connect} from "react-redux";
 import {Badge} from "evergreen-ui";
 import PropTypes from "prop-types";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
 	},
 	main: {
 		padding: 16,
-		backgroundColor: "#F5F5F5"
+		backgroundColor: theme.palette.background.default
 	}
 }));
 
@@ -64,27 +64,27 @@ export const JumpContent = props => {
 			{/* check this browser supports copy before showing the button */}
 			{document.queryCommandSupported("copy") &&
 				<Tooltip title={"Copy URL"}>
-					<IconButton centerRipple={false} onClick={() => {handleCopy(jump.location)}}><Icon path={mdiContentCopy} size={0.85}/></IconButton>
+					<IconButton centerRipple={false} onClick={() => handleCopy(jump.location)}>
+						<Icon path={mdiContentCopy} size={0.85} color={theme.palette.getContrastText(theme.palette.background.default)}/>
+					</IconButton>
 				</Tooltip>
 			}
 			{props.isLoggedIn === true && hasOwnership === true &&
 				<Tooltip title={"Edit"}>
-					<IconButton centerRipple={false} onClick={() => {
-						props.onEdit(jump)
-					}}><Icon path={mdiPencilOutline} size={0.85}/></IconButton>
+					<IconButton centerRipple={false} onClick={() => props.onEdit(jump)}>
+						<Icon path={mdiPencilOutline} size={0.85} color={theme.palette.getContrastText(theme.palette.background.default)}/>
+					</IconButton>
 				</Tooltip>
 			}
 			<Tooltip title={"Open"}>
 				<IconButton centerRipple={false} target={"_blank"} rel={"noopener noreferrer"} href={`/jmp?query=${jump.name}`}>
-					<Icon path={mdiOpenInNew} size={0.85}/>
+					<Icon path={mdiOpenInNew} size={0.85} color={theme.palette.getContrastText(theme.palette.background.default)}/>
 				</IconButton>
 			</Tooltip>
 			{props.isLoggedIn === true && hasOwnership === true &&
 				<Tooltip title={"Delete"}>
-					<IconButton centerRipple={false} onClick={(e) => {
-						props.onDelete(jump.id)
-					}}>
-						<Icon path={mdiDeleteOutline} size={0.85}/>
+					<IconButton centerRipple={false} onClick={() => props.onDelete(jump.id)}>
+						<Icon path={mdiDeleteOutline} size={0.85} color={theme.palette.getContrastText(theme.palette.background.default)}/>
 					</IconButton>
 				</Tooltip>
 			}

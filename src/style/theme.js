@@ -18,7 +18,7 @@
 import {createMuiTheme} from "@material-ui/core";
 import {LS_DARK} from "../constants";
 
-const theme = createMuiTheme({
+export default createMuiTheme({
 	palette: {
 		primary: {
 			main: '#0052CC',
@@ -60,4 +60,3 @@ const theme = createMuiTheme({
 		}
 	},
 });
-export default theme;

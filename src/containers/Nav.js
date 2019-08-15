@@ -22,7 +22,7 @@ import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
 import {fade} from "@material-ui/core/styles/colorManipulator";
 import InputBase from "@material-ui/core/InputBase";
-import {IconButton, withStyles} from "@material-ui/core";
+import {IconButton, withStyles, withTheme} from "@material-ui/core";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import {connect} from "react-redux";
@@ -35,6 +35,7 @@ import Icon from "@mdi/react";
 import {mdiAccountGroupOutline, mdiHelpCircleOutline, mdiLogin, mdiLogout} from "@mdi/js";
 import {Avatar} from "evergreen-ui";
 import BackButton from "../components/widget/BackButton";
+import getIconColour from "../style/getIconColour";
 
 const styles = theme => ({
 	root: {width: '100%'},
@@ -143,7 +144,7 @@ class Nav extends React.Component {
 
 	render() {
 		const {anchorEl} = this.state;
-		const {classes} = this.props;
+		const {classes, theme} = this.props;
 		const isMenuOpen = Boolean(anchorEl);
 
 		let name = this.state.userProfile['displayName'];
@@ -181,7 +182,7 @@ class Nav extends React.Component {
 					}
 					<div className={classes.grow}/>
 					<div className={classes.sectionDesktop}>
-						<IconButton component={Link} centerRipple={false} color={"inherit"} to={"/help"}><Icon path={mdiHelpCircleOutline} size={1}/></IconButton>
+						<IconButton component={Link} centerRipple={false} color={"inherit"} to={"/help"}><Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/></IconButton>
 						<Avatar name={name2} src={this.state.userProfile['avatarUrl']} size={40} style={{marginTop: 4}} onClick={this.handleProfileMenuOpen} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
 					</div>
 				</Toolbar>
@@ -224,4 +225,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = ({
 	setFilter
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(Nav)));
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(withStyles(styles)(withRouter(Nav))));

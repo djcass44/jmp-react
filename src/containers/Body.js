@@ -8,6 +8,11 @@ import AdminPanel from "../components/AdminPanel";
 import PropTypes from "prop-types";
 import NavLoading from "../components/NavLoading";
 import {withRouter} from "react-router-dom";
+import {withStyles} from "@material-ui/core";
+
+const styles = theme => ({
+
+});
 
 class Body extends React.Component {
 	constructor(props) {
@@ -63,4 +68,4 @@ const mapDispatchToProps = ({
 	oauthRequest,
 	oauthUnready,
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(withRouter(Body)));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(withRouter(Body))));
