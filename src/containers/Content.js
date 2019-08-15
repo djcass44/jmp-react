@@ -34,7 +34,7 @@ import Help from "./content/Help";
 import {JUMP_LOAD} from "../actions/Jumps";
 import Callback from "./content/Callback";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
 	container: {
 		flex: 1,
 		justifyContent: 'center',
@@ -69,13 +69,15 @@ export const Content = props => {
 			<Route component={NotFound} key={"notfound"}/>
 		</Switch>
 	</Grid>);
-	return (<div className={classes.container}>
-		<Grid container spacing={5} className={classes.centred}>
-			<Grid item sm={3}/>
-			{content}
-			<Grid item sm={3}/>
-		</Grid>
-	</div>);
+	return (
+		<div className={classes.container}>
+			<Grid container spacing={5} className={classes.centred}>
+				<Grid item sm={3}/>
+				{content}
+				<Grid item sm={3}/>
+			</Grid>
+		</div>
+	);
 };
 const mapStateToProps = state => ({
 	error: state.errors[OAUTH_REFRESH] || state.errors[JUMP_LOAD],

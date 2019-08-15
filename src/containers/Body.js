@@ -11,7 +11,26 @@ import {withRouter} from "react-router-dom";
 import {withStyles} from "@material-ui/core";
 
 const styles = theme => ({
-
+	main: {
+		display: 'flex',
+		flexDirection: 'column'
+	},
+	root: {
+		flexGrow: 1,
+		flex: '1 0 100%'
+	},
+	hero: {
+		height: '100vh',
+		// minHeight: '100vh',
+		flex: '0 0 auto',
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'top',
+		backgroundColor: theme.palette.background.default
+	},
+	hero2: {
+		width: '100%'
+	}
 });
 
 class Body extends React.Component {
@@ -39,17 +58,24 @@ class Body extends React.Component {
 	}
 
 	render() {
+		const {classes} = this.props;
 		return (
-			<div>
-				{this.state.loading === false ?
-					<div>
-						<Nav/>
-						<Content/>
-						<AdminPanel/>
+			<div className={classes.main}>
+				<div className={classes.root}>
+					<div className={classes.hero}>
+						{this.state.loading === false ?
+							<div className={classes.hero2}>
+								<Nav/>
+								<Content/>
+								<AdminPanel/>
+							</div>
+							:
+							<div className={classes.hero2}>
+								<NavLoading/>
+							</div>
+						}
 					</div>
-					:
-					<NavLoading/>
-				}
+				</div>
 			</div>
 		);
 	}

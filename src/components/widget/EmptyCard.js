@@ -21,21 +21,25 @@ import ListItemText from "@material-ui/core/es/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import {SentimentDissatisfied} from "@material-ui/icons";
 import {makeStyles, withTheme} from "@material-ui/core";
+import getAvatarScheme from "../../style/getAvatarScheme";
 
 const useStyles = makeStyles(theme => ({
 	title: {fontFamily: "Manrope", fontWeight: 500},
 	avatar: {
-		backgroundColor: theme.palette.error.light,
-		color: theme.palette.error.dark,
 		marginRight: 12
 	}
 }));
 
-export const EmptyCard = () => {
+export const EmptyCard = ({theme}) => {
 	const classes = useStyles();
+	const scheme = getAvatarScheme(theme, 3);
+	const avatar = {
+		backgroundColor: scheme[0],
+		color: scheme[1]
+	};
 	return (
 		<ListItem key={"null"} component={'li'}>
-			<Avatar className={classes.avatar}>
+			<Avatar className={classes.avatar} style={avatar}>
 				<SentimentDissatisfied/>
 			</Avatar>
 			<ListItemText className={classes.title} primary={"Nothing could be found."}/>

@@ -28,7 +28,6 @@ import Typography from "@material-ui/core/Typography";
 const useStyles = makeStyles(theme => ({
 	name: {fontFamily: "Manrope", fontWeight: 500, color: theme.palette.secondary.main},
 	avatar: {
-		backgroundColor: '#FAFAFA',
 		width: 56,
 		height: 56,
 		borderRadius: 100,
@@ -47,7 +46,9 @@ export const Identity = props => {
 	return (
 		<div>
 			<Center>
-				<Avatar className={classes.avatar} component={Paper}><Icon path={mdiAccountGroupOutline} size={2} color={theme.palette.primary.main}/></Avatar>
+				<Avatar className={classes.avatar} style={{backgroundColor: theme.palette.background.paper}} component={Paper}>
+					<Icon path={mdiAccountGroupOutline} size={2} color={theme.palette.primary.main}/>
+				</Avatar>
 			</Center>
 			<Center>
 				<Typography variant={"h4"} className={classes.name}>Users &amp; Groups</Typography>

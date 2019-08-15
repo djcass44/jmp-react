@@ -14,7 +14,6 @@ import PropTypes from "prop-types";
 const useStyles = makeStyles(theme => ({
 	name: {fontFamily: "Manrope", fontWeight: 500, color: theme.palette.secondary.main},
 	avatar: {
-		backgroundColor: '#FAFAFA',
 		width: 56,
 		height: 56,
 		borderRadius: 100,
@@ -33,7 +32,7 @@ export const Settings = props => {
 	return (
 		<div>
 			<Center>
-				<Avatar className={classes.avatar} component={Paper}>
+				<Avatar className={classes.avatar} style={{backgroundColor: theme.palette.background.paper}} component={Paper}>
 					<Icon path={mdiSettingsOutline} size={2} color={theme.palette.primary.main}/>
 				</Avatar>
 			</Center>

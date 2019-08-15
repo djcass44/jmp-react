@@ -39,6 +39,7 @@ import AddIcon from "@material-ui/icons/Add";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
 import {setGroupNew} from "../../../actions/Modal";
 import {setOffset, setSort} from "../../../actions/Generic";
+import getAvatarScheme from "../../../style/getAvatarScheme";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -80,6 +81,9 @@ const Groups = props => {
 	};
 	const {theme} = props;
 	const classes = useStyles();
+	// get the colour scheme
+	const scheme = getAvatarScheme(theme, 2);
+
 	let listItems = [];
 	// Tell the loop what our pagination limits are
 	let max = (props.offset + pageSize);
@@ -87,15 +91,11 @@ const Groups = props => {
 	let sortedGroups = sortItems(props.groups, props.sort);
 	sortedGroups.filter(filterGroup).forEach((i, index) => {
 		if(index < props.offset || index > max) return;
-		let avatar = {
-			bg: theme.palette.info.light,
-			fg: theme.palette.info.dark
-		};
 		let secondary = <span>{capitalise(i.from)}</span>;
 		listItems.push((
 			<ListItem button disableRipple key={index} component={'li'}>
-				<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
-					<Icon path={mdiAccountGroupOutline} size={1} color={avatar.fg}/>
+				<Avatar component={'div'} style={{backgroundColor: scheme[0], color: scheme[1], marginRight: 12}}>
+					<Icon path={mdiAccountGroupOutline} size={1} color={scheme[1]}/>
 				</Avatar>
 				<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={secondary}/>
 			</ListItem>

@@ -41,6 +41,8 @@ import {mdiDotsVertical} from "@mdi/js";
 import MenuItem from "@material-ui/core/MenuItem";
 import {Badge} from "evergreen-ui";
 import GroupModDialog from "../../modal/GroupModDialog";
+import getAvatarScheme from "../../../style/getAvatarScheme";
+import getIconColour from "../../../style/getIconColour";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -133,6 +135,9 @@ class Users extends React.Component {
 	}
 	render() {
 		const {classes, theme} = this.props;
+		// get the colour scheme
+		const scheme = getAvatarScheme(theme, 0);
+		const schemeAdmin = getAvatarScheme(theme, 3);
 		let listItems = [];
 		// Tell the loop what our pagination limits are
 		let max = (this.state.offset + pageSize);
@@ -143,8 +148,8 @@ class Users extends React.Component {
 			const isAdmin = i.role === 'ADMIN';
 			let avatar = {
 				icon: isAdmin ? <AdminCircleIcon/> : <AccountCircleIcon/>,
-				bg: isAdmin ? theme.palette.error.light : theme.palette.primary.light,
-				fg: isAdmin ? theme.palette.error.dark : theme.palette.primary.dark,
+				bg: isAdmin ? schemeAdmin[0] : scheme[0],
+				fg: isAdmin ? schemeAdmin[1] : scheme[1],
 				banner: isAdmin ? <Badge color="red">Admin</Badge> : ""
 			};
 			let secondary = <span>{Users.capitalise(i.from)}&nbsp;{avatar.banner}</span>;
@@ -156,7 +161,7 @@ class Users extends React.Component {
 					<ListItemText primary={<span className={classes.title}>{i.username}</span>} secondary={secondary}/>
 					{this.state.isAdmin === true ? <ListItemSecondaryAction>
 						<IconButton centerRipple={false} onClick={(e) => this.toggleExpansion(e, i.id)}>
-							<Icon path={mdiDotsVertical} size={1}/>
+							<Icon path={mdiDotsVertical} size={1} color={getIconColour(theme)}/>
 							<Menu id={"user-menu"} open={i.expanded === true} anchorEl={i.anchorEl} anchorOrigin={{horizontal: "left", vertical: "top"}} onExit={() => {i.expanded = false}}>
 								{i.role !== 'ADMIN' ? <MenuItem button={true} component={'li'} onClick={(e) => {this.handlePatchUser(e, i, 'ADMIN')}}>Promote to admin</MenuItem> : ""}
 								{i.role === 'ADMIN' && i.username !== "admin" ?

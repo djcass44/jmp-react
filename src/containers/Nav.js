@@ -201,15 +201,24 @@ class Nav extends React.Component {
 				<Divider/>
 				{window.location.pathname !== "/" ? <MenuItem component={Link} onClick={this.handleMenuClose} to={"/"} button={true}><HomeIcon/>Home</MenuItem> : ""}
 				{this.state.isLoggedIn === true ?
-					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/identity"} button={true}><Icon path={mdiAccountGroupOutline} size={1}/>Users &amp; Groups</MenuItem>
+					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/identity"} button={true}>
+						<Icon path={mdiAccountGroupOutline} size={1} color={getIconColour(theme)}/>
+						Users &amp; Groups
+					</MenuItem>
 					:
 					""
 				}
 				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/settings"} button={true}><SettingsIcon/>Settings</MenuItem>
 				{this.state.isLoggedIn === false ?
-					<MenuItem component={Link} onClick={this.handleMenuClose} to={loginUrl} button={true}><Icon path={mdiLogin} size={1}/>Login</MenuItem>
+					<MenuItem component={Link} onClick={this.handleMenuClose} to={loginUrl} button={true}>
+						<Icon path={mdiLogin} size={1} color={getIconColour(theme)}/>
+						Login
+					</MenuItem>
 					:
-					<MenuItem component={Link} onClick={this.handleMenuClose} to={'/logout'} button={true}><Icon path={mdiLogout} size={1}/>Logout</MenuItem>
+					<MenuItem component={Link} onClick={this.handleMenuClose} to={'/logout'} button={true}>
+						<Icon path={mdiLogout} size={1} color={getIconColour(theme)}/>
+						Logout
+					</MenuItem>
 				}
 			</Menu>
 		</div>
