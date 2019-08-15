@@ -41,11 +41,11 @@ const Snackbar = (props) => {
 			// Display snackbar using notistack
 			props.enqueueSnackbar(message, {
 				...options,
-				onClose: (event, reason, key) => {
+				onClose: (event, reason, k) => {
 					if (options.onClose)
-						options.onClose(event, reason, key);
+						options.onClose(event, reason, k);
 					// Dispatch action to remove snackbar from redux store
-					props.removeSnackbar(key);
+					props.removeSnackbar(k);
 				}
 			});
 			// Keep track of snackbars that we've displayed

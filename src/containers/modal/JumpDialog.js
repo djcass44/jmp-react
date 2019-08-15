@@ -51,9 +51,8 @@ const JumpDialog = ({open, headers, ...props}) => {
 	const [groupId, setGroupId] = useState('');
 
 	useEffect(() => {
-		props.getUserGroups(headers, props.uid);
-	}, []);
-	useEffect(() => {
+		if(open === true && props.isLoggedIn === true)
+			props.getUserGroups(headers, props.uid);
 		setName(initialName);
 		setUrl(initialUrl);
 	}, [open]);
@@ -135,6 +134,7 @@ JumpDialog.propTypes = {
 };
 const mapStateToProps = state => ({
 	isAdmin: state.auth.isAdmin,
+	isLoggedIn: state.auth.isLoggedIn,
 	uid: state.auth.userProfile && state.auth.userProfile.id,
 	userGroups: state.groups.userGroups,
 	loadingGroups: state.loading[GET_USER_GROUPS],

@@ -37,7 +37,7 @@ export const App = props => {
 	return (
 		<div className={"App"}>
 			<MuiThemeProvider theme={Theme}>
-				<SnackbarProvider maxSnack={3}>
+				<SnackbarProvider maxSnack={3} autoHideDuration={3500} preventDuplicate>
 					<Helmet><meta name={"theme-color"} content={theme.palette.primary.main}/></Helmet>
 					<Body/>
 					<Snackbar/>
