@@ -17,6 +17,14 @@
 
 import {createMuiTheme} from "@material-ui/core";
 import {LS_DARK} from "../constants";
+import prefersColorScheme from "prefers-color-scheme";
+
+// get the theme that the browser/os wants (dark or light)
+const wantedTheme = prefersColorScheme();
+console.log(`os wants: ${wantedTheme}`);
+const themeType = localStorage.getItem(LS_DARK) === 'true' ? 'dark' : wantedTheme;
+// inform the css about which theme we're using
+document.documentElement.setAttribute("data-theme", themeType);
 
 export default createMuiTheme({
 	palette: {
@@ -50,7 +58,7 @@ export default createMuiTheme({
 			light: '#E3FCEF',
 			dark: '#00875A'
 		},
-		type: localStorage.getItem(LS_DARK) === 'true' ? 'dark' : 'light'
+		type: themeType
 	},
 	overrides: {
 		MuiTooltip: {
