@@ -32,11 +32,18 @@ import {mdiChevronDown, mdiChevronUp} from "@mdi/js";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import BrowserGuide from "./help/BrowserGuide";
-import getAvatarScheme from "../../style/getAvatarScheme";
+import getHelpCardColour from "../../selectors/getHelpCardColour";
 
 const useStyles = makeStyles(theme => ({
-	title: {fontFamily: "Manrope", fontWeight: 500},
-	name: {fontFamily: "Manrope", fontWeight: 500, color: theme.palette.secondary.main},
+	title: {
+		fontFamily: "Manrope",
+		fontWeight: 500
+	},
+	name: {
+		fontFamily: "Manrope",
+		fontWeight: 500,
+		color: theme.palette.primary.main
+	},
 	avatar: {
 		width: 56,
 		height: 56,
@@ -47,6 +54,12 @@ const useStyles = makeStyles(theme => ({
 	content: {
 		padding: 16,
 		borderRadius: 12,
+	},
+	item: {
+		borderRadius: 12
+	},
+	itemAction: {
+		pointerEvents: 'none'
 	}
 }));
 
@@ -113,17 +126,18 @@ const Help = props => {
 	const {theme} = props;
 	// set the appropriate colours for the card-content
 	const card = {
-		backgroundColor: getAvatarScheme(theme, 0)[0],
+		backgroundColor: getHelpCardColour(theme),
 	};
 	card.color = theme.palette.getContrastText(card.backgroundColor);
+	const textColour = theme.palette.getContrastText(theme.palette.background.default);
 	const classes = useStyles();
 	const items = [];
 	qna.forEach((i, index) => {
 		items.push(
 			<div key={index}>
-				<ListItem button disableRipple value={i.id} onClick={() => toggleExpansion(index)} component={'li'}>
-					<ListItemText primary={<span className={classes.title}>{i.q}</span>}/>
-					<ListItemSecondaryAction>
+				<ListItem button className={classes.item} value={i.id} onClick={() => toggleExpansion(index)} component={'li'}>
+					<ListItemText primary={<span className={classes.title} style={{color: textColour}}>{i.q}</span>}/>
+					<ListItemSecondaryAction className={classes.itemAction}>
 						<Icon path={index === expand ? mdiChevronUp : mdiChevronDown} size={1} color={theme.palette.primary.main}/>
 					</ListItemSecondaryAction>
 				</ListItem>
@@ -136,7 +150,7 @@ const Help = props => {
 	return (
 		<div>
 			<Center>
-				<Avatar className={classes.avatar} style={{backgroundColor: theme.palette.background.paper}} component={Paper} src={`${process.env.PUBLIC_URL}/jmp.png`} alt={process.env.REACT_APP_APP_NAME}/>
+				<Avatar className={classes.avatar} style={{backgroundColor: theme.palette.background.default}} component={Paper} src={`${process.env.PUBLIC_URL}/jmp.png`} alt={process.env.REACT_APP_APP_NAME}/>
 			</Center>
 			<Center>
 				<Typography variant={"h4"} className={classes.name}>How can we help you?</Typography>

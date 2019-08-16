@@ -40,20 +40,36 @@ import getIconColour from "../style/getIconColour";
 const styles = theme => ({
 	root: {width: '100%'},
 	grow: {flexGrow: 1},
+	brand: {
+		paddingRight: 8,
+		[theme.breakpoints.up('sm')]: {
+			paddingRight: 0
+		},
+		fontFamily: "Manrope",
+		pointerEvents: 'none'
+	},
 	title: {
 		display: 'none',
 		[theme.breakpoints.up('sm')]: {
 			display: 'block'
 		},
-		fontFamily: "Manrope"
+		fontFamily: "Manrope",
+		pointerEvents: 'none'
 	},
 	search: {
 		position: 'relative',
 		borderRadius: theme.shape.borderRadius,
 		backgroundColor: fade(theme.palette.primary.light, 0.15),
 		'&:hover': {
-			backgroundColor: fade(theme.palette.primary.main, 0.25),
+			backgroundColor: fade(theme.palette.primary.light, 0.25),
+			transition: 'background-color 250ms linear',
+			webkitTransition: 'background-color 250ms linear',
+			msTransition: 'background-color 250ms linear',
 		},
+		transition: 'background-color 150ms linear',
+		webkitTransition: 'background-color 150ms linear',
+		msTransition: 'background-color 150ms linear',
+
 		marginRight: theme.spacing(2),
 		marginLeft: 0,
 		width: '100%',
@@ -164,7 +180,7 @@ class Nav extends React.Component {
 			<AppBar position={"static"} color={"default"}>
 				<Toolbar>
 					{window.location.pathname !== "/" ? <BackButton label={""} to={"/"}/> : ""}
-					<Typography className={classes.title} variant={"h6"} color={"inherit"}>
+					<Typography className={classes.brand} variant={"h6"} color={"inherit"}>
 						{process.env.REACT_APP_APP_NAME}
 					</Typography>
 					<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"inherit"}>
@@ -183,8 +199,8 @@ class Nav extends React.Component {
 					<div className={classes.grow}/>
 					<div className={classes.sectionDesktop}>
 						<IconButton component={Link} centerRipple={false} color={"inherit"} to={"/help"}><Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/></IconButton>
-						<Avatar name={name2} src={this.state.userProfile['avatarUrl']} size={40} style={{marginTop: 4}} onClick={this.handleProfileMenuOpen} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
 					</div>
+					<Avatar name={name2} src={this.state.userProfile['avatarUrl']} size={40} style={{marginTop: 4}} onClick={this.handleProfileMenuOpen} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
 				</Toolbar>
 			</AppBar>
 			<Menu
