@@ -15,20 +15,16 @@
  *
  */
 
-import React from "react";
+import React, {useEffect} from "react";
 import Typography from "@material-ui/core/es/Typography/Typography";
 import Center from "react-center";
-import {withStyles, withTheme} from "@material-ui/core";
+import {makeStyles, withTheme} from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {connect} from "react-redux";
 import {OAUTH2_CALLBACK, oauth2Callback} from "../../actions/Oauth";
+import PropTypes from "prop-types";
 
-const styles = theme => ({
-	title: {
-		fontSize: 148,
-		fontWeight: 200,
-		color: "#454545"
-	},
+const useStyles = makeStyles(theme => ({
 	subtitle: {
 		textAlign: 'center',
 		fontFamily: "Manrope",
@@ -40,66 +36,67 @@ const styles = theme => ({
 		justifyContent: 'center',
 		alignItems: 'center',
 		height: '80vh'
+	},
+	inner: {
+		justifyContent: 'center',
+		alignItems: 'center'
 	}
-});
+}));
 
-class Callback extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			headers: props.headers
-		};
-	}
-
-
-	componentDidMount() {
+const Callback = ({headers, loading, error, oauth2Callback, ...props}) => {
+	useEffect(() => {
 		window.document.title = `Callback - ${process.env.REACT_APP_APP_NAME}`;
 		// Get the list of parameters
-		const params = new URLSearchParams(this.props.location.search);
+		const params = new URLSearchParams(props.location.search);
 		console.log(`params: ${params}`);
 		// Create the callback request to the backend
-		const provider = this.props.location.pathname.split("/callback-")[1];
+		const provider = props.location.pathname.split("/callback-")[1];
 		console.log(`Using provider: ${provider}`);
-		const headers = this.state.headers;
-		headers['X-Auth-Source'] = provider;
-		this.props.oauth2Callback(params, headers);
-	}
 
-	componentWillReceiveProps(nextProps, nextContext) {
-		if(nextProps.loading === false && nextProps.error == null) {
-			this.props.history.push('/');
-		}
-		this.setState({...nextProps});
-	}
+		const sentHeaders = headers;
+		sentHeaders['X-Auth-Source'] = provider;
+		oauth2Callback(params, sentHeaders);
+	}, []);
 
-	render() {
-		const {classes} = this.props;
+	useEffect(() => {
+		if(loading === false && error == null)
+			props.history.push('/');
+	}, [loading, error]);
 
-		console.log(this.state.error);
-		return (
-			<div className={classes.container}>
-				<div style={{justifyContent: 'center', alignItems: 'center'}}>
-					{this.state.error == null ?
-						<>
-							<Center>
-								<CircularProgress style={{margin: 24}}/>
-							</Center>
-							<Center>
-								<Typography className={classes.subtitle} variant={"subtitle1"}>We're just doing some setup...</Typography>
-							</Center>
-						</>
-						:
-						<>
-							<Center>
-								<Typography className={classes.subtitle} variant={"subtitle1"}>{this.state.error.toString()}</Typography>
-							</Center>
-						</>
-					}
-				</div>
+	const classes = useStyles();
+	return (
+		<div className={classes.container}>
+			<div className={classes.inner}>
+				{error == null ?
+					<>
+						<Center>
+							<CircularProgress style={{margin: 24}}/>
+						</Center>
+						<Center>
+							<Typography className={classes.subtitle} variant={"subtitle1"}>We're just doing some setup...</Typography>
+						</Center>
+					</>
+					:
+					<>
+						<Center>
+							<Typography className={classes.subtitle} variant={"subtitle1"}>{error.toString()}</Typography>
+						</Center>
+					</>
+				}
 			</div>
-		);
-	}
-}
+		</div>
+	);
+};
+Callback.propTypes = {
+	headers: PropTypes.object.isRequired,
+	loading: PropTypes.bool,
+	error: PropTypes.object,
+	oauth2Callback: PropTypes.func.isRequired
+};
+Callback.defaultProps = {
+	loading: false,
+	error: null
+};
 const mapStateToProps = state => ({
 	headers: state.auth.headers,
 	loading: state.loading[OAUTH2_CALLBACK],
@@ -109,4 +106,7 @@ const mapDispatchToProps = ({
 	oauth2Callback
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Callback)));
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(withTheme(Callback));
