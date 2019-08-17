@@ -15,62 +15,59 @@
  *
  */
 
-import React from "react";
+import React, {useEffect} from "react";
 import Center from "react-center";
 import {oauthLogout} from "../../actions/Auth";
 import {connect} from "react-redux";
-import {Link, withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
-import {withTheme} from "@material-ui/core";
+import {makeStyles, Typography} from "@material-ui/core";
 import {oauth2Logout} from "../../actions/Oauth";
+import {APP_NAME} from "../../constants";
 
-class Logout extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			isLoggedIn: props.isLoggedIn,
-			headers: props.headers,
-			request: props.request,
-			source: props.source
-		};
+const useStyles = makeStyles(theme => ({
+	title: {
+		fontSize: 148,
+		fontWeight: 200,
+		color: theme.palette.text.primary
 	}
+}));
 
-	componentDidMount() {
-		window.document.title = `Logout - ${process.env.REACT_APP_APP_NAME}`;
+const Logout = ({isLoggedIn, headers, request, source, ...props}) => {
+	useEffect(() => {
+		window.document.title = `Logout - ${APP_NAME}`;
 		// Log the user out
-		this.props.oauthLogout(this.state.headers);
-		this.props.oauth2Logout(this.state.request, this.state.source, this.state.headers);
-	}
+		props.oauthLogout(headers);
+		props.oauth2Logout(request, source, headers);
+	}, []);
 
-	componentWillReceiveProps(nextProps, nextContext) {
-		this.setState({...nextProps});
-		if(nextProps.isLoggedIn === false) {
-			this.props.history.push('/');
-		}
-	}
+	useEffect(() => {
+		if(isLoggedIn === false)
+			props.history.push("/");
+	}, [isLoggedIn]);
 
-	render() {
-		const loggedIn = (
-			<div>
-				<h1 className={"m2-title"}>Ensuring that you're logged out...</h1>
-				<Center><CircularProgress/></Center>
-				<Center style={{paddingTop: 16}}>If you're not redirected in a few seconds, click below</Center>
-				<Center>
-					<IconButton component={Link} to={"/"} color={"primary"} aria-label={"Return to home"}>
-						<HomeIcon/>
-					</IconButton>
-				</Center>
-			</div>
-		);
-		return (
+	const classes = useStyles();
+
+	const loggedIn = (
+		<>
+			<Typography variant={"h1"} className={classes.title}>Ensuring that you're logged out...</Typography>
+			<Center><CircularProgress/></Center>
+			<Center style={{paddingTop: 16}}>If you're not redirected in a few seconds, click below</Center>
 			<Center>
-				{loggedIn}
+				<IconButton component={Link} to={"/"} color={"primary"} centerRipple={false} aria-label={"Return to home"}>
+					<HomeIcon/>
+				</IconButton>
 			</Center>
-		);
-	}
-}
+		</>
+	);
+	return (
+		<Center>
+			{loggedIn}
+		</Center>
+	);
+};
 const mapStateToProps = state => ({
 	isLoggedIn: state.auth.isLoggedIn,
 	headers: state.auth.headers,
@@ -81,4 +78,7 @@ const mapDispatchToProps = ({
 	oauthLogout,
 	oauth2Logout
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(withRouter(Logout)));
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Logout);

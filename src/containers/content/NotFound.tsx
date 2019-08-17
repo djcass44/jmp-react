@@ -16,24 +16,27 @@
  */
 
 import React, {useEffect} from "react";
-import Typography from "@material-ui/core/es/Typography/Typography";
+import {Typography, makeStyles} from "@material-ui/core";
+import {useTheme} from "@material-ui/core/styles";
+// @ts-ignore
 import Center from "react-center";
-import {makeStyles, withTheme} from "@material-ui/core";
-import IconButton from "@material-ui/core/es/IconButton/IconButton";
+import {IconButton} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHomeOutline} from "@mdi/js";
+import {APP_NAME} from "../../constants";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
 	title: {
 		fontSize: 148,
 		fontWeight: 200,
-		color: "#454545"
+		color: theme.palette.text.primary
 	},
 	subtitle: {
 		textAlign: 'center',
 		fontFamily: "Manrope",
-		fontWeight: 500
+		fontWeight: 500,
+		color: theme.palette.text.secondary
 	},
 	container: {
 		flex: 1,
@@ -43,23 +46,23 @@ const useStyles = makeStyles(() => ({
 	}
 }));
 
-export const NotFound = props => {
+const NotFound = () => {
 	useEffect(() => {
-		window.document.title = `404 - ${process.env.REACT_APP_APP_NAME}`;
+		window.document.title = `404 - ${APP_NAME}`;
 	}, []);
 
 	const classes = useStyles();
-	const {theme} = props;
+	const theme = useTheme();
 	return (
 		<div className={classes.container}>
 			<div style={{justifyContent: 'center', alignItems: 'center'}}>
 				<Center><Typography className={classes.title} variant={"h1"}>404</Typography></Center>
 				<Center><Typography className={classes.subtitle} variant={"subtitle1"}>The page you're looking for doesn't exist or the server refused to disclose it.</Typography></Center>
 				<Center>
-					<IconButton color={"secondary"} href={"javascript:window.history.back()"} aria-label={"Go back"}>
+					<IconButton color={"secondary"} href={"javascript:window.history.back()"} centerRipple={false} aria-label={"Go back"}>
 						<Icon path={mdiArrowLeft} size={1} color={theme.palette.secondary.main}/>
 					</IconButton>
-					<IconButton component={Link} to={"/"} color={"primary"} aria-label={"Return to home"}>
+					<IconButton component={Link} to={"/"} color={"primary"} centerRipple={false} aria-label={"Return to home"}>
 						<Icon path={mdiHomeOutline} size={1} color={theme.palette.primary.main}/>
 					</IconButton>
 				</Center>
@@ -67,4 +70,4 @@ export const NotFound = props => {
 		</div>
 	);
 };
-export default(withTheme(NotFound));
+export default NotFound;
