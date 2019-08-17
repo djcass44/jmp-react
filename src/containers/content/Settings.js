@@ -22,13 +22,12 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-export const Settings = props => {
+export const Settings = ({isAdmin, theme}) => {
 	useEffect(() => {
 		window.document.title = `Settings - ${process.env.REACT_APP_APP_NAME}`;
 	}, []);
 
 	const classes = useStyles();
-	const {theme} = props;
 	return (
 		<div>
 			<Center>
@@ -40,7 +39,7 @@ export const Settings = props => {
 				<Typography variant={"h4"} className={classes.name}>Settings</Typography>
 			</Center>
 			<General/>
-			{props.isAdmin === true ?
+			{isAdmin === true ?
 				<div>
 					<Auth/>
 					<Info/>
@@ -54,7 +53,9 @@ export const Settings = props => {
 Settings.propTypes = {
 	isAdmin: PropTypes.bool
 };
-
+Settings.defaultProps = {
+	isAdmin: false
+};
 const mapStateToProps = state => ({
 	isAdmin: state.auth.isAdmin
 });

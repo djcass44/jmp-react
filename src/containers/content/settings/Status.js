@@ -15,12 +15,12 @@ const Status = ({loading, headers, status, getInfoHealth, showReload}) => {
 
 	return (
 		<>
-			<>
+			<div>
 				<StatusIcon active={status.http} title={`JMP Core`} icon={mdiHexagon} />
 				<StatusIcon active={status['database']} title={`Database`} icon={mdiDatabase} />
 				<StatusIcon active={status['identityProvider']} title={`Identity Provider`} icon={mdiAccountNetworkOutline} />
 				<StatusIcon active={status['imageApi']} title={`Image API`} icon={mdiImageSearchOutline} />
-			</>
+			</div>
 			{showReload === true ? <Button disabled={loading === true} color="primary" onClick={() => handleReload()}>Reload</Button> : ""}
 		</>
 	);

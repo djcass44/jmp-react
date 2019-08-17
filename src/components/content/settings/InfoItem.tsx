@@ -1,4 +1,4 @@
-import React from "react";
+import React, {ReactNode} from "react";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import Typography from "@material-ui/core/Typography";
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export const InfoItem = ({title, error, open, icon, content}: {title: string, error: object, open: boolean, icon: string, content: object}) => {
+export const InfoItem = ({title, error, open, icon, content}: {title: ReactNode, error: object | null, open: boolean, icon: ReactNode, content: object}) => {
 	const classes = useStyles();
 	return (
 		<ExpansionPanel defaultExpanded={open}>
