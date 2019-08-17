@@ -28,11 +28,13 @@ import {getVersion} from "../../actions/Generic";
 import SocialButton from "../../components/widget/SocialButton";
 import {mdiGithubCircle, mdiGoogle} from "@mdi/js";
 import {oauth2Discover} from "../../actions/Oauth";
+import {APP_NAME} from "../../constants";
 
 const styles = theme => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
+		color: theme.palette.text.secondary
 	},
 	banner: {
 		fontFamily: "Manrope",
@@ -129,8 +131,8 @@ class Login extends React.Component {
 					:
 					<div>
 						<Grid container spacing={4} alignContent={"center"} justify={"center"}>
-							<Grid item md={2} sm={false}/>
-							<Grid item md={8} sm={12}>
+							<Grid item lg={2} md={false}/>
+							<Grid item lg={8} md={12}>
 								<CardContent style={{margin: 12}}>
 									<Grid container spacing={4} alignContent={"center"} justify={"center"}>
 										<Grid item xs={12}>
@@ -153,7 +155,7 @@ class Login extends React.Component {
 											</Card>
 										</Grid>
 									</Grid>
-									<Center className={classes.title} style={{padding: 8}}>{process.env.REACT_APP_APP_NAME}&nbsp;{this.state.version}</Center>
+									<Center className={classes.title} style={{padding: 8}}>{APP_NAME}&nbsp;{this.state.version}</Center>
 									{errorMessage}
 									<div>
 										{this.state.providers['github'] === true ? <SocialButton id={"github"} name={"GitHub"} colour={"#171516"} icon={mdiGithubCircle}/> : ""}
@@ -161,7 +163,7 @@ class Login extends React.Component {
 									</div>
 								</CardContent>
 							</Grid>
-							<Grid item md={2} sm={false}/>
+							<Grid item lg={2} md={false}/>
 						</Grid>
 					</div>
 				}

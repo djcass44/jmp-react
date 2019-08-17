@@ -16,24 +16,28 @@
  */
 
 import * as React from "react";
-import {Button, makeStyles} from "@material-ui/core";
+import {Button, makeStyles, Theme} from "@material-ui/core";
 import Icon from "@mdi/react";
 import {BASE_URL} from "../../constants";
-import PropTypes from "prop-types";
+import {useTheme} from "@material-ui/styles";
 
 const useStyles = makeStyles(() => ({
-	title: {fontFamily: "Manrope", fontWeight: 500},
+	button: {
+		fontFamily: "Manrope",
+		fontWeight: 500,
+		margin: 4
+	}
 }));
 
-export const SocialButton = props => {
+const SocialButton = ({id, colour, name, icon}: {id: string, colour: string, name: string, icon: string}) => {
+	const {palette} = useTheme();
 	const classes = useStyles();
-	return (<Button href={`${BASE_URL}/api/v2/oauth2/authorise?provider=${props.id}`} className={classes.title} style={{color: props.colour, margin: 4}}>
-		<Icon path={props.icon} size={1} color={props.colour}/>{props.name}
-	</Button>);
-};
-SocialButton.propTypes = {
-	icon: PropTypes.string.isRequired,
-	colour: PropTypes.string.isRequired,
-	name: PropTypes.string.isRequired
+	const colourOverride = palette.type === "dark" ? {backgroundColor: palette.secondary.main} : {};
+	return (
+		<Button href={`${BASE_URL}/api/v2/oauth2/authorise?provider=${id}`} className={classes.button} style={colourOverride}>
+			<Icon path={icon} size={1} color={colour}/>
+			{name}
+		</Button>
+	);
 };
 export default SocialButton;
