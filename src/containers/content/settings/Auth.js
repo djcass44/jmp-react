@@ -17,47 +17,55 @@
 
 import React, {useEffect} from "react";
 import {getInfoAuth} from "../../../actions/Info";
-import {ListSubheader, withStyles, withTheme} from "@material-ui/core";
+import {ListSubheader, makeStyles} from "@material-ui/core";
 import {connect} from "react-redux";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import Icon from "@mdi/react";
 import {mdiFolderAccountOutline} from "@mdi/js";
+import {useTheme} from "@material-ui/core/styles";
+import PropTypes from "prop-types";
 
-const styles = theme => ({
-	title: {fontFamily: "Manrope", fontWeight: 500},
+const useStyles = makeStyles(theme => ({
+	title: {
+		fontFamily: "Manrope", fontWeight: 500
+	},
 	content: {
 		fontSize: 14,
 		flex: 1
 	},
-	grow: {flexGrow: 1},
 	statusOK: {
 		color: theme.palette.success.main
 	},
 	statusFail: {
 		color: theme.palette.error.main
 	},
-});
+}));
 
-const Auth = props => {
+const Auth = ({auth, headers, ...props}) => {
 	useEffect(() => {
-		props.getInfoAuth(props.headers);
+		props.getInfoAuth(headers);
 	}, []);
 
-	const {classes, theme} = props;
-	const auth = (
+	const classes = useStyles();
+	const theme = useTheme();
+	const content = (
 		<div>
-			<p>Connected... {props.auth['connected'] === true ? <span className={classes.statusOK}>Yes</span> : <span className={classes.statusFail}>No</span>}</p>
-			<p>{props.auth['name']} provides {props.auth['users']} users and {props.auth['groups']} groups.</p>
+			<p>Connected... {auth['connected'] === true ? <span className={classes.statusOK}>Yes</span> : <span className={classes.statusFail}>No</span>}</p>
+			<p>{auth['name']} provides {auth['users']} users and {auth['groups']} groups.</p>
 		</div>
 	);
 	return (
 		<div>
 			<ListSubheader className={classes.title} inset component={"div"}>Authentication</ListSubheader>
-			<InfoItem title={<span>Identity Provider (read-only)</span>} content={auth} icon={
+			<InfoItem title={<span>Identity Provider</span>} content={content} icon={
 				<Icon style={{paddingRight: 8}} path={mdiFolderAccountOutline} size={1} color={theme.palette.success.dark}/>
 			}/>
 		</div>
 	);
+};
+Auth.propTypes = {
+	auth: PropTypes.object.isRequired,
+	headers: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
 	auth: state.info.auth,
@@ -66,4 +74,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = ({
 	getInfoAuth
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Auth)));
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Auth);

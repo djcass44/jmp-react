@@ -1,117 +1,80 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import {Typography, withStyles, withTheme} from "@material-ui/core";
+import React, {useEffect, useState} from 'react';
+import {makeStyles, Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import {connect} from "react-redux";
 import {PATCH_JUMP, patchJump} from "../../actions/Jumps";
+import {APP_NOUN} from "../../constants";
 
-const styles = theme => ({
-	title: {fontFamily: "Manrope", fontWeight: 500},
-});
+const useStyles = makeStyles(() => ({
+	title: {
+		fontFamily: "Manrope",
+		fontWeight: 500,
+		fontSize: 20
+	},
+	button: {
+		fontFamily: "Manrope",
+		fontWeight: 'bold'
+	},
+}));
 
-class JumpEditDialog extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			name: {
-				value: '',
-				error: '',
-				regex: new RegExp('^[a-zA-Z0-9_.-]*$')
-			},
-			location: {
-				value: '',
-				error: '',
-				regex: new RegExp('https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)')
-			},
-			alias: {
-				value: '',
-				error: '',
-				regex: new RegExp('(^([0-9a-zA-Z]+,)*[0-9a-zA-Z]+$|^$)')
-			},
-			isAdmin: props.isAdmin,
-			headers: props.headers,
-			submitted: false,
-			exiting: false
-		};
-		this.handleDialogOpen = this.handleDialogOpen.bind(this);
-	}
-	componentWillReceiveProps(nextProps, nextContext) {
-		this.setState({...nextProps});
-		if(nextProps.loadingSubmit === false && this.state.submitted === true && nextProps.submitError == null && this.state.exiting === false) {
-			this.setState({exiting: true});
-			this.props.onExited();
-		}
-	}
+const initialName = {
+	value: '',
+	error: '',
+	regex: new RegExp('^[a-zA-Z0-9_.-]*$')
+};
+const initialUrl = {
+	value: '',
+	error: '',
+	regex: new RegExp('https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)')
+};
+const initialAlias = {
+	value: '',
+	error: '',
+	regex: new RegExp('(^([0-9a-zA-Z]+,)*[0-9a-zA-Z]+$|^$)')
+};
 
-	handleDialogOpen() {
-		const name = {
-			value: this.props.jump.name,
-			error: '',
-			regex: new RegExp('^[a-zA-Z0-9_.-]*$')
-		};
-		const location = {
-			value: this.props.jump.location,
-			error: '',
-			regex: new RegExp('https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)')
-		};
+const JumpEditDialog = ({headers, jump, open, loadingSubmit, submitError, onExited, patchJump}) => {
+	const [name, setName] = useState(initialName);
+	const [url, setUrl] = useState(initialUrl);
+	const [alias, setAlias] = useState(initialAlias);
+	const [submit, setSubmit] = useState(false);
+
+	useEffect(() => {
+		if(loadingSubmit === false && submit === true && submitError == null)
+			onExited();
+	}, [loadingSubmit, submitError]);
+
+	const onOpen = () => {
+		setName({...initialName, value: jump.name});
+		setUrl({...initialUrl, value: jump.location});
+
 		let aliases = [];
-		this.props.jump.alias.forEach(i => {
+		jump.alias.forEach(i => {
 			aliases.push(i.name);
 		});
-		const alias = {
-			value: aliases.join(","),
-			error: '',
-			regex: new RegExp('(^([0-9a-zA-Z]+,)*[0-9a-zA-Z]+$|^$)')
-		};
-		this.setState({
-			name: name,
-			location: location,
-			alias: alias,
-			submitted: false,
-			exiting: false
-		});
-	}
 
-	handleNameChange(e) {
-		let val = e.target.value;
-		const {name} = this.state;
-		name.value = val;
-		if(name.regex.test(val) === false)
-			name.error = 'Invalid name';
-		else
-			name.error = '';
-		this.setState({name});
-	}
-	handleUrlChange(e) {
-		let val = e.target.value;
-		const {location} = this.state;
-		location.value = val;
-		if(location.regex.test(val) === false)
-			location.error = 'Invalid url';
-		else
-			location.error = '';
-		this.setState({location});
-	}
-	handleAliasChange(e) {
-		let val = e.target.value;
-		const {alias} = this.state;
-		alias.value = val;
-		if(alias.regex.test(val) === false)
-			alias.error = 'Aliases must be letters or digits seperated by commas.';
-		else
-			alias.error = '';
-		this.setState({alias});
-	}
+		setAlias({...initialAlias, value: aliases.join(",")});
+	};
 
-	handleSubmit() {
-		let aliases = [];
-		let {jump} = this.props;
-		if(this.state.alias.value.length > 0) {
-			let a = this.state.alias.value.split(",");
+	const onNameChange = (e) => {
+		const {value} = e.target;
+		const error = name.regex.test(value) === true ? "" : "Invalid name";
+		setName({...name, value, error});
+	};
+	const onUrlChange = (e) => {
+		const {value} = e.target;
+		const error = url.regex.test(value) === true ? "" : "Invalid url";
+		setUrl({...url, value, error});
+	};
+	const onAliasChange = (e) => {
+		const {value} = e.target;
+		const error = alias.regex.test(value) === true ? "" : "Aliases must be letters or digits separated by commas.";
+		setAlias({...alias, value, error});
+	};
+
+	const onSubmit = () => {
+		const aliases = [];
+		if(alias.value.length > 0) {
+			let a = alias.value.split(",");
 			a.forEach(item => {
 				let i = -1;
 				for (let j = 0; j < jump.alias.length; j++) {
@@ -134,43 +97,42 @@ class JumpEditDialog extends React.Component {
 				}
 			});
 		}
-		this.props.patchJump(this.state.headers, JSON.stringify({
-			id: this.props.jump.id,
-			name: this.state.name.value,
-			location: this.state.location.value,
+		patchJump(headers, JSON.stringify({
+			id: jump.id,
+			name: name.value,
+			location: url.value,
 			alias: aliases
 		}));
-		this.setState({submitted: true});
-	}
+		setSubmit(true);
+	};
 
-	render() {
-		const {classes} = this.props;
-		return (
-			<Dialog open={this.props.open === true} aria-labelledby={"form-dialog-title"} onClose={this.props.onExited} onEnter={this.handleDialogOpen}>
-				<DialogTitle id={"form-dialog-title"} className={classes.title}>Edit {process.env.REACT_APP_APP_NOUN}</DialogTitle>
-				<DialogContent>
-					<TextField required autoFocus margin={"dense"} id={"name"} label={"Name"} value={this.state.name.value} fullWidth
-					           error={this.state.name.error.length !== 0} helperText={this.state.name.error} onChange={this.handleNameChange.bind(this)}/>
-					<TextField required margin={"dense"} id={"location"} label={"Location"} value={this.state.location.value} autoComplete={"url"} fullWidth
-					           error={this.state.location.error.length !== 0} helperText={this.state.location.error} onChange={this.handleUrlChange.bind(this)}/>
-					<TextField margin={"dense"} id={"alias"} label={"Aliases (comma separated)"} value={this.state.alias.value} fullWidth
-					           error={this.state.alias.error.length !== 0} helperText={this.state.alias.error} onChange={this.handleAliasChange.bind(this)}/>
-					<Typography variant={"caption"} color={"error"}>{this.state.submitError}</Typography>
-				</DialogContent>
-				<DialogActions>
-					<Button color={"secondary"} onClick={this.props.onExited}>Cancel</Button>
-					<Button color={"primary"} onClick={this.handleSubmit.bind(this)}
-					        disabled={this.state.name.error !== '' || this.state.location.error !== '' || this.state.alias.error !== '' ||
-					        this.state.loadingSubmit === true || this.state.name.value.length === 0 || this.state.location.value.length === 0}>
-						Update
-					</Button>
-				</DialogActions>
-			</Dialog>
-		);
-	}
-}
+	const classes = useStyles();
+	return (
+		<Dialog open={open === true} aria-labelledby={"form-dialog-title"} onClose={() => onExited()} onEnter={() => onOpen()}>
+			<DialogTitle id={"form-dialog-title"}>
+				<Typography className={classes.title}>Edit {APP_NOUN}</Typography>
+			</DialogTitle>
+			<DialogContent>
+				<TextField required autoFocus margin={"dense"} id={"name"} label={"Name"} value={name.value} fullWidth
+				           error={name.error.length !== 0} helperText={name.error} onChange={(e) => onNameChange(e)}/>
+				<TextField required margin={"dense"} id={"location"} label={"Location"} value={url.value} autoComplete={"url"} fullWidth
+				           error={url.error.length !== 0} helperText={url.error} onChange={(e) => onUrlChange(e)}/>
+				<TextField margin={"dense"} id={"alias"} label={"Aliases (comma separated)"} value={alias.value} fullWidth
+				           error={alias.error.length !== 0} helperText={alias.error} onChange={(e) => onAliasChange(e)}/>
+				<Typography variant={"caption"} color={"error"}>{submitError}</Typography>
+			</DialogContent>
+			<DialogActions>
+				<Button className={classes.button} color={"secondary"} onClick={() => onExited()}>Cancel</Button>
+				<Button className={classes.button} color={"primary"} onClick={() => onSubmit()}
+				        disabled={name.error !== '' || url.error !== '' || alias.error !== '' ||
+				        loadingSubmit === true || name.value.length === 0 || url.value.length === 0}>
+					Update
+				</Button>
+			</DialogActions>
+		</Dialog>
+	);
+};
 const mapStateToProps = state => ({
-	isAdmin: state.auth.isAdmin,
 	headers: state.auth.headers,
 	loadingSubmit: state.loading[PATCH_JUMP],
 	submitError: state.errors[PATCH_JUMP]
@@ -178,4 +140,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps= ({
 	patchJump
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(JumpEditDialog)));
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(JumpEditDialog);

@@ -16,7 +16,7 @@
  */
 
 import React from "react";
-import {Grid, makeStyles, withStyles, withTheme} from "@material-ui/core";
+import {Grid, makeStyles} from "@material-ui/core";
 import Jumps from "./content/Jumps";
 import {Switch, Route, withRouter} from "react-router-dom";
 import Login from "./content/Login";
@@ -48,10 +48,8 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export const Content = props => {
+export const Content = () => {
 	const classes = useStyles();
-	const {theme} = props;
-	const {error} = theme.palette;
 	let content = (<Grid item xs={12} sm={6}>
 		<Switch>
 			<Route exact path={"/"} component={Jumps} key={"jumps"}/>
@@ -76,4 +74,4 @@ export const Content = props => {
 		</div>
 	);
 };
-export default withTheme(withRouter(Content));
+export default withRouter(Content);

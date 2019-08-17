@@ -21,7 +21,7 @@ import ListSubheader from "@material-ui/core/es/ListSubheader/ListSubheader";
 import {
 	deleteJump,
 	JUMP_LOAD,
-	listJumps, setJumpExpand,
+	listJumps,
 } from "../../actions/Jumps";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
@@ -47,9 +47,15 @@ const Item = posed.div({
 	exit: {opacity: 0}
 });
 
-const useStyles = makeStyles(() => ({
-	title: {fontFamily: "Manrope", fontWeight: 500},
-	grow: {flexGrow: 1}
+const useStyles = makeStyles(theme => ({
+	title: {
+		fontFamily: "Manrope",
+		fontWeight: 500
+	},
+	progress: {
+		backgroundColor: theme.palette.background.default,
+		flexGrow: 1
+	}
 }));
 
 const Jumps = props => {
@@ -101,22 +107,21 @@ const Jumps = props => {
 
 	const subHeader = (<ListSubheader className={classes.title} inset component={"div"}>
 		{process.env.REACT_APP_APP_NOUN}s {props.searchFilter != null && props.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
-		{/*<div className={classes.grow}/>*/}
 		<SortButton selectedSort={props.sort} sorts={sorts} onSubmit={(e) => handleSortChange(e)}/>
 		{props.isLoggedIn === true ?
-			<IconButton centerRipple={false} aria-label="Add" onClick={(() => {handleJumpDialog(true)})}>
+			<IconButton centerRipple={false} aria-label="Add" onClick={(() => handleJumpDialog(true))}>
 				<AddIcon fontSize={"small"}/>
 			</IconButton>
 			:
 			""
 		}
-		<JumpDialog open={props.new.open} onExited={() => {handleJumpDialog(false)}}/>
+		<JumpDialog open={props.new.open} onExited={() => handleJumpDialog(false)}/>
 	</ListSubheader>);
 
 	return (
 		<div>
 			{subHeader}
-			{props.loading === true ? <LinearProgress className={classes.grow} color={"primary"}/> : "" }
+			{props.loading === true ? <LinearProgress className={classes.progress} color={"primary"}/> : "" }
 			<PoseGroup animateOnMount={true}>
 				<Paper component={Item} key={"root"} style={{borderRadius: 12, marginBottom: 8}}>
 					<List component={'ul'}>
@@ -139,7 +144,6 @@ const Jumps = props => {
 };
 const mapStateToProps = state => ({
 	jumps: state.jumps.jumps,
-	expanded: state.jumps.expanded,
 	loading: state.loading[JUMP_LOAD],
 	headers: state.auth.headers,
 	isLoggedIn: state.auth.isLoggedIn,
@@ -157,8 +161,7 @@ const mapDispatchToProps = ({
 	setJumpNew,
 	setJumpEdit,
 	setDelete,
-	setOffset,
-	setJumpExpand
+	setOffset
 });
 export default connect(
 	mapStateToProps,

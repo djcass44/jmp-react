@@ -1,7 +1,6 @@
 import React from 'react';
 import Content from "../containers/Content";
 import Nav from "../containers/Nav";
-import {withTheme} from "@material-ui/core/styles";
 import {OAUTH_VERIFY, oauthRequest, oauthUnready, oauthVerify} from "../actions/Auth";
 import {connect} from "react-redux";
 import AdminPanel from "../components/AdminPanel";
@@ -82,6 +81,7 @@ class Body extends React.Component {
 }
 Body.propTypes = {
 	loading: PropTypes.bool,
+	headers: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -94,4 +94,7 @@ const mapDispatchToProps = ({
 	oauthRequest,
 	oauthUnready,
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(withRouter(Body))));
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(withStyles(styles)(withRouter(Body)));

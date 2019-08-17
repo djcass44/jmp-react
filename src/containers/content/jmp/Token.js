@@ -19,8 +19,7 @@ import React, {useEffect} from "react";
 import {client} from "../../../constants";
 import {GENERIC_GET_TOKEN, getTokenEnd, getTokenFail, getTokenStart} from "../../../actions/Generic";
 import {connect} from "react-redux";
-import {makeStyles, withTheme} from "@material-ui/core";
-import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
+import {makeStyles, CircularProgress} from "@material-ui/core";
 import Center from "react-center";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
@@ -94,4 +93,4 @@ const mapDispatchToProps = ({
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withRouter(withTheme(Token)));
+)(withRouter(Token));

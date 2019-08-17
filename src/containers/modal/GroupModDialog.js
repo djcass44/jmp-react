@@ -1,11 +1,20 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import {CircularProgress, Typography, withStyles, withTheme} from "@material-ui/core";
-import List from "@material-ui/core/List";
+import React, {useEffect, useState} from 'react';
+import {
+	CircularProgress,
+	Typography,
+	Button,
+	DialogTitle,
+	DialogContent,
+	DialogActions,
+	Dialog,
+	List,
+	ListItem,
+	ListItemIcon,
+	Checkbox,
+	ListItemText,
+	ListItemSecondaryAction,
+	makeStyles
+} from "@material-ui/core";
 import {
 	GET_USER_GROUPS,
 	getGroups,
@@ -16,16 +25,19 @@ import {
 } from "../../actions/Groups";
 import {connect} from "react-redux";
 import {sortItems} from "../../misc/Sort";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import Checkbox from "@material-ui/core/Checkbox";
-import ListItemText from "@material-ui/core/ListItemText";
 import Center from "react-center";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
-const styles = theme => ({
-	title: {fontFamily: "Manrope", fontWeight: 500},
-});
+const useStyles = makeStyles(() => ({
+	title: {
+		fontFamily: "Manrope",
+		fontWeight: 500,
+		fontSize: 20
+	},
+	button: {
+		fontFamily: "Manrope",
+		fontWeight: 'bold'
+	},
+}));
 
 class GroupModPayload {
 	constructor(add, rm) {
@@ -33,59 +45,42 @@ class GroupModPayload {
 		this.rm = rm;
 	}
 }
-class GroupModDialog extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			groups: props.groups,
-			userMap: [],
-			userMapRO: [], // used to determine the delta
-			userGroups: props.userGroups,
-			loading: props.loading,
-			headers: props.headers,
-		};
-		this.loadData = this.loadData.bind(this);
-	}
+const GroupModDialog = ({open, groups, userGroups, loading, headers, ...props}) => {
+	const [usermap, setUsermap] = useState([]);
 
-	componentWillReceiveProps(nextProps, nextContext) {
-		this.setState({...nextProps});
-		if(this.props.open === true)
-			this.updateGroupMappings(nextProps);
-	}
+	useEffect(() => {
+		if(open === true)
+			updateGroupMappings()
+	}, [groups, userGroups]);
 
-	componentDidMount() {
-		this.loadData();
-	}
-
-	updateGroupMappings(nextProps) {
+	const updateGroupMappings = () => {
 		let mapping = [];
 		// Check whether the user is in each group and build a mapping array
-		this.state.groups.forEach(g => {
+		groups.forEach(g => {
 			const g2 = JSON.parse(JSON.stringify(g));
-			g2.checked = nextProps.userGroups.some(e => e.name === g.name);
+			g2.checked = userGroups.some(e => e.name === g.name);
 			mapping.push(g2);
 		});
-		this.setState({userMap: mapping, userMapRO: JSON.parse(JSON.stringify(mapping))});
-	}
+		setUsermap(mapping);
+	};
 
-	loadData() {
-		if(this.props.user == null) return;
-		this.props.getUserGroups(this.state.headers, this.props.user.id);
-	}
+	const loadData = () => {
+		if(props.user == null) return;
+		props.getUserGroups(headers, props.user.id);
+	};
 
-	handleCheckChange(e, index) {
-		const checked = !this.state.userMap[index].checked;
-		this.handleChange(index, checked)
-	}
+	const onChecked = index => {
+		const checked = !usermap[index].checked;
+		onChange(index, checked);
+	};
 
 	/**
 	 * Add or remove the user from a group
 	 * @param index: position of the group in the userMap
 	 * @param checked: whether the group should be added or removed
 	 */
-	handleChange(index, checked) {
-		const {userMap} = this.state;
-		const item = userMap[index];
+	const onChange = (index, checked) => {
+		const item = usermap[index];
 		let add = [];
 		let rm = [];
 		if(checked === true)
@@ -93,53 +88,54 @@ class GroupModDialog extends React.Component {
 		else
 			rm.push(item.id);
 		const payload = new GroupModPayload(add, rm);
-		item['loading'] = true;
-		this.setState({...userMap});
-		this.props.setUserGroups(this.state.headers, this.props.user.id, JSON.stringify(payload));
-	}
+		item.loading = true;
+		props.setUserGroups(headers, props.user.id, JSON.stringify(payload));
+	};
 
-	render() {
-		const {classes} = this.props;
-		let sortedGroups = sortItems(this.state.userMap, 'name');
-		let listItems = [];
-		sortedGroups.forEach((i, index) => {
-			listItems.push((
-				<ListItem key={i.id} component={'li'} role={undefined} dense>
-					<ListItemIcon>
-						<Checkbox color={"primary"} edge="start" checked={i.checked === true} disabled={this.state.loading === true || i['loading'] === true} tabIndex={-1} onChange={e => {this.handleCheckChange(e, index)}}/>
-					</ListItemIcon>
-					<ListItemText id={i.id} primary={i.name}/>
-					{this.state.loading === true || i['loading'] === true ? <ListItemSecondaryAction><CircularProgress size={15}/></ListItemSecondaryAction> : ""}
-				</ListItem>
-			))
-		});
-		return (
-			<Dialog open={this.props.open === true} aria-labelledby={"form-dialog-title"} onClose={this.props.onExited} onEnter={this.loadData}>
-				<DialogTitle id={"form-dialog-title"} className={classes.title}>Modify groups</DialogTitle>
-				<DialogContent>
-					<Typography variant={"body1"}>
-						Here you can modify the groups that {this.props.user != null ? this.props.user.username || 'the user' : 'the user'} is in.
-					</Typography>
-					<div style={{margin: 12}}>
-					{this.state.loading === true && this.state.userMap.length === 0 ?
-						<Center><CircularProgress/></Center>
-						:
-						<List component={'ul'}>
-							{listItems.length > 0 ? listItems : <Center>There are no groups</Center>}
-						</List>
-					}
-					</div>
-				</DialogContent>
-				<DialogActions>
-					<Button color={"secondary"} onClick={this.props.onExited}>Done</Button>
-				</DialogActions>
-			</Dialog>
-		);
-	}
+	const classes = useStyles();
+	let listItems = [];
+	let sortedGroups = sortItems(usermap, 'name');
+	sortedGroups.forEach((i, index) => {
+		listItems.push(
+			<ListItem key={i.id} component='li' role={undefined} dense>
+				<ListItemIcon>
+					<Checkbox color="primary" edge="start" checked={i.checked === true} disabled={loading === true || i['loading'] === true} tabIndex={-1} onChange={() => onChecked(index)}/>
+				</ListItemIcon>
+				<ListItemText id={i.id} primary={i.name}/>
+				{loading === true || i['loading'] === true ? <ListItemSecondaryAction><CircularProgress size={15}/></ListItemSecondaryAction> : ""}
+			</ListItem>
+		)
+	});
+	return (
+		<Dialog open={open === true} aria-labelledby="form-dialog-title" onClose={() => props.onExited()} onEnter={() => loadData()}>
+			<DialogTitle id="form-dialog-title">
+				<Typography className={classes.title}>
+					Modify groups
+				</Typography>
+			</DialogTitle>
+			<DialogContent>
+				<Typography variant="body1">
+					Here you can modify the groups that {props.user != null ? props.user.username || 'the user' : 'the user'} is in.
+				</Typography>
+				<div style={{margin: 12}}>
+				{loading === true && usermap.length === 0 ?
+					<Center><CircularProgress/></Center>
+					:
+					<List component='ul'>
+						{listItems.length > 0 ? listItems : <Center>There are no groups</Center>}
+					</List>
+				}
+				</div>
+			</DialogContent>
+			<DialogActions>
+				<Button className={classes.button} color="secondary" onClick={() => props.onExited()}>Done</Button>
+			</DialogActions>
+		</Dialog>
+	);
 }
 const mapStateToProps = state => ({
-	groups: state.groups.groups || [],
-	userGroups: state.groups.userGroups || [],
+	groups: state.groups.groups,
+	userGroups: state.groups.userGroups,
 	loading: state.loading[GROUP_LOAD] || state.loading[GET_USER_GROUPS],
 	loadingMod: state.loading[SET_USER_GROUPS],
 	headers: state.auth.headers
@@ -149,4 +145,7 @@ const mapDispatchToProps = ({
 	getUserGroups,
 	setUserGroups
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(GroupModDialog)));
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(GroupModDialog);

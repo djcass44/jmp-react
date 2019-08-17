@@ -1,15 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import {Checkbox, DialogContentText, FormControlLabel, makeStyles, Typography, withTheme} from "@material-ui/core";
+import {Checkbox, DialogContentText, FormControlLabel, makeStyles, Typography, withTheme, Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {setDelete} from "../../actions/Modal";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
@@ -18,6 +13,9 @@ const useStyles = makeStyles(() => ({
 	button: {
 		fontFamily: "Manrope",
 		fontWeight: 'bold'
+	},
+	override: {
+		color: theme.palette.error.main
 	}
 }));
 
@@ -40,7 +38,6 @@ export const DeleteDialog = ({open, title, body, requireApproval, ...props}) => 
 	};
 
 	const classes = useStyles();
-	const {error} = props.theme.palette;
 	return (
 		<Dialog open={open === true} aria-labelledby={"form-dialog-title"}>
 			<DialogTitle id={"form-dialog-title"}>
@@ -52,9 +49,9 @@ export const DeleteDialog = ({open, title, body, requireApproval, ...props}) => 
 				</DialogContentText>
 				{requireApproval === true
 					?
-					<FormControlLabel control={
-						<Checkbox style={{color: error.dark}} checked={ack} onChange={(e) => setAck(e.target.checked)}/>
-					} label={"Use admin power to override"} style={{color: error.dark}}/>
+					<FormControlLabel className={classes.override} control={
+						<Checkbox className={classes.override} checked={ack} onChange={(e) => setAck(e.target.checked)}/>
+					} label={"Use admin power to override"}/>
 					:
 					""
 				}

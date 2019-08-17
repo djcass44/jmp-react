@@ -1,20 +1,16 @@
-import ListItem from "@material-ui/core/ListItem";
 import ReactImageFallback from "react-image-fallback";
 import Icon from "@mdi/react";
-import Tooltip from "@material-ui/core/Tooltip";
-import {ListItemSecondaryAction, makeStyles, withTheme} from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
+import {ListItemSecondaryAction, makeStyles, Tooltip, ListItem, ListItemText, Avatar, IconButton} from "@material-ui/core";
 import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiChevronDown, mdiChevronUp, mdiEarth} from "@mdi/js";
 import JumpContent from "../../../components/content/jmp/JumpContent";
 import React from "react";
-import ListItemText from "@material-ui/core/ListItemText";
 import PropTypes from "prop-types";
 import {setDelete, setJumpEdit, setJumpNew} from "../../../actions/Modal";
 import {deleteJump, setJumpExpand} from "../../../actions/Jumps";
 import {connect} from "react-redux";
-import Avatar from "@material-ui/core/Avatar";
 import getAvatarScheme from "../../../style/getAvatarScheme";
 import Domain from "../../../components/widget/Domain";
+import {useTheme} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -28,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 
 const JumpItem = ({jump, ...props}) => {
 	const classes = useStyles();
-	const {theme} = props;
+	const theme = useTheme();
 	const scheme = getAvatarScheme(theme, jump['personal']);
 	const avatar = {
 		icon: jump['personal'] === 0 ? mdiEarth : jump['personal'] === 1 ? mdiAccountCircleOutline : mdiAccountGroupOutline,
@@ -72,7 +68,7 @@ const JumpItem = ({jump, ...props}) => {
 					</IconButton>
 				</ListItemSecondaryAction>
 			</ListItem>
-			<JumpContent jump={jump} onEdit={() => props.setJumpEdit(true, jump)} onDelete={() => {props.setDelete(true, jump, jump.personal === 0)}}/>
+			<JumpContent jump={jump} onEdit={() => props.setJumpEdit(true, jump)} onDelete={() => props.setDelete(true, jump, jump.personal === 0)}/>
 		</div>
 	)
 };
@@ -92,4 +88,4 @@ const mapDispatchToProps = ({
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withTheme(JumpItem));
+)(JumpItem);

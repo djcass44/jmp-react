@@ -9,8 +9,7 @@ import {
 	InputLabel,
 	LinearProgress, makeStyles,
 	Select,
-	Typography,
-	withTheme
+	Typography
 } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -72,7 +71,8 @@ const JumpDialog = ({open, headers, ...props}) => {
 	};
 
 	const onSubmit = () => {
-		let gid = type === 2 ? `?gid=${groupId}` : '';
+		// ignore the type error below, it's fine
+		const gid = type === 2 ? `?gid=${groupId}` : '';
 		props.putJump(headers, JSON.stringify({
 			name: name.value,
 			location: url.value,
@@ -152,4 +152,4 @@ const mapDispatchToProps= ({
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withTheme(JumpDialog));
+)(JumpDialog);

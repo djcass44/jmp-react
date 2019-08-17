@@ -22,12 +22,12 @@ const useStyles = makeStyles(() => ({
 	}
 }));
 
-export const CreateGroupDialog = ({open, ...props}) => {
+const CreateGroupDialog = ({open, headers, putGroup, setGroupNew}) => {
 	const [name, setName] = useState("");
 
 	const handleSubmit = () => {
-		props.putGroup(props.headers, name);
-		props.setGroupNew(false);
+		putGroup(headers, name);
+		setGroupNew(false);
 	};
 
 	const classes = useStyles();
@@ -41,15 +41,17 @@ export const CreateGroupDialog = ({open, ...props}) => {
 				<TextField required autoFocus margin={"dense"} id={"name"} label={"Group name"} fullWidth onChange={(e) => setName(e.target.value)}/>
 			</DialogContent>
 			<DialogActions>
-				<Button className={classes.button} color={"secondary"} onClick={() => props.setGroupNew(false)}>Cancel</Button>
-				<Button className={classes.button} color={"primary"} onClick={() => handleSubmit()} disabled={props.loading === true || !name.length}>Create</Button>
+				<Button className={classes.button} color={"secondary"} onClick={() => setGroupNew(false)}>Cancel</Button>
+				<Button className={classes.button} color={"primary"} onClick={() => handleSubmit()} disabled={!name.length}>Create</Button>
 			</DialogActions>
 		</Dialog>
 	);
 };
 CreateGroupDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
-	title: PropTypes.string
+	headers: PropTypes.object.isRequired,
+	putGroup: PropTypes.func.isRequired,
+	setGroupNew: PropTypes.func.isRequired
 };
 const mapStateToProps = state => ({
 	open: state.modal.group.new.open,
@@ -62,4 +64,4 @@ const mapDispatchToProps = ({
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withTheme(CreateGroupDialog));
+)(CreateGroupDialog);

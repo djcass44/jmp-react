@@ -17,17 +17,11 @@
 
 import {getUsers, PATCH_USER_ROLE, patchUserRole, USER_LOAD} from "../../../actions/Users";
 import {connect} from "react-redux";
-import {LinearProgress, ListItemSecondaryAction, Menu, withStyles, withTheme} from "@material-ui/core";
+import {LinearProgress, ListItemSecondaryAction, Menu, withStyles, withTheme, Avatar, ListItemText, ListItem, ListSubheader, Paper, List, MenuItem} from "@material-ui/core";
 import React from "react";
 import AccountCircleIcon from "@material-ui/icons/AccountCircleOutlined";
 import AdminCircleIcon from "@material-ui/icons/SupervisedUserCircleOutlined";
-import Avatar from "@material-ui/core/es/Avatar";
 import ReactImageFallback from "react-image-fallback";
-import ListItemText from "@material-ui/core/es/ListItemText";
-import ListItem from "@material-ui/core/ListItem";
-import ListSubheader from "@material-ui/core/es/ListSubheader";
-import Paper from "@material-ui/core/Paper";
-import List from "@material-ui/core/List";
 import EmptyCard from "../../../components/widget/EmptyCard";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
@@ -38,7 +32,6 @@ import SortButton from "../../../components/widget/SortButton";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@mdi/react";
 import {mdiDotsVertical} from "@mdi/js";
-import MenuItem from "@material-ui/core/MenuItem";
 import {Badge} from "evergreen-ui";
 import GroupModDialog from "../../modal/GroupModDialog";
 import getAvatarScheme from "../../../style/getAvatarScheme";
@@ -50,11 +43,14 @@ const Item = posed.div({
 });
 
 const styles = theme => ({
-	title: {fontFamily: "Manrope", fontWeight: 500},
-	button: {
-		// margin: theme.spacing.unit,
+	title: {
+		fontFamily: "Manrope",
+		fontWeight: 500
 	},
-	grow: {flexGrow: 1}
+	progress: {
+		backgroundColor: theme.palette.background.default,
+		flexGrow: 1
+	}
 });
 
 class Users extends React.Component {
@@ -182,7 +178,6 @@ class Users extends React.Component {
 		// TODO move to component
 		const subHeader = (<ListSubheader className={classes.title} inset component={"div"}>
 			Users {this.state.searchFilter != null && this.state.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
-			{/*<div className={classes.grow}/>*/}
 			<SortButton selectedSort={this.state.sort} sorts={this.state.sorts} onSubmit={(e, value) => this.handleSortChange(e, value)}/>
 			{/*<IconButton className={classes.button} aria-label="Add"><AddIcon fontSize={"small"}/></IconButton>*/}
 		</ListSubheader>);
@@ -190,7 +185,7 @@ class Users extends React.Component {
 		return (
 			<div>
 				{subHeader}
-				{this.state.loading === true || this.state.loadingPatch === true ? <LinearProgress className={classes.grow} color={"primary"}/> : "" }
+				{this.state.loading === true || this.state.loadingPatch === true ? <LinearProgress className={classes.progress} color={"primary"}/> : "" }
 				<PoseGroup animateOnMount={true}>
 					<Paper key={"root"} component={Item} style={{borderRadius: 12, marginBottom: 8}}>
 						<List component={'ul'}>
@@ -213,11 +208,11 @@ class Users extends React.Component {
 }
 
 const mapStateToProps = state => ({
-	users: state.users.users || [],
+	users: state.users.users,
 	loading: state.loading[USER_LOAD],
 	loadingPatch: state.loading[PATCH_USER_ROLE],
 	headers: state.auth.headers,
-	ready: state.auth.ready || false,
+	ready: state.auth.ready,
 	searchFilter: state.generic.searchFilter,
 	isAdmin: state.auth.isAdmin,
 	isLoggedIn: state.auth.isLoggedIn
@@ -227,4 +222,7 @@ const mapDispatchToProps = ({
 	patchUserRole
 
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withTheme(Users)));
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(withStyles(styles)(withTheme(Users)));

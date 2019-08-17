@@ -16,7 +16,7 @@
  */
 
 import {connect} from "react-redux";
-import {Grid, makeStyles, withTheme} from "@material-ui/core";
+import {Grid, makeStyles} from "@material-ui/core";
 import React, {useEffect} from "react";
 import {GET_SIMILAR, getSimilar, getSimilarFail} from "../../../actions/Jumps";
 import Typography from "@material-ui/core/es/Typography/Typography";
@@ -31,6 +31,9 @@ import {Link, withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
 import ReactImageFallback from "react-image-fallback";
 import getAvatarScheme from "../../../style/getAvatarScheme";
+import useTheme from "@material-ui/core/styles/useTheme";
+import getErrorMessage from "../../../selectors/getErrorMessage";
+import {APP_NAME} from "../../../constants";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -60,9 +63,9 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Similar = props => {
+const Similar = ({headers, similar, loading, error, getSimilar, getSimilarFail}) => {
 	useEffect(() => {
-		window.document.title = `Similar - ${process.env.REACT_APP_APP_NAME}`;
+		window.document.title = `Similar - ${APP_NAME}`;
 		getMatches();
 	}, []);
 
@@ -70,17 +73,17 @@ const Similar = props => {
 		let url = new URL(window.location.href);
 		let query = url.searchParams.get("query");
 		if(query != null && query !== '') {
-			props.getSimilar(props.headers, query);
+			getSimilar(headers, query);
 		}
 		else {
-			props.getSimilarFail("You must specify a query!");
+			getSimilarFail("You must specify a query!");
 		}
 	};
 	
 	const classes = useStyles();
-	const {theme} = props;
+	const theme = useTheme();
 	let status;
-	switch (props.similar.length) {
+	switch (similar.length) {
 		case 0:
 			status = "We couldn't find any matches";
 			break;
@@ -88,10 +91,10 @@ const Similar = props => {
 			status = "We found 1 match";
 			break;
 		default:
-			status = `We found ${props.similar.length} matches`;
+			status = `We found ${similar.length} matches`;
 			break;
 	}
-	const chips = props.similar.map(i => {
+	const chips = similar.map(i => {
 		const scheme = getAvatarScheme(theme, i.personal);
 		const textColour = theme.palette.getContrastText(scheme[0]);
 		let avatar = {
@@ -127,9 +130,9 @@ const Similar = props => {
 				<Typography className={classes.subtitle} variant={"subtitle1"}>Before you go <span role={"img"} aria-label={"Rocket"}>🚀</span></Typography>
 			</Center>
 			<Center>
-				<Typography variant={"subtitle1"} className={classes.title}>{props.error == null ? status : props.error}</Typography>
+				<Typography variant={"subtitle1"} className={classes.title}>{error == null ? status : getErrorMessage(error)}</Typography>
 			</Center>
-			{props.loading === true ? <Center><CircularProgress/></Center> : ""}
+			{loading === true ? <Center><CircularProgress/></Center> : ""}
 			<Center style={{padding: 16}}>{chips}</Center>
 		</Grid>
 		<Grid item sm={3}/>
@@ -139,7 +142,9 @@ Similar.propTypes = {
 	similar: PropTypes.array.isRequired,
 	headers: PropTypes.object,
 	loading: PropTypes.bool,
-	error: PropTypes.object
+	error: PropTypes.object,
+	getSimilar: PropTypes.func.isRequired,
+	getSimilarFail: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -155,4 +160,4 @@ const mapDispatchToProps = ({
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withTheme(withRouter(Similar)));
+)(withRouter(Similar));

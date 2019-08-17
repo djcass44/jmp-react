@@ -16,7 +16,7 @@
  */
 
 import React, {useEffect} from 'react';
-import {MuiThemeProvider, withTheme} from "@material-ui/core/styles";
+import {MuiThemeProvider} from "@material-ui/core/styles";
 import Theme from "./style/theme";
 import {connect} from "react-redux";
 import {Helmet} from "react-helmet";
@@ -24,16 +24,18 @@ import {wsClose, wsOpen} from "./actions/Socket";
 import Body from "./containers/Body";
 import {SnackbarProvider} from "notistack";
 import Snackbar from "./containers/Snackbar";
+import useTheme from "@material-ui/core/styles/useTheme";
+import PropTypes from "prop-types";
 
-export const App = props => {
+export const App = ({headers, wsOpen, wsClose}) => {
 	useEffect(() => {
-		props.wsOpen(props.headers);
+		wsOpen(headers);
 		return () => {
-			props.wsClose();
+			wsClose();
 		}
 	});
 
-	const {theme} = props;
+	const theme = useTheme();
 	return (
 		<div className={"App"}>
 			<MuiThemeProvider theme={Theme}>
@@ -46,7 +48,11 @@ export const App = props => {
 		</div>
 	);
 };
-
+App.propTypes = {
+	headers: PropTypes.object.isRequired,
+	wsOpen: PropTypes.func.isRequired,
+	wsClose: PropTypes.func.isRequired
+};
 const mapStateToProps = state => ({
 	headers: state.auth.headers,
 });
@@ -57,4 +63,4 @@ const mapDispatchToProps = ({
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withTheme(App));
+)(App);
