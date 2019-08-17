@@ -21,7 +21,7 @@ import {setJumpNew} from "../../actions/Modal";
 import {APP_NOUN} from "../../constants";
 import PropTypes from "prop-types";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
@@ -30,7 +30,10 @@ const useStyles = makeStyles(() => ({
 	button: {
 		fontFamily: "Manrope",
 		fontWeight: 'bold'
-	}
+	},
+	progress: {
+		backgroundColor: theme.palette.background.default
+	},
 }));
 
 const initialName = {
@@ -102,7 +105,7 @@ const JumpDialog = ({open, headers, ...props}) => {
 						<MenuItem value={2} disabled={props.userGroups.length === 0}>Group</MenuItem>
 					</Select>
 				</FormControl>
-				{props.loadingGroups === true ? <LinearProgress/> : ""}
+				{props.loadingGroups === true ? <LinearProgress className={classes.progress}/> : ""}
 				{type === 2 && props.userGroups.length > 0 ?
 					<FormControl fullWidth>
 						<InputLabel htmlFor={"group"}>Group</InputLabel>

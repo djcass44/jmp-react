@@ -8,16 +8,22 @@ import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiChevronDown, mdiChev
 import JumpContent from "../../../components/content/jmp/JumpContent";
 import React from "react";
 import ListItemText from "@material-ui/core/ListItemText";
-import SchemeHighlight from "../../../components/widget/SchemeHighlight";
 import PropTypes from "prop-types";
 import {setDelete, setJumpEdit, setJumpNew} from "../../../actions/Modal";
 import {deleteJump, setJumpExpand} from "../../../actions/Jumps";
 import {connect} from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import getAvatarScheme from "../../../style/getAvatarScheme";
+import Domain from "../../../components/widget/Domain";
 
-const useStyles = makeStyles(() => ({
-	title: {fontFamily: "Manrope", fontWeight: 500},
+const useStyles = makeStyles(theme => ({
+	title: {
+		fontFamily: "Manrope",
+		fontWeight: 500
+	},
+	subtitle: {
+		color: theme.palette.text.secondary
+	}
 }));
 
 const JumpItem = ({jump, ...props}) => {
@@ -32,7 +38,12 @@ const JumpItem = ({jump, ...props}) => {
 	// Generate the secondary text and add the owner (if it exists)
 	let secondary = (
 		<span>
-			<SchemeHighlight text={jump.location}/>{jump['owner'] != null ? <span>&nbsp;&bull;&nbsp;{jump['owner']}</span> : ""}
+			<Domain text={jump.location}/>
+			{jump['owner'] != null ?
+				<span>&nbsp;&bull;&nbsp;{jump['owner']}</span>
+				:
+				""
+			}
 		</span>
 	);
 

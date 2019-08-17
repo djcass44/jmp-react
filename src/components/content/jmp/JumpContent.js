@@ -21,6 +21,9 @@ const useStyles = makeStyles(theme => ({
 	main: {
 		padding: 16,
 		backgroundColor: theme.palette.background.default
+	},
+	subtext: {
+		color: theme.palette.text.secondary
 	}
 }));
 
@@ -58,9 +61,9 @@ export const JumpContent = props => {
 			{/* ALIASES */}
 			{aliases.length > 0 ? <Typography variant={"body1"}>Aliases: {aliases}</Typography> : ""}
 			{/* CREATION */}
-			<p>Created <Moment fromNow>{jump['metaCreation']}</Moment></p>
+			<p className={classes.subtext}>Created <Moment fromNow>{jump['metaCreation']}</Moment></p>
 			{/* EDIT */}
-			{jump['metaUpdate'] !== jump['metaCreation'] ? <p>Edited <Moment fromNow>{jump['metaUpdate']}</Moment></p>: ""}
+			{jump['metaUpdate'] !== jump['metaCreation'] ? <p className={classes.subtext}>Edited <Moment fromNow>{jump['metaUpdate']}</Moment></p>: ""}
 			{/* check this browser supports copy before showing the button */}
 			{document.queryCommandSupported("copy") &&
 				<Tooltip title={"Copy URL"}>
