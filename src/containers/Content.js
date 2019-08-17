@@ -44,6 +44,12 @@ const useStyles = makeStyles(theme => ({
 	centred: {
 		flex: 1,
 		justifyContent: 'center'
+	},
+	padding: {
+		display: 'none',
+		[theme.breakpoints.up('sm')]: {
+			display: 'initial'
+		},
 	}
 }));
 
@@ -72,9 +78,9 @@ export const Content = props => {
 	return (
 		<div className={classes.container}>
 			<Grid container spacing={5} className={classes.centred}>
-				<Grid item sm={3}/>
+				<Grid item sm={3} className={classes.padding}/>
 				{content}
-				<Grid item sm={3}/>
+				<Grid item sm={3} className={classes.padding}/>
 			</Grid>
 		</div>
 	);

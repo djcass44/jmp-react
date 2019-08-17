@@ -61,7 +61,7 @@ const styles = theme => ({
 		borderRadius: theme.shape.borderRadius,
 		backgroundColor: fade(theme.palette.primary.light, 0.15),
 		'&:hover': {
-			backgroundColor: fade(theme.palette.primary.light, 0.25),
+			backgroundColor: fade(theme.palette.primary.light, 0.35),
 			transition: 'background-color 250ms linear',
 			webkitTransition: 'background-color 250ms linear',
 			msTransition: 'background-color 250ms linear',
