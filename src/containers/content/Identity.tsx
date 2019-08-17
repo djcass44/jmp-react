@@ -18,15 +18,22 @@
 import React, {useEffect} from "react";
 import Users from "./identity/Users";
 import Groups from "./identity/Groups";
+// @ts-ignore
 import Center from "react-center";
 import Avatar from "@material-ui/core/Avatar";
-import {makeStyles, Paper, withTheme} from "@material-ui/core";
+import {makeStyles, Paper} from "@material-ui/core";
+import {useTheme} from "@material-ui/core/styles";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline} from "@mdi/js";
 import Typography from "@material-ui/core/Typography";
+import {APP_NAME} from "../../constants";
 
 const useStyles = makeStyles(theme => ({
-	name: {fontFamily: "Manrope", fontWeight: 500, color: theme.palette.secondary.main},
+	name: {
+		fontFamily: "Manrope",
+		fontWeight: 500,
+		color: theme.palette.secondary.main
+	},
 	avatar: {
 		width: 56,
 		height: 56,
@@ -36,13 +43,13 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-export const Identity = props => {
+export const Identity = () => {
 	useEffect(() => {
-		window.document.title = `Identity - ${process.env.REACT_APP_APP_NAME}`;
+		window.document.title = `Identity - ${APP_NAME}`;
 	}, []);
 
 	const classes = useStyles();
-	const {theme} = props;
+	const theme = useTheme();
 	return (
 		<div>
 			<Center>
@@ -58,4 +65,4 @@ export const Identity = props => {
 		</div>
 	);
 };
-export default(withTheme(Identity));
+export default Identity;

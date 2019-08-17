@@ -24,6 +24,7 @@ import {
 	Typography,
 	withTheme
 } from "@material-ui/core";
+// @ts-ignore
 import Center from "react-center";
 import Avatar from "@material-ui/core/Avatar";
 import List from "@material-ui/core/List";
@@ -33,6 +34,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import BrowserGuide from "./help/BrowserGuide";
 import getHelpCardColour from "../../selectors/getHelpCardColour";
+import useTheme from "@material-ui/core/styles/useTheme";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -49,11 +51,13 @@ const useStyles = makeStyles(theme => ({
 		height: 56,
 		borderRadius: 100,
 		margin: 24,
-		padding: 6
+		padding: 6,
+		backgroundColor: theme.palette.background.default
 	},
 	content: {
 		padding: 16,
 		borderRadius: 12,
+		color: theme.palette.text.secondary
 	},
 	item: {
 		borderRadius: 12
@@ -63,8 +67,8 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Help = props => {
-	const [expand, setExpand] = useState(null);
+const Help = () => {
+	const [expand, setExpand] = useState<number>(-1);
 	const qna = [
 		{
 			q: "Browser setup guides",
@@ -116,26 +120,25 @@ const Help = props => {
 			</span>
 		}
 	];
-	const toggleExpansion = index => {
+	const toggleExpansion = (index: number) => {
 		if(index !== expand)
 			setExpand(index);
 		else
-			setExpand(null);
+			setExpand(-1);
 	};
 	
-	const {theme} = props;
+	const theme = useTheme();
 	// set the appropriate colours for the card-content
 	const card = {
-		backgroundColor: getHelpCardColour(theme),
+		backgroundColor: getHelpCardColour(theme)
 	};
-	card.color = theme.palette.getContrastText(card.backgroundColor);
 	const textColour = theme.palette.getContrastText(theme.palette.background.default);
 	const classes = useStyles();
-	const items = [];
+	const items = new Array<object>();
 	qna.forEach((i, index) => {
 		items.push(
 			<div key={index}>
-				<ListItem button className={classes.item} value={i.id} onClick={() => toggleExpansion(index)} component={'li'}>
+				<ListItem button className={classes.item} value={index} onClick={() => toggleExpansion(index)} component={'li'}>
 					<ListItemText primary={<span className={classes.title} style={{color: textColour}}>{i.q}</span>}/>
 					<ListItemSecondaryAction className={classes.itemAction}>
 						<Icon path={index === expand ? mdiChevronUp : mdiChevronDown} size={1} color={theme.palette.primary.main}/>
@@ -148,17 +151,17 @@ const Help = props => {
 		)
 	});
 	return (
-		<div>
+		<>
 			<Center>
-				<Avatar className={classes.avatar} style={{backgroundColor: theme.palette.background.default}} component={Paper} src={`${process.env.PUBLIC_URL}/jmp.png`} alt={process.env.REACT_APP_APP_NAME}/>
+				<Avatar className={classes.avatar} component={Paper} src={`${process.env.PUBLIC_URL}/jmp.png`} alt={process.env.REACT_APP_APP_NAME}/>
 			</Center>
 			<Center>
-				<Typography variant={"h4"} className={classes.name}>How can we help you?</Typography>
+				<Typography variant="h4" className={classes.name}>How can we help you?</Typography>
 			</Center>
-			<List component={'ul'}>
+			<List component='ul'>
 				{items}
 			</List>
-		</div>
+		</>
 	);
 };
 export default withTheme(Help);
