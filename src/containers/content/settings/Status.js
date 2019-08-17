@@ -6,29 +6,34 @@ import {connect} from "react-redux";
 import StatusIcon from "../../../components/widget/StatusIcon";
 import PropTypes from "prop-types";
 
-const Status = props => {
+const Status = ({loading, headers, status, getInfoHealth, showReload}) => {
 	useEffect(() => {
 		handleReload();
 	}, []);
 
-	const handleReload = () => { props.getInfoHealth(props.headers) };
+	const handleReload = () => getInfoHealth(headers);
 
 	return (
-		<div>
-			<div>
-				<StatusIcon active={props.status.http === "OK"} title={`JMP Core: ${props.status.http}`} icon={mdiHexagon} />
-				<StatusIcon active={props.status['database'] === true} title={`Database: ${props.status['database']}`} icon={mdiDatabase} />
-				<StatusIcon active={props.status['identityProvider'] === true} title={`Identity Provider: ${props.status['identityProvider']}`} icon={mdiAccountNetworkOutline} />
-				<StatusIcon active={props.status['imageApi'] === true} title={`Image API: ${props.status['imageApi']}`} icon={mdiImageSearchOutline} />
-			</div>
-			{props['showReload'] === true ? <Button disabled={props.loading === true} color="primary" onClick={() => {handleReload()}}>Reload</Button> : ""}
-		</div>
+		<>
+			<>
+				<StatusIcon active={status.http} title={`JMP Core`} icon={mdiHexagon} />
+				<StatusIcon active={status['database']} title={`Database`} icon={mdiDatabase} />
+				<StatusIcon active={status['identityProvider']} title={`Identity Provider`} icon={mdiAccountNetworkOutline} />
+				<StatusIcon active={status['imageApi']} title={`Image API`} icon={mdiImageSearchOutline} />
+			</>
+			{showReload === true ? <Button disabled={loading === true} color="primary" onClick={() => handleReload()}>Reload</Button> : ""}
+		</>
 	);
 };
 Status.propTypes = {
 	loading: PropTypes.bool,
 	headers: PropTypes.object,
-	status: PropTypes.object
+	status: PropTypes.object,
+	showReload: PropTypes.bool
+};
+Status.defaultProps = {
+	loading: false,
+	showReload: false
 };
 const mapStateToProps = state => ({
 	status: state.info.status,

@@ -16,7 +16,7 @@
  */
 
 import * as React from "react";
-import {Button, makeStyles, Theme} from "@material-ui/core";
+import {Button, makeStyles} from "@material-ui/core";
 import Icon from "@mdi/react";
 import {BASE_URL} from "../../constants";
 import {useTheme} from "@material-ui/styles";

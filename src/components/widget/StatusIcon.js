@@ -3,20 +3,28 @@ import Icon from "@mdi/react";
 import React from "react";
 import PropTypes from "prop-types";
 
-export const StatusIcon = props => {
-	const colour = props.active === true ? props.theme.palette.success.main : props.theme.palette.error.main;
-	const colourName = props.active === true ? "primary" : "secondary";
+export const StatusIcon = ({active, title, icon, theme}) => {
+	const {palette} = theme;
+	const ok = active === true || active === "OK";
+	const colour = ok === true ? palette.success.main : palette.error.main;
+	const colourName = ok === true ? "primary" : "secondary";
 	return (
-		<Tooltip title={props.title}>
+		<Tooltip title={`${title}: ${ok === true ? "OK" : "Checks failed"}`}>
 			<IconButton color={colourName}>
-				<Icon component={'div'} path={props.icon} size={1} color={colour}/>
+				<Icon component={'div'} path={icon} size={1} color={colour}/>
 			</IconButton>
 		</Tooltip>
 	)
 };
 StatusIcon.propTypes = {
-	active: PropTypes.bool.isRequired,
+	active: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.bool
+	]),
 	title: PropTypes.string.isRequired,
 	icon: PropTypes.string.isRequired
+};
+StatusIcon.defaultProps = {
+	active: false
 };
 export default withTheme(StatusIcon);

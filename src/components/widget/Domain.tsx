@@ -32,16 +32,16 @@ interface Theme {
 	}
 }
 
-const useStyles = makeStyles(({palette}: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
 	https: {
-		color: palette.success.main
+		color: theme.palette.success.main
 	},
 	http: {
-		color: palette.error.main,
+		color: theme.palette.error.main,
 		textDecorationLine: 'line-through'
 	},
 	secondaryText: {
-		color: palette.text.secondary
+		color: theme.palette.text.secondary
 	}
 }));
 

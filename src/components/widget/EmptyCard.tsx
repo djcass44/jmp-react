@@ -21,7 +21,7 @@ import ListItem from "@material-ui/core/ListItem";
 import React from "react";
 import {useTheme} from "@material-ui/styles";
 
-const useStyles = makeStyles(()=> ({
+const useStyles = makeStyles(() => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
