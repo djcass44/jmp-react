@@ -28,7 +28,6 @@ import Paper from "@material-ui/core/Paper";
 import Pagination from "material-ui-flat-pagination";
 import Center from "react-center";
 import {LinearProgress, makeStyles, withTheme} from "@material-ui/core";
-import EmptyCard from "../../components/widget/EmptyCard";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import { pageSize} from "../../constants";
@@ -41,6 +40,7 @@ import SortButton from "../../components/widget/SortButton";
 import {setOffset, setSort} from "../../actions/Generic";
 import {setDelete, setJumpEdit, setJumpNew} from "../../actions/Modal";
 import JumpItem from "./jmp/JumpItem";
+import EmptyCard from "../../components/widget/EmptyCard";
 
 const Item = posed.div({
 	enter: {opacity: 1},

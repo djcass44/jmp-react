@@ -23,7 +23,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import {connect} from "react-redux";
 import {OAUTH2_CALLBACK, oauth2Callback} from "../../actions/Oauth";
 
-const styles = () => ({
+const styles = theme => ({
 	title: {
 		fontSize: 148,
 		fontWeight: 200,
@@ -32,7 +32,8 @@ const styles = () => ({
 	subtitle: {
 		textAlign: 'center',
 		fontFamily: "Manrope",
-		fontWeight: 500
+		fontWeight: 500,
+		color: theme.palette.text.primary
 	},
 	container: {
 		flex: 1,
@@ -73,18 +74,26 @@ class Callback extends React.Component {
 
 	render() {
 		const {classes} = this.props;
+
+		console.log(this.state.error);
 		return (
 			<div className={classes.container}>
 				<div style={{justifyContent: 'center', alignItems: 'center'}}>
 					{this.state.error == null ?
-						<div>
-							<Center><CircularProgress style={{margin: 24}}/></Center>
-							<Center><Typography className={classes.subtitle} variant={"subtitle1"}>We're just doing some setup...</Typography></Center>
-						</div>
+						<>
+							<Center>
+								<CircularProgress style={{margin: 24}}/>
+							</Center>
+							<Center>
+								<Typography className={classes.subtitle} variant={"subtitle1"}>We're just doing some setup...</Typography>
+							</Center>
+						</>
 						:
-						<div>
-							<Center><Typography className={classes.subtitle} variant={"subtitle1"}>{this.state.error}</Typography></Center>
-						</div>
+						<>
+							<Center>
+								<Typography className={classes.subtitle} variant={"subtitle1"}>{this.state.error.toString()}</Typography>
+							</Center>
+						</>
 					}
 				</div>
 			</div>

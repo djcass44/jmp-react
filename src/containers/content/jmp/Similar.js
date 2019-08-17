@@ -30,9 +30,17 @@ import Tooltip from "@material-ui/core/Tooltip";
 import {Link, withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
 import ReactImageFallback from "react-image-fallback";
+import getAvatarScheme from "../../../style/getAvatarScheme";
 
 const useStyles = makeStyles(theme => ({
-	title: {fontFamily: "Manrope", fontWeight: 500},
+	title: {
+		fontFamily: "Manrope",
+		fontWeight: 500,
+		color: theme.palette.text.primary
+	},
+	subtitle: {
+		color: theme.palette.text.secondary
+	},
 	button: {
 		// margin: theme.spacing.unit,
 	},
@@ -41,7 +49,9 @@ const useStyles = makeStyles(theme => ({
 		fontFamily: "Manrope",
 		fontWeight: 500
 	},
-	grow: {flexGrow: 1},
+	grow: {
+		flexGrow: 1
+	},
 	container: {
 		flex: 1,
 		justifyContent: 'center',
@@ -82,10 +92,12 @@ const Similar = props => {
 			break;
 	}
 	const chips = props.similar.map(i => {
+		const scheme = getAvatarScheme(theme, i.personal);
+		const textColour = theme.palette.getContrastText(scheme[0]);
 		let avatar = {
 			icon: i.personal === 0 ? mdiEarth : i.personal === 1 ? mdiAccountCircleOutline : mdiAccountGroupOutline,
-			bg: i.personal === 0 ? theme.palette.primary.light : i.personal === 1 ? theme.palette.success.light : theme.palette.info.light,
-			fg: i.personal === 0 ? theme.palette.primary.dark : i.personal === 1 ? theme.palette.success.dark : theme.palette.info.dark
+			bg: scheme[0],
+			fg: scheme[1]
 		};
 		return (
 			<Tooltip disableFocusListener title={i.location} placement={"bottom"} interactive key={`${i.id}${i.name}`}>
@@ -96,7 +108,7 @@ const Similar = props => {
 							<Icon path={avatar.icon} color={avatar.fg} size={1}/>
 						} initialImage={<Icon path={avatar.icon} color={avatar.fg} size={1}/>}/>
 					</Avatar>}
-					label={i.name}
+					label={<span style={{color: textColour}}>{i.name}</span>}
 					clickable
 					component={Link}
 					to={`/jmp?query=${i.name}?id=${i.id}`}
@@ -108,9 +120,15 @@ const Similar = props => {
 	return <Grid container spacing={5} className={classes.container}>
 		<Grid item sm={3}/>
 		<Grid item sm={6}>
-			<Center><Typography className={classes.title} variant={"h1"}>Woah</Typography></Center>
-			<Center><Typography variant={"subtitle1"}>Before you go <span role={"img"} aria-label={"Rocket"}>🚀</span></Typography></Center>
-			<Center><Typography variant={"subtitle1"} className={classes.title}>{props.error == null ? status : props.error}</Typography></Center>
+			<Center>
+				<Typography className={classes.title} variant={"h1"}>Woah</Typography>
+			</Center>
+			<Center>
+				<Typography className={classes.subtitle} variant={"subtitle1"}>Before you go <span role={"img"} aria-label={"Rocket"}>🚀</span></Typography>
+			</Center>
+			<Center>
+				<Typography variant={"subtitle1"} className={classes.title}>{props.error == null ? status : props.error}</Typography>
+			</Center>
 			{props.loading === true ? <Center><CircularProgress/></Center> : ""}
 			<Center style={{padding: 16}}>{chips}</Center>
 		</Grid>

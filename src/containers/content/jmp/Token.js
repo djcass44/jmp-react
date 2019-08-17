@@ -19,13 +19,21 @@ import React, {useEffect} from "react";
 import {client} from "../../../constants";
 import {GENERIC_GET_TOKEN, getTokenEnd, getTokenFail, getTokenStart} from "../../../actions/Generic";
 import {connect} from "react-redux";
-import {withTheme} from "@material-ui/core";
+import {makeStyles, withTheme} from "@material-ui/core";
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import Center from "react-center";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
 
+const useStyles = makeStyles(theme => ({
+	text: {
+		color: theme.palette.text.primary
+	}
+}));
+
 export const Token = props => {
+	const classes = useStyles();
+
 	useEffect(() => {
 		window.document.title = `${process.env.REACT_APP_APP_NAME}`;
 		jumpUser();
@@ -57,15 +65,16 @@ export const Token = props => {
 			props.getTokenFail("You must specify a query!");
 		}
 	};
-
-	const errorMessage = props.error != null ?
-		<Center>{props.error}</Center>
-		:
-		<Center>Jumping... You can close this window if it stays open</Center>;
-	return props.loading === true ?
-		<Center><CircularProgress/></Center>
-		:
-		<div>{errorMessage}</div>;
+	const message = props.error != null ? props.error : "Jumping... You can close this window if it stays open";
+	return (
+		<Center>
+			{props.loading === true ?
+				<CircularProgress/>
+				:
+				<span className={classes.text}>{message}</span>
+			}
+		</Center>
+	);
 };
 Token.propTypes = {
 	loading: PropTypes.bool,
@@ -82,4 +91,7 @@ const mapDispatchToProps = ({
 	getTokenEnd,
 	getTokenFail
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withTheme(Token)));
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(withRouter(withTheme(Token)));

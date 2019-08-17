@@ -12,26 +12,29 @@
  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
- *
  */
 
-import React from "react";
-import Avatar from "@material-ui/core/es/Avatar";
-import ListItemText from "@material-ui/core/es/ListItemText";
-import ListItem from "@material-ui/core/ListItem";
-import {SentimentDissatisfied} from "@material-ui/icons";
-import {makeStyles, withTheme} from "@material-ui/core";
+import {Avatar, createStyles, ListItemText, makeStyles, Theme} from "@material-ui/core";
 import getAvatarScheme from "../../style/getAvatarScheme";
+import {SentimentDissatisfied} from "@material-ui/icons";
+import ListItem from "@material-ui/core/ListItem";
+import React from "react";
+import {useTheme} from "@material-ui/styles";
 
-const useStyles = makeStyles(theme => ({
-	title: {fontFamily: "Manrope", fontWeight: 500},
+const useStyles = makeStyles(()=> ({
+	title: {
+		fontFamily: "Manrope",
+		fontWeight: 500
+	},
 	avatar: {
 		marginRight: 12
 	}
 }));
 
-export const EmptyCard = ({theme}) => {
+export default () => {
+	const theme = useTheme<Theme>();
 	const classes = useStyles();
+
 	const scheme = getAvatarScheme(theme, 3);
 	const avatar = {
 		backgroundColor: scheme[0],
@@ -44,6 +47,5 @@ export const EmptyCard = ({theme}) => {
 			</Avatar>
 			<ListItemText className={classes.title} primary={"Nothing could be found."}/>
 		</ListItem>
-	)
+	);
 };
-export default withTheme(EmptyCard);
