@@ -102,7 +102,7 @@ const Jumps = props => {
 	const subHeader = (<ListSubheader className={classes.title} inset component={"div"}>
 		{process.env.REACT_APP_APP_NOUN}s {props.searchFilter != null && props.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
 		{/*<div className={classes.grow}/>*/}
-		<SortButton selectedSort={props.sort} sorts={sorts} onSubmit={(e, value) => {handleSortChange(value)}}/>
+		<SortButton selectedSort={props.sort} sorts={sorts} onSubmit={(e) => handleSortChange(e)}/>
 		{props.isLoggedIn === true ?
 			<IconButton centerRipple={false} aria-label="Add" onClick={(() => {handleJumpDialog(true)})}>
 				<AddIcon fontSize={"small"}/>

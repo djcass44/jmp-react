@@ -14,10 +14,10 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export const AdminPanel = props => {
+export const AdminPanel = ({isAdmin}) => {
 	const classes = useStyles();
 
-	if(props.isAdmin === false) return "";
+	if(isAdmin === false) return <div/>;
 	return (
 		<div className={classes.root}>
 			<Card className={classes.card}>

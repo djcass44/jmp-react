@@ -17,12 +17,21 @@
 
 import React from "react";
 import {Alert} from "evergreen-ui";
+import PropTypes from "prop-types";
 
-export const Banner = props => {
+// THIS CLASS CANNOT BE CONVERTED TO TYPESCRIPT UNTIL EVERGREEN-UI HAS TYPE DEFINITIONS
 
-	return props.open === true && props.visible === true ?
-			<Alert intent={"danger"} title={props.label} style={{marginBottom: 32, borderRadius: 8}} />
+const Banner = ({open, label}) => {
+	return open === true ?
+			<Alert intent={"danger"} title={label && label.toString() || "No information could be provided"} style={{marginBottom: 32, borderRadius: 8}} />
 			:
 			<div/>
+};
+Banner.propTypes = {
+	open: PropTypes.bool.isRequired,
+	label: PropTypes.object
+};
+Banner.defaultProps = {
+	label: null
 };
 export default Banner;

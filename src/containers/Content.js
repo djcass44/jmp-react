@@ -20,18 +20,13 @@ import {Grid, makeStyles, withStyles, withTheme} from "@material-ui/core";
 import Jumps from "./content/Jumps";
 import {Switch, Route, withRouter} from "react-router-dom";
 import Login from "./content/Login";
-import {connect} from "react-redux";
-import {OAUTH_REFRESH} from "../actions/Auth";
 import NotFound from "./content/NotFound";
-import ErrorIcon from "@material-ui/icons/ErrorOutline";
 import Logout from "./content/Logout";
 import Identity from "./content/Identity";
 import Token from "./content/jmp/Token";
-import Banner from "../components/widget/Banner";
 import Similar from "./content/jmp/Similar";
 import Settings from "./content/Settings";
 import Help from "./content/Help";
-import {JUMP_LOAD} from "../actions/Jumps";
 import Callback from "./content/Callback";
 
 const useStyles = makeStyles(theme => ({
@@ -58,10 +53,6 @@ export const Content = props => {
 	const {theme} = props;
 	const {error} = theme.palette;
 	let content = (<Grid item xs={12} sm={6}>
-		{/* TODO fix the background colour of the banner avatar */}
-		<Banner avatarStyle={{backgroundColor: error.light, color: error.dark}} open={props.error != null} label={props.error} icon={
-			<ErrorIcon style={{color: error.dark}}/>
-		}/>
 		<Switch>
 			<Route exact path={"/"} component={Jumps} key={"jumps"}/>
 			<Route exact path={"/identity"} component={Identity} key={"identity"}/>
@@ -85,7 +76,4 @@ export const Content = props => {
 		</div>
 	);
 };
-const mapStateToProps = state => ({
-	error: state.errors[OAUTH_REFRESH] || state.errors[JUMP_LOAD],
-});
-export default connect(mapStateToProps, null)(withTheme(withRouter(Content)));
+export default withTheme(withRouter(Content));

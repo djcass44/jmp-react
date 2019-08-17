@@ -4,12 +4,16 @@ import {Menu} from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import SortIcon from "@material-ui/icons/Sort";
 import CheckIcon from "@material-ui/icons/Check";
-import PropTypes from "prop-types";
 
-export const SortButton = props => {
-	const [anchorEl, setAnchorEl] = React.useState(null);
+interface Sort {
+	id: string,
+	value: string
+}
 
-	const handleClick = e => {
+export const SortButton = ({selectedSort, sorts, onSubmit}: {selectedSort: string, sorts: Array<Sort>, onSubmit: Function}) => {
+	const [anchorEl, setAnchorEl] = React.useState<any>(null);
+
+	const handleClick = (e: any) => {
 		setAnchorEl(e.currentTarget);
 	};
 
@@ -17,16 +21,18 @@ export const SortButton = props => {
 		setAnchorEl(null);
 	};
 
-	const handleSubmit = (e, value) => {
-		props.onSubmit(e, value);
+	const handleSubmit = (id: string) => {
+		onSubmit(id);
 		handleClose();
 	};
 
-	const items = props.sorts.map(s => {
-		return <MenuItem onClick={(e) => {handleSubmit(e, s.id)}} component={'li'} button={true} key={s.id} value={s.id}>
-			{s.id === props.selectedSort ? <CheckIcon/> : ""}
-			{s.value}
-		</MenuItem>
+	const items = sorts.map(s => {
+		return (
+			<MenuItem onClick={() => handleSubmit(s.id)} component="li" button key={s.id} value={s.id}>
+				{s.id === selectedSort ? <CheckIcon/> : ""}
+				{s.value}
+			</MenuItem>
+		);
 	});
 
 	return (
@@ -39,10 +45,5 @@ export const SortButton = props => {
 			</Menu>
 		</span>
 	)
-};
-SortButton.propTypes = {
-	selectedSort: PropTypes.string.isRequired,
-	onSubmit: PropTypes.func.isRequired,
-	sorts: PropTypes.array.isRequired
 };
 export default SortButton;
