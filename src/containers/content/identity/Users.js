@@ -50,6 +50,7 @@ import getAvatarScheme from "../../../style/getAvatarScheme";
 import getIconColour from "../../../style/getIconColour";
 import useTheme from "@material-ui/core/styles/useTheme";
 import {setUserGroups} from "../../../actions/Modal";
+import {setSort} from "../../../actions/Generic";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -95,7 +96,7 @@ const Users = ({users, offset, headers, searchFilter, sort, loading, isAdmin, is
 	const handlePageChange = offset => props.setOffset(offset);
 	const handleSortChange = value => {
 		props.setSort(value);
-		props.getGroups(headers);
+		props.getUsers(headers);
 	};
 	const capitalise = (text) => {
 		if(text == null || text.length === 0) return text;
@@ -152,7 +153,7 @@ const Users = ({users, offset, headers, searchFilter, sort, loading, isAdmin, is
 	const subHeader = (
 		<ListSubheader className={classes.title} inset component={"div"}>
 			Users {searchFilter != null && searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
-			<SortButton selectedSort={sort} sorts={sorts} onSubmit={(e, value) => handleSortChange(value)}/>
+			<SortButton selectedSort={sort} sorts={sorts} onSubmit={(value) => handleSortChange(value)}/>
 			{/*<IconButton className={classes.button} aria-label="Add"><AddIcon fontSize={"small"}/></IconButton>*/}
 		</ListSubheader>
 	);
@@ -188,13 +189,15 @@ const mapStateToProps = state => ({
 	headers: state.auth.headers,
 	ready: state.auth.ready,
 	searchFilter: state.generic.searchFilter,
+	sort: state.generic.sort,
 	isAdmin: state.auth.isAdmin,
 	isLoggedIn: state.auth.isLoggedIn
 });
 const mapDispatchToProps = ({
 	getUsers,
 	patchUserRole,
-	setUserGroups
+	setUserGroups,
+	setSort
 });
 export default connect(
 	mapStateToProps,

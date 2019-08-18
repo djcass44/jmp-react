@@ -35,7 +35,7 @@ import posed, {PoseGroup} from "react-pose";
 import JumpDialog from "../modal/JumpDialog";
 import DeleteDialog from "../modal/DeleteDialog";
 import JumpEditDialog from "../modal/JumpEditDialog";
-import {sortItems} from "../../misc/Sort";
+import {defaultSorts, sortItems} from "../../misc/Sort";
 import SortButton from "../../components/widget/SortButton";
 import {setOffset, setSort} from "../../actions/Generic";
 import {setDelete, setJumpEdit, setJumpNew} from "../../actions/Modal";
@@ -59,13 +59,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Jumps = props => {
-	const sorts = [
-		{id: 'name', value: "Name"},
-		{id: '-name', value: "Name Desc"},
-		{id: 'usage', value: "Usage"},
-		{id: 'creation', value: "Creation"},
-		{id: 'updated', value: "Last edited"}
-	];
+	const sorts = [...defaultSorts, {id: 'usage', value: "Usage"}];
 	
 	useEffect(() => {
 		window.document.title = `${process.env.REACT_APP_APP_NAME}`;

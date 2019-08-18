@@ -26,7 +26,7 @@ import {getGroups, GROUP_LOAD} from "../../../actions/Groups";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline} from "@mdi/js";
 import posed, {PoseGroup} from "react-pose";
-import {sortItems} from "../../../misc/Sort";
+import {defaultSorts, sortItems} from "../../../misc/Sort";
 import SortButton from "../../../components/widget/SortButton";
 import AddIcon from "@material-ui/icons/Add";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
@@ -52,12 +52,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Groups = props => {
-	const sorts = [
-		{id: 'name', value: "Name"},
-		{id: '-name', value: "Name Desc"},
-		{id: 'creation', value: "Creation"},
-		{id: 'updated', value: "Last edited"}
-	];
+	const sorts = defaultSorts;
 	
 	useEffect(() => {
 		props.getGroups(props.headers);
@@ -103,7 +98,7 @@ const Groups = props => {
 	const subHeader = (
 		<ListSubheader className={classes.title} inset component="div">
 			Groups {props.searchFilter != null && props.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
-			<SortButton selectedSort={props.sort} sorts={sorts} onSubmit={(e, value) => handleSortChange(value)}/>
+			<SortButton selectedSort={props.sort} sorts={sorts} onSubmit={(value) => handleSortChange(value)}/>
 			<IconButton centerRipple={false} aria-label="Add" onClick={() => props.setGroupNew(true)}>
 				<AddIcon fontSize="small"/>
 			</IconButton>
