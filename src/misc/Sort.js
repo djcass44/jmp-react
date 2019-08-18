@@ -26,3 +26,10 @@ export function sortItems(items, sort) {
 			});
 	}
 }
+
+export const defaultSorts = [
+	{id: 'name', value: "Name"},
+	{id: '-name', value: "Name Desc"},
+	{id: 'creation', value: "Creation"},
+	{id: 'updated', value: "Last edited"}
+];

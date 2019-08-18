@@ -17,17 +17,29 @@
 
 import {getUsers, PATCH_USER_ROLE, patchUserRole, USER_LOAD} from "../../../actions/Users";
 import {connect} from "react-redux";
-import {LinearProgress, ListItemSecondaryAction, Menu, withStyles, withTheme, Avatar, ListItemText, ListItem, ListSubheader, Paper, List, MenuItem} from "@material-ui/core";
-import React from "react";
+import {
+	LinearProgress,
+	ListItemSecondaryAction,
+	Menu,
+	Avatar,
+	ListItemText,
+	ListItem,
+	ListSubheader,
+	Paper,
+	List,
+	MenuItem,
+	makeStyles
+} from "@material-ui/core";
+import React, {useEffect, useState} from "react";
 import AccountCircleIcon from "@material-ui/icons/AccountCircleOutlined";
 import AdminCircleIcon from "@material-ui/icons/SupervisedUserCircleOutlined";
 import ReactImageFallback from "react-image-fallback";
 import EmptyCard from "../../../components/widget/EmptyCard";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
-import {LS_SORT, pageSize} from "../../../constants";
+import {pageSize} from "../../../constants";
 import posed, {PoseGroup} from "react-pose";
-import {sortItems} from "../../../misc/Sort";
+import {defaultSorts, sortItems} from "../../../misc/Sort";
 import SortButton from "../../../components/widget/SortButton";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@mdi/react";
@@ -36,13 +48,15 @@ import {Badge} from "evergreen-ui";
 import GroupModDialog from "../../modal/GroupModDialog";
 import getAvatarScheme from "../../../style/getAvatarScheme";
 import getIconColour from "../../../style/getIconColour";
+import useTheme from "@material-ui/core/styles/useTheme";
+import {setUserGroups} from "../../../actions/Modal";
 
 const Item = posed.div({
 	enter: {opacity: 1},
 	exit: {opacity: 0}
 });
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
@@ -51,161 +65,121 @@ const styles = theme => ({
 		backgroundColor: theme.palette.background.default,
 		flexGrow: 1
 	}
-});
+}));
 
-class Users extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			users: props.users,
-			offset: 0,
-			headers: props.headers,
-			searchFilter: props.searchFilter,
-			sort: localStorage.getItem(LS_SORT),
-			sorts: [
-				{id: 'name', value: "Name"},
-				{id: '-name', value: "Name Desc"},
-				{id: 'creation', value: "Creation"},
-				{id: 'updated', value: "Last edited"}
-			],
-			isAdmin: props.isAdmin,
-			isLoggedIn: props.isLoggedIn,
-			// Used by the 'Modify groups' dialog
-			showModDialog: false,
-			modifyUser: null
-		};
-		this.filterUser = this.filterUser.bind(this);
-	}
+const Users = ({users, offset, headers, searchFilter, sort, loading, isAdmin, isLoggedIn, ...props}) => {
+	const sorts = defaultSorts;
+	const [expanded, setExpanded] = useState(-1);
+	const [anchorEl, setAnchorEl] = useState(null);
 
-	componentWillReceiveProps(nextProps, nextContext) {
-		if(nextProps.headers !== this.state.headers || nextProps.ready !== this.state.ready) {
-			// Load jumps from the API
-			this.props.getUsers(nextProps.headers);
-		}
-		this.setState({...nextProps});
-	}
 
-	componentDidMount() {
-		this.props.getUsers(this.state.headers);
-	}
-	toggleExpansion(e, id) {
-		let val = id;
-		const {users} = this.state;
-		users.forEach(i => {
-			if(i.id !== val) {
-				i.expanded = false;
-				return;
-			}
-			if(i.expanded == null) i.expanded = true;
-			else i.expanded = i.expanded !== true;
-			i.anchorEl = e.currentTarget;
-		});
-		this.setState({...users});
-	}
-	filterUser(user) {
-		return user.username.toLowerCase().includes(this.state.searchFilter) ||
-			user.role.toLowerCase() === this.state.searchFilter.toLowerCase() ||
-			user.from.toLowerCase() === this.state.searchFilter.toLowerCase();
-	}
-	handlePatchUser(e, user, role) {
-		this.props.patchUserRole(this.state.headers, JSON.stringify({
+	useEffect(() => props.getUsers(headers), [headers]);
+
+	const toggleExpansion = (e, id) => {
+		setExpanded(expanded === id ? -1 : id);
+		setAnchorEl(expanded === id ? null : e.currentTarget);
+	};
+
+	const filterUser = user => {
+		return user.username.toLowerCase().includes(searchFilter) ||
+			user.role.toLowerCase() === searchFilter.toLowerCase() ||
+			user.from.toLowerCase() === searchFilter.toLowerCase();
+	};
+
+	const handlePatchUser = (user, role) => {
+		props.patchUserRole(headers, JSON.stringify({
 			id: user.id,
 			role: role
 		}));
-	}
-	handlePageChange(offset) {
-		this.setState({offset: offset});
-	}
-	handleSortChange(e, value) {
-		this.setState({sort: value});
-		localStorage.setItem(LS_SORT, value);
-		this.props.getUsers(this.state.headers);
-	}
-	handleModDialog(e, visible, item) {
-		this.setState({showModDialog: visible, modifyUser: item});
-	}
-	static capitalise(text) {
+	};
+	const handlePageChange = offset => props.setOffset(offset);
+	const handleSortChange = value => {
+		props.setSort(value);
+		props.getGroups(headers);
+	};
+	const capitalise = (text) => {
 		if(text == null || text.length === 0) return text;
 		if(text.toLowerCase() === "ldap") return "LDAP"; // hmm
 		return text.substring(0, 1).toUpperCase() + text.substring(1, text.length).toLowerCase();
-	}
-	render() {
-		const {classes, theme} = this.props;
-		// get the colour scheme
-		const scheme = getAvatarScheme(theme, 0);
-		const schemeAdmin = getAvatarScheme(theme, 3);
-		let listItems = [];
-		// Tell the loop what our pagination limits are
-		let max = (this.state.offset + pageSize);
-		if(max > this.state.users.length) max = this.state.users.length;
-		let sortedUsers = sortItems(this.state.users, this.state.sort);
-		sortedUsers.filter(this.filterUser).forEach((i, index) => {
-			if(index < this.state.offset || index > max) return;
-			const isAdmin = i.role === 'ADMIN';
-			let avatar = {
-				icon: isAdmin ? <AdminCircleIcon/> : <AccountCircleIcon/>,
-				bg: isAdmin ? schemeAdmin[0] : scheme[0],
-				fg: isAdmin ? schemeAdmin[1] : scheme[1],
-				banner: isAdmin ? <Badge color="red">Admin</Badge> : ""
-			};
-			let secondary = <span>{Users.capitalise(i.from)}&nbsp;{avatar.banner}</span>;
-			listItems.push((
-				<ListItem button disableRipple key={index} component={'li'}>
-					<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
-						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon}/>
-					</Avatar>
-					<ListItemText primary={<span className={classes.title}>{i.username}</span>} secondary={secondary}/>
-					{this.state.isAdmin === true ? <ListItemSecondaryAction>
-						<IconButton centerRipple={false} onClick={(e) => this.toggleExpansion(e, i.id)}>
-							<Icon path={mdiDotsVertical} size={1} color={getIconColour(theme)}/>
-							<Menu id={"user-menu"} open={i.expanded === true} anchorEl={i.anchorEl} anchorOrigin={{horizontal: "left", vertical: "top"}} onExit={() => {i.expanded = false}}>
-								{i.role !== 'ADMIN' ? <MenuItem button={true} component={'li'} onClick={(e) => {this.handlePatchUser(e, i, 'ADMIN')}}>Promote to admin</MenuItem> : ""}
-								{i.role === 'ADMIN' && i.username !== "admin" ?
-									<MenuItem button={true} component={'li'} onClick={(e) => {this.handlePatchUser(e, i, 'USER')}}>
-										Demote to user
-									</MenuItem>
-									:
-									""
-								}
-								<MenuItem button={true} component={'li'} onClick={(e) => {this.handleModDialog(e, true, i)}}>Modify groups</MenuItem>
-								{i.username !== "admin" && i.from.toLowerCase() === 'local' ? <MenuItem button={true} component={'li'}>Delete</MenuItem> : ""}
-							</Menu>
-						</IconButton>
-					</ListItemSecondaryAction> : ""}
-				</ListItem>
-			));
-		});
-		// TODO move to component
-		const subHeader = (<ListSubheader className={classes.title} inset component={"div"}>
-			Users {this.state.searchFilter != null && this.state.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
-			<SortButton selectedSort={this.state.sort} sorts={this.state.sorts} onSubmit={(e, value) => this.handleSortChange(e, value)}/>
+	};
+	const classes = useStyles();
+	const theme = useTheme();
+	// get the colour scheme
+	const scheme = getAvatarScheme(theme, 0);
+	const schemeAdmin = getAvatarScheme(theme, 3);
+	let listItems = [];
+	// Tell the loop what our pagination limits are
+	let max = (offset + pageSize);
+	if(max > users.length) max = users.length;
+	let sortedUsers = sortItems(users, sort);
+	sortedUsers.filter(filterUser).forEach((i, index) => {
+		if(index < offset || index > max) return;
+		const isAdmin = i.role === 'ADMIN';
+		let avatar = {
+			icon: isAdmin ? <AdminCircleIcon/> : <AccountCircleIcon/>,
+			bg: isAdmin ? schemeAdmin[0] : scheme[0],
+			fg: isAdmin ? schemeAdmin[1] : scheme[1],
+			banner: isAdmin ? <Badge color="red">Admin</Badge> : ""
+		};
+		let secondary = <span>{capitalise(i.from)}&nbsp;{avatar.banner}</span>;
+		listItems.push((
+			<ListItem button disableRipple key={index} component='li'>
+				<Avatar component='div' style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
+					<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon}/>
+				</Avatar>
+				<ListItemText primary={<span className={classes.title}>{i.username}</span>} secondary={secondary}/>
+				{isAdmin === true ? <ListItemSecondaryAction>
+					<IconButton centerRipple={false} onClick={(e) => toggleExpansion(e, i.id)}>
+						<Icon path={mdiDotsVertical} size={1} color={getIconColour(theme)}/>
+						<Menu id={"user-menu"} open={i.id === expanded} anchorEl={anchorEl} anchorOrigin={{horizontal: "left", vertical: "top"}} onExit={() => {i.expanded = false}}>
+							{i.role !== 'ADMIN' ? <MenuItem button component='li' onClick={() => handlePatchUser(i, 'ADMIN')}>Promote to admin</MenuItem> : ""}
+							{i.role === 'ADMIN' && i.username !== "admin" ?
+								<MenuItem button component='li' onClick={() => handlePatchUser(i, 'USER')}>
+									Demote to user
+								</MenuItem>
+								:
+								""
+							}
+							<MenuItem button component='li' onClick={() => props.setUserGroups(true, i)}>Modify groups</MenuItem>
+							{i.username !== "admin" && i.from.toLowerCase() === 'local' ? <MenuItem button={true} component='li'>Delete</MenuItem> : ""}
+						</Menu>
+					</IconButton>
+				</ListItemSecondaryAction> : ""}
+			</ListItem>
+		));
+	});
+	// TODO move to component
+	const subHeader = (
+		<ListSubheader className={classes.title} inset component={"div"}>
+			Users {searchFilter != null && searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
+			<SortButton selectedSort={sort} sorts={sorts} onSubmit={(e, value) => handleSortChange(value)}/>
 			{/*<IconButton className={classes.button} aria-label="Add"><AddIcon fontSize={"small"}/></IconButton>*/}
-		</ListSubheader>);
+		</ListSubheader>
+	);
 
-		return (
-			<div>
-				{subHeader}
-				{this.state.loading === true || this.state.loadingPatch === true ? <LinearProgress className={classes.progress} color={"primary"}/> : "" }
-				<PoseGroup animateOnMount={true}>
-					<Paper key={"root"} component={Item} style={{borderRadius: 12, marginBottom: 8}}>
-						<List component={'ul'}>
-							{listItems.length > 0 ? listItems : <EmptyCard/>}
-						</List>
-						<GroupModDialog user={this.state.modifyUser} open={this.state.showModDialog} onExited={(e) => {this.handleModDialog(e, false, null)}}/>
-					</Paper>
-				</PoseGroup>
-				{listItems.length > pageSize ?
-					<Center>
-						<Pagination limit={pageSize} offset={this.state.offset} total={sortedUsers.length}
-	                        nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, offset) => this.handlePageChange(offset)}/>
-					</Center>
-					:
-					<div/>
-				}
-			</div>
-		)
-	}
-}
+	return (
+		<div>
+			{subHeader}
+			{loading === true || props.loadingPatch === true ? <LinearProgress className={classes.progress} color="primary"/> : "" }
+			<PoseGroup animateOnMount={true}>
+				<Paper key="root" component={Item} style={{borderRadius: 12, marginBottom: 8}}>
+					<List component='ul'>
+						{listItems.length > 0 ? listItems : <EmptyCard/>}
+					</List>
+					<GroupModDialog/>
+				</Paper>
+			</PoseGroup>
+			{listItems.length > pageSize ?
+				<Center>
+					<Pagination limit={pageSize} offset={offset} total={sortedUsers.length}
+					            nextPageLabel="▶" previousPageLabel="◀" onClick={(e, offset) => handlePageChange(offset)}/>
+				</Center>
+				:
+				<div/>
+			}
+		</div>
+	);
+};
 
 const mapStateToProps = state => ({
 	users: state.users.users,
@@ -219,10 +193,10 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = ({
 	getUsers,
-	patchUserRole
-
+	patchUserRole,
+	setUserGroups
 });
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withStyles(styles)(withTheme(Users)));
+)(Users);

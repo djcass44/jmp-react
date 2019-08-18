@@ -26,6 +26,7 @@ import {
 import {connect} from "react-redux";
 import {sortItems} from "../../misc/Sort";
 import Center from "react-center";
+import {setUserGroups as mSetUserGroups} from "../../actions/Modal";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -45,7 +46,7 @@ class GroupModPayload {
 		this.rm = rm;
 	}
 }
-const GroupModDialog = ({open, groups, userGroups, loading, headers, ...props}) => {
+const GroupModDialog = ({open, user, groups, userGroups, loading, headers, ...props}) => {
 	const [usermap, setUsermap] = useState([]);
 
 	useEffect(() => {
@@ -65,8 +66,8 @@ const GroupModDialog = ({open, groups, userGroups, loading, headers, ...props}) 
 	};
 
 	const loadData = () => {
-		if(props.user == null) return;
-		props.getUserGroups(headers, props.user.id);
+		if(user == null) return;
+		props.getUserGroups(headers, user.id);
 	};
 
 	const onChecked = index => {
@@ -89,7 +90,7 @@ const GroupModDialog = ({open, groups, userGroups, loading, headers, ...props}) 
 			rm.push(item.id);
 		const payload = new GroupModPayload(add, rm);
 		item.loading = true;
-		props.setUserGroups(headers, props.user.id, JSON.stringify(payload));
+		props.setUserGroups(headers, user.id, JSON.stringify(payload));
 	};
 
 	const classes = useStyles();
@@ -107,7 +108,7 @@ const GroupModDialog = ({open, groups, userGroups, loading, headers, ...props}) 
 		)
 	});
 	return (
-		<Dialog open={open === true} aria-labelledby="form-dialog-title" onClose={() => props.onExited()} onEnter={() => loadData()}>
+		<Dialog open={open === true} aria-labelledby="form-dialog-title" onEnter={() => loadData()}>
 			<DialogTitle id="form-dialog-title">
 				<Typography className={classes.title}>
 					Modify groups
@@ -115,7 +116,7 @@ const GroupModDialog = ({open, groups, userGroups, loading, headers, ...props}) 
 			</DialogTitle>
 			<DialogContent>
 				<Typography variant="body1">
-					Here you can modify the groups that {props.user != null ? props.user.username || 'the user' : 'the user'} is in.
+					Here you can modify the groups that {user != null ? user.username || 'the user' : 'the user'} is in.
 				</Typography>
 				<div style={{margin: 12}}>
 				{loading === true && usermap.length === 0 ?
@@ -128,22 +129,25 @@ const GroupModDialog = ({open, groups, userGroups, loading, headers, ...props}) 
 				</div>
 			</DialogContent>
 			<DialogActions>
-				<Button className={classes.button} color="secondary" onClick={() => props.onExited()}>Done</Button>
+				<Button className={classes.button} color="secondary" onClick={() => props.mSetUserGroups(false, null)}>Done</Button>
 			</DialogActions>
 		</Dialog>
 	);
-}
+};
 const mapStateToProps = state => ({
 	groups: state.groups.groups,
 	userGroups: state.groups.userGroups,
 	loading: state.loading[GROUP_LOAD] || state.loading[GET_USER_GROUPS],
 	loadingMod: state.loading[SET_USER_GROUPS],
-	headers: state.auth.headers
+	headers: state.auth.headers,
+	user: state.modal.user.group.item,
+	open: state.modal.user.group.open
 });
 const mapDispatchToProps = ({
 	getGroups,
 	getUserGroups,
-	setUserGroups
+	setUserGroups,
+	mSetUserGroups
 });
 export default connect(
 	mapStateToProps,

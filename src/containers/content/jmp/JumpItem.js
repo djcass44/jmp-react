@@ -55,7 +55,7 @@ const JumpItem = ({jump, ...props}) => {
 	
 	return (
 		<div>
-			<ListItem button disableRipple value={jump.id} onClick={() => props.setJumpExpand(jump.id)}>
+			<ListItem button value={jump.id} onClick={() => props.setJumpExpand(jump.id)}>
 				<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
 					<ReactImageFallback style={{borderRadius: 64}} src={jump.image} fallbackImage={<Icon path={avatar.icon} color={avatar.fg} size={1}/>} initialImage={<Icon path={avatar.icon} color={avatar.fg} size={1}/>}/>
 				</Avatar>
