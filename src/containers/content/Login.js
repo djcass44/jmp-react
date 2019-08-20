@@ -68,7 +68,7 @@ const Login = ({isLoggedIn, version, providers, loading, error, ...props}) => {
 	
 	// lifecycle hooks
 	useEffect(() => {
-		window.document.title = `Login - ${process.env.REACT_APP_APP_NAME}`;
+		window.document.title = `Login - ${APP_NAME}`;
 		props.getVersion();
 		props.oauth2Discover("github");
 		props.oauth2Discover("google");
@@ -153,7 +153,7 @@ const Login = ({isLoggedIn, version, providers, loading, error, ...props}) => {
 											{providers['github'] === true ?
 												<SocialButton id={"github"} name={"GitHub"} colour={"#171516"}
 												              icon={mdiGithubCircle}/> : ""}
-											{providers['google'] === false ?
+											{providers['google'] === true ?
 												<SocialButton id={"google"} name={"Google"} colour={"#4285F4"}
 												              icon={mdiGoogle}/> : ""}
 										</Center>

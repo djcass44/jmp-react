@@ -2,20 +2,12 @@ import {IconButton, Tooltip} from "@material-ui/core";
 import {useTheme} from "@material-ui/core/styles";
 import Icon from "@mdi/react";
 import React from "react";
+import {Theme} from "../../style/palette";
 
-interface MTheme {
-	palette: {
-		success: {
-			main: string
-		},
-		error: {
-			main: string
-		}
-	}
-}
+export const StatusIcon = ({active = false, title, icon}: {active: boolean | string | null, title: string, icon: string}) => {
+	const theme = useTheme<Theme>();
 
-export const StatusIcon = ({active = false, title, icon}: {active: any, title: string, icon: string}) => {
-	const theme = useTheme<MTheme>();
+	if(active == null) return "";
 
 	const ok = active === true || active === "OK";
 	const colour = ok ? theme.palette.success.main : theme.palette.error.main;

@@ -1,3 +1,25 @@
+export interface Theme {
+	palette: PaletteGroup
+}
+export interface PaletteGroup {
+	primary: Palette,
+	secondary: Palette,
+	warning: Palette,
+	error: Palette,
+	info: Palette,
+	success: Palette,
+	background: {
+		default: string,
+		paper: string
+	},
+	type: string
+}
+export interface Palette {
+	main: string,
+	light: string,
+	dark: string
+}
+
 export const light = {
 	primary: {
 		main: '#4285F4',
