@@ -19,23 +19,34 @@ import * as React from "react";
 import {Button, makeStyles} from "@material-ui/core";
 import Icon from "@mdi/react";
 import {BASE_URL} from "../../constants";
-import {useTheme} from "@material-ui/styles";
+import {useTheme} from "@material-ui/core/styles";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
 	button: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
-		margin: 4
+		margin: 4,
+		// the below 2 should be merged in some way
+		backgroundColor: theme.palette.type === "dark" ? theme.palette.secondary.main : theme.palette.background.default,
+		color: theme.palette.getContrastText(theme.palette.type === "dark" ? theme.palette.secondary.main : theme.palette.background.default),
+		textTransform: "capitalize"
+	},
+	icon: {
+		paddingLeft: 8,
+		paddingRight: 8
+	},
+	text: {
+		paddingLeft: 8
 	}
 }));
 
 const SocialButton = ({id, colour, name, icon}: {id: string, colour: string, name: string, icon: string}) => {
-	const {palette} = useTheme();
+	const theme = useTheme();
 	const classes = useStyles();
-	const colourOverride = palette.type === "dark" ? {backgroundColor: palette.secondary.main} : {};
+	const variant = theme.palette.type === "dark" ? "contained" : "text";
 	return (
-		<Button href={`${BASE_URL}/api/v2/oauth2/authorise?provider=${id}`} className={classes.button} style={colourOverride}>
-			<Icon path={icon} size={1} color={colour}/>
+		<Button href={`${BASE_URL}/api/v2/oauth2/authorise?provider=${id}`} className={classes.button} variant={variant}>
+			<Icon className={classes.icon} path={icon} size={'1.5rem'} color={colour}/>
 			{name}
 		</Button>
 	);

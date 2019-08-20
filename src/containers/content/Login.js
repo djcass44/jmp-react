@@ -42,6 +42,12 @@ const useStyles = makeStyles(theme => ({
 		fontWeight: 500,
 		color: theme.palette.secondary.main
 	},
+	oauthMessage: {
+		fontFamily: "Manrope",
+		fontWeight: 500,
+		textAlign: 'center',
+		color: theme.palette.getContrastText(theme.palette.background.default),
+	}
 }));
 
 const initialUser = {
@@ -82,13 +88,13 @@ const Login = ({isLoggedIn, version, providers, loading, error, ...props}) => {
 	
 	const onUsernameChange = (e) => {
 		const {value} = e.target;
-		const error = username.regex.test(value) === true ? "" : "Username must be a minimum of 3 characters";
-		setUsername({...username, value, error});
+		const err = username.regex.test(value) === true ? "" : "Username must be a minimum of 3 characters";
+		setUsername({...username, value, err});
 	};
 	const onPasswordChange = (e) => {
 		const {value} = e.target;
-		const error = password.regex.test(value) === true ? "" : "Password must be a minimum of 8 characters";
-		setPassword({...password, value, error});
+		const err = password.regex.test(value) === true ? "" : "Password must be a minimum of 8 characters";
+		setPassword({...password, value, err});
 	};
 	const onSubmit = () => {
 		const data = window.btoa(`${username.value}:${password.value}`);
@@ -140,10 +146,21 @@ const Login = ({isLoggedIn, version, providers, loading, error, ...props}) => {
 								</Grid>
 								<Center className={classes.title} style={{padding: 8}}>{APP_NAME}&nbsp;{version}</Center>
 								{errorMessage}
-								<>
-									{providers['github'] === true ? <SocialButton id={"github"} name={"GitHub"} colour={"#171516"} icon={mdiGithubCircle}/> : ""}
-									{providers['google'] === true ? <SocialButton id={"google"} name={"Google"} colour={"#4285f4"} icon={mdiGoogle}/> : ""}
-								</>
+								{Object.keys(providers).length > 0 ?
+									<>
+										<p className={classes.oauthMessage}>Login with</p>
+										<Center>
+											{providers['github'] === true ?
+												<SocialButton id={"github"} name={"GitHub"} colour={"#171516"}
+												              icon={mdiGithubCircle}/> : ""}
+											{providers['google'] === false ?
+												<SocialButton id={"google"} name={"Google"} colour={"#4285F4"}
+												              icon={mdiGoogle}/> : ""}
+										</Center>
+									</>
+									:
+									""
+								}
 							</CardContent>
 						</Grid>
 						<Grid item lg={2} md={false}/>

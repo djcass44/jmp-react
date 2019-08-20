@@ -1,6 +1,6 @@
 export const light = {
 	primary: {
-		main: '#0052CC',
+		main: '#4285F4',
 		light: '#DEEBFF',
 		dark: '#0052CC'
 	},
@@ -10,12 +10,12 @@ export const light = {
 		dark: '#101e35'
 	},
 	warning: {
-		main: '#FFAB00',
+		main: '#F4B400',
 		light: '#FFE380',
 		dark: '#FF8B00'
 	},
 	error: {
-		main: '#FF5630',
+		main: '#DB4437',
 		light: '#FFEBE5',
 		dark: '#BF2600'
 	},
@@ -25,7 +25,7 @@ export const light = {
 		dark: '#5243AA'
 	},
 	success: {
-		main: '#36B37E',
+		main: '#0F9D58',
 		light: '#E3FCEF',
 		dark: '#00875A'
 	},
