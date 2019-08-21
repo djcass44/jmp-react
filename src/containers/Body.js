@@ -1,14 +1,14 @@
-import React from 'react';
+import React, {useLayoutEffect} from 'react';
 import Content from "../containers/Content";
 import Nav from "../containers/Nav";
-import {OAUTH_VERIFY, oauthRequest, oauthUnready, oauthVerify} from "../actions/Auth";
+import {OAUTH_VERIFY, oauthRequest, oauthVerify} from "../actions/Auth";
 import {connect} from "react-redux";
 import AdminPanel from "../components/AdminPanel";
 import PropTypes from "prop-types";
 import {withRouter} from "react-router-dom";
-import {withStyles} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
 	main: {
 		display: 'flex',
 		flexDirection: 'column'
@@ -29,55 +29,35 @@ const styles = theme => ({
 	hero2: {
 		width: '100%'
 	}
-});
+}));
 
-class Body extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			refresh: props.refresh,
-			headers: props.headers,
-		}
-	}
+const Body = ({refresh, headers, history, loading, ...props}) => {
 
-	componentWillReceiveProps(nextProps, nextContext) {
-		this.setState({...nextProps});
-	}
-	componentWillMount() {
-		this.props.oauthVerify(this.state.refresh, this.state.headers);
-		this.unlisten = this.props.history.listen(() => {
-			this.props.oauthUnready();
-			this.props.oauthVerify(this.state.refresh, this.state.headers);
-		});
-	}
+	useLayoutEffect(() => {
+		props.oauthVerify(refresh, headers);
+	}, [history.location.key]);
 
-	componentWillUnmount() {
-		this.unlisten();
-	}
-
-	render() {
-		const {classes} = this.props;
-		return (
-			<div className={classes.main}>
-				<div className={classes.root}>
-					<div className={classes.hero}>
-							<div className={classes.hero2}>
-								<Nav loading={this.state.loading}/>
-								{this.state.loading === false ?
-									<>
-										<Content/>
-										<AdminPanel/>
-									</>
-									:
-									""
-								}
-							</div>
+	const classes = useStyles();
+	return (
+		<div className={classes.main}>
+			<div className={classes.root}>
+				<div className={classes.hero}>
+					<div className={classes.hero2}>
+						<Nav loading={loading}/>
+						{loading === false ?
+							<>
+								<Content/>
+								<AdminPanel/>
+							</>
+							:
+							""
+						}
 					</div>
 				</div>
 			</div>
-		);
-	}
-}
+		</div>
+	);
+};
 Body.propTypes = {
 	loading: PropTypes.bool,
 	headers: PropTypes.object.isRequired
@@ -91,9 +71,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = ({
 	oauthVerify,
 	oauthRequest,
-	oauthUnready,
 });
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withStyles(styles)(withRouter(Body)));
+)(withRouter(Body));
