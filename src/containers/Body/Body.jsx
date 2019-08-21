@@ -1,12 +1,9 @@
 import React, {useLayoutEffect} from 'react';
-import Content from "../containers/Content";
-import Nav from "../containers/Nav";
-import {OAUTH_VERIFY, oauthRequest, oauthVerify} from "../actions/Auth";
-import {connect} from "react-redux";
-import AdminPanel from "../components/AdminPanel";
-import PropTypes from "prop-types";
-import {withRouter} from "react-router-dom";
+import Content from "../Content";
+import Nav from "../Nav";
+import AdminPanel from "../../components/AdminPanel";
 import {makeStyles} from "@material-ui/core";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles(theme => ({
 	main: {
@@ -31,10 +28,9 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Body = ({refresh, headers, history, loading, ...props}) => {
-
+export const Body = ({refresh, headers, history, loading, oauthVerify}) => {
 	useLayoutEffect(() => {
-		props.oauthVerify(refresh, headers);
+		oauthVerify(refresh, headers);
 	}, [history.location.key]);
 
 	const classes = useStyles();
@@ -60,19 +56,11 @@ const Body = ({refresh, headers, history, loading, ...props}) => {
 };
 Body.propTypes = {
 	loading: PropTypes.bool,
-	headers: PropTypes.object.isRequired
+	headers: PropTypes.object.isRequired,
+	refresh: PropTypes.string.isRequired,
+	history: PropTypes.any.isRequired,
+	oauthVerify: PropTypes.func.isRequired
 };
-
-const mapStateToProps = state => ({
-	loading: state.loading[OAUTH_VERIFY],
-	headers: state.auth.headers,
-	refresh: state.auth.refresh,
-});
-const mapDispatchToProps = ({
-	oauthVerify,
-	oauthRequest,
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(withRouter(Body));
+Body.defaultProps = {
+	loading: false
+};

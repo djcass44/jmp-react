@@ -38,6 +38,7 @@ import BackButton from "../components/widget/BackButton";
 import getIconColour from "../style/getIconColour";
 import {APP_NAME} from "../constants";
 import {useTheme} from "@material-ui/core/styles";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -119,7 +120,7 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Nav = ({searchFilter, isLoggedIn, isAdmin, username, userProfile, history, loading = false, ...props}) => {
+const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilter, ...props}) => {
 	const searchRoutes = [
 		"/",
 		"/identity"
@@ -128,8 +129,8 @@ const Nav = ({searchFilter, isLoggedIn, isAdmin, username, userProfile, history,
 	const [anchorEl, setAnchorEl] = useState(null);
 
 	useEffect(() => {
-		setShowSearch(searchRoutes.includes(history.location.pathname));
-	}, [history.location.key]);
+		setShowSearch(searchRoutes.includes(props.history.location.pathname));
+	}, [props.history.location.key]);
 
 	const handleMenuClose = () => {
 		setAnchorEl(null);
@@ -137,7 +138,7 @@ const Nav = ({searchFilter, isLoggedIn, isAdmin, username, userProfile, history,
 
 	const handleSearchChange = e => {
 		let s = e.target.value.toLowerCase();
-		props.setFilter(s);
+		setFilter(s);
 	};
 
 	const classes = useStyles();
@@ -226,9 +227,16 @@ const Nav = ({searchFilter, isLoggedIn, isAdmin, username, userProfile, history,
 		</div>
 	);
 };
+Nav.propTypes = {
+	loading: PropTypes.bool.isRequired,
+	searchFilter: PropTypes.string.isRequired,
+	isLoggedIn: PropTypes.bool.isRequired,
+	username: PropTypes.string.isRequired,
+	userProfile: PropTypes.object.isRequired,
+	setFilter: PropTypes.func.isRequired
+};
 const mapStateToProps = state => ({
 	isLoggedIn: state.auth.isLoggedIn,
-	isAdmin: state.auth.isAdmin,
 	username: state.auth.username,
 	userProfile: state.auth.userProfile,
 	searchFilter: state.generic.searchFilter
