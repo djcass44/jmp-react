@@ -31,7 +31,7 @@ import SortButton from "../../../components/widget/SortButton";
 import AddIcon from "@material-ui/icons/Add";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
 import {setGroupNew} from "../../../actions/Modal";
-import {setOffset, setSort} from "../../../actions/Generic";
+import {setSort} from "../../../actions/Generic";
 import getAvatarScheme from "../../../style/getAvatarScheme";
 import {useTheme} from "@material-ui/core/styles";
 

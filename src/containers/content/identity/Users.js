@@ -51,6 +51,7 @@ import getIconColour from "../../../style/getIconColour";
 import useTheme from "@material-ui/core/styles/useTheme";
 import {setUserGroups} from "../../../actions/Modal";
 import {setSort} from "../../../actions/Generic";
+import SortedSubheader from "../../../components/content/SortedSubheader";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -149,18 +150,10 @@ const Users = ({users, headers, searchFilter, sort, loading, isAdmin, isLoggedIn
 			</ListItem>
 		));
 	});
-	// TODO move to component
-	const subHeader = (
-		<ListSubheader className={classes.title} inset component={"div"}>
-			Users {searchFilter != null && searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
-			<SortButton selectedSort={sort} sorts={sorts} onSubmit={(value) => handleSortChange(value)}/>
-			{/*<IconButton className={classes.button} aria-label="Add"><AddIcon fontSize={"small"}/></IconButton>*/}
-		</ListSubheader>
-	);
 
 	return (
 		<div>
-			{subHeader}
+			<SortedSubheader title="Users" size={listItems.length} sorts={sorts}/>
 			{loading === true || props.loadingPatch === true ? <LinearProgress className={classes.progress} color="primary"/> : "" }
 			<PoseGroup animateOnMount={true}>
 				<Paper key="root" component={Item} style={{borderRadius: 12, marginBottom: 8}}>

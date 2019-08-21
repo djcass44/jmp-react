@@ -1,7 +1,5 @@
-export function sortItems(items, sort) {
+export function sortItems(items: Array<any>, sort: string) {
 	switch (sort) {
-		// case 'name':
-		// 	return jumps.sort((a, b) => a.localeCompare(b));
 		case '-name':
 			return items.sort((a, b) => {
 				if(a.name != null)
@@ -27,9 +25,14 @@ export function sortItems(items, sort) {
 	}
 }
 
-export const defaultSorts = [
+export interface Sort {
+	id: string,
+	value: string
+}
+
+export const defaultSorts = new Array<Sort>(
 	{id: 'name', value: "Name"},
 	{id: '-name', value: "Name Desc"},
 	{id: 'creation', value: "Creation"},
 	{id: 'updated', value: "Last edited"}
-];
+);
