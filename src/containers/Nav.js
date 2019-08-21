@@ -22,7 +22,7 @@ import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
 import {fade} from "@material-ui/core/styles/colorManipulator";
 import InputBase from "@material-ui/core/InputBase";
-import {IconButton, makeStyles} from "@material-ui/core";
+import {IconButton, LinearProgress, makeStyles} from "@material-ui/core";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import {connect} from "react-redux";
@@ -114,9 +114,12 @@ const useStyles = makeStyles(theme => ({
 			display: 'flex',
 		},
 	},
+	progress: {
+		backgroundColor: 'transparent'
+	}
 }));
 
-const Nav = ({searchFilter, isLoggedIn, isAdmin, username, userProfile, history, ...props}) => {
+const Nav = ({searchFilter, isLoggedIn, isAdmin, username, userProfile, history, loading = false, ...props}) => {
 	const searchRoutes = [
 		"/",
 		"/identity"
@@ -155,14 +158,14 @@ const Nav = ({searchFilter, isLoggedIn, isAdmin, username, userProfile, history,
 		<div className={classes.root}>
 			<AppBar position={"static"} color={"default"}>
 				<Toolbar>
-					{window.location.pathname !== "/" ? <BackButton label={""} to={"/"}/> : ""}
+					{window.location.pathname !== "/" && loading === false ? <BackButton label={""} to={"/"}/> : ""}
 					<Typography className={classes.brand} variant={"h6"} color={"inherit"}>
 						{APP_NAME}
 					</Typography>
 					<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"inherit"}>
 						{process.env.REACT_APP_APP_MSG}
 					</Typography>
-					{showSearch === true ?
+					{showSearch === true && loading !== true ?
 						<div className={classes.search}>
 							<div className={classes.searchIcon}>
 								<SearchIcon/>
@@ -173,13 +176,18 @@ const Nav = ({searchFilter, isLoggedIn, isAdmin, username, userProfile, history,
 						<div/>
 					}
 					<div className={classes.grow}/>
-					<div className={classes.sectionDesktop}>
-						<IconButton component={Link} centerRipple={false} color={"inherit"} to={"/help"}>
-							<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
-						</IconButton>
-					</div>
-					<Avatar name={name2} src={userProfile['avatarUrl']} size={40} style={{marginTop: 4}} onClick={(e) => setAnchorEl(e.currentTarget)} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
+					{loading === false &&
+						<>
+							<div className={classes.sectionDesktop}>
+								<IconButton component={Link} centerRipple={false} color={"inherit"} to={"/help"}>
+									<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
+								</IconButton>
+							</div>
+							<Avatar name={name2} src={userProfile['avatarUrl']} size={40} style={{marginTop: 4}} onClick={(e) => setAnchorEl(e.currentTarget)} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
+						</>
+					}
 				</Toolbar>
+				{loading === true && <LinearProgress className={classes.progress} />}
 			</AppBar>
 			<Menu
 				anchorEl={anchorEl}

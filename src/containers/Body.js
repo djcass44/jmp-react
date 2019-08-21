@@ -5,7 +5,6 @@ import {OAUTH_VERIFY, oauthRequest, oauthUnready, oauthVerify} from "../actions/
 import {connect} from "react-redux";
 import AdminPanel from "../components/AdminPanel";
 import PropTypes from "prop-types";
-import NavLoading from "../components/NavLoading";
 import {withRouter} from "react-router-dom";
 import {withStyles} from "@material-ui/core";
 
@@ -62,17 +61,17 @@ class Body extends React.Component {
 			<div className={classes.main}>
 				<div className={classes.root}>
 					<div className={classes.hero}>
-						{this.state.loading === false ?
 							<div className={classes.hero2}>
-								<Nav/>
-								<Content/>
-								<AdminPanel/>
+								<Nav loading={this.state.loading}/>
+								{this.state.loading === false ?
+									<>
+										<Content/>
+										<AdminPanel/>
+									</>
+									:
+									""
+								}
 							</div>
-							:
-							<div className={classes.hero2}>
-								<NavLoading/>
-							</div>
-						}
 					</div>
 				</div>
 			</div>
