@@ -68,10 +68,11 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Users = ({users, offset, headers, searchFilter, sort, loading, isAdmin, isLoggedIn, ...props}) => {
+const Users = ({users, headers, searchFilter, sort, loading, isAdmin, isLoggedIn, ...props}) => {
 	const sorts = defaultSorts;
 	const [expanded, setExpanded] = useState(-1);
 	const [anchorEl, setAnchorEl] = useState(null);
+	const [offset, setOffset] = useState(0);
 
 
 	useEffect(() => props.getUsers(headers), [headers]);
@@ -93,7 +94,6 @@ const Users = ({users, offset, headers, searchFilter, sort, loading, isAdmin, is
 			role: role
 		}));
 	};
-	const handlePageChange = offset => props.setOffset(offset);
 	const handleSortChange = value => {
 		props.setSort(value);
 		props.getUsers(headers);
@@ -115,12 +115,12 @@ const Users = ({users, offset, headers, searchFilter, sort, loading, isAdmin, is
 	let sortedUsers = sortItems(users, sort);
 	sortedUsers.filter(filterUser).forEach((i, index) => {
 		if(index < offset || index > max) return;
-		const isAdmin = i.role === 'ADMIN';
+		const userIsAdmin = i.role === 'ADMIN';
 		let avatar = {
-			icon: isAdmin ? <AdminCircleIcon/> : <AccountCircleIcon/>,
-			bg: isAdmin ? schemeAdmin[0] : scheme[0],
-			fg: isAdmin ? schemeAdmin[1] : scheme[1],
-			banner: isAdmin ? <Badge color="red">Admin</Badge> : ""
+			icon: userIsAdmin ? <AdminCircleIcon/> : <AccountCircleIcon/>,
+			bg: userIsAdmin ? schemeAdmin[0] : scheme[0],
+			fg: userIsAdmin ? schemeAdmin[1] : scheme[1],
+			banner: userIsAdmin ? <Badge color="red">Admin</Badge> : ""
 		};
 		let secondary = <span>{capitalise(i.from)}&nbsp;{avatar.banner}</span>;
 		listItems.push((
@@ -129,12 +129,12 @@ const Users = ({users, offset, headers, searchFilter, sort, loading, isAdmin, is
 					<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon}/>
 				</Avatar>
 				<ListItemText primary={<span className={classes.title}>{i.username}</span>} secondary={secondary}/>
-				{isAdmin === true ? <ListItemSecondaryAction>
+				{userIsAdmin === true ? <ListItemSecondaryAction>
 					<IconButton centerRipple={false} onClick={(e) => toggleExpansion(e, i.id)}>
 						<Icon path={mdiDotsVertical} size={1} color={getIconColour(theme)}/>
 						<Menu id={"user-menu"} open={i.id === expanded} anchorEl={anchorEl} anchorOrigin={{horizontal: "left", vertical: "top"}} onExit={() => {i.expanded = false}}>
-							{i.role !== 'ADMIN' ? <MenuItem button component='li' onClick={() => handlePatchUser(i, 'ADMIN')}>Promote to admin</MenuItem> : ""}
-							{i.role === 'ADMIN' && i.username !== "admin" ?
+							{isAdmin && i.role !== 'ADMIN' ? <MenuItem button component='li' onClick={() => handlePatchUser(i, 'ADMIN')}>Promote to admin</MenuItem> : ""}
+							{isAdmin && i.role === 'ADMIN' && i.username !== "admin" ?
 								<MenuItem button component='li' onClick={() => handlePatchUser(i, 'USER')}>
 									Demote to user
 								</MenuItem>
@@ -142,7 +142,7 @@ const Users = ({users, offset, headers, searchFilter, sort, loading, isAdmin, is
 								""
 							}
 							<MenuItem button component='li' onClick={() => props.setUserGroups(true, i)}>Modify groups</MenuItem>
-							{i.username !== "admin" && i.from.toLowerCase() === 'local' ? <MenuItem button={true} component='li'>Delete</MenuItem> : ""}
+							{isAdmin && i.username !== "admin" && i.from.toLowerCase() === 'local' ? <MenuItem button={true} component='li'>Delete</MenuItem> : ""}
 						</Menu>
 					</IconButton>
 				</ListItemSecondaryAction> : ""}
@@ -173,7 +173,7 @@ const Users = ({users, offset, headers, searchFilter, sort, loading, isAdmin, is
 			{listItems.length > pageSize ?
 				<Center>
 					<Pagination limit={pageSize} offset={offset} total={sortedUsers.length}
-					            nextPageLabel="▶" previousPageLabel="◀" onClick={(e, offset) => handlePageChange(offset)}/>
+					            nextPageLabel="▶" previousPageLabel="◀" onClick={(e, off) => setOffset(off)}/>
 				</Center>
 				:
 				<div/>

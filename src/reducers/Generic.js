@@ -18,7 +18,6 @@
 import {
 	GENERIC_FILTER_SET,
 	GENERIC_GET_VERSION,
-	GENERIC_SET_OFFSET,
 	GENERIC_SET_SORT,
 	SOCKET_APP_INIT
 } from "../actions/Generic";
@@ -27,18 +26,15 @@ import {LS_APPID, LS_SORT} from "../constants";
 const initialState = {
 	searchFilter: '',
 	sort: localStorage.getItem(LS_SORT) || '',
-	offset: 0
 };
 
-const generic = (state = initialState, action) => {
+export default (state = initialState, action) => {
 	switch(action.type) {
 		case GENERIC_FILTER_SET:
 			return {...state, searchFilter: action.payload};
 		case GENERIC_SET_SORT:
 			localStorage.setItem(LS_SORT, action.payload);
 			return {...state, sort: action.payload};
-		case GENERIC_SET_OFFSET:
-			return {...state, offset: action.payload};
 		case `${GENERIC_GET_VERSION}_SUCCESS`:
 			return {...state, version: action.payload};
 		case `${SOCKET_APP_INIT}`: {
@@ -53,4 +49,3 @@ const generic = (state = initialState, action) => {
 			return state;
 	}
 };
-export default generic;

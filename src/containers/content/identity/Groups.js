@@ -17,7 +17,7 @@
 
 import {connect} from "react-redux";
 import {LinearProgress, makeStyles, Avatar, ListItemText, ListItem, ListSubheader, Paper, List, IconButton} from "@material-ui/core";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import EmptyCard from "../../../components/widget/EmptyCard";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
@@ -53,7 +53,8 @@ const useStyles = makeStyles(theme => ({
 
 const Groups = props => {
 	const sorts = defaultSorts;
-	
+	const [offset, setOffset] = useState(0);
+
 	useEffect(() => {
 		props.getGroups(props.headers);
 	}, [props.headers]);
@@ -62,7 +63,6 @@ const Groups = props => {
 		return group.name.toLowerCase().includes(props.searchFilter) ||
 			group.from.toLowerCase() === props.searchFilter.toLowerCase();
 	};
-	const handlePageChange = offset => props.setOffset(offset);
 	const handleSortChange = value => {
 		props.setSort(value);
 		props.getGroups(props.headers);
@@ -79,11 +79,11 @@ const Groups = props => {
 
 	let listItems = [];
 	// Tell the loop what our pagination limits are
-	let max = (props.offset + pageSize);
+	let max = (offset + pageSize);
 	if(max > props.groups.length) max = props.groups.length;
 	let sortedGroups = sortItems(props.groups, props.sort);
 	sortedGroups.filter(filterGroup).forEach((i, index) => {
-		if(index < props.offset || index > max) return;
+		if(index < offset || index > max) return;
 		let secondary = <span>{capitalise(i.from)}</span>;
 		listItems.push((
 			<ListItem button disableRipple key={index} component={'li'}>
@@ -117,10 +117,10 @@ const Groups = props => {
 					</List>
 				</Paper>
 			</PoseGroup>
-			{listItems.length > pageSize || props.offset > 0 ?
+			{listItems.length > pageSize || offset > 0 ?
 				<Center>
-					<Pagination limit={pageSize} offset={props.offset} total={sortedGroups.length}
-		                nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e ,offset) => handlePageChange(offset)}/>
+					<Pagination limit={pageSize} offset={offset} total={sortedGroups.length}
+		                nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, off) => setOffset(off)}/>
 				</Center>
 				:
 				<div/>
@@ -135,12 +135,10 @@ const mapStateToProps = state => ({
 	headers: state.auth.headers,
 	sort: state.generic.sort,
 	searchFilter: state.generic.searchFilter,
-	offset: state.generic.offset
 });
 const mapDispatchToProps = ({
 	getGroups,
 	setGroupNew,
-	setOffset,
 	setSort
 });
 export default connect(

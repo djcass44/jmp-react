@@ -15,7 +15,7 @@
  *
  */
 
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import List from "@material-ui/core/List";
 import ListSubheader from "@material-ui/core/es/ListSubheader/ListSubheader";
 import {
@@ -60,6 +60,7 @@ const useStyles = makeStyles(theme => ({
 
 const Jumps = props => {
 	const sorts = [...defaultSorts, {id: 'usage', value: "Usage"}];
+	const [offset, setOffset] = useState(0);
 	
 	useEffect(() => {
 		window.document.title = `${process.env.REACT_APP_APP_NAME}`;
@@ -70,9 +71,6 @@ const Jumps = props => {
 		return jump.name.includes(props.searchFilter) || jump.location.includes(props.searchFilter);
 	};
 
-	const handlePageChange = off => {
-		props.setOffset(off);
-	};
 	const handleJumpDialog = visible => {
 		props.setJumpNew(visible);
 	};
@@ -90,12 +88,12 @@ const Jumps = props => {
 	const classes = useStyles();
 	let listItems = [];
 	// Tell the loop what our pagination limits are
-	let max = (props.offset + pageSize);
+	let max = (offset + pageSize);
 	if(max > props.jumps.length) max = props.jumps.length;
 	// Loop-d-loop
 	let sortedJumps = sortItems(props.jumps, props.sort);
 	sortedJumps.filter(filterJump).forEach((i, index) => {
-		if(index < props.offset || index > max) return;
+		if(index < offset || index > max) return;
 		listItems.push(<JumpItem jump={i} key={i.id} id={i.id}/>);
 	});
 
@@ -125,10 +123,10 @@ const Jumps = props => {
 					<JumpEditDialog jump={props.edit.item} open={props.edit.open} onExited={() => {handleEditDialog(false, null)}}/>
 				</Paper>
 			</PoseGroup>
-			{listItems.length > pageSize || props.offset > 0 ?
+			{listItems.length > pageSize || offset > 0 ?
 				<Center>
-					<Pagination limit={pageSize} offset={props.offset} total={sortedJumps.length}
-					            nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, off) => handlePageChange(off)}/>
+					<Pagination limit={pageSize} offset={offset} total={sortedJumps.length}
+					            nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, off) => setOffset(off)}/>
 				</Center>
 				:
 				<div/>
@@ -143,7 +141,6 @@ const mapStateToProps = state => ({
 	isLoggedIn: state.auth.isLoggedIn,
 	sort: state.generic.sort,
 	searchFilter: state.generic.searchFilter,
-	offset: state.generic.offset,
 	new: state.modal.jump.new,
 	edit: state.modal.jump.edit,
 	delete: state.modal.generic.delete
@@ -155,7 +152,6 @@ const mapDispatchToProps = ({
 	setJumpNew,
 	setJumpEdit,
 	setDelete,
-	setOffset
 });
 export default connect(
 	mapStateToProps,
