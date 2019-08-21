@@ -15,14 +15,14 @@
  *
  */
 
-import React from "react";
+import React, {useEffect, useState} from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
 import {fade} from "@material-ui/core/styles/colorManipulator";
 import InputBase from "@material-ui/core/InputBase";
-import {IconButton, withStyles, withTheme} from "@material-ui/core";
+import {IconButton, makeStyles} from "@material-ui/core";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import {connect} from "react-redux";
@@ -36,10 +36,16 @@ import {mdiAccountGroupOutline, mdiHelpCircleOutline, mdiLogin, mdiLogout} from 
 import {Avatar} from "evergreen-ui";
 import BackButton from "../components/widget/BackButton";
 import getIconColour from "../style/getIconColour";
+import {APP_NAME} from "../constants";
+import {useTheme} from "@material-ui/core/styles";
 
-const styles = theme => ({
-	root: {width: '100%'},
-	grow: {flexGrow: 1},
+const useStyles = makeStyles(theme => ({
+	root: {
+		width: '100%'
+	},
+	grow: {
+		flexGrow: 1
+	},
 	brand: {
 		paddingRight: 8,
 		[theme.breakpoints.up('sm')]: {
@@ -108,99 +114,71 @@ const styles = theme => ({
 			display: 'flex',
 		},
 	},
-});
+}));
 
-class Nav extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			searchRoutes: ["/", "/identity"],
-			showSearch: true,
-			searchFilter: props.searchFilter || '',
-			isLoggedIn: props.isLoggedIn,
-			isAdmin: props.isAdmin,
-			username: props.username,
-			userProfile: props.userProfile
-		};
-	}
-	// Why isn't this called on start?
-	componentWillReceiveProps(nextProps, nextContext) {
-		this.setState({...nextProps});
-	}
+const Nav = ({searchFilter, isLoggedIn, isAdmin, username, userProfile, history, ...props}) => {
+	const searchRoutes = [
+		"/",
+		"/identity"
+	];
+	const [showSearch, setShowSearch] = useState(true);
+	const [anchorEl, setAnchorEl] = useState(null);
 
-	componentWillMount() {
-		this.handleLocationChange();
-		this.unlisten = this.props.history.listen(() => {
-			this.handleLocationChange();
-		});
-	}
+	useEffect(() => {
+		setShowSearch(searchRoutes.includes(history.location.pathname));
+	}, [history.location.key]);
 
-	componentWillUnmount() {
-		this.unlisten();
-	}
-
-	handleLocationChange() {
-		let search = this.state.searchRoutes.includes(window.location.pathname);
-		this.setState({showSearch: search});
-	}
-
-	handleProfileMenuOpen = event => {
-		this.setState({ anchorEl: event.currentTarget });
+	const handleMenuClose = () => {
+		setAnchorEl(null);
 	};
 
-	handleMenuClose = () => {
-		this.setState({ anchorEl: null });
-	};
-
-	handleSearchChange = e => {
+	const handleSearchChange = e => {
 		let s = e.target.value.toLowerCase();
-		this.setState({searchFilter: s});
-		this.props.setFilter(s);
+		props.setFilter(s);
 	};
 
-	render() {
-		const {anchorEl} = this.state;
-		const {classes, theme} = this.props;
-		const isMenuOpen = Boolean(anchorEl);
+	const classes = useStyles();
+	const theme = useTheme();
+	const isMenuOpen = anchorEl != null;
 
-		let name = this.state.userProfile['displayName'];
-		if(name === "") name = this.state.username;
-		let name2 = name;
-		if (name != null)
-			name2 = name.replace(".", " ");
-		const url = window.location.pathname + window.location.search;
-		let loginUrl;
-		if(url !== '') {
-			loginUrl = `/login?target=${url}`;
-		}
-		else
-			loginUrl = '/login';
+	let name = userProfile['displayName'];
+	if(name === "") name = username;
+	let name2 = name;
+	if (name != null)
+		name2 = name.replace(".", " ");
+	const url = window.location.pathname + window.location.search;
+	let loginUrl = '/login';
+	if(url !== '')
+		loginUrl = `/login?target=${url}`;
 
-		return <div className={classes.root}>
+	return (
+		<div className={classes.root}>
 			<AppBar position={"static"} color={"default"}>
 				<Toolbar>
 					{window.location.pathname !== "/" ? <BackButton label={""} to={"/"}/> : ""}
 					<Typography className={classes.brand} variant={"h6"} color={"inherit"}>
-						{process.env.REACT_APP_APP_NAME}
+						{APP_NAME}
 					</Typography>
 					<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"inherit"}>
 						{process.env.REACT_APP_APP_MSG}
 					</Typography>
-					{this.state.showSearch === true ?
+					{showSearch === true ?
 						<div className={classes.search}>
 							<div className={classes.searchIcon}>
 								<SearchIcon/>
 							</div>
-							<InputBase placeholder={"Search..."} classes={{root: classes.inputRoot, input: classes.inputInput}} onChange={this.handleSearchChange} value={this.state.searchFilter}/>
+							<InputBase placeholder={"Search..."} classes={{root: classes.inputRoot, input: classes.inputInput}} onChange={(e) => handleSearchChange(e)} value={searchFilter}/>
 						</div>
 						:
 						<div/>
 					}
 					<div className={classes.grow}/>
 					<div className={classes.sectionDesktop}>
-						<IconButton component={Link} centerRipple={false} color={"inherit"} to={"/help"}><Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/></IconButton>
+						<IconButton component={Link} centerRipple={false} color={"inherit"} to={"/help"}>
+							<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
+						</IconButton>
 					</div>
-					<Avatar name={name2} src={this.state.userProfile['avatarUrl']} size={40} style={{marginTop: 4}} onClick={this.handleProfileMenuOpen} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
+					<Avatar name={name2} src={userProfile['avatarUrl']} size={40} style={{marginTop: 4}} onClick={(e) => setAnchorEl(e.currentTarget)} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
 				</Toolbar>
 			</AppBar>
 			<Menu
@@ -208,38 +186,38 @@ class Nav extends React.Component {
 				anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
 				transformOrigin={{ vertical: 'top', horizontal: 'right' }}
 				open={isMenuOpen}
-				onClose={this.handleMenuClose}>
+				onClose={() => handleMenuClose()}>
 				<MenuItem disabled={true} button={false} component={'div'}>
 					<div>
 						<span>{name != null && name !== '' ? name : 'Anonymous'}</span>
 					</div>
 				</MenuItem>
 				<Divider/>
-				{window.location.pathname !== "/" ? <MenuItem component={Link} onClick={this.handleMenuClose} to={"/"} button={true}><HomeIcon/>Home</MenuItem> : ""}
-				{this.state.isLoggedIn === true ?
-					<MenuItem component={Link} onClick={this.handleMenuClose} to={"/identity"} button={true}>
+				{window.location.pathname !== "/" ? <MenuItem component={Link} onClick={() => handleMenuClose()} to={"/"} button={true}><HomeIcon/>Home</MenuItem> : ""}
+				{isLoggedIn === true ?
+					<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/identity"} button={true}>
 						<Icon path={mdiAccountGroupOutline} size={1} color={getIconColour(theme)}/>
 						Users &amp; Groups
 					</MenuItem>
 					:
 					""
 				}
-				<MenuItem component={Link} onClick={this.handleMenuClose} to={"/settings"} button={true}><SettingsIcon/>Settings</MenuItem>
-				{this.state.isLoggedIn === false ?
-					<MenuItem component={Link} onClick={this.handleMenuClose} to={loginUrl} button={true}>
+				<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/settings"} button={true}><SettingsIcon/>Settings</MenuItem>
+				{isLoggedIn === false ?
+					<MenuItem component={Link} onClick={() => handleMenuClose()} to={loginUrl} button={true}>
 						<Icon path={mdiLogin} size={1} color={getIconColour(theme)}/>
 						Login
 					</MenuItem>
 					:
-					<MenuItem component={Link} onClick={this.handleMenuClose} to={'/logout'} button={true}>
+					<MenuItem component={Link} onClick={() => handleMenuClose()} to={'/logout'} button={true}>
 						<Icon path={mdiLogout} size={1} color={getIconColour(theme)}/>
 						Logout
 					</MenuItem>
 				}
 			</Menu>
 		</div>
-	}
-}
+	);
+};
 const mapStateToProps = state => ({
 	isLoggedIn: state.auth.isLoggedIn,
 	isAdmin: state.auth.isAdmin,
@@ -250,4 +228,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = ({
 	setFilter
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(withStyles(styles)(withRouter(Nav))));
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(withRouter(Nav));
