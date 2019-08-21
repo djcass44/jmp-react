@@ -17,7 +17,6 @@
 
 import React, {useEffect, useState} from "react";
 import List from "@material-ui/core/List";
-import ListSubheader from "@material-ui/core/es/ListSubheader/ListSubheader";
 import {
 	deleteJump,
 	JUMP_LOAD,
@@ -28,63 +27,55 @@ import Paper from "@material-ui/core/Paper";
 import Pagination from "material-ui-flat-pagination";
 import Center from "react-center";
 import {LinearProgress, makeStyles, withTheme} from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import AddIcon from "@material-ui/icons/Add";
-import { pageSize} from "../../constants";
+import {APP_NOUN, pageSize} from "../../constants";
 import posed, {PoseGroup} from "react-pose";
 import JumpDialog from "../modal/JumpDialog";
 import DeleteDialog from "../modal/DeleteDialog";
 import JumpEditDialog from "../modal/JumpEditDialog";
 import {defaultSorts, sortItems} from "../../misc/Sort";
-import SortButton from "../../components/widget/SortButton";
-import {setOffset, setSort} from "../../actions/Generic";
+import {setSort} from "../../actions/Generic";
 import {setDelete, setJumpEdit, setJumpNew} from "../../actions/Modal";
 import JumpItem from "./jmp/JumpItem";
 import EmptyCard from "../../components/widget/EmptyCard";
+import SortedSubheader from "../../components/content/SortedSubheader";
 
 const Item = posed.div({
 	enter: {opacity: 1},
 	exit: {opacity: 0}
 });
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
 	},
 	progress: {
-		backgroundColor: theme.palette.background.default,
+		backgroundColor: 'transparent',
 		flexGrow: 1
 	}
 }));
 
-const Jumps = props => {
+const Jumps = ({setJumpNew, searchFilter, headers, ...props}) => {
 	const sorts = [...defaultSorts, {id: 'usage', value: "Usage"}];
 	const [offset, setOffset] = useState(0);
 	
 	useEffect(() => {
 		window.document.title = `${process.env.REACT_APP_APP_NAME}`;
-		props.listJumps(props.headers);
-	}, [props.headers]);
+		props.listJumps(headers);
+	}, [headers]);
 
 	const filterJump = jump => {
-		return jump.name.includes(props.searchFilter) || jump.location.includes(props.searchFilter);
+		return jump.name.includes(searchFilter) || jump.location.includes(searchFilter);
 	};
 
-	const handleJumpDialog = visible => {
-		props.setJumpNew(visible);
-	};
 	const handleDeleteDialog = (visible, item) => {
 		props.setDelete(visible, item);
 	};
 	const handleEditDialog = (visible, item) => {
 		props.setJumpEdit(visible, item);
 	};
-	const handleDeleteJump = () => props.deleteJump(props.headers, props.delete.item.id);
-	const handleSortChange = value => {
-		props.setSort(value);
-		props.listJumps(props.headers);
-	};
+	const handleDeleteJump = () => props.deleteJump(headers, props.delete.item.id);
+
 	const classes = useStyles();
 	let listItems = [];
 	// Tell the loop what our pagination limits are
@@ -97,22 +88,9 @@ const Jumps = props => {
 		listItems.push(<JumpItem jump={i} key={i.id} id={i.id}/>);
 	});
 
-	const subHeader = (<ListSubheader className={classes.title} inset component={"div"}>
-		{process.env.REACT_APP_APP_NOUN}s {props.searchFilter != null && props.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
-		<SortButton selectedSort={props.sort} sorts={sorts} onSubmit={(e) => handleSortChange(e)}/>
-		{props.isLoggedIn === true ?
-			<IconButton centerRipple={false} aria-label="Add" onClick={(() => handleJumpDialog(true))}>
-				<AddIcon fontSize={"small"}/>
-			</IconButton>
-			:
-			""
-		}
-		<JumpDialog open={props.new.open} onExited={() => handleJumpDialog(false)}/>
-	</ListSubheader>);
-
 	return (
 		<div>
-			{subHeader}
+			<SortedSubheader title={`${APP_NOUN}s`} size={listItems.length} sorts={sorts} onAdd={() => setJumpNew(true)}/>
 			{props.loading === true ? <LinearProgress className={classes.progress} color={"primary"}/> : "" }
 			<PoseGroup animateOnMount={true}>
 				<Paper component={Item} key={"root"} style={{borderRadius: 12, marginBottom: 8}}>
@@ -131,6 +109,7 @@ const Jumps = props => {
 				:
 				<div/>
 			}
+			<JumpDialog open={props.new.open} onExited={() => setJumpNew(false)}/>
 		</div>
 	)
 };

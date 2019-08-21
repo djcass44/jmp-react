@@ -24,7 +24,6 @@ import {
 	Avatar,
 	ListItemText,
 	ListItem,
-	ListSubheader,
 	Paper,
 	List,
 	MenuItem,
@@ -40,7 +39,6 @@ import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import {pageSize} from "../../../constants";
 import posed, {PoseGroup} from "react-pose";
 import {defaultSorts, sortItems} from "../../../misc/Sort";
-import SortButton from "../../../components/widget/SortButton";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@mdi/react";
 import {mdiDotsVertical} from "@mdi/js";
@@ -58,13 +56,13 @@ const Item = posed.div({
 	exit: {opacity: 0}
 });
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
 	},
 	progress: {
-		backgroundColor: theme.palette.background.default,
+		backgroundColor: 'transparent',
 		flexGrow: 1
 	}
 }));
@@ -94,10 +92,6 @@ const Users = ({users, headers, searchFilter, sort, loading, isAdmin, isLoggedIn
 			id: user.id,
 			role: role
 		}));
-	};
-	const handleSortChange = value => {
-		props.setSort(value);
-		props.getUsers(headers);
 	};
 	const capitalise = (text) => {
 		if(text == null || text.length === 0) return text;

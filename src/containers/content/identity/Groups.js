@@ -16,7 +16,7 @@
  */
 
 import {connect} from "react-redux";
-import {LinearProgress, makeStyles, Avatar, ListItemText, ListItem, ListSubheader, Paper, List, IconButton} from "@material-ui/core";
+import {LinearProgress, makeStyles, Avatar, ListItemText, ListItem, Paper, List} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
 import EmptyCard from "../../../components/widget/EmptyCard";
 import Center from "react-center";
@@ -27,13 +27,12 @@ import Icon from "@mdi/react";
 import {mdiAccountGroupOutline} from "@mdi/js";
 import posed, {PoseGroup} from "react-pose";
 import {defaultSorts, sortItems} from "../../../misc/Sort";
-import SortButton from "../../../components/widget/SortButton";
-import AddIcon from "@material-ui/icons/Add";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
 import {setGroupNew} from "../../../actions/Modal";
 import {setSort} from "../../../actions/Generic";
 import getAvatarScheme from "../../../style/getAvatarScheme";
 import {useTheme} from "@material-ui/core/styles";
+import SortedSubheader from "../../../components/content/SortedSubheader";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -46,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 		fontWeight: 500
 	},
 	progress: {
-		backgroundColor: theme.palette.background.default,
+		backgroundColor: 'transparent',
 		flexGrow: 1
 	}
 }));
@@ -62,10 +61,6 @@ const Groups = props => {
 	const filterGroup = group => {
 		return group.name.toLowerCase().includes(props.searchFilter) ||
 			group.from.toLowerCase() === props.searchFilter.toLowerCase();
-	};
-	const handleSortChange = value => {
-		props.setSort(value);
-		props.getGroups(props.headers);
 	};
 	const capitalise = text => {
 		if(text == null || text.length === 0) return text;
@@ -94,21 +89,9 @@ const Groups = props => {
 			</ListItem>
 		));
 	});
-	// TODO move to component
-	const subHeader = (
-		<ListSubheader className={classes.title} inset component="div">
-			Groups {props.searchFilter != null && props.searchFilter.length > 0 ? `(${listItems.length} results)` : ''}
-			<SortButton selectedSort={props.sort} sorts={sorts} onSubmit={(value) => handleSortChange(value)}/>
-			<IconButton centerRipple={false} aria-label="Add" onClick={() => props.setGroupNew(true)}>
-				<AddIcon fontSize="small"/>
-			</IconButton>
-			<CreateGroupDialog/>
-		</ListSubheader>
-	);
-
 	return (
 		<div>
-			{subHeader}
+			<SortedSubheader title="Groups" size={listItems.length} sorts={sorts} onAdd={() => props.setGroupNew(true)}/>
 			{props.loading === true ? <LinearProgress className={classes.progress} color="primary"/> : "" }
 			<PoseGroup animateOnMount={true}>
 				<Paper key="root" component={Item} style={{borderRadius: 12, marginBottom: 8}}>
@@ -125,6 +108,7 @@ const Groups = props => {
 				:
 				<div/>
 			}
+			<CreateGroupDialog/>
 		</div>
 	)
 };
