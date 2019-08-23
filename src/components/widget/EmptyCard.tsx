@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-import {Avatar, createStyles, ListItemText, makeStyles, Theme} from "@material-ui/core";
+import {Avatar, ListItemText, makeStyles, Theme} from "@material-ui/core";
 import getAvatarScheme from "../../style/getAvatarScheme";
 import {SentimentDissatisfied} from "@material-ui/icons";
 import ListItem from "@material-ui/core/ListItem";

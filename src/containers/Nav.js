@@ -180,7 +180,7 @@ const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilte
 					{loading === false &&
 						<>
 							<div className={classes.sectionDesktop}>
-								<IconButton component={Link} centerRipple={false} color={"inherit"} to={"/help"}>
+								<IconButton style={{margin: 8}} component={Link} centerRipple={false} color={"inherit"} to={"/help"}>
 									<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
 								</IconButton>
 							</div>

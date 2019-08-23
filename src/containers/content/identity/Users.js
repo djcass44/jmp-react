@@ -124,7 +124,7 @@ const Users = ({users, headers, searchFilter, sort, loading, isAdmin, isLoggedIn
 					<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon}/>
 				</Avatar>
 				<ListItemText primary={<span className={classes.title}>{i.username}</span>} secondary={secondary}/>
-				{userIsAdmin === true ? <ListItemSecondaryAction>
+				<ListItemSecondaryAction>
 					<IconButton centerRipple={false} onClick={(e) => toggleExpansion(e, i.id)}>
 						<Icon path={mdiDotsVertical} size={1} color={getIconColour(theme)}/>
 						<Menu id={"user-menu"} open={i.id === expanded} anchorEl={anchorEl} anchorOrigin={{horizontal: "left", vertical: "top"}} onExit={() => {i.expanded = false}}>
@@ -140,7 +140,7 @@ const Users = ({users, headers, searchFilter, sort, loading, isAdmin, isLoggedIn
 							{isAdmin && i.username !== "admin" && i.from.toLowerCase() === 'local' ? <MenuItem button={true} component='li'>Delete</MenuItem> : ""}
 						</Menu>
 					</IconButton>
-				</ListItemSecondaryAction> : ""}
+				</ListItemSecondaryAction>
 			</ListItem>
 		));
 	});

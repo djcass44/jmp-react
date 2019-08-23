@@ -27,7 +27,7 @@ import Paper from "@material-ui/core/Paper";
 import Pagination from "material-ui-flat-pagination";
 import Center from "react-center";
 import {LinearProgress, makeStyles, withTheme} from "@material-ui/core";
-import {APP_NOUN, pageSize} from "../../constants";
+import {APP_NAME, APP_NOUN, pageSize} from "../../constants";
 import posed, {PoseGroup} from "react-pose";
 import JumpDialog from "../modal/JumpDialog";
 import DeleteDialog from "../modal/DeleteDialog";
@@ -40,8 +40,18 @@ import EmptyCard from "../../components/widget/EmptyCard";
 import SortedSubheader from "../../components/content/SortedSubheader";
 
 const Item = posed.div({
-	enter: {opacity: 1},
-	exit: {opacity: 0}
+	enter: {
+		opacity: 1,
+		transition: {
+			ease: 'easeInOut'
+		}
+	},
+	exit: {
+		opacity: 0,
+		transition: {
+			ease: 'easeInOut'
+		}
+	}
 });
 
 const useStyles = makeStyles(() => ({
@@ -55,26 +65,18 @@ const useStyles = makeStyles(() => ({
 	}
 }));
 
-const Jumps = ({setJumpNew, searchFilter, headers, ...props}) => {
+const Jumps = ({setJumpNew, setJumpEdit, setDelete, deleteJump, searchFilter, headers, ...props}) => {
 	const sorts = [...defaultSorts, {id: 'usage', value: "Usage"}];
 	const [offset, setOffset] = useState(0);
 	
 	useEffect(() => {
-		window.document.title = `${process.env.REACT_APP_APP_NAME}`;
+		window.document.title = `${APP_NAME}`;
 		props.listJumps(headers);
 	}, [headers]);
 
 	const filterJump = jump => {
 		return jump.name.includes(searchFilter) || jump.location.includes(searchFilter);
 	};
-
-	const handleDeleteDialog = (visible, item) => {
-		props.setDelete(visible, item);
-	};
-	const handleEditDialog = (visible, item) => {
-		props.setJumpEdit(visible, item);
-	};
-	const handleDeleteJump = () => props.deleteJump(headers, props.delete.item.id);
 
 	const classes = useStyles();
 	let listItems = [];
@@ -97,8 +99,8 @@ const Jumps = ({setJumpNew, searchFilter, headers, ...props}) => {
 					<List component={'ul'}>
 						{listItems.length > 0 ? listItems : <EmptyCard/>}
 					</List>
-					<DeleteDialog onExited={() => {handleDeleteDialog(false, null)}} onSubmit={() => handleDeleteJump()}/>
-					<JumpEditDialog jump={props.edit.item} open={props.edit.open} onExited={() => {handleEditDialog(false, null)}}/>
+					<DeleteDialog onExited={() => setDelete(false, null)} onSubmit={() => deleteJump(headers, props.delete.item.id)}/>
+					<JumpEditDialog jump={props.edit.item} open={props.edit.open} onExited={() => setJumpEdit(false, null)}/>
 				</Paper>
 			</PoseGroup>
 			{listItems.length > pageSize || offset > 0 ?
