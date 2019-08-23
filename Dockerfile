@@ -12,6 +12,7 @@ RUN npm install --quiet
 
 COPY ./public ./public
 COPY ./src ./src
+COPY ./tsconfig.json .
 COPY .env.* ./
 
 RUN npm run build
