@@ -33,11 +33,6 @@ const useStyles = makeStyles(theme => ({
 export const Token = props => {
 	const classes = useStyles();
 
-	useEffect(() => {
-		window.document.title = `${process.env.REACT_APP_APP_NAME}`;
-		jumpUser();
-	}, []);
-
 	const jumpUser = () => {
 		let url = new URL(window.location.href);
 		let query = url.searchParams.get("query");
@@ -64,6 +59,10 @@ export const Token = props => {
 			props.getTokenFail("You must specify a query!");
 		}
 	};
+	useEffect(() => {
+		window.document.title = `${process.env.REACT_APP_APP_NAME}`;
+		jumpUser();
+	}, []);
 	const message = props.error != null ? props.error : "Jumping... You can close this window if it stays open";
 	return (
 		<Center>

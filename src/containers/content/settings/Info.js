@@ -44,7 +44,6 @@ const Info = ({headers, isAdmin, isLoggedIn, error, ...props}) => {
 		props.getInfoSystem(headers);
 		props.getInfoError(headers);
 	}, []);
-	
 	const classes = useStyles();
 	const theme = useTheme();
 	const status = (

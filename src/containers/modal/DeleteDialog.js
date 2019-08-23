@@ -23,7 +23,8 @@ export const DeleteDialog = ({open, title, body, requireApproval, ...props}) => 
 	const [ack, setAck] = useState(false);
 
 	const defaultTitle = "Delete";
-	const defaultBody = `Are you sure? This action is immediate and cannot be undone. ${requireApproval === true ? "Since this change will likely impact functionality for users, you will need to be certain of your actions." : ""}`;
+	const defaultBody = `Are you sure? This action is immediate and cannot be undone.` +
+		`${requireApproval === true ? "Since this change will likely impact functionality for users, you will need to be certain of your actions." : ""}`;
 
 	useEffect(() => {
 		setAck(false);

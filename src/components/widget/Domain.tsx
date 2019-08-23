@@ -14,23 +14,10 @@
  *    limitations under the License.
  */
 
-import {createStyles, makeStyles} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core";
 import * as React from "react";
-import { ThemeProvider, useTheme } from "@material-ui/styles";
-
-interface Theme {
-	palette: {
-		success: {
-			main: string,
-		},
-		error: {
-			main: string
-		},
-		text: {
-			secondary: string
-		}
-	}
-}
+import {useTheme} from "@material-ui/core/styles";
+import {Theme} from "../../style/palette";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	https: {
@@ -55,13 +42,7 @@ const Domain = ({text}: {text: string}) => {
 		const domain = split[1];
 		return (<span className={classes[scheme]}>{scheme}://<span className={classes.secondaryText}>{domain}</span></span>);
 	};
-	return (
-		<ThemeProvider<Theme> theme={theme}>
-			<span>
-				{highlighted(text, classes)}
-			</span>
-		</ThemeProvider>
-	)
+	return (<span>{highlighted(text, classes)}</span>)
 
 };
 export default Domain;

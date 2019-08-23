@@ -16,11 +16,7 @@
  */
 
 import React, {useEffect, useState} from "react";
-import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
-import Card from "@material-ui/core/es/Card/Card";
-import {CardContent, Grid, makeStyles, TextField, withTheme} from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
+import {CardContent, Grid, makeStyles, TextField, CircularProgress, Card, Typography, Button} from "@material-ui/core";
 import {OAUTH_REQUEST, oauthRequest} from "../../actions/Auth";
 import {connect} from "react-redux";
 import Center from "react-center";
@@ -30,6 +26,7 @@ import {mdiGithubCircle, mdiGoogle} from "@mdi/js";
 import {oauth2Discover} from "../../actions/Oauth";
 import {APP_NAME} from "../../constants";
 import PropTypes from "prop-types";
+import {useTheme} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -65,7 +62,6 @@ const Login = ({isLoggedIn, version, providers, loading, error, ...props}) => {
 	// state hooks
 	const [username, setUsername] = useState(initialUser);
 	const [password, setPassword] = useState(initialPassword);
-	
 	// lifecycle hooks
 	useEffect(() => {
 		window.document.title = `Login - ${APP_NAME}`;
@@ -73,19 +69,14 @@ const Login = ({isLoggedIn, version, providers, loading, error, ...props}) => {
 		props.oauth2Discover("github");
 		props.oauth2Discover("google");
 	}, []);
-	
 	useEffect(() => {
 		if(isLoggedIn === true) {
 			// The user is already logged in, we can leave here
 			const url = new URL(window.location.href);
 			let target = url.searchParams.get("target");
-			if(target != null && target !== '')
-				props.history.push(target);
-			else
-				props.history.push('/');
+			props.history.push(target != null && target !== "" ? target : "/");
 		}
 	}, [isLoggedIn]);
-	
 	const onUsernameChange = (e) => {
 		const {value} = e.target;
 		const err = username.regex.test(value) === true ? "" : "Username must be a minimum of 3 characters";
@@ -100,9 +91,8 @@ const Login = ({isLoggedIn, version, providers, loading, error, ...props}) => {
 		const data = window.btoa(`${username.value}:${password.value}`);
 		props.oauthRequest(data);
 	};
-	
 	const classes = useStyles();
-	const {theme} = props;
+	const theme = useTheme();
 	let errorMessage = <div/>;
 	if(error != null) {
 		errorMessage = (
@@ -197,4 +187,4 @@ const mapDispatchToProps = ({
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withTheme(Login));
+)(Login);

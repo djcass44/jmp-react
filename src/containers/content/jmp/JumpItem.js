@@ -26,8 +26,20 @@ const JumpItem = ({jump, ...props}) => {
 	const classes = useStyles();
 	const theme = useTheme();
 	const scheme = getAvatarScheme(theme, jump['personal']);
+	let icon;
+	switch (jump.personal) {
+		default:
+			icon = mdiEarth;
+			break;
+		case 1:
+			icon = mdiAccountCircleOutline;
+			break;
+		case 2:
+			icon = mdiAccountGroupOutline;
+			break;
+	}
 	const avatar = {
-		icon: jump['personal'] === 0 ? mdiEarth : jump['personal'] === 1 ? mdiAccountCircleOutline : mdiAccountGroupOutline,
+		icon: icon,
 		bg: scheme[0],
 		fg: scheme[1]
 	};
@@ -42,7 +54,6 @@ const JumpItem = ({jump, ...props}) => {
 			}
 		</span>
 	);
-
 	const getAliases = () => {
 		if(jump.alias.length === 0) return "";
 		let items = [];
@@ -52,12 +63,15 @@ const JumpItem = ({jump, ...props}) => {
 		let alias = items.join(', ');
 		return `AKA ${alias}`;
 	};
-	
 	return (
 		<div>
 			<ListItem button value={jump.id} onClick={() => props.setJumpExpand(jump.id)}>
 				<Avatar component={'div'} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
-					<ReactImageFallback style={{borderRadius: 64}} src={jump.image} fallbackImage={<Icon path={avatar.icon} color={avatar.fg} size={1}/>} initialImage={<Icon path={avatar.icon} color={avatar.fg} size={1}/>}/>
+					<ReactImageFallback style={{borderRadius: 64}} src={jump.image} fallbackImage={
+						<Icon path={avatar.icon} color={avatar.fg} size={1}/>
+					} initialImage={
+						<Icon path={avatar.icon} color={avatar.fg} size={1}/>
+					}/>
 				</Avatar>
 				<Tooltip disableFocusListener title={getAliases()} placement={"left"} interactive>
 					<ListItemText primary={<span className={classes.title}>{jump.name}</span>} secondary={secondary}/>

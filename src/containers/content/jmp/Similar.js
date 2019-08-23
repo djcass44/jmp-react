@@ -64,11 +64,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Similar = ({headers, similar, loading, error, getSimilar, getSimilarFail}) => {
-	useEffect(() => {
-		window.document.title = `Similar - ${APP_NAME}`;
-		getMatches();
-	}, []);
-
 	const getMatches = () => {
 		let url = new URL(window.location.href);
 		let query = url.searchParams.get("query");
@@ -79,6 +74,10 @@ const Similar = ({headers, similar, loading, error, getSimilar, getSimilarFail})
 			getSimilarFail("You must specify a query!");
 		}
 	};
+	useEffect(() => {
+		window.document.title = `Similar - ${APP_NAME}`;
+		getMatches();
+	}, []);
 	
 	const classes = useStyles();
 	const theme = useTheme();

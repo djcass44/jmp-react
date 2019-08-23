@@ -26,8 +26,6 @@ const Snackbar = (props) => {
 				props.closeSnackbar(newSnack.key);
 				props.removeSnackbar(newSnack.key);
 			}
-
-			if(notExists) continue;
 			notExists = notExists || !currentSnacks.filter(({ key }) => newSnack.key === key).length;
 		}
 		return notExists;

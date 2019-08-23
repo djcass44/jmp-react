@@ -68,7 +68,6 @@ const useStyles = makeStyles(() => ({
 const Jumps = ({setJumpNew, setJumpEdit, setDelete, deleteJump, searchFilter, headers, ...props}) => {
 	const sorts = [...defaultSorts, {id: 'usage', value: "Usage"}];
 	const [offset, setOffset] = useState(0);
-	
 	useEffect(() => {
 		window.document.title = `${APP_NAME}`;
 		props.listJumps(headers);

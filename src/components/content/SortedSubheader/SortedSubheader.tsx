@@ -11,7 +11,10 @@ const useStyles = makeStyles(() => ({
 	}
 }));
 
-export default ({title, searchFilter, size, sort, sorts, setSort, onAdd}: {title: string, searchFilter?: string, size: number, sort: string, sorts: Array<Sort>, setSort: Function, onAdd?: Function}) => {
+export default (
+		{title, searchFilter, size, sort, sorts, setSort, onAdd}:
+		{title: string, searchFilter?: string, size: number, sort: string, sorts: Array<Sort>, setSort: Function, onAdd?: Function}
+	) => {
 	const classes = useStyles();
 	return (
 		<ListSubheader className={classes.title} inset component="div">

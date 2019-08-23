@@ -24,11 +24,6 @@ export const SET_USER_GROUPS = "SET_USER_GROUPS";
 
 export const SOCKET_UPDATE_GROUPS = "EVENT_UPDATE_GROUP";
 
-export const getGroups = (headers) => dispatch => getGroupsDispatch(dispatch, headers);
-export const putGroup = (headers, name) => dispatch => putGroupDispatch(dispatch, headers, name);
-export const getUserGroups = (headers, uid) => dispatch => getUserGroupsDispatch(dispatch, headers, uid);
-export const setUserGroups = (headers, uid, payload) => dispatch => setUserGroupsDispatch(dispatch, headers, uid, payload);
-
 const getGroupsDispatch = (dispatch, headers) => {
 	dispatch({type: `${GROUP_LOAD}_REQUEST`});
 	client.get("/api/v2_1/groups", {headers: headers}).then(r => {
@@ -81,3 +76,8 @@ const setUserGroupsDispatch = (dispatch, headers, uid, payload) => {
 		dispatch({type: `${SET_USER_GROUPS}_FAILURE`, payload: err, error: true});
 	});
 };
+
+export const getGroups = (headers) => dispatch => getGroupsDispatch(dispatch, headers);
+export const putGroup = (headers, name) => dispatch => putGroupDispatch(dispatch, headers, name);
+export const getUserGroups = (headers, uid) => dispatch => getUserGroupsDispatch(dispatch, headers, uid);
+export const setUserGroups = (headers, uid, payload) => dispatch => setUserGroupsDispatch(dispatch, headers, uid, payload);

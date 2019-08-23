@@ -120,12 +120,7 @@ const Help = () => {
 			</span>
 		}
 	];
-	const toggleExpansion = (index: number) => {
-		if(index !== expand)
-			setExpand(index);
-		else
-			setExpand(-1);
-	};
+	const toggleExpansion = (index: number) => setExpand(index !== expand ? index : -1);
 	
 	const theme = useTheme();
 	// set the appropriate colours for the card-content

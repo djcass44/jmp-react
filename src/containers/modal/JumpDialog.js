@@ -81,7 +81,6 @@ const JumpDialog = ({open, headers, ...props}) => {
 		}), gid);
 		props.setJumpNew(false);
 	};
-	
 	const classes = useStyles();
 	const userGroups = [];
 	props.userGroups.forEach(g => {

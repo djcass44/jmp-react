@@ -7,14 +7,6 @@ export const GET_INFO_PROP = "GET_INFO_PROP";
 export const GET_INFO_AUTH = "GET_INFO_AUTH";
 export const GET_INFO_ERROR = "GET_INFO_ERROR";
 
-export const getInfoApp = headers => dispatch => getInfoAppDispatch(dispatch, headers);
-export const getInfoSystem = headers => dispatch => getInfoSystemDispatch(dispatch, headers);
-export const getInfoHealth = headers => dispatch => getInfoStatusDispatch(dispatch, headers);
-export const getInfoProp = (headers, prop) => dispatch => getPropDispatch(dispatch, headers, prop);
-export const getInfoAuth = headers => dispatch => getInfoAuthDispatch(dispatch, headers);
-export const getInfoError = headers => dispatch => getInfoErrorDispatch(dispatch, headers);
-
-
 const getInfoAppDispatch = (dispatch, headers) => {
 	dispatch({type: `${GET_INFO_APP}_REQUEST`});
 	client.get("/api/v2/info/app", {headers: headers}).then(r => {
@@ -63,3 +55,10 @@ const getInfoErrorDispatch = (dispatch, headers) => {
 		dispatch({type: `${GET_INFO_ERROR}_FAILURE`, payload: err, error: true});
 	});
 };
+
+export const getInfoApp = headers => dispatch => getInfoAppDispatch(dispatch, headers);
+export const getInfoSystem = headers => dispatch => getInfoSystemDispatch(dispatch, headers);
+export const getInfoHealth = headers => dispatch => getInfoStatusDispatch(dispatch, headers);
+export const getInfoProp = (headers, prop) => dispatch => getPropDispatch(dispatch, headers, prop);
+export const getInfoAuth = headers => dispatch => getInfoAuthDispatch(dispatch, headers);
+export const getInfoError = headers => dispatch => getInfoErrorDispatch(dispatch, headers);

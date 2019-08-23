@@ -8,6 +8,10 @@ export interface PaletteGroup {
 	error: Palette,
 	info: Palette,
 	success: Palette,
+	text: {
+		primary: string,
+		secondary: string
+	}
 	background: {
 		default: string,
 		paper: string

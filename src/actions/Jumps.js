@@ -13,15 +13,6 @@ export const SOCKET_UPDATE_JUMP = "EVENT_UPDATE";
 export const SOCKET_UPDATE_TITLE = "EVENT_UPDATE_TITLE";
 export const SOCKET_UPDATE_FAVICON = "EVENT_UPDATE_FAVICON";
 
-export const listJumps = headers => dispatch => listJumpsDispatch(dispatch, headers);
-export const deleteJump = (headers, id) => dispatch => deleteJumpDispatch(dispatch, headers, id);
-export const putJump = (headers, jump, gid) => dispatch => putJumpDispatch(dispatch, headers, jump, gid);
-export const patchJump = (headers, jump) => dispatch => patchJumpDispatch(dispatch, headers, jump);
-export const setJumpExpand = id => dispatch => dispatch({type: JUMP_SET_EXPAND, payload: id});
-
-export const getSimilar = (headers, query) => dispatch => getSimilarDispatch(dispatch, headers, query);
-export const getSimilarFail = error => dispatch => dispatch({type: `${GET_SIMILAR}_FAILURE`, payload: error, error: true});
-
 const listJumpsDispatch = (dispatch, headers) => {
 	dispatch({type: `${JUMP_LOAD}_REQUEST`});
 	client.get("/api/v1/jumps", {headers: headers}).then(r => {
@@ -76,3 +67,12 @@ const patchJumpDispatch = (dispatch, headers, jump) => {
 		dispatch({type: `${PATCH_JUMP}_FAILURE`, payload: err, error: true});
 	});
 };
+
+export const listJumps = headers => dispatch => listJumpsDispatch(dispatch, headers);
+export const deleteJump = (headers, id) => dispatch => deleteJumpDispatch(dispatch, headers, id);
+export const putJump = (headers, jump, gid) => dispatch => putJumpDispatch(dispatch, headers, jump, gid);
+export const patchJump = (headers, jump) => dispatch => patchJumpDispatch(dispatch, headers, jump);
+export const setJumpExpand = id => dispatch => dispatch({type: JUMP_SET_EXPAND, payload: id});
+
+export const getSimilar = (headers, query) => dispatch => getSimilarDispatch(dispatch, headers, query);
+export const getSimilarFail = error => dispatch => dispatch({type: `${GET_SIMILAR}_FAILURE`, payload: error, error: true});

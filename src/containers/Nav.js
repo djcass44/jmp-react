@@ -40,6 +40,8 @@ import {APP_NAME} from "../constants";
 import {useTheme} from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 
+const bgTransition = time => `background-color ${time}ms linear`;
+
 const useStyles = makeStyles(theme => ({
 	root: {
 		width: '100%'
@@ -69,13 +71,13 @@ const useStyles = makeStyles(theme => ({
 		backgroundColor: fade(theme.palette.primary.light, 0.15),
 		'&:hover': {
 			backgroundColor: fade(theme.palette.primary.light, 0.35),
-			transition: 'background-color 250ms linear',
-			webkitTransition: 'background-color 250ms linear',
-			msTransition: 'background-color 250ms linear',
+			transition: bgTransition(250),
+			webkitTransition: bgTransition(250),
+			msTransition: bgTransition(250),
 		},
-		transition: 'background-color 150ms linear',
-		webkitTransition: 'background-color 150ms linear',
-		msTransition: 'background-color 150ms linear',
+		transition: bgTransition(150),
+		webkitTransition: bgTransition(150),
+		msTransition: bgTransition(150),
 
 		marginRight: theme.spacing(2),
 		marginLeft: 0,

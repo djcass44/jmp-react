@@ -19,7 +19,7 @@ import getAvatarScheme from "../../style/getAvatarScheme";
 import {SentimentDissatisfied} from "@material-ui/icons";
 import ListItem from "@material-ui/core/ListItem";
 import React from "react";
-import {useTheme} from "@material-ui/styles";
+import {useTheme} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(() => ({
 	title: {

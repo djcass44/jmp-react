@@ -48,12 +48,6 @@ class GroupModPayload {
 }
 const GroupModDialog = ({open, user, groups, userGroups, loading, headers, ...props}) => {
 	const [usermap, setUsermap] = useState([]);
-
-	useEffect(() => {
-		if(open === true)
-			updateGroupMappings()
-	}, [groups, userGroups]);
-
 	const updateGroupMappings = () => {
 		let mapping = [];
 		// Check whether the user is in each group and build a mapping array
@@ -64,17 +58,14 @@ const GroupModDialog = ({open, user, groups, userGroups, loading, headers, ...pr
 		});
 		setUsermap(mapping);
 	};
-
+	useEffect(() => {
+		if(open === true)
+			updateGroupMappings()
+	}, [groups, userGroups]);
 	const loadData = () => {
 		if(user == null) return;
 		props.getUserGroups(headers, user.id);
 	};
-
-	const onChecked = index => {
-		const checked = !usermap[index].checked;
-		onChange(index, checked);
-	};
-
 	/**
 	 * Add or remove the user from a group
 	 * @param index: position of the group in the userMap
@@ -92,6 +83,7 @@ const GroupModDialog = ({open, user, groups, userGroups, loading, headers, ...pr
 		item.loading = true;
 		props.setUserGroups(headers, user.id, JSON.stringify(payload));
 	};
+	const onChecked = index => onChange(index, !usermap[index].checked);
 
 	const classes = useStyles();
 	let listItems = [];

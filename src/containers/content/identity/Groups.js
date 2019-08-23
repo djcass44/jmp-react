@@ -57,7 +57,6 @@ const Groups = props => {
 	useEffect(() => {
 		props.getGroups(props.headers);
 	}, [props.headers]);
-	
 	const filterGroup = group => {
 		return group.name.toLowerCase().includes(props.searchFilter) ||
 			group.from.toLowerCase() === props.searchFilter.toLowerCase();

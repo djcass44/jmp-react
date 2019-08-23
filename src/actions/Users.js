@@ -22,9 +22,6 @@ export const PATCH_USER_ROLE = "PATCH_USER_ROLE";
 
 export const SOCKET_UPDATE_USERS = "EVENT_UPDATE_USER";
 
-export const getUsers = headers => dispatch => getUsersDispatch(dispatch, headers);
-export const patchUserRole = (headers, user) => dispatch => patchUserRoleDispatch(dispatch, headers, user);
-
 function getUsersDispatch(dispatch, headers) {
 	dispatch({type: `${USER_LOAD}_REQUEST`});
 	client.get("/api/v2/users?count=9999&offset=0", {headers: headers}).then(r => {
@@ -50,3 +47,6 @@ function patchUserRoleDispatch(dispatch, headers, user) {
 		dispatch({type: `${PATCH_USER_ROLE}_FAILURE`, payload: err, error: true});
 	});
 }
+
+export const getUsers = headers => dispatch => getUsersDispatch(dispatch, headers);
+export const patchUserRole = (headers, user) => dispatch => patchUserRoleDispatch(dispatch, headers, user);

@@ -1,8 +1,7 @@
 import {Button, CircularProgress, makeStyles, Typography} from "@material-ui/core";
-import * as React from "react";
+import React, {useEffect} from "react";
 import {Link} from "react-router-dom";
-import {useEffect} from "react";
-import useTheme from "@material-ui/core/styles/useTheme";
+import {useTheme} from "@material-ui/core/styles";
 import {Theme} from "../../../style/palette";
 import StatusPanel from "../settings/Status";
 import {getDefault} from "../../../selectors/getTextColour";
@@ -47,17 +46,14 @@ const getReport = (status: Status) => {
 	}
 	if(status.database != null) {
 		expected++;
-		if(status.database === true || status.database === "OK")
-			actual++;
+		if(status.database === true || status.database === "OK") {actual++}
 	}
 	if(status.identityProvider != null) {
 		expected++;
-		if(status.identityProvider === true || status.identityProvider === "OK")
-			actual++;
+		if(status.identityProvider === true || status.identityProvider === "OK") {actual++}
 	}
 	expected++;
-	if(status.imageApi)
-		actual++;
+	if(status.imageApi) {actual++}
 	return actual / expected;
 };
 

@@ -1,3 +1,5 @@
+import getRandomValue from "../selectors/getRandomValue";
+
 export const ADD_SNACKBAR = "ADD_SNACKBAR";
 export const CLOSE_SNACKBAR = "CLOSE_SNACKBAR";
 export const REMOVE_SNACKBAR = "REMOVE_SNACKBAR";
@@ -8,7 +10,7 @@ export const addSnackbar = notify => {
 		type: ADD_SNACKBAR,
 		notify: {
 			...notify,
-			key: key || new Date().getTime() + Math.random() // ensure that the key is not-null
+			key: key || new Date().getTime() + getRandomValue() // ensure that the key is not-null
 		}
 	};
 };
