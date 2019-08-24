@@ -70,7 +70,7 @@ export default ({getInfoHealth, headers, status, loading, error}: {getInfoHealth
 	if(hrStatus === 0)
 		content = {color: theme.palette.error.main, title: "System failure", message: "Most or all components are having problems."};
 	else if(hrStatus < 1)
-		content = {color: theme.palette.warning.main, title: "Something's wrong", message: "One or more components have failed, or are having issues.\nThe application is probably still usable with limited features"};
+		content = {color: theme.palette.warning.main, title: "Something's wrong", message: "One or more components have failed, or are having issues.\nThe application is probably still usable but some features may not be available."};
 
 	const classes = useStyles();
 	return (

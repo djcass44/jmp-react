@@ -44,9 +44,10 @@ export default (state = initialState, action) => {
 		}
 		case MODAL_GROUP_NEW:
 			return {...state, group: {...state.group, new: {...state.group.new, open: action.payload}}};
-		case MODAL_USER_GROUPS:
+		case MODAL_USER_GROUPS: {
 			const {open, item} = action.payload;
 			return {...state, user: {...state.user, group: {...state.user.group, open, item}}};
+		}
 		default:
 			return state;
 	}

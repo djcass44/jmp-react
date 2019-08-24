@@ -1,4 +1,6 @@
-export default (theme, type) => {
+import {Theme} from "./palette";
+
+export default (theme: Theme, type: number) => {
 	const {palette} = theme;
 	if(palette.type === 'dark') {
 		switch (type) {

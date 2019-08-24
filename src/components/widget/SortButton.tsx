@@ -1,6 +1,6 @@
 import IconButton from "@material-ui/core/IconButton";
 import React from "react";
-import {Menu} from "@material-ui/core";
+import {Menu, Tooltip} from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import SortIcon from "@material-ui/icons/Sort";
 import CheckIcon from "@material-ui/icons/Check";
@@ -37,9 +37,11 @@ export const SortButton = ({selectedSort, sorts, onSubmit}: {selectedSort: strin
 
 	return (
 		<span>
-			<IconButton aria-owns={anchorEl ? 'simple-menu' : undefined} aria-haspopup="true" onClick={handleClick} centerRipple={false} aria-label="Sort">
-				<SortIcon fontSize="small"/>
-			</IconButton>
+			<Tooltip title="Sort">
+				<IconButton aria-owns={anchorEl ? 'simple-menu' : undefined} aria-haspopup="true" onClick={handleClick} centerRipple={false} aria-label="Sort">
+					<SortIcon fontSize="small"/>
+				</IconButton>
+			</Tooltip>
 			<Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
 				{items}
 			</Menu>
