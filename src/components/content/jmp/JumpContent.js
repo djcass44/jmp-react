@@ -1,5 +1,6 @@
 import React from "react";
-import {Collapse, IconButton, makeStyles, Tooltip, Typography, withTheme} from "@material-ui/core";
+import {Collapse, IconButton, makeStyles, Tooltip, Typography} from "@material-ui/core";
+import {useTheme} from "@material-ui/core/styles";
 import Icon from "@mdi/react";
 import Moment from "react-moment";
 import {
@@ -27,14 +28,14 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export const JumpContent = props => {
+export const JumpContent = ({jump, ...props}) => {
 	const classes = useStyles();
 	// This is a recent API
 	// There WILL be compatibility issues with its usage
 	const handleCopy = text => {
 		navigator.clipboard.writeText(text).then(() => { console.log("copied link") });
 	};
-	const {jump, theme} = props;
+	const theme = useTheme();
 	const secureStatus = jump.location.startsWith("https://") ? {
 		secure: true,
 		title: "Secure",
@@ -106,4 +107,7 @@ const mapStateToProps = state => ({
 	isAdmin: state.auth.isAdmin,
 	expanded: state.jumps.expanded
 });
-export default connect(mapStateToProps, null)(withTheme(JumpContent));
+export default connect(
+	mapStateToProps,
+	null
+)(JumpContent);
