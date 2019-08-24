@@ -11,6 +11,8 @@ import {connect} from "react-redux";
 import getAvatarScheme from "../../../style/getAvatarScheme";
 import Domain from "../../../components/widget/Domain";
 import {useTheme} from "@material-ui/core/styles";
+import {usePalette} from "react-palette";
+import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -38,7 +40,13 @@ const JumpItem = ({jump, ...props}) => {
 			icon = mdiAccountGroupOutline;
 			break;
 	}
-	const avatar = {
+	const  {data, loading, error} = usePalette(jump.image);
+	const avatarPalette = getAvatarFromPalette(theme, icon, data);
+	const avatar = loading === false && error == null ? {
+		icon: icon,
+		bg: avatarPalette.bg,
+		fg: avatarPalette.fg
+	} : {
 		icon: icon,
 		bg: scheme[0],
 		fg: scheme[1]
