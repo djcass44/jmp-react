@@ -21,8 +21,7 @@ import {
 	ListItemSecondaryAction,
 	makeStyles,
 	Paper,
-	Typography,
-	withTheme
+	Typography
 } from "@material-ui/core";
 // @ts-ignore
 import Center from "react-center";
@@ -159,4 +158,4 @@ const Help = () => {
 		</>
 	);
 };
-export default withTheme(Help);
+export default Help;

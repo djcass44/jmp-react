@@ -18,20 +18,21 @@
 import React, {useEffect} from 'react';
 import {MuiThemeProvider} from "@material-ui/core/styles";
 import Theme from "./style/theme";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Helmet} from "react-helmet";
-import {wsClose, wsOpen} from "./actions/Socket";
+import {closeWebSocket, connectWebSocket} from "./actions/Socket";
 import Body from "./containers/Body";
 import {SnackbarProvider} from "notistack";
 import Snackbar from "./containers/Snackbar";
 import useTheme from "@material-ui/core/styles/useTheme";
-import PropTypes from "prop-types";
 
-export const App = ({headers, wsOpen, wsClose}) => {
+export default () => {
+	const headers = useSelector(state => state.auth.headers);
+	const dispatch = useDispatch();
 	useEffect(() => {
-		wsOpen(headers);
+		connectWebSocket(dispatch, headers);
 		return () => {
-			wsClose();
+			closeWebSocket(dispatch);
 		}
 	});
 
@@ -48,19 +49,3 @@ export const App = ({headers, wsOpen, wsClose}) => {
 		</div>
 	);
 };
-App.propTypes = {
-	headers: PropTypes.object.isRequired,
-	wsOpen: PropTypes.func.isRequired,
-	wsClose: PropTypes.func.isRequired
-};
-const mapStateToProps = state => ({
-	headers: state.auth.headers,
-});
-const mapDispatchToProps = ({
-	wsOpen,
-	wsClose
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(App);

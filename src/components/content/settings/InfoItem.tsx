@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export const InfoItem = ({title, error, open, icon, content}: {title: ReactNode, error: object | null, open: boolean, icon: ReactNode, content: object}) => {
+export default ({title, error, open, icon, content}: {title: ReactNode, error: object | null, open: boolean, icon: ReactNode, content: object}) => {
 	const classes = useStyles();
 	return (
 		<ExpansionPanel defaultExpanded={open}>
@@ -37,4 +37,3 @@ export const InfoItem = ({title, error, open, icon, content}: {title: ReactNode,
 		</ExpansionPanel>
 	);
 };
-export default InfoItem;

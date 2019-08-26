@@ -11,10 +11,7 @@ export const WS_CLOSE_USER = "WS_CLOSE_USER"; // user requested
 
 let socket = null;
 
-export const wsOpen = headers => dispatch => connectWebSocket(dispatch, headers);
-export const wsClose = () => dispatch => closeWebSocket(dispatch);
-
-function connectWebSocket(dispatch, headers) {
+export const connectWebSocket = (dispatch, headers) => {
 	socket = new WebSocket(SOCKET_URL);
 	socket.addEventListener('open', () => {
 		dispatch(removeSnackbar(WS_CLOSE));
@@ -35,7 +32,7 @@ function connectWebSocket(dispatch, headers) {
 		const {payload} = data;
 		checkType(dispatch, type, payload, headers);
 	});
-}
+};
 
 const checkType = (dispatch, type, payload, headers) => {
 	switch(type) {
@@ -56,7 +53,7 @@ const checkType = (dispatch, type, payload, headers) => {
 	}
 };
 
-function closeWebSocket(dispatch) {
+export const closeWebSocket = dispatch => {
 	socket.close();
 	dispatch({type: WS_CLOSE_USER});
-}
+};
