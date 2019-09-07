@@ -39,6 +39,7 @@ import getIconColour from "../style/getIconColour";
 import {APP_NAME} from "../constants";
 import {useTheme} from "@material-ui/core/styles";
 import PropTypes from "prop-types";
+import UserPopover from "../components/widget/UserPopover";
 
 const bgTransition = time => `background-color ${time}ms linear`;
 
@@ -119,6 +120,9 @@ const useStyles = makeStyles(theme => ({
 	},
 	progress: {
 		backgroundColor: 'transparent'
+	},
+	menuIcon: {
+		paddingRight: theme.spacing(1)
 	}
 }));
 
@@ -198,30 +202,33 @@ const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilte
 				transformOrigin={{ vertical: 'top', horizontal: 'right' }}
 				open={isMenuOpen}
 				onClose={() => handleMenuClose()}>
-				<MenuItem disabled={true} button={false} component={'div'}>
-					<div>
-						<span>{name != null && name !== '' ? name : 'Anonymous'}</span>
-					</div>
+				<MenuItem button={false} component={"div"}>
+					<UserPopover user={userProfile} onClose={() => {
+					}} open={true} anchorEl={null} elevation={0}/>
 				</MenuItem>
 				<Divider/>
 				{window.location.pathname !== "/" ? <MenuItem component={Link} onClick={() => handleMenuClose()} to={"/"} button={true}><HomeIcon/>Home</MenuItem> : ""}
 				{isLoggedIn === true ?
 					<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/identity"} button={true}>
-						<Icon path={mdiAccountGroupOutline} size={1} color={getIconColour(theme)}/>
+						<Icon className={classes.menuIcon} path={mdiAccountGroupOutline} size={1}
+						      color={getIconColour(theme)}/>
 						Users &amp; Groups
 					</MenuItem>
 					:
 					""
 				}
-				<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/settings"} button={true}><SettingsIcon/>Settings</MenuItem>
+				<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/settings"} button={true}>
+					<SettingsIcon className={classes.menuIcon}/>
+					Settings
+				</MenuItem>
 				{isLoggedIn === false ?
 					<MenuItem component={Link} onClick={() => handleMenuClose()} to={loginUrl} button={true}>
-						<Icon path={mdiLogin} size={1} color={getIconColour(theme)}/>
+						<Icon className={classes.menuIcon} path={mdiLogin} size={1} color={getIconColour(theme)}/>
 						Login
 					</MenuItem>
 					:
 					<MenuItem component={Link} onClick={() => handleMenuClose()} to={'/logout'} button={true}>
-						<Icon path={mdiLogout} size={1} color={getIconColour(theme)}/>
+						<Icon className={classes.menuIcon} path={mdiLogout} size={1} color={getIconColour(theme)}/>
 						Logout
 					</MenuItem>
 				}

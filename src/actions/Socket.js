@@ -24,7 +24,10 @@ export const connectWebSocket = (dispatch, headers) => {
 			dispatch({type: WS_RECONNECT});
 		}, 2000);
 		dispatch({type: WS_CLOSE});
-		dispatch(addSnackbar({message: "Trouble reaching servers", options: {key: WS_CLOSE, variant: "warning"}}));
+		setTimeout(() => {
+			// add a slight delay
+			dispatch(addSnackbar({message: "Trouble reaching servers", options: {key: WS_CLOSE, variant: "warning"}}));
+		}, 500);
 	});
 	socket.addEventListener('message', ev => {
 		const data = JSON.parse(ev.data);

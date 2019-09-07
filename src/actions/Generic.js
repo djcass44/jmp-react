@@ -7,9 +7,13 @@ export const GENERIC_GET_VERSION = "GENERIC_GET_VERSION";
 export const GENERIC_GET_TOKEN = "GENERIC_GET_TOKEN";
 export const SOCKET_APP_INIT = "INIT_APP";
 
-export const getTokenStart = () => dispatch => dispatch({type: `${GENERIC_GET_TOKEN}_REQUEST`});
-export const getTokenEnd = () => dispatch => dispatch({type: `${GENERIC_GET_TOKEN}_SUCCESS`});
-export const getTokenFail = err => dispatch => dispatch({type: `${GENERIC_GET_TOKEN}_FAILURE`, payload: err, error: true});
+export const getTokenStart = dispatch => dispatch({type: `${GENERIC_GET_TOKEN}_REQUEST`});
+export const getTokenEnd = dispatch => dispatch({type: `${GENERIC_GET_TOKEN}_SUCCESS`});
+export const getTokenFail = (dispatch, err) => dispatch({
+	type: `${GENERIC_GET_TOKEN}_FAILURE`,
+	payload: err,
+	error: true
+});
 
 export const setFilter = filter => dispatch => {
 	dispatch({type: GENERIC_FILTER_SET, payload: filter});

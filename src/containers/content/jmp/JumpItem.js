@@ -1,13 +1,21 @@
 import ReactImageFallback from "react-image-fallback";
 import Icon from "@mdi/react";
-import {ListItemSecondaryAction, makeStyles, Tooltip, ListItem, ListItemText, Avatar, IconButton} from "@material-ui/core";
+import {
+	Avatar,
+	IconButton,
+	ListItem,
+	ListItemSecondaryAction,
+	ListItemText,
+	makeStyles,
+	Tooltip
+} from "@material-ui/core";
 import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiChevronDown, mdiChevronUp, mdiEarth} from "@mdi/js";
 import JumpContent from "../../../components/content/jmp/JumpContent";
 import React from "react";
 import PropTypes from "prop-types";
 import {setDelete, setJumpEdit, setJumpNew} from "../../../actions/Modal";
 import {deleteJump, setJumpExpand} from "../../../actions/Jumps";
-import {connect} from "react-redux";
+import {connect, useSelector} from "react-redux";
 import getAvatarScheme from "../../../style/getAvatarScheme";
 import Domain from "../../../components/widget/Domain";
 import {useTheme} from "@material-ui/core/styles";
@@ -27,6 +35,7 @@ const useStyles = makeStyles(theme => ({
 const JumpItem = ({jump, ...props}) => {
 	const classes = useStyles();
 	const theme = useTheme();
+	const {expanded} = useSelector(state => state.jumps);
 	const scheme = getAvatarScheme(theme, jump['personal']);
 	let icon;
 	switch (jump.personal) {
@@ -86,7 +95,8 @@ const JumpItem = ({jump, ...props}) => {
 				</Tooltip>
 				<ListItemSecondaryAction>
 					<IconButton centerRipple={false} onClick={() => props.setJumpExpand(jump.id)}>
-						<Icon path={jump.id === props.expanded ? mdiChevronUp : mdiChevronDown} size={1} color={theme.palette.primary.main}/>
+						<Icon path={jump.id === expanded ? mdiChevronUp : mdiChevronDown} size={1}
+						      color={theme.palette.primary.main}/>
 					</IconButton>
 				</ListItemSecondaryAction>
 			</ListItem>
@@ -97,9 +107,6 @@ const JumpItem = ({jump, ...props}) => {
 JumpItem.propTypes = {
 	jump: PropTypes.object.isRequired
 };
-const mapStateToProps = state => ({
-	expanded: state.jumps.expanded,
-});
 const mapDispatchToProps = ({
 	setJumpNew,
 	setJumpEdit,
@@ -108,6 +115,6 @@ const mapDispatchToProps = ({
 	deleteJump
 });
 export default connect(
-	mapStateToProps,
+	null,
 	mapDispatchToProps
 )(JumpItem);

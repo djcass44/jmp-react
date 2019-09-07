@@ -16,57 +16,67 @@
  */
 
 import React, {useEffect} from "react";
-import {client} from "../../../constants";
+import {APP_NAME, client} from "../../../constants";
 import {GENERIC_GET_TOKEN, getTokenEnd, getTokenFail, getTokenStart} from "../../../actions/Generic";
-import {connect} from "react-redux";
-import {makeStyles, CircularProgress} from "@material-ui/core";
+import {useDispatch, useSelector} from "react-redux";
+import {CircularProgress, makeStyles} from "@material-ui/core";
 import Center from "react-center";
 import {withRouter} from "react-router-dom";
-import PropTypes from "prop-types";
 
 const useStyles = makeStyles(theme => ({
 	text: {
 		color: theme.palette.text.primary
+	},
+	overlay: {
+		position: "fixed",
+		width: "100%",
+		height: "100%",
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		backgroundColor: "transparent"
 	}
 }));
 
-export const Token = props => {
+export const Token = ({history}) => {
 	const classes = useStyles();
+	const dispatch = useDispatch();
+	const loading = useSelector(state => state.loading[GENERIC_GET_TOKEN]);
+	const error = useSelector(state => state.errors[GENERIC_GET_TOKEN]);
+	const {headers} = useSelector(state => state.auth);
 
 	const jumpUser = () => {
 		let url = new URL(window.location.href);
 		let query = url.searchParams.get("query");
 		const id = url.searchParams.get("id");
 		if(query != null && query !== '') {
-			props.getTokenStart();
-			if(id != null && id !== '') {
+			getTokenStart(dispatch);
+			if (id != null && id !== "")
 				query += `?id=${id}`;
-			}
-			client.get(`/api/v2/jump/${query}`, {headers: props.headers}).then(r => {
-				props.getTokenEnd();
-				console.log(`token: ${r.data}`);
-				if(r.data['found'] === true) {
-					window.location.replace(r.data['location']);
-				}
-				else {
-					props.history.push(r.data['location']);
-				}
+			// find out were we are going
+			client.get(`/api/v2/jump/${query}`, {headers}).then(r => {
+				getTokenEnd(dispatch);
+				if (r.data.found === true)
+					window.location.replace(r.data.location);
+				else
+					history.push(r.data.location);
 			}).catch(err => {
-				props.getTokenFail(err.toString());
+				getTokenFail(dispatch, err.toString());
 			});
 		}
 		else {
-			props.getTokenFail("You must specify a query!");
+			getTokenFail(dispatch, "You must specify a query!");
 		}
 	};
 	useEffect(() => {
-		window.document.title = `${process.env.REACT_APP_APP_NAME}`;
+		window.document.title = `${APP_NAME}`;
 		jumpUser();
 	}, []);
-	const message = props.error != null ? props.error : "Jumping... You can close this window if it stays open";
+	const message = error != null ? error : "Jumping... You can close this window if it stays open";
 	return (
-		<Center>
-			{props.loading === true ?
+		<Center className={classes.overlay}>
+			{loading === true ?
 				<CircularProgress/>
 				:
 				<span className={classes.text}>{message}</span>
@@ -74,22 +84,4 @@ export const Token = props => {
 		</Center>
 	);
 };
-Token.propTypes = {
-	loading: PropTypes.bool,
-	error: PropTypes.object,
-	headers: PropTypes.object
-};
-const mapStateToProps = state => ({
-	loading: state.loading[GENERIC_GET_TOKEN],
-	error: state.errors[GENERIC_GET_TOKEN],
-	headers: state.auth.headers,
-});
-const mapDispatchToProps = ({
-	getTokenStart,
-	getTokenEnd,
-	getTokenFail
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(withRouter(Token));
+export default withRouter(Token);

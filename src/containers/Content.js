@@ -18,7 +18,7 @@
 import React from "react";
 import {Grid, makeStyles} from "@material-ui/core";
 import Jumps from "./content/Jumps";
-import {Switch, Route, withRouter} from "react-router-dom";
+import {Route, Switch, withRouter} from "react-router-dom";
 import Login from "./content/Login";
 import NotFound from "./content/NotFound";
 import Logout from "./content/Logout";
@@ -51,26 +51,25 @@ const useStyles = makeStyles(theme => ({
 
 export const Content = () => {
 	const classes = useStyles();
-	let content = (<Grid item xs={12} sm={6}>
-		<Switch>
-			<Route exact path="/" component={Jumps} key={"jumps"}/>
-			<Route exact path="/identity" component={Identity} key={"identity"}/>
-			<Route exact path="/jmp" component={Token} key={"token"}/>
-			<Route exact path="/similar" component={Similar} key={"similar"}/>
-			<Route exact path="/login" component={Login} key={"login"}/>
-			<Route exact path="/logout" component={Logout} key={"logout"}/>
-			<Route exact path="/settings" component={Settings} key={"settings"}/>
-			<Route exact path="/help" component={Help} key={"help"}/>
-			<Route exact path="/callback-*" component={Callback} key={"callback"}/>
-			<Route exact path="/status" component={Status} key="status"/>
-			<Route component={NotFound} key={"notfound"}/>
-		</Switch>
-	</Grid>);
 	return (
 		<div className={classes.container}>
 			<Grid container spacing={5} className={classes.centred}>
 				<Grid item sm={3} className={classes.padding}/>
-				{content}
+				<Grid item xs={12} sm={6}>
+					<Switch>
+						<Route exact path="/" component={Jumps} key={"jumps"}/>
+						<Route exact path="/identity" component={Identity} key={"identity"}/>
+						<Route exact path="/jmp" component={Token} key={"token"}/>
+						<Route exact path="/similar" component={Similar} key={"similar"}/>
+						<Route exact path="/login" component={Login} key={"login"}/>
+						<Route exact path="/logout" component={Logout} key={"logout"}/>
+						<Route exact path="/settings" component={Settings} key={"settings"}/>
+						<Route exact path="/help" component={Help} key={"help"}/>
+						<Route exact path="/callback-*" component={Callback} key={"callback"}/>
+						<Route exact path="/status" component={Status} key="status"/>
+						<Route component={NotFound} key={"notfound"}/>
+					</Switch>
+				</Grid>
 				<Grid item sm={3} className={classes.padding}/>
 			</Grid>
 		</div>

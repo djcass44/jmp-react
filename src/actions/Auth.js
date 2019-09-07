@@ -17,26 +17,16 @@ export function oauthRequest(data) {
 		oauthRequestDispatch(dispatch, data);
 	}
 }
-export function oauthRefresh(refresh, headers) {
-	return dispatch => {
-		oauthRefreshDispatch(dispatch, refresh, headers);
-	}
-}
 export function oauthLogout(headers) {
 	return dispatch => {
 		oauthLogoutDispatch(dispatch, headers);
 	}
 }
-export function oauthUnready() {
-	return dispatch => {dispatch({type: OAUTH_UNREADY});}
-}
 function oauthPreverifyDispatch(dispatch, refresh, headers) {
 	dispatch({type: `${OAUTH_VERIFY}_REQUEST`});
 	let hasCookie = false;
 	client.get("/api/v2/oauth/cookie", {headers: headers}).then(r => {
-		console.log(`cookie result: ${r.data}, type: ${typeof r.data}`);
 		hasCookie = r.data;
-		console.log(`SSO cookie: ${hasCookie}`);
 		if(shouldVerify(refresh, headers) || hasCookie) {
 			oauthVerifyDispatch(dispatch, refresh, headers, hasCookie);
 		}
@@ -44,7 +34,6 @@ function oauthPreverifyDispatch(dispatch, refresh, headers) {
 			dispatch({type: `${OAUTH_VERIFY}_FAILURE`, error: true});
 		}
 	}).catch(err => {
-		console.log(`probably no sso setup: ${err.toString()}`);
 		// No sso token, but headers may be okay
 		if(shouldVerify(refresh, headers)) {
 			oauthVerifyDispatch(dispatch, refresh, headers, false);
@@ -55,7 +44,7 @@ function oauthPreverifyDispatch(dispatch, refresh, headers) {
 	});
 }
 function oauthVerifyDispatch(dispatch, refresh, headers, hasCookie) {
-	client.get("/api/v2/oauth/valid", {headers: headers}).then( r => {
+	client.get("/api/v2/oauth/valid", {headers}).then(r => {
 		dispatch({
 			type: `${OAUTH_VERIFY}_SUCCESS`,
 			payload: r.data
@@ -64,14 +53,11 @@ function oauthVerifyDispatch(dispatch, refresh, headers, hasCookie) {
 			oauthRequest2Dispatch(dispatch, headers);
 		}
 	}).catch(err => {
-		console.log(`verify failed: ${err}`);
-		console.log("lets try to refresh first");
 		dispatch({type: `${OAUTH_VERIFY}_FAILURE`, payload: err, error: true});
 		oauthRefreshDispatch(dispatch, refresh, headers)
 	});
 }
 function oauthRequest2Dispatch(dispatch, headers) {
-	console.log("making v2 oauth request");
 	dispatch({type: `${OAUTH_REQUEST}_REQUEST`});
 	client.post("/api/v2/oauth/token", {}, {headers: headers}).then(r => {
 		dispatch({type: `${OAUTH_REQUEST}_SUCCESS`, payload: r.data});
@@ -86,8 +72,7 @@ function oauthRequestDispatch(dispatch, data) {
 		'Content-Type': 'application/json'
 	};
 	dispatch({type: `${OAUTH_REFRESH}_REQUEST`});
-	client.post("/api/v2/oauth/token", {}, {headers: headers}).then(r => {
-		console.log(`request success`);
+	client.post("/api/v2/oauth/token", {}, {headers}).then(r => {
 		dispatch({
 			type: `${OAUTH_REQUEST}_SUCCESS`,
 			payload: r.data
@@ -101,8 +86,7 @@ function oauthRequestDispatch(dispatch, data) {
 }
 function oauthRefreshDispatch(dispatch, refresh, headers) {
 	dispatch({type: `${OAUTH_REFRESH}_REQUEST`});
-	client.get("/api/v2/oauth/refresh", {headers: headers, params: {refreshToken: refresh}}).then( r => {
-		console.log(`refresh success`);
+	client.get("/api/v2/oauth/refresh", {headers, params: {refreshToken: refresh}}).then(r => {
 		dispatch({
 			type: `${OAUTH_REFRESH}_SUCCESS`,
 			payload: r.data
@@ -114,18 +98,15 @@ function oauthRefreshDispatch(dispatch, refresh, headers) {
 }
 function oauthLogoutDispatch(dispatch, headers) {
 	dispatch({type: `${OAUTH_LOGOUT}_REQUEST`});
-	client.post("/api/v2/oauth/logout", {}, {headers: headers}).then( () => {
+	client.post("/api/v2/oauth/logout", {}, {headers}).then(() => {
 		dispatch({type: `${OAUTH_LOGOUT}_SUCCESS`});
 	}).catch(err => {
 		dispatch(addSnackbar({message: "Failed to logout", options: {key: `${OAUTH_LOGOUT}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${OAUTH_LOGOUT}_FAILURE`, payload: err, error: true});
 	});
 }
-function shouldVerify(refresh, headers) {
+
+const shouldVerify = (refresh, headers) => {
 	// Do a quick check to see if the user has purposefully logged out
-	if((refresh == null || refresh === "") || (headers == null || headers === "")) {
-		console.log("Skipping verify (no refresh/headers)");
-		return false;
-	}
-	return true;
-}
+	return !((refresh == null || refresh === "") || (headers == null || headers === ""));
+};
