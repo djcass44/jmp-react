@@ -57,6 +57,9 @@ const useStyles = makeStyles(theme => ({
 		fontWeight: 500,
 		color: theme.palette.text.primary
 	},
+	subtitle: {
+		color: theme.palette.text.hint
+	},
 	collapse: {
 		padding: theme.spacing(2),
 		borderRadius: 12,
@@ -79,15 +82,34 @@ const JumpItem2 = ({jump}) => {
 
 	const selected = expanded === jump.id;
 
+	const getAliases = () => {
+		if (jump.alias.length === 0) return "";
+		let items = [];
+		jump.alias.forEach((i) => {
+			items.push(i.name);
+		});
+		let alias = items.join(", ");
+		return `AKA ${alias}`;
+	};
+
+	const primary = (
+		<>
+			<span className={classes.title}>
+				{jump.name}
+			</span>
+			{((selected || focus || mouse) && jump.alias.length > 0) && <small className={classes.subtitle}>
+				&nbsp;&bull;&nbsp;{getAliases()}
+			</small>}
+		</>
+	);
+
 	// Generate the secondary text and add the owner (if it exists)
 	const secondary = (
 		<span>
 			<Domain text={jump.location}/>
-			{jump.owner != null ?
-				<span>&nbsp;&bull;&nbsp;{jump.owner}</span>
-				:
-				""
-			}
+			{jump.owner != null && <span>
+				&nbsp;&bull;&nbsp;{jump.owner}
+			</span>}
 		</span>
 	);
 
@@ -120,7 +142,7 @@ const JumpItem2 = ({jump}) => {
 				          setJumpExpand(dispatch, null);
 			          }}>
 				<JumpAvatar jump={jump} background={false} palette={data} loading={loading} error={error}/>
-				<ListItemText primary={<span className={classes.title}>{jump.name}</span>} secondary={secondary}/>
+				<ListItemText primary={primary} secondary={secondary}/>
 				<ListItemSecondaryAction>
 					<PoseGroup animateOnMount={true}>
 						<Item className={classes.action} key="expand">
