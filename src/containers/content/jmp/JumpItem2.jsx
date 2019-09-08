@@ -105,8 +105,8 @@ const JumpItem2 = ({jump}) => {
 	};
 
 	return (
-		<div key={jump.id}>
-			<ListItem button className={classes.item} value={jump.id} component={"li"}
+		<div>
+			<ListItem component={"li"} button className={classes.item} value={jump.id}
 			          selected={focus || selected}
 			          onMouseEnter={() => onMouse(true)}
 			          onMouseLeave={() => onMouse(false)}

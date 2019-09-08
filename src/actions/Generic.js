@@ -20,6 +20,7 @@ export const setFilter = filter => dispatch => {
 	dispatch({type: JUMP_SET_EXPAND, payload: null});
 };
 export const setSort = sort => dispatch => dispatch({type: GENERIC_SET_SORT, payload: sort});
+export const dispatchSort = (dispatch, sort) => dispatch({type: GENERIC_SET_SORT, payload: sort});
 export const getVersion = () => dispatch => getVersionDispatch(dispatch);
 
 function getVersionDispatch(dispatch) {

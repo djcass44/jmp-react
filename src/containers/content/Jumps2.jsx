@@ -14,36 +14,23 @@
  *    limitations under the License.
  */
 
-import {Avatar, LinearProgress, makeStyles, Paper, Typography} from "@material-ui/core";
+import {Avatar, IconButton, LinearProgress, makeStyles, Paper, Tooltip, Typography} from "@material-ui/core";
 import {defaultSorts, sortItems} from "../../misc/Sort";
 import React, {useEffect, useState} from "react";
-import {APP_NAME, APP_NOUN, pageSize} from "../../constants";
+import {APP_NAME, pageSize} from "../../constants";
 import {JUMP_LOAD, listJumpsDispatch} from "../../actions/Jumps";
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
-import SortedSubheader from "../../components/content/SortedSubheader";
-import posed from "react-pose";
 import List from "@material-ui/core/List";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 import {fade} from "@material-ui/core/styles";
 import JumpItem2 from "./jmp/JumpItem2";
+import SortButton from "../../components/widget/SortButton";
+import {dispatchSort} from "../../actions/Generic";
+import AddIcon from "@material-ui/icons/Add";
 
-const Item = posed.div({
-	enter: {
-		opacity: 1,
-		transition: {
-			ease: "easeInOut"
-		}
-	},
-	exit: {
-		opacity: 0,
-		transition: {
-			ease: "easeInOut"
-		}
-	}
-});
 const bgTransition = time => `background-color ${time}ms linear`;
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -122,7 +109,7 @@ const Jumps = () => {
 	const dispatch = useDispatch();
 	const {jumps} = useSelector(state => state.jumps);
 	const {sort} = useSelector(state => state.generic);
-	const {headers, isLoggedIn} = useSelector(state => state.auth);
+	const {headers} = useSelector(state => state.auth);
 	const loading = useSelector(state => state.loading[JUMP_LOAD]);
 
 
@@ -159,6 +146,14 @@ const Jumps = () => {
 			<Center>
 				<Typography variant="h4" className={classes.name}>Where do you want to go?</Typography>
 			</Center>
+			<Center>
+				<SortButton selectedSort={sort} sorts={sorts} onSubmit={e => dispatchSort(dispatch, e)}/>
+				<Tooltip title="Add">
+					<IconButton centerRipple={false} aria-label="Add">
+						<AddIcon fontSize="small"/>
+					</IconButton>
+				</Tooltip>
+			</Center>
 			<div className={classes.search}>
 				<div className={classes.searchIcon}>
 					<SearchIcon/>
@@ -172,7 +167,6 @@ const Jumps = () => {
 				/>
 			</div>
 			<div>
-				<SortedSubheader title={`${APP_NOUN}s`} size={listItems.length} sorts={sorts}/>
 				{loading === true && <LinearProgress className={classes.progress} color={"primary"}/>}
 				<div key={"root"} style={{borderRadius: 12, marginBottom: 8}}>
 					<List component={"ul"}>
