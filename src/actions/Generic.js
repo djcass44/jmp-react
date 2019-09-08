@@ -34,3 +34,5 @@ function getVersionDispatch(dispatch) {
 		dispatch({type: `${GENERIC_GET_VERSION}_FAILURE`, payload: err, error: true});
 	});
 }
+
+export const resetError = (dispatch, action) => dispatch({type: `${action}_RESET`});

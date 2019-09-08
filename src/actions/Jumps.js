@@ -44,7 +44,7 @@ const getSimilarDispatch = (dispatch, headers, query) => {
 		dispatch({type: `${GET_SIMILAR}_FAILURE`, payload: err, error: true});
 	});
 };
-const putJumpDispatch = (dispatch, headers, jump, gid) => {
+export const putJumpDispatch = (dispatch, headers, jump, gid) => {
 	dispatch({type: `${PUT_JUMP}_REQUEST`});
 	client.put(`/api/v1/jump${gid}`, jump,{headers: headers}).then(r => {
 		dispatch({

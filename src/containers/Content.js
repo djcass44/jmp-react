@@ -32,6 +32,7 @@ import Status from "./content/Status/index";
 import Jumps2 from "./content/Jumps2";
 import JumpEditDialog from "./modal/JumpEditDialog";
 import DeleteDialog from "./modal/DeleteDialog";
+import JumpDialog from "./modal/JumpDialog";
 
 const useStyles = makeStyles(theme => ({
 	container: {
@@ -78,6 +79,7 @@ export const Content = () => {
 			</Grid>
 			<JumpEditDialog/>
 			<DeleteDialog/>
+			<JumpDialog/>
 		</div>
 	);
 };

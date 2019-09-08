@@ -30,6 +30,7 @@ import JumpItem2 from "./jmp/JumpItem2";
 import SortButton from "../../components/widget/SortButton";
 import {dispatchSort} from "../../actions/Generic";
 import AddIcon from "@material-ui/icons/Add";
+import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
 
 const bgTransition = time => `background-color ${time}ms linear`;
 const useStyles = makeStyles(theme => ({
@@ -149,7 +150,12 @@ const Jumps = () => {
 			<Center>
 				<SortButton selectedSort={sort} sorts={sorts} onSubmit={e => dispatchSort(dispatch, e)}/>
 				<Tooltip title="Add">
-					<IconButton centerRipple={false} aria-label="Add">
+					<IconButton centerRipple={false} aria-label="Add" onClick={
+						() => setDialog(dispatch,
+							MODAL_JUMP_NEW,
+							true
+						)
+					}>
 						<AddIcon fontSize="small"/>
 					</IconButton>
 				</Tooltip>
