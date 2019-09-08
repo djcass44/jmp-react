@@ -5,9 +5,10 @@ import {Card, makeStyles} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
 	root: {
-		position: 'absolute',
+		position: "fixed",
 		bottom: theme.spacing(2),
-		right: theme.spacing(3)
+		right: theme.spacing(3),
+		backgroundColor: "transparent"
 	},
 	card: {
 		padding: 8
