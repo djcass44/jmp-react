@@ -1,6 +1,6 @@
 import React from "react";
 import Status from "../containers/content/settings/Status";
-import {connect} from "react-redux";
+import {useSelector} from "react-redux";
 import {Card, makeStyles} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
@@ -8,14 +8,19 @@ const useStyles = makeStyles(theme => ({
 		position: "fixed",
 		bottom: theme.spacing(2),
 		right: theme.spacing(3),
-		backgroundColor: "transparent"
+		backgroundColor: "transparent",
+		display: "none",
+		[theme.breakpoints.up("sm")]: {
+			display: "block"
+		}
 	},
 	card: {
 		padding: 8
 	}
 }));
 
-export const AdminPanel = ({isAdmin}) => {
+export default () => {
+	const {isAdmin} = useSelector(state => state.auth);
 	const classes = useStyles();
 
 	if(isAdmin === false) return <div/>;
@@ -27,11 +32,3 @@ export const AdminPanel = ({isAdmin}) => {
 		</div>
 	)
 };
-const mapStateToProps = state => ({
-	isAdmin: state.auth.isAdmin,
-	headers: state.auth.headers,
-});
-export default connect(
-	mapStateToProps,
-	null
-)(AdminPanel);

@@ -45,6 +45,7 @@ const useStyles = makeStyles(theme => ({
 	name: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
+		textAlign: "center",
 		color: theme.palette.primary.main
 	},
 	avatar: {

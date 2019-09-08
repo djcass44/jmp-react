@@ -79,7 +79,7 @@ const JumpItem2 = ({jump}) => {
 	const selected = expanded === jump.id;
 
 	// Generate the secondary text and add the owner (if it exists)
-	let secondary = (
+	const secondary = (
 		<span>
 			<Domain text={jump.location}/>
 			{jump.owner != null ?
