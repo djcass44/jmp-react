@@ -50,6 +50,7 @@ const JumpItem = ({jump, ...props}) => {
 			break;
 	}
 	const  {data, loading, error} = usePalette(jump.image);
+	console.log(data, loading, error);
 	const avatarPalette = getAvatarFromPalette(theme, icon, data);
 	const avatar = loading === false && error == null ? {
 		icon: icon,

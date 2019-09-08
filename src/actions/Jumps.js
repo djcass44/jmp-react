@@ -13,7 +13,7 @@ export const SOCKET_UPDATE_JUMP = "EVENT_UPDATE";
 export const SOCKET_UPDATE_TITLE = "EVENT_UPDATE_TITLE";
 export const SOCKET_UPDATE_FAVICON = "EVENT_UPDATE_FAVICON";
 
-const listJumpsDispatch = (dispatch, headers) => {
+export const listJumpsDispatch = (dispatch, headers) => {
 	dispatch({type: `${JUMP_LOAD}_REQUEST`});
 	client.get("/api/v1/jumps", {headers: headers}).then(r => {
 		dispatch({type: `${JUMP_LOAD}_SUCCESS`, payload: r.data});
@@ -22,9 +22,9 @@ const listJumpsDispatch = (dispatch, headers) => {
 		dispatch({type: `${JUMP_LOAD}_FAILURE`, payload: err, error: true});
 	});
 };
-const deleteJumpDispatch = (dispatch, headers, id) => {
+export const deleteJumpDispatch = (dispatch, headers, item) => {
 	dispatch({type: `${DELETE_JUMP}_REQUEST`});
-	client.delete(`/api/v1/jump/${id}`, {headers: headers}).then(r => {
+	client.delete(`/api/v1/jump/${item.id}`, {headers: headers}).then(r => {
 		dispatch({type: `${DELETE_JUMP}_SUCCESS`, payload: r.data});
 		dispatch(addSnackbar({message: `Deleted ${APP_NOUN}`, options: {key: `${DELETE_JUMP}_SUCCESS`, variant: "success"}}));
 	}).catch(err => {
@@ -57,7 +57,7 @@ const putJumpDispatch = (dispatch, headers, jump, gid) => {
 		dispatch({type: `${PUT_JUMP}_FAILURE`, payload: err, error: true});
 	});
 };
-const patchJumpDispatch = (dispatch, headers, jump) => {
+export const patchJumpDispatch = (dispatch, headers, jump) => {
 	dispatch({type: `${PATCH_JUMP}_REQUEST`});
 	client.patch(`/api/v1/jump`, jump,{headers: headers}).then(r => {
 		dispatch({type: `${PATCH_JUMP}_SUCCESS`, payload: r.data});
@@ -72,7 +72,7 @@ export const listJumps = headers => dispatch => listJumpsDispatch(dispatch, head
 export const deleteJump = (headers, id) => dispatch => deleteJumpDispatch(dispatch, headers, id);
 export const putJump = (headers, jump, gid) => dispatch => putJumpDispatch(dispatch, headers, jump, gid);
 export const patchJump = (headers, jump) => dispatch => patchJumpDispatch(dispatch, headers, jump);
-export const setJumpExpand = id => dispatch => dispatch({type: JUMP_SET_EXPAND, payload: id});
+export const setJumpExpand = (dispatch, id) => dispatch({type: JUMP_SET_EXPAND, payload: id});
 
 export const getSimilar = (headers, query) => dispatch => getSimilarDispatch(dispatch, headers, query);
 export const getSimilarFail = error => dispatch => dispatch({type: `${GET_SIMILAR}_FAILURE`, payload: error, error: true});

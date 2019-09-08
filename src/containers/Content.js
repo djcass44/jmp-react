@@ -29,6 +29,9 @@ import Settings from "./content/Settings";
 import Help from "./content/Help";
 import Callback from "./content/Callback";
 import Status from "./content/Status/index";
+import Jumps2 from "./content/Jumps2";
+import JumpEditDialog from "./modal/JumpEditDialog";
+import DeleteDialog from "./modal/DeleteDialog";
 
 const useStyles = makeStyles(theme => ({
 	container: {
@@ -67,11 +70,14 @@ export const Content = () => {
 						<Route exact path="/help" component={Help} key={"help"}/>
 						<Route exact path="/callback-*" component={Callback} key={"callback"}/>
 						<Route exact path="/status" component={Status} key="status"/>
+						<Route exact path="/v2" component={Jumps2}/>
 						<Route component={NotFound} key={"notfound"}/>
 					</Switch>
 				</Grid>
 				<Grid item sm={3} className={classes.padding}/>
 			</Grid>
+			<JumpEditDialog/>
+			<DeleteDialog/>
 		</div>
 	);
 };

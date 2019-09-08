@@ -16,7 +16,6 @@
  */
 
 import React, {useEffect, useState} from "react";
-import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
@@ -45,7 +44,14 @@ const bgTransition = time => `background-color ${time}ms linear`;
 
 const useStyles = makeStyles(theme => ({
 	root: {
-		width: '100%'
+		position: "fixed",
+		width: "100%",
+		height: "100%",
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		backgroundColor: "transparent"
 	},
 	grow: {
 		flexGrow: 1
@@ -163,7 +169,7 @@ const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilte
 
 	return (
 		<div className={classes.root}>
-			<AppBar position={"static"} color={"default"}>
+			<>
 				<Toolbar>
 					{window.location.pathname !== "/" && loading === false ? <BackButton label={""} to={"/"}/> : ""}
 					<Typography className={classes.brand} variant={"h6"} color={"inherit"}>
@@ -195,7 +201,7 @@ const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilte
 					}
 				</Toolbar>
 				{loading === true && <LinearProgress className={classes.progress} />}
-			</AppBar>
+			</>
 			<Menu
 				anchorEl={anchorEl}
 				anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -207,7 +213,11 @@ const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilte
 					}} open={true} anchorEl={null} elevation={0}/>
 				</MenuItem>
 				<Divider/>
-				{window.location.pathname !== "/" ? <MenuItem component={Link} onClick={() => handleMenuClose()} to={"/"} button={true}><HomeIcon/>Home</MenuItem> : ""}
+				{window.location.pathname !== "/" &&
+				<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/"} button={true}>
+					<HomeIcon className={classes.menuIcon}/>
+					Home
+				</MenuItem>}
 				{isLoggedIn === true ?
 					<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/identity"} button={true}>
 						<Icon className={classes.menuIcon} path={mdiAccountGroupOutline} size={1}
