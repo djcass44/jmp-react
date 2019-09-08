@@ -23,18 +23,13 @@ import React from "react";
 import {makeStyles, useTheme} from "@material-ui/styles";
 import getHelpCardColour from "../../../selectors/getHelpCardColour";
 import PropTypes from "prop-types";
+import {CardActions, Typography} from "@material-ui/core";
+import Moment from "react-moment";
 
 const useStyles = makeStyles(theme => ({
-	item: {
-		borderRadius: 12
-	},
-	itemAction: {
-		pointerEvents: "none"
-	},
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
-		color: theme.palette.text.primary
 	},
 	collapse: {
 		padding: theme.spacing(2),
@@ -42,8 +37,9 @@ const useStyles = makeStyles(theme => ({
 		color: theme.palette.text.secondary,
 		minHeight: 48
 	},
-	action: {
-		float: "right"
+	action: {},
+	content: {
+		padding: theme.spacing(2)
 	}
 }));
 
@@ -62,63 +58,82 @@ const JumpContent2 = ({jump, focusProps}) => {
 
 	return (
 		<div className={classes.collapse} style={card}>
-			{(isLoggedIn && hasOwnership) &&
-			<div className={classes.action}>
-				<JumpButton
-					title="Delete"
-					buttonProps={{
-						onClick: () => setDelete2(dispatch,
-							true,
-							deleteJumpDispatch,
-							jump.personal === 0,
-							jump
-						)
-					}}
-					iconProps={{
-						path: mdiDeleteOutline,
-						color: theme.palette.error.main
-					}
-					}
-					{...focusProps}
-				/>
+			<div className={classes.content}>
+				<Typography className={classes.title} noWrap variant="subtitle1"
+				            color="primary">{jump.title}</Typography>
+				<Typography color="primary" variant="caption">
+					Used&nbsp;{jump.metaUsage}&nbsp;times
+				</Typography>
+				<br/>
+				<Typography color="secondary" variant="caption">
+					Created&nbsp;
+					<Moment fromNow>{jump.metaCreation}</Moment>
+				</Typography>
+				<br/>
+				{jump.metaUpdate !== jump.metaCreation && <Typography color="secondary" variant="caption">
+					Edited&nbsp;
+					<Moment fromNow>{jump.metaUpdate}</Moment>
+				</Typography>}
 			</div>
-			}
-			{(isLoggedIn && hasOwnership) &&
-			<div className={classes.action}>
-				<JumpButton
-					title="Edit"
-					buttonProps={{
-						onClick: () => setDialog(dispatch,
-							MODAL_JUMP_EDIT,
-							true,
-							{jump}
-						)
-					}}
-					iconProps={{
-						path: mdiPencilOutline,
-						color: theme.palette.secondary.main
-					}
-					}
-					{...focusProps}
-				/>
-			</div>
-			}
-			{document.queryCommandSupported("copy") &&
-			<div className={classes.action}>
-				<JumpButton
-					title="Copy"
-					buttonProps={{
-						onClick: () => navigator.clipboard.writeText(jump.location).then()
-					}}
-					iconProps={{
-						path: mdiContentCopy,
-						color: theme.palette.secondary.main
-					}
-					}
-					{...focusProps}
-				/>
-			</div>
-			}
+			<CardActions>
+				{document.queryCommandSupported("copy") &&
+				<div className={classes.action}>
+					<JumpButton
+						title="Copy"
+						buttonProps={{
+							onClick: () => navigator.clipboard.writeText(jump.location).then(),
+							style: {color: theme.palette.secondary.main}
+						}}
+						iconProps={{
+							path: mdiContentCopy,
+							color: theme.palette.secondary.main
+						}
+						}
+						{...focusProps}
+					/>
+				</div>}
+				{(isLoggedIn && hasOwnership) &&
+				<div className={classes.action}>
+					<JumpButton
+						title="Edit"
+						buttonProps={{
+							onClick: () => setDialog(dispatch,
+								MODAL_JUMP_EDIT,
+								true,
+								{jump}
+							),
+							style: {color: theme.palette.secondary.main}
+						}}
+						iconProps={{
+							path: mdiPencilOutline,
+							color: theme.palette.secondary.main
+						}
+						}
+						{...focusProps}
+					/>
+				</div>}
+				{(isLoggedIn && hasOwnership) &&
+				<div className={classes.action}>
+					<JumpButton
+						title="Delete"
+						buttonProps={{
+							onClick: () => setDelete2(dispatch,
+								true,
+								deleteJumpDispatch,
+								jump.personal === 0,
+								jump
+							),
+							style: {color: theme.palette.error.main}
+						}}
+						iconProps={{
+							path: mdiDeleteOutline,
+							color: theme.palette.error.main
+						}
+						}
+						{...focusProps}
+					/>
+				</div>}
+			</CardActions>
 		</div>
 	);
 };

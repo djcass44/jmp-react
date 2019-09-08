@@ -27,6 +27,7 @@ import posed, {PoseGroup} from "react-pose";
 import JumpButton from "../../../components/content/jmp/JumpButton";
 import {setJumpExpand} from "../../../actions/Jumps";
 import JumpContent2 from "./JumpContent2";
+import JumpAvatar from "../../../components/content/jmp/JumpAvatar";
 
 const Item = posed.div({
 	enter: {
@@ -75,6 +76,8 @@ const JumpItem2 = ({jump}) => {
 	const [focus, setFocus] = useState(false);
 	const [mouse, setMouse] = useState(false);
 
+	const selected = expanded === jump.id;
+
 	// Generate the secondary text and add the owner (if it exists)
 	let secondary = (
 		<span>
@@ -87,20 +90,24 @@ const JumpItem2 = ({jump}) => {
 		</span>
 	);
 
-	const onFocus = (active) => setFocus(active);
+	const onFocus = (active) => {
+		if (!active)
+			setJumpExpand(dispatch, null);
+		setFocus(active);
+	};
 	const onMouse = (active) => setMouse(active);
 
 	const focusProps = {
-		onFocus: onFocus,
-		onMouse: onMouse,
-		focus,
-		mouse
+		onFocus: () => setFocus(true),
+		onBlur: () => setFocus(false),
+		onMouseEnter: () => setMouse(true),
+		onMouseLeave: () => setMouse(false)
 	};
 
 	return (
 		<div key={jump.id}>
 			<ListItem button className={classes.item} value={jump.id} component={"li"}
-			          selected={focus}
+			          selected={focus || selected}
 			          onMouseEnter={() => onMouse(true)}
 			          onMouseLeave={() => onMouse(false)}
 			          onFocus={() => onFocus(true)}
@@ -108,6 +115,7 @@ const JumpItem2 = ({jump}) => {
 				          onFocus(false);
 				          setJumpExpand(dispatch, null);
 			          }}>
+				<JumpAvatar jump={jump} background={false}/>
 				<ListItemText primary={<span className={classes.title}>{jump.name}</span>} secondary={secondary}/>
 				<ListItemSecondaryAction>
 					<PoseGroup animateOnMount={true}>
@@ -117,15 +125,16 @@ const JumpItem2 = ({jump}) => {
 								buttonProps={{
 									onClick: () => setJumpExpand(dispatch,
 										// collapse if we're already expanded
-										expanded === jump.id ? null : jump.id
+										selected ? null : jump.id
 									)
 								}}
 								iconProps={{
-									path: expanded === jump.id ? mdiChevronUp : mdiChevronDown,
+									path: selected ? mdiChevronUp : mdiChevronDown,
 									color: theme.palette.primary.main
-								}
-								}
-								{...focusProps}
+								}}
+								focus={focus || selected}
+								mouse={mouse}
+								focusProps={focusProps}
 							/>
 						</Item>
 						<Item className={classes.action} key="jump">
@@ -138,15 +147,16 @@ const JumpItem2 = ({jump}) => {
 								iconProps={{
 									path: mdiCallMerge,
 									color: theme.palette.primary.dark
-								}
-								}
-								{...focusProps}
+								}}
+								focus={focus}
+								mouse={mouse}
+								focusProps={focusProps}
 							/>
 						</Item>
 					</PoseGroup>
 				</ListItemSecondaryAction>
 			</ListItem>
-			<Collapse in={jump.id === expanded} unmountOnExit timeout={"auto"}>
+			<Collapse in={selected} unmountOnExit timeout={"auto"}>
 				<JumpContent2 focusProps={focusProps} jump={jump}/>
 			</Collapse>
 		</div>

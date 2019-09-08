@@ -20,17 +20,14 @@ import React from "react";
 import {mdiCircleSmall} from "@mdi/js";
 import {useTheme} from "@material-ui/styles";
 
-export default ({title, focus, mouse, onMouse, onFocus, buttonProps, iconProps}) => {
+export default ({title, focus = true, mouse = true, focusProps, buttonProps, iconProps}) => {
 	const theme = useTheme();
 	return (
 		<div>
 			<Tooltip title={title}>
 				<IconButton
 					centerRipple={false}
-					onMouseEnter={() => onMouse(true)}
-					onMouseLeave={() => onMouse(false)}
-					onFocus={() => onFocus(true)}
-					onBlur={() => onFocus(false)}
+					{...focusProps}
 					{...buttonProps}>
 					{(focus || mouse) ?
 						<Icon size={0.85} {...iconProps} />
