@@ -17,7 +17,6 @@
 
 import React from "react";
 import {Grid, makeStyles} from "@material-ui/core";
-import Jumps from "./content/Jumps";
 import {Route, Switch, withRouter} from "react-router-dom";
 import Login from "./content/Login";
 import NotFound from "./content/NotFound";
@@ -61,7 +60,7 @@ export const Content = () => {
 				<Grid item sm={3} className={classes.padding}/>
 				<Grid item xs={12} sm={6}>
 					<Switch>
-						<Route exact path="/" component={Jumps} key={"jumps"}/>
+						<Route exact path="/" component={Jumps2} key={"jumps"}/>
 						<Route exact path="/identity" component={Identity} key={"identity"}/>
 						<Route exact path="/jmp" component={Token} key={"token"}/>
 						<Route exact path="/similar" component={Similar} key={"similar"}/>
@@ -71,7 +70,6 @@ export const Content = () => {
 						<Route exact path="/help" component={Help} key={"help"}/>
 						<Route exact path="/callback-*" component={Callback} key={"callback"}/>
 						<Route exact path="/status" component={Status} key="status"/>
-						<Route exact path="/v2" component={Jumps2}/>
 						<Route component={NotFound} key={"notfound"}/>
 					</Switch>
 				</Grid>

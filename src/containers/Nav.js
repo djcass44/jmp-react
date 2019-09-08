@@ -134,7 +134,6 @@ const useStyles = makeStyles(theme => ({
 
 const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilter, ...props}) => {
 	const searchRoutes = [
-		"/",
 		"/identity"
 	];
 	const [showSearch, setShowSearch] = useState(true);
@@ -172,10 +171,10 @@ const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilte
 			<>
 				<Toolbar>
 					{window.location.pathname !== "/" && loading === false ? <BackButton label={""} to={"/"}/> : ""}
-					<Typography className={classes.brand} variant={"h6"} color={"inherit"}>
+					<Typography className={classes.brand} variant={"h6"} color={"primary"}>
 						{APP_NAME}
 					</Typography>
-					<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"inherit"}>
+					<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"secondary"}>
 						{process.env.REACT_APP_APP_MSG}
 					</Typography>
 					{showSearch === true && loading !== true ?

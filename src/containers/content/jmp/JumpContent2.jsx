@@ -25,6 +25,8 @@ import getHelpCardColour from "../../../selectors/getHelpCardColour";
 import PropTypes from "prop-types";
 import {CardActions, Typography} from "@material-ui/core";
 import Moment from "react-moment";
+import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
+import getColourFromHex from "../../../style/getColourFromHex";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -43,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const JumpContent2 = ({jump, focusProps}) => {
+const JumpContent2 = ({jump, focusProps, palette, loading, error}) => {
 	const dispatch = useDispatch();
 	const classes = useStyles();
 	const theme = useTheme();
@@ -52,16 +54,21 @@ const JumpContent2 = ({jump, focusProps}) => {
 
 	const hasOwnership = isAdmin || jump.personal > 0;
 	// set the appropriate colours for the card-content
+	const avatarPalette = getAvatarFromPalette(theme, "", palette);
+	const bg = loading === false && error == null ? getColourFromHex(avatarPalette.bg, 0.2) : getHelpCardColour(theme);
 	const card = {
-		backgroundColor: getHelpCardColour(theme)
+		backgroundColor: bg
+	};
+	const primary = {
+		color: avatarPalette.fg
 	};
 
 	return (
 		<div className={classes.collapse} style={card}>
 			<div className={classes.content}>
 				<Typography className={classes.title} noWrap variant="subtitle1"
-				            color="primary">{jump.title}</Typography>
-				<Typography color="primary" variant="caption">
+				            style={primary}>{jump.title || jump.name}</Typography>
+				<Typography style={primary} variant="caption">
 					Used&nbsp;{jump.metaUsage}&nbsp;times
 				</Typography>
 				<br/>
@@ -139,6 +146,7 @@ const JumpContent2 = ({jump, focusProps}) => {
 };
 JumpContent2.propTypes = {
 	jump: PropTypes.object.isRequired,
-	focusProps: PropTypes.object.isRequired
+	focusProps: PropTypes.object.isRequired,
+	palette: PropTypes.object.isRequired
 };
 export default JumpContent2;

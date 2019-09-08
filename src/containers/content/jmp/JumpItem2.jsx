@@ -28,6 +28,7 @@ import JumpButton from "../../../components/content/jmp/JumpButton";
 import {setJumpExpand} from "../../../actions/Jumps";
 import JumpContent2 from "./JumpContent2";
 import JumpAvatar from "../../../components/content/jmp/JumpAvatar";
+import {usePalette} from "react-palette";
 
 const Item = posed.div({
 	enter: {
@@ -90,6 +91,8 @@ const JumpItem2 = ({jump}) => {
 		</span>
 	);
 
+	const {data, loading, error} = usePalette(jump.image);
+
 	const onFocus = (active) => {
 		if (!active)
 			setJumpExpand(dispatch, null);
@@ -108,6 +111,7 @@ const JumpItem2 = ({jump}) => {
 		<div>
 			<ListItem component={"li"} button className={classes.item} value={jump.id}
 			          selected={focus || selected}
+			          onClick={() => setJumpExpand(dispatch, jump.id)}
 			          onMouseEnter={() => onMouse(true)}
 			          onMouseLeave={() => onMouse(false)}
 			          onFocus={() => onFocus(true)}
@@ -115,7 +119,7 @@ const JumpItem2 = ({jump}) => {
 				          onFocus(false);
 				          setJumpExpand(dispatch, null);
 			          }}>
-				<JumpAvatar jump={jump} background={false}/>
+				<JumpAvatar jump={jump} background={false} palette={data} loading={loading} error={error}/>
 				<ListItemText primary={<span className={classes.title}>{jump.name}</span>} secondary={secondary}/>
 				<ListItemSecondaryAction>
 					<PoseGroup animateOnMount={true}>
@@ -157,7 +161,7 @@ const JumpItem2 = ({jump}) => {
 				</ListItemSecondaryAction>
 			</ListItem>
 			<Collapse in={selected} unmountOnExit timeout={"auto"}>
-				<JumpContent2 focusProps={focusProps} jump={jump}/>
+				<JumpContent2 focusProps={focusProps} jump={jump} palette={data} loading={loading} error={error}/>
 			</Collapse>
 		</div>
 	);

@@ -16,7 +16,6 @@
 
 import getAvatarScheme from "../../../style/getAvatarScheme";
 import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
-import {usePalette} from "react-palette";
 import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import {useTheme} from "@material-ui/styles";
 import ReactImageFallback from "react-image-fallback";
@@ -25,7 +24,7 @@ import {Avatar} from "@material-ui/core";
 import React from "react";
 import PropTypes from "prop-types";
 
-const JumpAvatar = ({jump, background}) => {
+const JumpAvatar = ({jump, background, palette, loading, error}) => {
 	// hooks
 	const theme = useTheme();
 
@@ -42,8 +41,7 @@ const JumpAvatar = ({jump, background}) => {
 			icon = mdiAccountGroupOutline;
 			break;
 	}
-	const {data, loading, error} = usePalette(jump.image);
-	const avatarPalette = getAvatarFromPalette(theme, icon, data);
+	const avatarPalette = getAvatarFromPalette(theme, icon, palette);
 	const avatar = loading === false && error == null ? {
 		icon: icon,
 		bg: background ? avatarPalette.bg : "transparent",
