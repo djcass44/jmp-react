@@ -57,8 +57,8 @@ export const Content = () => {
 	return (
 		<div className={classes.container}>
 			<Grid container spacing={5} className={classes.centred}>
-				<Grid item sm={3} className={classes.padding}/>
-				<Grid item xs={12} sm={6}>
+				<Grid item xs={0} sm={1} md={3} className={classes.padding}/>
+				<Grid item xs={12} sm={10} md={6}>
 					<Switch>
 						<Route exact path="/" component={Jumps2} key={"jumps"}/>
 						<Route exact path="/identity" component={Identity} key={"identity"}/>
@@ -73,7 +73,7 @@ export const Content = () => {
 						<Route component={NotFound} key={"notfound"}/>
 					</Switch>
 				</Grid>
-				<Grid item sm={3} className={classes.padding}/>
+				<Grid item xs={0} sm={1} md={3} className={classes.padding}/>
 			</Grid>
 			<JumpEditDialog/>
 			<DeleteDialog/>

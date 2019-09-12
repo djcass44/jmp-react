@@ -22,7 +22,8 @@ export function oauthLogout(headers) {
 		oauthLogoutDispatch(dispatch, headers);
 	}
 }
-function oauthPreverifyDispatch(dispatch, refresh, headers) {
+
+export const oauthPreverifyDispatch = (dispatch, refresh, headers) => {
 	dispatch({type: `${OAUTH_VERIFY}_REQUEST`});
 	let hasCookie = false;
 	client.get("/api/v2/oauth/cookie", {headers: headers}).then(r => {
@@ -33,7 +34,7 @@ function oauthPreverifyDispatch(dispatch, refresh, headers) {
 		else {
 			dispatch({type: `${OAUTH_VERIFY}_FAILURE`, error: true});
 		}
-	}).catch(err => {
+	}).catch(() => {
 		// No sso token, but headers may be okay
 		if(shouldVerify(refresh, headers)) {
 			oauthVerifyDispatch(dispatch, refresh, headers, false);
@@ -42,8 +43,8 @@ function oauthPreverifyDispatch(dispatch, refresh, headers) {
 			dispatch({type: `${OAUTH_VERIFY}_FAILURE`, error: true});
 		}
 	});
-}
-function oauthVerifyDispatch(dispatch, refresh, headers, hasCookie) {
+};
+const oauthVerifyDispatch = (dispatch, refresh, headers, hasCookie) => {
 	client.get("/api/v2/oauth/valid", {headers}).then(r => {
 		dispatch({
 			type: `${OAUTH_VERIFY}_SUCCESS`,
@@ -56,7 +57,7 @@ function oauthVerifyDispatch(dispatch, refresh, headers, hasCookie) {
 		dispatch({type: `${OAUTH_VERIFY}_FAILURE`, payload: err, error: true});
 		oauthRefreshDispatch(dispatch, refresh, headers)
 	});
-}
+};
 function oauthRequest2Dispatch(dispatch, headers) {
 	dispatch({type: `${OAUTH_REQUEST}_REQUEST`});
 	client.post("/api/v2/oauth/token", {}, {headers: headers}).then(r => {

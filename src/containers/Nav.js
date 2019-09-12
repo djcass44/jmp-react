@@ -128,6 +128,11 @@ const useStyles = makeStyles(theme => ({
 			display: 'flex',
 		},
 	},
+	helpButton: {
+		[theme.breakpoints.up("md")]: {
+			display: "none"
+		}
+	},
 	progress: {
 		backgroundColor: 'transparent'
 	},
@@ -227,6 +232,12 @@ const Nav = ({loading, history}) => {
 					<HomeIcon className={classes.menuIcon}/>
 					Home
 				</MenuItem>}
+				<MenuItem className={classes.helpButton} component={Link} onClick={() => handleMenuClose()} to={"/help"}
+				          button={true}>
+					<Icon className={classes.menuIcon} path={mdiHelpCircleOutline} size={1}
+					      color={getIconColour(theme)}/>
+					Help
+				</MenuItem>
 				{isLoggedIn === true ?
 					<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/identity"} button={true}>
 						<Icon className={classes.menuIcon} path={mdiAccountGroupOutline} size={1}
