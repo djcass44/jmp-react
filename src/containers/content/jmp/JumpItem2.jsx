@@ -29,6 +29,7 @@ import {setJumpExpand} from "../../../actions/Jumps";
 import JumpContent2 from "./JumpContent2";
 import JumpAvatar from "../../../components/content/jmp/JumpAvatar";
 import {usePalette} from "react-palette";
+import withWidth, {isWidthDown} from "@material-ui/core/withWidth";
 
 const Item = posed.div({
 	enter: {
@@ -71,16 +72,17 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const JumpItem2 = ({jump}) => {
+const JumpItem2 = ({jump, width}) => {
 	// hooks
 	const classes = useStyles();
 	const theme = useTheme();
 	const dispatch = useDispatch();
 	const {expanded} = useSelector(state => state.jumps);
-	const [focus, setFocus] = useState(false);
 	const [mouse, setMouse] = useState(false);
 
 	const selected = expanded === jump.id;
+
+	const smallScreen = isWidthDown("sm", width);
 
 	const getAliases = () => {
 		if (jump.alias.length === 0) return "";
@@ -97,7 +99,7 @@ const JumpItem2 = ({jump}) => {
 			<span className={classes.title}>
 				{jump.name}
 			</span>
-			{((selected || focus || mouse) && jump.alias.length > 0) && <small className={classes.subtitle}>
+			{((selected || mouse) && jump.alias.length > 0) && <small className={classes.subtitle}>
 				&nbsp;&bull;&nbsp;{getAliases()}
 			</small>}
 		</>
@@ -115,16 +117,9 @@ const JumpItem2 = ({jump}) => {
 
 	const {data, loading, error} = usePalette(jump.image);
 
-	const onFocus = (active) => {
-		if (!active)
-			setJumpExpand(dispatch, null);
-		setFocus(active);
-	};
 	const onMouse = (active) => setMouse(active);
 
 	const focusProps = {
-		onFocus: () => setFocus(true),
-		onBlur: () => setFocus(false),
 		onMouseEnter: () => setMouse(true),
 		onMouseLeave: () => setMouse(false)
 	};
@@ -132,15 +127,10 @@ const JumpItem2 = ({jump}) => {
 	return (
 		<div>
 			<ListItem component={"li"} button className={classes.item} value={jump.id}
-			          selected={focus || selected}
+			          selected={selected}
 			          onClick={() => setJumpExpand(dispatch, jump.id)}
 			          onMouseEnter={() => onMouse(true)}
-			          onMouseLeave={() => onMouse(false)}
-			          onFocus={() => onFocus(true)}
-			          onBlur={() => {
-				          onFocus(false);
-				          setJumpExpand(dispatch, null);
-			          }}>
+			          onMouseLeave={() => onMouse(false)}>
 				<JumpAvatar jump={jump} background={false} palette={data} loading={loading} error={error}/>
 				<ListItemText primary={primary} secondary={secondary}/>
 				<ListItemSecondaryAction>
@@ -158,7 +148,7 @@ const JumpItem2 = ({jump}) => {
 									path: selected ? mdiChevronUp : mdiChevronDown,
 									color: theme.palette.primary.main
 								}}
-								focus={focus || selected}
+								focus={selected || smallScreen}
 								mouse={mouse}
 								focusProps={focusProps}
 							/>
@@ -174,7 +164,7 @@ const JumpItem2 = ({jump}) => {
 									path: mdiCallMerge,
 									color: theme.palette.primary.dark
 								}}
-								focus={focus}
+								focus={smallScreen}
 								mouse={mouse}
 								focusProps={focusProps}
 							/>
@@ -191,4 +181,4 @@ const JumpItem2 = ({jump}) => {
 JumpItem2.propTypes = {
 	jump: PropTypes.object.isRequired
 };
-export default JumpItem2;
+export default withWidth()(JumpItem2);

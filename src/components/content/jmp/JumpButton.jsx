@@ -20,7 +20,7 @@ import React from "react";
 import {mdiCircleSmall} from "@mdi/js";
 import {useTheme} from "@material-ui/styles";
 
-export default ({title, focus = true, mouse = true, focusProps, buttonProps, iconProps}) => {
+export default ({title, focus = false, mouse = true, focusProps, buttonProps, iconProps}) => {
 	const theme = useTheme();
 	return (
 		<div>

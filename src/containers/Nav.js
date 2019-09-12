@@ -267,7 +267,10 @@ const Nav = ({loading, history}) => {
 	);
 };
 Nav.propTypes = {
-	loading: PropTypes.bool.isRequired,
+	loading: PropTypes.bool,
 	history: PropTypes.object.isRequired
+};
+Nav.defaultProps = {
+	loading: false
 };
 export default withRouter(Nav);

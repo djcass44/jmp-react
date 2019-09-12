@@ -23,7 +23,7 @@ import React from "react";
 import {makeStyles, useTheme} from "@material-ui/styles";
 import getHelpCardColour from "../../../selectors/getHelpCardColour";
 import PropTypes from "prop-types";
-import {CardActions, Typography} from "@material-ui/core";
+import {CardActions, Table, TableBody, TableCell, TableRow, Typography} from "@material-ui/core";
 import Moment from "react-moment";
 import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import getColourFromHex from "../../../style/getColourFromHex";
@@ -59,28 +59,45 @@ const JumpContent2 = ({jump, focusProps, palette, loading, error}) => {
 	const card = {
 		backgroundColor: bg
 	};
-	const primary = {
-		color: avatarPalette.fg
+	const textStyle = {
+		color: theme.palette.getContrastText(bg)
 	};
+
+	const data = [
+		{
+			key: "Used",
+			value: jump.metaUsage
+		},
+		{
+			key: "Created",
+			value: <Moment fromNow>{jump.metaCreation}</Moment>
+		},
+		{
+			key: "Edited",
+			value: jump.metaUpdate !== jump.metaCreation ? <Moment fromNow>{jump.metaUpdate}</Moment> : "Never"
+		}
+	];
 
 	return (
 		<div className={classes.collapse} style={card}>
 			<div className={classes.content}>
-				<Typography className={classes.title} noWrap variant="subtitle1"
-				            style={primary}>{jump.title || jump.name}</Typography>
-				<Typography style={primary} variant="caption">
-					Used&nbsp;{jump.metaUsage}&nbsp;times
+				<Typography className={classes.title} noWrap variant="subtitle1" style={textStyle}>
+					{jump.title || jump.name}
 				</Typography>
-				<br/>
-				<Typography color="secondary" variant="caption">
-					Created&nbsp;
-					<Moment fromNow>{jump.metaCreation}</Moment>
-				</Typography>
-				<br/>
-				{jump.metaUpdate !== jump.metaCreation && <Typography color="secondary" variant="caption">
-					Edited&nbsp;
-					<Moment fromNow>{jump.metaUpdate}</Moment>
-				</Typography>}
+				<Table>
+					<TableBody>
+						{data.map(row => (
+							<TableRow key={row.key}>
+								<TableCell variant={"head"}>
+									{row.key}
+								</TableCell>
+								<TableCell variant={"body"}>
+									{row.value}
+								</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
 			</div>
 			<CardActions>
 				{document.queryCommandSupported("copy") &&
