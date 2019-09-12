@@ -71,9 +71,6 @@ export const patchJumpDispatch = (dispatch, headers, jump) => {
 };
 
 export const listJumps = headers => dispatch => listJumpsDispatch(dispatch, headers);
-export const deleteJump = (headers, id) => dispatch => deleteJumpDispatch(dispatch, headers, id);
-export const putJump = (headers, jump, gid) => dispatch => putJumpDispatch(dispatch, headers, jump, gid);
-export const patchJump = (headers, jump) => dispatch => patchJumpDispatch(dispatch, headers, jump);
 export const setJumpExpand = (dispatch, id) => dispatch({type: JUMP_SET_EXPAND, payload: id});
 
 export const getSimilar = (headers, query) => dispatch => getSimilarDispatch(dispatch, headers, query);

@@ -18,11 +18,6 @@ export const setDialog = (dispatch, name, open, other = {}) => dispatch({
 	payload: {name, open, other}
 });
 
-export const setJumpNew = open => dispatch => dispatch({type: MODAL_JUMP_NEW, payload: open});
-export const setJumpEdit = (open, item) => dispatch => dispatch({type: MODAL_JUMP_EDIT, payload: {open, item}});
-
-export const setDelete = (open, item, requireApproval = false) => dispatch => dispatch({type: MODAL_DELETE, payload: {open, item, requireApproval}});
-
 export const setGroupNew = open => dispatch => dispatch({type: MODAL_GROUP_NEW, payload: open});
 
 export const setUserGroups = (open, item) => dispatch => dispatch({type: MODAL_USER_GROUPS, payload: {open, item}});

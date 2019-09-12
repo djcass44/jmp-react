@@ -18,7 +18,7 @@
 import React, {useEffect} from "react";
 import Center from "react-center";
 import {oauthLogout} from "../../actions/Auth";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
@@ -35,17 +35,21 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Logout = ({isLoggedIn, headers, request, source, ...props}) => {
+export default ({history}) => {
+	// hooks
+	const dispatch = useDispatch();
+	const {isLoggedIn, headers, request, source} = useSelector(state => state.auth);
+
 	useEffect(() => {
 		window.document.title = `Logout - ${APP_NAME}`;
 		// Log the user out
-		props.oauthLogout(headers);
-		props.oauth2Logout(request, source, headers);
+		oauthLogout(dispatch, headers);
+		oauth2Logout(dispatch, request, source, headers);
 	}, []);
 
 	useEffect(() => {
 		if(isLoggedIn === false)
-			props.history.push("/");
+			history.push("/");
 	}, [isLoggedIn]);
 
 	const classes = useStyles();
@@ -68,17 +72,3 @@ const Logout = ({isLoggedIn, headers, request, source, ...props}) => {
 		</Center>
 	);
 };
-const mapStateToProps = state => ({
-	isLoggedIn: state.auth.isLoggedIn,
-	headers: state.auth.headers,
-	request: state.auth.request,
-	source: state.auth.source,
-});
-const mapDispatchToProps = ({
-	oauthLogout,
-	oauth2Logout
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Logout);
