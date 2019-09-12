@@ -1,68 +1,57 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# JMP UI
 
-## Available Scripts
+This README details how to setup the JMP UI and connect it the [JMP API](https://github.com/djcass44/jmp)
 
-In the project directory, you can run:
+If the API has been updated, it is highly recommended to update the UI as they are tightly-coupled and not updating may lead to missing features or potential undefined behaviour.
 
-### `npm start`
+## Setting up the UI
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The JMP UI can be run in 2 different ways.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+Edit [.env.production](.env.production) so that the UI knows where to locate the API
 
-### `npm test`
+```
+REACT_APP_API_SCHEME=http or https (required)
+REACT_APP_API_URL=jmp.example.org
+```
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Using docker** (recommended)
 
-### `npm run build`
+```bash
+docker build -t jmp/ui .
+docker run -p 8080:8080 jmp/ui
+```
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**If using Kubernetes** there is a helm chart available [here](https://github.com/djcass44/jmp-helm). 
+This also includes the API backend.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+2. **Standalone**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm install
+npm start
+```
 
-### `npm run eject`
+The above will serve a non-optimised development build of the UI on `localhost:8080`. 
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+In order to serve the optimised build, you will need to serve it manually with a web server. This is done automatically in the [Dockerfile](Dockerfile) using NGINX
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+To create the optimised files:
+```bash
+npm run build
+```
+They will be available in the `build` directory
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Custom branding
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+The JMP UI currently has limited support for custom branding without editing the source.
 
-## Learn More
+This can be set by modifying the `.env.production` file before building.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+`REACT_APP_APP_NAME`: name of the application in Navbar and documentation
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+`REACT_APP_APP_MSG`: subheader shown in Navbar
 
-### Code Splitting
+`REACT_APP_APP_NOUN`: the name of a Jump
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+`REACT_APP_APP_KEY`: what the application recommends the user set their keyword to (will also be used in the future by an automatic installer)
