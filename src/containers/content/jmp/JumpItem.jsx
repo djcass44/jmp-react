@@ -26,7 +26,7 @@ import {APP_NOUN} from "../../../constants";
 import posed, {PoseGroup} from "react-pose";
 import JumpButton from "../../../components/content/jmp/JumpButton";
 import {setJumpExpand} from "../../../actions/Jumps";
-import JumpContent2 from "./JumpContent2";
+import JumpContent from "./JumpContent";
 import JumpAvatar from "../../../components/content/jmp/JumpAvatar";
 import {usePalette} from "react-palette";
 import withWidth, {isWidthDown} from "@material-ui/core/withWidth";
@@ -72,7 +72,7 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const JumpItem2 = ({jump, width}) => {
+const JumpItem = ({jump, width}) => {
 	// hooks
 	const classes = useStyles();
 	const theme = useTheme();
@@ -173,12 +173,12 @@ const JumpItem2 = ({jump, width}) => {
 				</ListItemSecondaryAction>
 			</ListItem>
 			<Collapse in={selected} unmountOnExit timeout={"auto"}>
-				<JumpContent2 focusProps={focusProps} jump={jump} palette={data} loading={loading} error={error}/>
+				<JumpContent focusProps={focusProps} jump={jump} palette={data} loading={loading} error={error}/>
 			</Collapse>
 		</div>
 	);
 };
-JumpItem2.propTypes = {
+JumpItem.propTypes = {
 	jump: PropTypes.object.isRequired
 };
-export default withWidth()(JumpItem2);
+export default withWidth()(JumpItem);

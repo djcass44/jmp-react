@@ -26,7 +26,7 @@ import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 import {fade} from "@material-ui/core/styles";
-import JumpItem2 from "./jmp/JumpItem2";
+import JumpItem2 from "./jmp/JumpItem";
 import SortButton from "../../components/widget/SortButton";
 import {dispatchSort} from "../../actions/Generic";
 import AddIcon from "@material-ui/icons/Add";
@@ -105,7 +105,7 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Jumps = () => {
+export default () => {
 	// hooks
 	const classes = useStyles();
 	const dispatch = useDispatch();
@@ -197,4 +197,3 @@ const Jumps = () => {
 		</React.Fragment>
 	);
 };
-export default Jumps;

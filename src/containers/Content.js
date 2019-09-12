@@ -28,7 +28,7 @@ import Settings from "./content/Settings";
 import Help from "./content/Help";
 import Callback from "./content/Callback";
 import Status from "./content/Status/index";
-import Jumps2 from "./content/Jumps2";
+import Jumps from "./content/Jumps";
 import JumpEditDialog from "./modal/JumpEditDialog";
 import DeleteDialog from "./modal/DeleteDialog";
 import JumpDialog from "./modal/JumpDialog";
@@ -60,7 +60,7 @@ export const Content = () => {
 				<Grid item xs={false} sm={1} md={3} className={classes.padding}/>
 				<Grid item xs={12} sm={10} md={6}>
 					<Switch>
-						<Route exact path="/" component={Jumps2} key={"jumps"}/>
+						<Route exact path="/" component={Jumps} key={"jumps"}/>
 						<Route exact path="/identity" component={Identity} key={"identity"}/>
 						<Route exact path="/jmp" component={Token} key={"token"}/>
 						<Route exact path="/similar" component={Similar} key={"similar"}/>

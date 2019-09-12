@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const JumpContent2 = ({jump, focusProps, palette, loading, error}) => {
+const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 	const dispatch = useDispatch();
 	const classes = useStyles();
 	const theme = useTheme();
@@ -161,9 +161,9 @@ const JumpContent2 = ({jump, focusProps, palette, loading, error}) => {
 		</div>
 	);
 };
-JumpContent2.propTypes = {
+JumpContent.propTypes = {
 	jump: PropTypes.object.isRequired,
 	focusProps: PropTypes.object.isRequired,
 	palette: PropTypes.object.isRequired
 };
-export default JumpContent2;
+export default JumpContent;
