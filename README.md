@@ -8,23 +8,18 @@ If the API has been updated, it is highly recommended to update the UI as they a
 
 The JMP UI can be run in 2 different ways.
 
-Edit [.env.production](.env.production)
+Edit [.env.production](.env.production) so that the UI knows where to locate the API
 
 ```
 REACT_APP_API_SCHEME=http or https (required)
 REACT_APP_API_URL=jmp.example.org
-REACT_APP_SOCKET_URL=jmp.example.org (only change if you've also changed SOCKET_PATH on the api)
-REACT_APP_APP_NAME=JMP
-REACT_APP_APP_MSG=""
-REACT_APP_APP_NOUN=Jump
-REACT_APP_APP_KEY=jmp
 ```
 
 1. **Using docker** (recommended)
 
 ```bash
-docker build -t jmp-ui:latest .
-docker run jmp-ui:latest -p 80:80
+docker build -t jmp/ui .
+docker run -p 8080:8080 jmp/ui
 ```
 
 **If using Kubernetes** there is a helm chart available [here](https://github.com/djcass44/jmp-helm). 
@@ -50,6 +45,8 @@ They will be available in the `build` directory
 ### Custom branding
 
 The JMP UI currently has limited support for custom branding without editing the source.
+
+This can be set by modifying the `.env.production` file before building.
 
 `REACT_APP_APP_NAME`: name of the application in Navbar and documentation
 
