@@ -7,22 +7,7 @@ export const OAUTH_REFRESH = "OAUTH_REFRESH";
 export const OAUTH_LOGOUT = "OAUTH_LOGOUT";
 export const OAUTH_UNREADY = "OAUTH_UNREADY";
 
-export function oauthVerify(refresh, headers) {
-	return dispatch => {
-		oauthPreverifyDispatch(dispatch, refresh, headers);
-	}
-}
-export function oauthRequest(data) {
-	return dispatch => {
-		oauthRequestDispatch(dispatch, data);
-	}
-}
-export function oauthLogout(headers) {
-	return dispatch => {
-		oauthLogoutDispatch(dispatch, headers);
-	}
-}
-function oauthPreverifyDispatch(dispatch, refresh, headers) {
+export const oauthPreverifyDispatch = (dispatch, refresh, headers) => {
 	dispatch({type: `${OAUTH_VERIFY}_REQUEST`});
 	let hasCookie = false;
 	client.get("/api/v2/oauth/cookie", {headers: headers}).then(r => {
@@ -33,7 +18,7 @@ function oauthPreverifyDispatch(dispatch, refresh, headers) {
 		else {
 			dispatch({type: `${OAUTH_VERIFY}_FAILURE`, error: true});
 		}
-	}).catch(err => {
+	}).catch(() => {
 		// No sso token, but headers may be okay
 		if(shouldVerify(refresh, headers)) {
 			oauthVerifyDispatch(dispatch, refresh, headers, false);
@@ -42,8 +27,8 @@ function oauthPreverifyDispatch(dispatch, refresh, headers) {
 			dispatch({type: `${OAUTH_VERIFY}_FAILURE`, error: true});
 		}
 	});
-}
-function oauthVerifyDispatch(dispatch, refresh, headers, hasCookie) {
+};
+const oauthVerifyDispatch = (dispatch, refresh, headers, hasCookie) => {
 	client.get("/api/v2/oauth/valid", {headers}).then(r => {
 		dispatch({
 			type: `${OAUTH_VERIFY}_SUCCESS`,
@@ -56,17 +41,18 @@ function oauthVerifyDispatch(dispatch, refresh, headers, hasCookie) {
 		dispatch({type: `${OAUTH_VERIFY}_FAILURE`, payload: err, error: true});
 		oauthRefreshDispatch(dispatch, refresh, headers)
 	});
-}
+};
 function oauthRequest2Dispatch(dispatch, headers) {
 	dispatch({type: `${OAUTH_REQUEST}_REQUEST`});
-	client.post("/api/v2/oauth/token", {}, {headers: headers}).then(r => {
+	client.post("/api/v2/oauth/token", {}, {headers}).then(r => {
 		dispatch({type: `${OAUTH_REQUEST}_SUCCESS`, payload: r.data});
 	}).catch(err => {
 		dispatch(addSnackbar({message: "Failed to authenticate", options: {key: `${OAUTH_REQUEST}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${OAUTH_REQUEST}_FAILURE`, payload: err, error: true});
 	})
 }
-function oauthRequestDispatch(dispatch, data) {
+
+export const oauthRequest = (dispatch, data) => {
 	let headers = {
 		'Authorization': `Basic ${data}`,
 		'Content-Type': 'application/json'
@@ -78,12 +64,12 @@ function oauthRequestDispatch(dispatch, data) {
 			payload: r.data
 		});
 		// Retry verification
-		oauthVerifyDispatch(dispatch, r.data['refresh'], {'Authorization': `Bearer ${r.data.request}`});
+		oauthVerifyDispatch(dispatch, r.data.refresh, {'Authorization': `Bearer ${r.data.request}`});
 	}).catch(err => {
 		dispatch(addSnackbar({message: "Failed to authenticate", options: {key: `${OAUTH_REQUEST}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${OAUTH_REQUEST}_FAILURE`, payload: err, error: true});
 	});
-}
+};
 function oauthRefreshDispatch(dispatch, refresh, headers) {
 	dispatch({type: `${OAUTH_REFRESH}_REQUEST`});
 	client.get("/api/v2/oauth/refresh", {headers, params: {refreshToken: refresh}}).then(r => {
@@ -96,7 +82,8 @@ function oauthRefreshDispatch(dispatch, refresh, headers) {
 		dispatch({type: `${OAUTH_REFRESH}_FAILURE`, payload: err, error: true});
 	});
 }
-function oauthLogoutDispatch(dispatch, headers) {
+
+export const oauthLogout = (dispatch, headers) => {
 	dispatch({type: `${OAUTH_LOGOUT}_REQUEST`});
 	client.post("/api/v2/oauth/logout", {}, {headers}).then(() => {
 		dispatch({type: `${OAUTH_LOGOUT}_SUCCESS`});
@@ -104,7 +91,7 @@ function oauthLogoutDispatch(dispatch, headers) {
 		dispatch(addSnackbar({message: "Failed to logout", options: {key: `${OAUTH_LOGOUT}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${OAUTH_LOGOUT}_FAILURE`, payload: err, error: true});
 	});
-}
+};
 
 const shouldVerify = (refresh, headers) => {
 	// Do a quick check to see if the user has purposefully logged out

@@ -1,8 +1,19 @@
-import React, {useEffect, useState} from 'react';
-import {Checkbox, DialogContentText, FormControlLabel, makeStyles, Typography, withTheme, Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
-import PropTypes from "prop-types";
-import {connect} from "react-redux";
-import {setDelete} from "../../actions/Modal";
+import React, {useEffect, useState} from "react";
+import {
+	Button,
+	Checkbox,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
+	FormControlLabel,
+	makeStyles,
+	Typography
+} from "@material-ui/core";
+import {useDispatch, useSelector} from "react-redux";
+import {MODAL_DELETE, setDialog} from "../../actions/Modal";
+import {defaultState} from "../../reducers/Modal";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -12,30 +23,41 @@ const useStyles = makeStyles(theme => ({
 	},
 	button: {
 		fontFamily: "Manrope",
-		fontWeight: 'bold'
+		fontWeight: "bold"
 	},
-	override: {
+	red: {
 		color: theme.palette.error.main
 	}
 }));
 
-export const DeleteDialog = ({open, title, body, requireApproval, ...props}) => {
+export default () => {
+	// hooks
+	const dispatch = useDispatch();
+
+	// seletors
+	const {headers} = useSelector(state => state.auth);
+	const {other, open} = useSelector(state => state.modal[MODAL_DELETE] || defaultState);
+
 	const [ack, setAck] = useState(false);
+
+	const requireApproval = other.requireApproval || false;
 
 	const defaultTitle = "Delete";
 	const defaultBody = `Are you sure? This action is immediate and cannot be undone.` +
-		`${requireApproval === true ? "Since this change will likely impact functionality for users, you will need to be certain of your actions." : ""}`;
+		`${requireApproval === true ? " Since this change will likely impact functionality for users, you will need to confirm your actions." : ""}`;
+
+	const title = other.title || defaultTitle;
+	const body = other.body || defaultBody;
 
 	useEffect(() => {
 		setAck(false);
 	}, [open]);
 
+	const close = () => setDialog(dispatch, MODAL_DELETE, false);
+
 	const onSubmit = () => {
-		props.onSubmit();
-		props.setDelete(false, null);
-	};
-	const onExit = () => {
-		props.setDelete(false, null);
+		other.onSubmit(dispatch, headers, other.item);
+		close();
 	};
 
 	const classes = useStyles();
@@ -48,41 +70,22 @@ export const DeleteDialog = ({open, title, body, requireApproval, ...props}) => 
 				<DialogContentText>
 					{body != null ? body : defaultBody}
 				</DialogContentText>
-				{requireApproval === true
-					?
-					<FormControlLabel className={classes.override} control={
-						<Checkbox className={classes.override} checked={ack} onChange={(e) => setAck(e.target.checked)}/>
-					} label={"Use admin power to override"}/>
-					:
-					""
-				}
+				{requireApproval === true && <FormControlLabel
+					className={classes.red}
+					control={
+						<Checkbox
+							className={classes.red}
+							checked={ack}
+							onChange={(e) => setAck(e.target.checked)}/>
+					}
+					label={"Use admin power to override"}
+				/>}
 			</DialogContent>
 			<DialogActions>
-				<Button className={classes.button} color={"secondary"} onClick={() => onExit()}>Cancel</Button>
-				<Button className={classes.button} color={"primary"} onClick={() => onSubmit()} disabled={requireApproval === true && ack === false}>Delete</Button>
+				<Button className={classes.button} color={"secondary"} onClick={() => close()}>Cancel</Button>
+				<Button className={`${classes.button} ${classes.red}`} onClick={() => onSubmit()}
+				        disabled={requireApproval === true && ack === false}>Delete</Button>
 			</DialogActions>
 		</Dialog>
 	);
 };
-DeleteDialog.propTypes = {
-	open: PropTypes.bool,
-	title: PropTypes.object,
-	body: PropTypes.object,
-	requireApproval: PropTypes.bool,
-	onSubmit: PropTypes.func.isRequired
-};
-DeleteDialog.defaultProps = {
-	requireApproval: false
-};
-const mapStateToProps = state => ({
-	isAdmin: state.auth.isAdmin,
-	requireApproval: state.modal.generic.delete.requireApproval,
-	open: state.modal.generic.delete.open,
-});
-const mapDispatchToProps = ({
-	setDelete
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(withTheme(DeleteDialog));

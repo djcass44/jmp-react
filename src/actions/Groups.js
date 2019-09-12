@@ -49,7 +49,7 @@ const putGroupDispatch = (dispatch, headers, name) => {
 		dispatch({type: `${PUT_GROUP}_FAILURE`, payload: err, error: true});
 	});
 };
-const getUserGroupsDispatch = (dispatch, headers, uid) => {
+export const getUserGroupsDispatch = (dispatch, headers, uid) => {
 	dispatch({type: `${GET_USER_GROUPS}_REQUEST`});
 	client.get(`/api/v2_1/user/groups?uid=${uid}`, {headers: headers}).then(r => {
 		dispatch({

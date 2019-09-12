@@ -1,9 +1,12 @@
 import React, {useLayoutEffect} from 'react';
-import Content from "../Content";
-import Nav from "../Nav";
-import AdminPanel from "../../components/AdminPanel";
+import Content from "./Content";
+import Nav from "./Nav";
+import AdminPanel from "../components/AdminPanel";
 import {makeStyles} from "@material-ui/core";
 import PropTypes from "prop-types";
+import {useDispatch, useSelector} from "react-redux";
+import {OAUTH_VERIFY, oauthPreverifyDispatch} from "../actions/Auth";
+import {withRouter} from "react-router";
 
 const useStyles = makeStyles(theme => ({
 	main: {
@@ -28,9 +31,14 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export const Body = ({refresh, headers, history, loading, oauthVerify}) => {
+export const Body = ({history}) => {
+	// hooks
+	const loading = useSelector(state => state.loading[OAUTH_VERIFY]);
+	const {headers, refresh} = useSelector(state => state.auth);
+	const dispatch = useDispatch();
+
 	useLayoutEffect(() => {
-		oauthVerify(refresh, headers);
+		oauthPreverifyDispatch(dispatch, refresh, headers);
 	}, [history.location.key]);
 
 	const classes = useStyles();
@@ -55,12 +63,6 @@ export const Body = ({refresh, headers, history, loading, oauthVerify}) => {
 	);
 };
 Body.propTypes = {
-	loading: PropTypes.bool,
-	headers: PropTypes.object.isRequired,
-	refresh: PropTypes.string.isRequired,
 	history: PropTypes.any.isRequired,
-	oauthVerify: PropTypes.func.isRequired
 };
-Body.defaultProps = {
-	loading: false
-};
+export default withRouter(Body);

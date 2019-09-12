@@ -16,16 +16,15 @@
  */
 
 import React, {useEffect, useState} from "react";
-import {CardContent, Grid, makeStyles, TextField, CircularProgress, Card, Typography, Button} from "@material-ui/core";
+import {Button, Card, CardContent, CircularProgress, Grid, makeStyles, TextField, Typography} from "@material-ui/core";
 import {OAUTH_REQUEST, oauthRequest} from "../../actions/Auth";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import {getVersion} from "../../actions/Generic";
 import SocialButton from "../../components/widget/SocialButton";
 import {mdiGithubCircle, mdiGoogle} from "@mdi/js";
 import {oauth2Discover} from "../../actions/Oauth";
 import {APP_NAME} from "../../constants";
-import PropTypes from "prop-types";
 import {useTheme} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
@@ -58,23 +57,32 @@ const initialPassword = {
 	regex: new RegExp(/^.{8,}$/)
 };
 
-const Login = ({isLoggedIn, version, providers, loading, error, ...props}) => {
+export default ({history}) => {
+	// props hooks
+	const dispatch = useDispatch();
+	const providers = useSelector(state => state.auth.providers);
+	const {isLoggedIn} = useSelector(state => state.auth);
+	const {version} = useSelector(state => state.generic);
+	const loading = useSelector(state => state.loading[OAUTH_REQUEST]);
+	const error = useSelector(state => state.errors[OAUTH_REQUEST]);
+
 	// state hooks
 	const [username, setUsername] = useState(initialUser);
 	const [password, setPassword] = useState(initialPassword);
 	// lifecycle hooks
 	useEffect(() => {
 		window.document.title = `Login - ${APP_NAME}`;
-		props.getVersion();
-		props.oauth2Discover("github");
-		props.oauth2Discover("google");
-	}, []);
+		getVersion(dispatch);
+		oauth2Discover(dispatch, "github");
+		oauth2Discover(dispatch, "google");
+	}, [dispatch]);
+
 	useEffect(() => {
 		if(isLoggedIn === true) {
 			// The user is already logged in, we can leave here
 			const url = new URL(window.location.href);
-			let target = url.searchParams.get("target");
-			props.history.push(target != null && target !== "" ? target : "/");
+			const target = url.searchParams.get("target");
+			history.push(target != null && target !== "" ? target : "/");
 		}
 	}, [isLoggedIn]);
 	const onUsernameChange = (e) => {
@@ -89,7 +97,7 @@ const Login = ({isLoggedIn, version, providers, loading, error, ...props}) => {
 	};
 	const onSubmit = () => {
 		const data = window.btoa(`${username.value}:${password.value}`);
-		props.oauthRequest(data);
+		oauthRequest(dispatch, data);
 	};
 	const classes = useStyles();
 	const theme = useTheme();
@@ -160,31 +168,3 @@ const Login = ({isLoggedIn, version, providers, loading, error, ...props}) => {
 		</>
 	);
 };
-Login.propTypes = {
-	providers: PropTypes.object.isRequired,
-	loading: PropTypes.bool,
-	error: PropTypes.object,
-	isLoggedIn: PropTypes.bool.isRequired,
-	version: PropTypes.string
-};
-Login.defaultProps = {
-	loading: false,
-	error: null,
-	version: ''
-};
-const mapStateToProps = state => ({
-	providers: {...state.auth.providers},
-	loading: state.loading[OAUTH_REQUEST],
-	error: state.errors[OAUTH_REQUEST],
-	isLoggedIn: state.auth.isLoggedIn,
-	version: state.generic.version
-});
-const mapDispatchToProps = ({
-	oauthRequest,
-	oauth2Discover,
-	getVersion
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Login);

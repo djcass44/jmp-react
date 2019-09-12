@@ -16,7 +16,6 @@
  */
 
 import React, {useEffect, useState} from "react";
-import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
@@ -25,7 +24,7 @@ import InputBase from "@material-ui/core/InputBase";
 import {IconButton, LinearProgress, makeStyles} from "@material-ui/core";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
 import Divider from "@material-ui/core/es/Divider/Divider";
 import {setFilter} from "../actions/Generic";
@@ -45,7 +44,18 @@ const bgTransition = time => `background-color ${time}ms linear`;
 
 const useStyles = makeStyles(theme => ({
 	root: {
-		width: '100%'
+		position: "fixed",
+		width: "100%",
+		height: "100%",
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		backgroundColor: "transparent",
+		pointerEvents: "none"
+	},
+	main: {
+		pointerEvents: "auto"
 	},
 	grow: {
 		flexGrow: 1
@@ -118,6 +128,11 @@ const useStyles = makeStyles(theme => ({
 			display: 'flex',
 		},
 	},
+	helpButton: {
+		[theme.breakpoints.up("md")]: {
+			display: "none"
+		}
+	},
 	progress: {
 		backgroundColor: 'transparent'
 	},
@@ -126,17 +141,22 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilter, ...props}) => {
+const Nav = ({loading, history}) => {
 	const searchRoutes = [
-		"/",
 		"/identity"
 	];
+	// hooks
+	const {isLoggedIn, username, userProfile} = useSelector(state => state.auth);
+	const {searchFilter} = useSelector(state => state.generic);
+	const {location} = history;
+	const dispatch = useDispatch();
+
 	const [showSearch, setShowSearch] = useState(true);
 	const [anchorEl, setAnchorEl] = useState(null);
 
 	useEffect(() => {
-		setShowSearch(searchRoutes.includes(props.history.location.pathname));
-	}, [props.history.location.key]);
+		setShowSearch(searchRoutes.includes(location.pathname));
+	}, [location.key, searchRoutes]);
 
 	const handleMenuClose = () => {
 		setAnchorEl(null);
@@ -144,7 +164,7 @@ const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilte
 
 	const handleSearchChange = e => {
 		let s = e.target.value.toLowerCase();
-		setFilter(s);
+		setFilter(dispatch, s);
 	};
 
 	const classes = useStyles();
@@ -156,20 +176,20 @@ const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilte
 	let name2 = name;
 	if (name != null)
 		name2 = name.replace(".", " ");
-	const url = window.location.pathname + window.location.search;
+	const url = location.pathname + location.search;
 	let loginUrl = '/login';
 	if(url !== '')
 		loginUrl = `/login?target=${url}`;
 
 	return (
 		<div className={classes.root}>
-			<AppBar position={"static"} color={"default"}>
-				<Toolbar>
-					{window.location.pathname !== "/" && loading === false ? <BackButton label={""} to={"/"}/> : ""}
-					<Typography className={classes.brand} variant={"h6"} color={"inherit"}>
+			<>
+				<Toolbar className={classes.main}>
+					{location.pathname !== "/" && loading === false ? <BackButton label={""} to={"/"}/> : ""}
+					<Typography className={classes.brand} variant={"h6"} color={"primary"}>
 						{APP_NAME}
 					</Typography>
-					<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"inherit"}>
+					<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"secondary"}>
 						{process.env.REACT_APP_APP_MSG}
 					</Typography>
 					{showSearch === true && loading !== true ?
@@ -195,7 +215,7 @@ const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilte
 					}
 				</Toolbar>
 				{loading === true && <LinearProgress className={classes.progress} />}
-			</AppBar>
+			</>
 			<Menu
 				anchorEl={anchorEl}
 				anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -207,7 +227,17 @@ const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilte
 					}} open={true} anchorEl={null} elevation={0}/>
 				</MenuItem>
 				<Divider/>
-				{window.location.pathname !== "/" ? <MenuItem component={Link} onClick={() => handleMenuClose()} to={"/"} button={true}><HomeIcon/>Home</MenuItem> : ""}
+				{location.pathname !== "/" &&
+				<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/"} button={true}>
+					<HomeIcon className={classes.menuIcon}/>
+					Home
+				</MenuItem>}
+				<MenuItem className={classes.helpButton} component={Link} onClick={() => handleMenuClose()} to={"/help"}
+				          button={true}>
+					<Icon className={classes.menuIcon} path={mdiHelpCircleOutline} size={1}
+					      color={getIconColour(theme)}/>
+					Help
+				</MenuItem>
 				{isLoggedIn === true ?
 					<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/identity"} button={true}>
 						<Icon className={classes.menuIcon} path={mdiAccountGroupOutline} size={1}
@@ -237,23 +267,10 @@ const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilte
 	);
 };
 Nav.propTypes = {
-	loading: PropTypes.bool.isRequired,
-	searchFilter: PropTypes.string.isRequired,
-	isLoggedIn: PropTypes.bool.isRequired,
-	username: PropTypes.string.isRequired,
-	userProfile: PropTypes.object.isRequired,
-	setFilter: PropTypes.func.isRequired
+	loading: PropTypes.bool,
+	history: PropTypes.object.isRequired
 };
-const mapStateToProps = state => ({
-	isLoggedIn: state.auth.isLoggedIn,
-	username: state.auth.username,
-	userProfile: state.auth.userProfile,
-	searchFilter: state.generic.searchFilter
-});
-const mapDispatchToProps = ({
-	setFilter
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(withRouter(Nav));
+Nav.defaultProps = {
+	loading: false
+};
+export default withRouter(Nav);

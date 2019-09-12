@@ -23,7 +23,7 @@ const initialState = {
 	request: localStorage.getItem(LS_REQUEST) || '',
 	refresh: localStorage.getItem(LS_REFRESH) || '',
 	source: localStorage.getItem(LS_SOURCE) || '',
-	userProfile: localStorage.getItem(LS_USER) || {},
+	userProfile: JSON.parse(localStorage.getItem(LS_USER)) || {},
 	headers: JSON.parse(localStorage.getItem(LS_HEADERS)) || {},
 	isLoggedIn: localStorage.getItem(LS_LOGIN) === 'true' || false,
 	isAdmin: localStorage.getItem(LS_ADM) === 'true' || false, // This is just an assumption, the API dictates whether you're an admin or not

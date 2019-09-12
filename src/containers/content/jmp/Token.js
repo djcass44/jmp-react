@@ -15,13 +15,13 @@
  *
  */
 
-import React, {useEffect} from "react";
-import {APP_NAME, client} from "../../../constants";
-import {GENERIC_GET_TOKEN, getTokenEnd, getTokenFail, getTokenStart} from "../../../actions/Generic";
+import React, {useEffect, useState} from "react";
+import {APP_NAME} from "../../../constants";
 import {useDispatch, useSelector} from "react-redux";
 import {CircularProgress, makeStyles} from "@material-ui/core";
 import Center from "react-center";
 import {withRouter} from "react-router-dom";
+import {GET_TARGET, getTargetJump} from "../../../actions/Jumps";
 
 const useStyles = makeStyles(theme => ({
 	text: {
@@ -35,45 +35,50 @@ const useStyles = makeStyles(theme => ({
 		left: 0,
 		right: 0,
 		bottom: 0,
-		backgroundColor: "transparent"
+		backgroundColor: "transparent",
+		pointerEvents: "none"
 	}
 }));
 
 export const Token = ({history}) => {
 	const classes = useStyles();
 	const dispatch = useDispatch();
-	const loading = useSelector(state => state.loading[GENERIC_GET_TOKEN]);
-	const error = useSelector(state => state.errors[GENERIC_GET_TOKEN]);
+	const loading = useSelector(state => state.loading[GET_TARGET]);
+	const error = useSelector(state => state.errors[GET_TARGET]);
 	const {headers} = useSelector(state => state.auth);
+	const {target} = useSelector(state => state.jumps);
+
+	const [failure, setFailure] = useState(error);
 
 	const jumpUser = () => {
 		let url = new URL(window.location.href);
 		let query = url.searchParams.get("query");
 		const id = url.searchParams.get("id");
 		if(query != null && query !== '') {
-			getTokenStart(dispatch);
 			if (id != null && id !== "")
 				query += `?id=${id}`;
 			// find out were we are going
-			client.get(`/api/v2/jump/${query}`, {headers}).then(r => {
-				getTokenEnd(dispatch);
-				if (r.data.found === true)
-					window.location.replace(r.data.location);
-				else
-					history.push(r.data.location);
-			}).catch(err => {
-				getTokenFail(dispatch, err.toString());
-			});
-		}
-		else {
-			getTokenFail(dispatch, "You must specify a query!");
-		}
+			getTargetJump(dispatch, headers, query);
+		} else
+			setFailure("You must specify a query!");
 	};
+	// initial hook run on start (componentdidmount)
 	useEffect(() => {
 		window.document.title = `${APP_NAME}`;
 		jumpUser();
 	}, []);
-	const message = error != null ? error : "Jumping... You can close this window if it stays open";
+
+	// hook which checks for a result from getTargetJump
+	useEffect(() => {
+		if (loading === false && error == null && target != null) {
+			if (target.found === true)
+				window.location.replace(target.location);
+			else
+				history.push(target.location);
+		}
+	}, [loading, error, target]);
+
+	const message = (error != null || failure != null) ? (error || failure) : "Jumping... You can close this window if it stays open";
 	return (
 		<Center className={classes.overlay}>
 			{loading === true ?

@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-const Domain = ({text}: {text: string}) => {
+export default ({text}: {text: string}) => {
 	const theme = useTheme<Theme>();
 	const classes = useStyles(theme);
 
@@ -45,4 +45,3 @@ const Domain = ({text}: {text: string}) => {
 	return (<span>{highlighted(text, classes)}</span>)
 
 };
-export default Domain;

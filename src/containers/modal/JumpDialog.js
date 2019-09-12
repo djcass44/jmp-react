@@ -1,24 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import {
-	InputLabel,
-	LinearProgress, makeStyles,
-	Select,
-	Typography
-} from "@material-ui/core";
+import React, {useEffect, useState} from "react";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import {CircularProgress, InputLabel, LinearProgress, makeStyles, Select, Typography} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
-import {connect} from "react-redux";
-import {GET_USER_GROUPS, getUserGroups} from "../../actions/Groups";
-import {putJump} from "../../actions/Jumps";
-import {setJumpNew} from "../../actions/Modal";
+import {useDispatch, useSelector} from "react-redux";
+import {GET_USER_GROUPS, getUserGroupsDispatch} from "../../actions/Groups";
+import {PUT_JUMP, putJumpDispatch} from "../../actions/Jumps";
+import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
 import {APP_NOUN} from "../../constants";
-import PropTypes from "prop-types";
+import {defaultState} from "../../reducers/Modal";
+import {resetError} from "../../actions/Generic";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -31,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 		fontWeight: 'bold'
 	},
 	progress: {
-		backgroundColor: theme.palette.background.default
+		backgroundColor: "transparent"
 	},
 }));
 
@@ -46,45 +42,69 @@ const initialUrl = {
 	regex: new RegExp('https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)')
 };
 
-const JumpDialog = ({open, headers, ...props}) => {
+const JumpDialog = () => {
+	// hooks
+	const dispatch = useDispatch();
+
+	// seletors
+	const loadingGroups = useSelector(state => state.loading[GET_USER_GROUPS]);
+	const loading = useSelector(state => state.loading[PUT_JUMP]);
+	const error = useSelector(state => state.errors[PUT_JUMP]);
+	const {headers, isAdmin, isLoggedIn, userProfile} = useSelector(state => state.auth);
+	const {userGroups} = useSelector(state => state.groups);
+	const {open} = useSelector(state => state.modal[MODAL_JUMP_NEW] || defaultState);
+
+	const uid = userProfile && userProfile.id;
+
 	const [name, setName] = useState(initialName);
 	const [url, setUrl] = useState(initialUrl);
 	const [type, setType] = useState('');
 	const [groupId, setGroupId] = useState('');
+	const [submit, setSubmit] = useState(false);
+
+	const close = () => setDialog(dispatch, MODAL_JUMP_NEW, false);
 
 	useEffect(() => {
-		if(open === true && props.isLoggedIn === true)
-			props.getUserGroups(headers, props.uid);
+		resetError(dispatch, PUT_JUMP);
+		resetError(dispatch, GET_USER_GROUPS);
+		if (open === true && isLoggedIn === true)
+			getUserGroupsDispatch(dispatch, headers, uid);
 		setName(initialName);
 		setUrl(initialUrl);
+		setType("");
+		setSubmit(false);
 	}, [open]);
 
-	const onNameChange = (e) => {
+	useEffect(() => {
+		if (loading === false && submit === true && error == null)
+			close();
+	}, [loading, error]);
+
+	const onChange = (e, get, set, msg = "Invalid") => {
 		const {value} = e.target;
-		const error = name.regex.test(value) === true ? "" : "Invalid name";
-		setName({...name, value, error});
+		const error = get.regex.test(value) === true ? "" : msg;
+		set({...get, value, error});
 	};
-	const onUrlChange = (e) => {
-		const {value} = e.target;
-		const error = url.regex.test(value) === true ? "" : "Invalid url";
-		setUrl({...url, value, error});
-	};
+
+	const onNameChange = (e) => onChange(e, name, setName);
+	const onUrlChange = (e) => onChange(e, url, setUrl);
 
 	const onSubmit = () => {
 		// ignore the type error below, it's fine
 		const gid = type === 2 ? `?gid=${groupId}` : '';
-		props.putJump(headers, JSON.stringify({
+		putJumpDispatch(dispatch, headers, JSON.stringify({
 			name: name.value,
 			location: url.value,
 			personal: type,
 			alias: []
 		}), gid);
-		props.setJumpNew(false);
+		setSubmit(true);
 	};
+
 	const classes = useStyles();
-	const userGroups = [];
-	props.userGroups.forEach(g => {
-		userGroups.push(<MenuItem value={g.id} key={g.id}>{g.name}</MenuItem>);
+	const groups = [];
+	userGroups.forEach(g => {
+		groups.push(<MenuItem value={g.id} key={g.id}>{g.name}</MenuItem>);
 	});
 	return (
 		<Dialog open={open === true} aria-labelledby={"form-dialog-title"}>
@@ -99,29 +119,31 @@ const JumpDialog = ({open, headers, ...props}) => {
 				<FormControl fullWidth>
 					<InputLabel htmlFor={"type"}>Type</InputLabel>
 					<Select value={type} inputProps={{name: 'type', id: 'type'}} onChange={(e) => setType(e.target.value)}>
-						<MenuItem value={0} disabled={props.isAdmin !== true}>Global</MenuItem>
+						<MenuItem value={0} disabled={isAdmin !== true}>Global</MenuItem>
 						<MenuItem value={1}>Personal</MenuItem>
-						<MenuItem value={2} disabled={props.userGroups.length === 0}>Group</MenuItem>
+						<MenuItem value={2} disabled={userGroups.length === 0}>Group</MenuItem>
 					</Select>
 				</FormControl>
-				{props.loadingGroups === true ? <LinearProgress className={classes.progress}/> : ""}
-				{type === 2 && props.userGroups.length > 0 ?
+				{loadingGroups === true ? <LinearProgress className={classes.progress}/> : ""}
+				{type === 2 && userGroups.length > 0 ?
 					<FormControl fullWidth>
 						<InputLabel htmlFor={"group"}>Group</InputLabel>
 						<Select value={groupId} inputProps={{name: 'group', id: 'group'}} onChange={(e) => setGroupId(e.target.value)}>
-							{userGroups}
+							{groups}
 						</Select>
 					</FormControl>
 					:
 					""
 				}
-				<Typography style={{fontWeight: "bold"}} variant={"caption"} color={"error"}>{props.submitError}</Typography>
+				<Typography style={{fontWeight: "bold"}} variant={"caption"} color={"error"}>{error}</Typography>
 			</DialogContent>
 			<DialogActions>
-				<Button className={classes.button} color={"secondary"} onClick={() => props.setJumpNew(false)}>Cancel</Button>
+				{loading === true && <CircularProgress className={classes.progress} size={15} thickness={8}/>}
+				<Button className={classes.button} color={"secondary"} disabled={submit === true}
+				        onClick={() => close()}>Cancel</Button>
 				<Button className={classes.button} color={"primary"} onClick={() => onSubmit()}
 				        disabled={(type === 2 && groupId === '') || name.error !== '' ||
-				        url.error !== '' || props.loadingGroups === true ||
+				        url.error !== "" || loadingGroups === true || loading === true || submit === true ||
 				        name.value.length === 0 || url.value.length === 0}>
 					Create
 				</Button>
@@ -129,26 +151,4 @@ const JumpDialog = ({open, headers, ...props}) => {
 		</Dialog>
 	);
 };
-JumpDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	headers: PropTypes.object.isRequired,
-	props: PropTypes.object
-};
-const mapStateToProps = state => ({
-	isAdmin: state.auth.isAdmin,
-	isLoggedIn: state.auth.isLoggedIn,
-	uid: state.auth.userProfile && state.auth.userProfile.id,
-	userGroups: state.groups.userGroups,
-	loadingGroups: state.loading[GET_USER_GROUPS],
-	headers: state.auth.headers,
-	open: state.modal.jump.new.open
-});
-const mapDispatchToProps= ({
-	getUserGroups,
-	putJump,
-	setJumpNew
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(JumpDialog);
+export default JumpDialog;

@@ -15,7 +15,7 @@
  *
  */
 
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Grid, makeStyles} from "@material-ui/core";
 import React, {useEffect} from "react";
 import {GET_SIMILAR, getSimilar, getSimilarFail} from "../../../actions/Jumps";
@@ -24,11 +24,10 @@ import Center from "react-center";
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import Chip from "@material-ui/core/Chip";
 import Icon from "@mdi/react";
-import {mdiAccountGroupOutline, mdiAccountCircleOutline, mdiEarth} from "@mdi/js";
+import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
 import Avatar from "@material-ui/core/Avatar";
 import Tooltip from "@material-ui/core/Tooltip";
-import {Link, withRouter} from "react-router-dom";
-import PropTypes from "prop-types";
+import {Link} from "react-router-dom";
 import ReactImageFallback from "react-image-fallback";
 import getAvatarScheme from "../../../style/getAvatarScheme";
 import useTheme from "@material-ui/core/styles/useTheme";
@@ -44,16 +43,10 @@ const useStyles = makeStyles(theme => ({
 	subtitle: {
 		color: theme.palette.text.secondary
 	},
-	button: {
-		// margin: theme.spacing.unit,
-	},
 	chip: {
-		margin: theme.spacing.unit / 2,
+		margin: theme.spacing(0.5),
 		fontFamily: "Manrope",
 		fontWeight: 500
-	},
-	grow: {
-		flexGrow: 1
 	},
 	container: {
 		flex: 1,
@@ -63,24 +56,30 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Similar = ({headers, similar, loading, error, getSimilar, getSimilarFail}) => {
+export default () => {
+	// hooks
+	const dispatch = useDispatch();
+	const {headers} = useSelector(state => state.auth);
+	const loading = useSelector(state => state.loading[GET_SIMILAR]);
+	const error = useSelector(state => state.errors[GET_SIMILAR]);
+	const {similar} = useSelector(state => state.jumps);
+
+	const classes = useStyles();
+	const theme = useTheme();
+
 	const getMatches = () => {
 		let url = new URL(window.location.href);
 		let query = url.searchParams.get("query");
-		if(query != null && query !== '') {
-			getSimilar(headers, query);
-		}
-		else {
-			getSimilarFail("You must specify a query!");
-		}
+		if (query != null && query !== '')
+			getSimilar(dispatch, headers, query);
+		else
+			getSimilarFail(dispatch, "You must specify a query!");
 	};
 	useEffect(() => {
 		window.document.title = `Similar - ${APP_NAME}`;
 		getMatches();
 	}, []);
-	
-	const classes = useStyles();
-	const theme = useTheme();
+
 	let status;
 	switch (similar.length) {
 		case 0:
@@ -125,9 +124,11 @@ const Similar = ({headers, similar, loading, error, getSimilar, getSimilarFail})
 			<Center>
 				<Typography className={classes.title} variant={"h1"}>Woah</Typography>
 			</Center>
-			<Center>
-				<Typography className={classes.subtitle} variant={"subtitle1"}>Before you go <span role={"img"} aria-label={"Rocket"}>🚀</span></Typography>
-			</Center>
+			{error == null && similar.length > 0 && <Center>
+				<Typography className={classes.subtitle} variant={"subtitle1"}>Before you go&nbsp;
+					<span role={"img"} aria-label={"Rocket"}>🚀</span>
+				</Typography>
+			</Center>}
 			<Center>
 				<Typography variant={"subtitle1"} className={classes.title}>{error == null ? status : getErrorMessage(error)}</Typography>
 			</Center>
@@ -137,26 +138,3 @@ const Similar = ({headers, similar, loading, error, getSimilar, getSimilarFail})
 		<Grid item sm={3}/>
 	</Grid>;
 };
-Similar.propTypes = {
-	similar: PropTypes.array.isRequired,
-	headers: PropTypes.object,
-	loading: PropTypes.bool,
-	error: PropTypes.object,
-	getSimilar: PropTypes.func.isRequired,
-	getSimilarFail: PropTypes.func.isRequired
-};
-
-const mapStateToProps = state => ({
-	similar: state.jumps.similar,
-	loading: state.loading[GET_SIMILAR],
-	error: state.errors[GET_SIMILAR],
-	headers: state.auth.headers,
-});
-const mapDispatchToProps = ({
-	getSimilar,
-	getSimilarFail
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(withRouter(Similar));

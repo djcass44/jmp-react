@@ -17,6 +17,7 @@
 
 import {
 	GET_SIMILAR,
+	GET_TARGET,
 	JUMP_LOAD,
 	JUMP_SET,
 	JUMP_SET_EXPAND,
@@ -27,10 +28,11 @@ import {
 const initialState = {
 	jumps: [],
 	similar: [],
-	expanded: null
+	expanded: null,
+	target: null
 };
 
-const jumps = (state = initialState, action) => {
+export default (state = initialState, action) => {
 	switch (action.type) {
 		case JUMP_SET_EXPAND: {
 			const {payload} = action;
@@ -39,6 +41,8 @@ const jumps = (state = initialState, action) => {
 			else
 				return {...state, expanded: payload};
 		}
+		case `${GET_TARGET}_SUCCESS`:
+			return {...state, target: action.payload};
 		case JUMP_SET:
 		case `${JUMP_LOAD}_SUCCESS`:
 			return {...state, jumps: action.payload};
@@ -76,4 +80,3 @@ function indexFromId(item, id) {
 	}
 	return -1;
 }
-export default jumps;
