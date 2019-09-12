@@ -143,14 +143,15 @@ const Nav = ({loading, history}) => {
 	// hooks
 	const {isLoggedIn, username, userProfile} = useSelector(state => state.auth);
 	const {searchFilter} = useSelector(state => state.generic);
+	const {location} = history;
 	const dispatch = useDispatch();
 
 	const [showSearch, setShowSearch] = useState(true);
 	const [anchorEl, setAnchorEl] = useState(null);
 
 	useEffect(() => {
-		setShowSearch(searchRoutes.includes(history.location.pathname));
-	}, [history.location.key]);
+		setShowSearch(searchRoutes.includes(location.pathname));
+	}, [location.key, searchRoutes]);
 
 	const handleMenuClose = () => {
 		setAnchorEl(null);
@@ -170,7 +171,7 @@ const Nav = ({loading, history}) => {
 	let name2 = name;
 	if (name != null)
 		name2 = name.replace(".", " ");
-	const url = window.location.pathname + window.location.search;
+	const url = location.pathname + location.search;
 	let loginUrl = '/login';
 	if(url !== '')
 		loginUrl = `/login?target=${url}`;
@@ -179,7 +180,7 @@ const Nav = ({loading, history}) => {
 		<div className={classes.root}>
 			<>
 				<Toolbar className={classes.main}>
-					{window.location.pathname !== "/" && loading === false ? <BackButton label={""} to={"/"}/> : ""}
+					{location.pathname !== "/" && loading === false ? <BackButton label={""} to={"/"}/> : ""}
 					<Typography className={classes.brand} variant={"h6"} color={"primary"}>
 						{APP_NAME}
 					</Typography>
@@ -221,7 +222,7 @@ const Nav = ({loading, history}) => {
 					}} open={true} anchorEl={null} elevation={0}/>
 				</MenuItem>
 				<Divider/>
-				{window.location.pathname !== "/" &&
+				{location.pathname !== "/" &&
 				<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/"} button={true}>
 					<HomeIcon className={classes.menuIcon}/>
 					Home
