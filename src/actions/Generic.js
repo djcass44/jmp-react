@@ -15,7 +15,7 @@ export const getTokenFail = (dispatch, err) => dispatch({
 	error: true
 });
 
-export const setFilter = filter => dispatch => {
+export const setFilter = (dispatch, filter) => {
 	dispatch({type: GENERIC_FILTER_SET, payload: filter});
 	dispatch({type: JUMP_SET_EXPAND, payload: null});
 };

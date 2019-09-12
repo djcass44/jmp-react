@@ -24,7 +24,7 @@ import InputBase from "@material-ui/core/InputBase";
 import {IconButton, LinearProgress, makeStyles} from "@material-ui/core";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
 import Divider from "@material-ui/core/es/Divider/Divider";
 import {setFilter} from "../actions/Generic";
@@ -51,7 +51,11 @@ const useStyles = makeStyles(theme => ({
 		left: 0,
 		right: 0,
 		bottom: 0,
-		backgroundColor: "transparent"
+		backgroundColor: "transparent",
+		pointerEvents: "none"
+	},
+	main: {
+		pointerEvents: "auto"
 	},
 	grow: {
 		flexGrow: 1
@@ -132,16 +136,21 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilter, ...props}) => {
+const Nav = ({loading, history}) => {
 	const searchRoutes = [
 		"/identity"
 	];
+	// hooks
+	const {isLoggedIn, username, userProfile} = useSelector(state => state.auth);
+	const {searchFilter} = useSelector(state => state.generic);
+	const dispatch = useDispatch();
+
 	const [showSearch, setShowSearch] = useState(true);
 	const [anchorEl, setAnchorEl] = useState(null);
 
 	useEffect(() => {
-		setShowSearch(searchRoutes.includes(props.history.location.pathname));
-	}, [props.history.location.key]);
+		setShowSearch(searchRoutes.includes(history.location.pathname));
+	}, [history.location.key]);
 
 	const handleMenuClose = () => {
 		setAnchorEl(null);
@@ -149,7 +158,7 @@ const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilte
 
 	const handleSearchChange = e => {
 		let s = e.target.value.toLowerCase();
-		setFilter(s);
+		setFilter(dispatch, s);
 	};
 
 	const classes = useStyles();
@@ -169,7 +178,7 @@ const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilte
 	return (
 		<div className={classes.root}>
 			<>
-				<Toolbar>
+				<Toolbar className={classes.main}>
 					{window.location.pathname !== "/" && loading === false ? <BackButton label={""} to={"/"}/> : ""}
 					<Typography className={classes.brand} variant={"h6"} color={"primary"}>
 						{APP_NAME}
@@ -247,22 +256,6 @@ const Nav = ({searchFilter, isLoggedIn, username, userProfile, loading, setFilte
 };
 Nav.propTypes = {
 	loading: PropTypes.bool.isRequired,
-	searchFilter: PropTypes.string.isRequired,
-	isLoggedIn: PropTypes.bool.isRequired,
-	username: PropTypes.string.isRequired,
-	userProfile: PropTypes.object.isRequired,
-	setFilter: PropTypes.func.isRequired
+	history: PropTypes.object.isRequired
 };
-const mapStateToProps = state => ({
-	isLoggedIn: state.auth.isLoggedIn,
-	username: state.auth.username,
-	userProfile: state.auth.userProfile,
-	searchFilter: state.generic.searchFilter
-});
-const mapDispatchToProps = ({
-	setFilter
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(withRouter(Nav));
+export default withRouter(Nav);

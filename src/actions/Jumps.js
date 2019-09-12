@@ -9,6 +9,8 @@ export const PUT_JUMP = "PUT_JUMP";
 export const DELETE_JUMP = "DELETE_JUMP";
 export const PATCH_JUMP = "PATCH_JUMP";
 
+export const GET_TARGET = "GET_TARGET";
+
 export const SOCKET_UPDATE_JUMP = "EVENT_UPDATE";
 export const SOCKET_UPDATE_TITLE = "EVENT_UPDATE_TITLE";
 export const SOCKET_UPDATE_FAVICON = "EVENT_UPDATE_FAVICON";
@@ -76,3 +78,12 @@ export const setJumpExpand = (dispatch, id) => dispatch({type: JUMP_SET_EXPAND, 
 
 export const getSimilar = (headers, query) => dispatch => getSimilarDispatch(dispatch, headers, query);
 export const getSimilarFail = error => dispatch => dispatch({type: `${GET_SIMILAR}_FAILURE`, payload: error, error: true});
+
+export const getTargetJump = (dispatch, headers, query) => {
+	dispatch({type: `${GET_TARGET}_REQUEST`});
+	client.get(`/api/v2/jump/${query}`, {headers}).then(r => {
+		dispatch({type: `${GET_TARGET}_SUCCESS`, payload: r.data});
+	}).catch(err => {
+		dispatch({type: `${GET_TARGET}_FAILURE`, payload: err, error: true});
+	});
+};
