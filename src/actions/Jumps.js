@@ -34,9 +34,9 @@ export const deleteJumpDispatch = (dispatch, headers, item) => {
 		dispatch({type: `${DELETE_JUMP}_FAILURE`, payload: err, error: true});
 	});
 };
-const getSimilarDispatch = (dispatch, headers, query) => {
+export const getSimilar = (dispatch, headers, query) => {
 	dispatch({type: `${GET_SIMILAR}_REQUEST`});
-	client.get(`/api/v2/similar/${query}`, {headers: headers}).then(r => {
+	client.get(`/api/v2/similar/${query}`, {headers}).then(r => {
 		dispatch({
 			type: `${GET_SIMILAR}_SUCCESS`,
 			payload: r.data
@@ -73,8 +73,11 @@ export const patchJumpDispatch = (dispatch, headers, jump) => {
 export const listJumps = headers => dispatch => listJumpsDispatch(dispatch, headers);
 export const setJumpExpand = (dispatch, id) => dispatch({type: JUMP_SET_EXPAND, payload: id});
 
-export const getSimilar = (headers, query) => dispatch => getSimilarDispatch(dispatch, headers, query);
-export const getSimilarFail = error => dispatch => dispatch({type: `${GET_SIMILAR}_FAILURE`, payload: error, error: true});
+export const getSimilarFail = (dispatch, error) => dispatch({
+	type: `${GET_SIMILAR}_FAILURE`,
+	payload: error,
+	error: true
+});
 
 export const getTargetJump = (dispatch, headers, query) => {
 	dispatch({type: `${GET_TARGET}_REQUEST`});
