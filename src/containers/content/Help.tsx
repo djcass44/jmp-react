@@ -16,13 +16,7 @@
  */
 
 import React, {useState} from "react";
-import {
-	Collapse,
-	ListItemSecondaryAction,
-	makeStyles,
-	Paper,
-	Typography
-} from "@material-ui/core";
+import {Collapse, ListItemSecondaryAction, makeStyles, Paper, Typography} from "@material-ui/core";
 // @ts-ignore
 import Center from "react-center";
 import Avatar from "@material-ui/core/Avatar";
@@ -34,6 +28,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import BrowserGuide from "./help/BrowserGuide";
 import getHelpCardColour from "../../selectors/getHelpCardColour";
 import useTheme from "@material-ui/core/styles/useTheme";
+import {APP_NAME, APP_NOUN} from "../../constants";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -85,21 +80,21 @@ const Help = () => {
 			a: <span>HTTP URLs are marked as red to communicate their lack of security. HTTP websites are being phased out all across the internet and your browser probably already shows warnings.<br/><br/>The red highlight is only a warning and doesn't interfere with your ability to access them, however the site wont be indexed and will likely be missing metadata (e.g. title and favicon).</span>
 		},
 		{
-			q: `Why can't I access my personal ${process.env.REACT_APP_APP_NOUN}s sometimes?`,
-			a: <span>Your login only persists for a set period of time, once it expires you won't be able to access your personal/group {process.env.REACT_APP_APP_NOUN}s until you login again.</span>
+			q: `Why can't I access my personal ${APP_NOUN}s sometimes?`,
+			a: <span>Your login only persists for a set period of time, once it expires you won't be able to access your personal/group {APP_NOUN}s until you login again.</span>
 		},
 		{
-			q: `Why can't I create global ${process.env.REACT_APP_APP_NOUN}s?`,
-			a: <span>Creating global {process.env.REACT_APP_APP_NOUN}s is a privilege given only to Admins. Contact your local SysAdmin if you need your account upgraded.</span>
+			q: `Why can't I create global ${APP_NOUN}s?`,
+			a: <span>Creating global {APP_NOUN}s is a privilege given only to Admins. Contact your local SysAdmin if you need your account upgraded.</span>
 		},
 		{
-			q: `How do I share a ${process.env.REACT_APP_APP_NOUN} with select users?`,
-			a: <span>Create a Group! When you next create a {process.env.REACT_APP_APP_NOUN}, set the type to <code>Group</code> and select the Group containing your users.<br/>The only people who will be able to use this {process.env.REACT_APP_APP_NOUN} will be the users in the group.</span>
+			q: `How do I share a ${APP_NOUN} with select users?`,
+			a: <span>Create a Group! When you next create a {APP_NOUN}, set the type to <code>Group</code> and select the Group containing your users.<br/>The only people who will be able to use this {APP_NOUN} will be the users in the group.</span>
 		},
 		{
 			q: "Why am I already logged in sometimes?",
 			a: <span>
-				Your admin has probably set {process.env.REACT_APP_APP_NAME} to use <b>Atlassian Crowd</b> as an identity provider.
+				Your admin has probably set {APP_NAME} to use <b>Atlassian Crowd</b> as an identity provider.
 				Crowd enables Single-Sign-On (SSO) which allows you to log into multiple apps using the same credentials.
 				<br/><br/>For more information, contact your admin or have a look at Atlassian's documentation <a href={"https://confluence.atlassian.com/crowd/overview-of-sso-179445277.html"}>here</a>
 			</span>
@@ -114,7 +109,7 @@ const Help = () => {
 				Security is a very important issue and it's certainly not ignored here.
 				<br/>If using <b>local authentication</b>, your password is hashed &amp; salted then stored in the database. It is only used to verify your login and generated tokens for you to use the app. It is never decrypted again and cannot be seen by anyone.
 				<br/><br/>If using <b>LDAP</b>, your password is never stored and is only used to be verified against the LDAP server.
-				<br/><br/>If using <b>Atlassian Crowd</b>, your password is used in a similar method to LDAP. Your credentials are exchanged for a token which {process.env.REACT_APP_APP_NAME} uses on your behalf. It also allows Crowd to log you into any other apps which your environment uses.
+				<br/><br/>If using <b>Atlassian Crowd</b>, your password is used in a similar method to LDAP. Your credentials are exchanged for a token which {APP_NAME} uses on your behalf. It also allows Crowd to log you into any other apps which your environment uses.
 				See <a href={"https://confluence.atlassian.com/crowd/overview-of-sso-179445277.html"}>here</a> for more information.
 			</span>
 		}

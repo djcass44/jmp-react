@@ -35,7 +35,7 @@ import {mdiAccountGroupOutline, mdiHelpCircleOutline, mdiLogin, mdiLogout} from 
 import {Avatar} from "evergreen-ui";
 import BackButton from "../components/widget/BackButton";
 import getIconColour from "../style/getIconColour";
-import {APP_NAME} from "../constants";
+import {APP_MSG, APP_NAME} from "../constants";
 import {useTheme} from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import UserPopover from "../components/widget/UserPopover";
@@ -190,7 +190,7 @@ const Nav = ({loading, history}) => {
 						{APP_NAME}
 					</Typography>
 					<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"secondary"}>
-						{process.env.REACT_APP_APP_MSG}
+						{APP_MSG}
 					</Typography>
 					{showSearch === true && loading !== true ?
 						<div className={classes.search}>

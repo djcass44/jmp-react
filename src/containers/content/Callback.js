@@ -23,6 +23,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import {connect} from "react-redux";
 import {OAUTH2_CALLBACK, oauth2Callback} from "../../actions/Oauth";
 import PropTypes from "prop-types";
+import {APP_NAME} from "../../constants";
 
 const useStyles = makeStyles(theme => ({
 	subtitle: {
@@ -45,13 +46,11 @@ const useStyles = makeStyles(theme => ({
 
 const Callback = ({headers, loading, error, oauth2Callback, ...props}) => {
 	useEffect(() => {
-		window.document.title = `Callback - ${process.env.REACT_APP_APP_NAME}`;
+		window.document.title = `Callback - ${APP_NAME}`;
 		// Get the list of parameters
 		const params = new URLSearchParams(props.location.search);
-		console.log(`params: ${params}`);
 		// Create the callback request to the backend
 		const provider = props.location.pathname.split("/callback-")[1];
-		console.log(`Using provider: ${provider}`);
 
 		const sentHeaders = headers;
 		sentHeaders['X-Auth-Source'] = provider;

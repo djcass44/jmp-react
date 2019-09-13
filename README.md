@@ -6,14 +6,11 @@ If the API has been updated, it is highly recommended to update the UI as they a
 
 ## Setting up the UI
 
+The JMP UI requires the following environment variables to be set:
+* `JMP_API_URL`: the url of the API (default: `localhost:7000`)
+* `JMP_API_SECURE`: whether the API is using HTTPS (default: `false`)
+
 The JMP UI can be run in 2 different ways.
-
-Edit [.env.production](.env.production) so that the UI knows where to locate the API
-
-```
-REACT_APP_API_SCHEME=http or https (required)
-REACT_APP_API_URL=jmp.example.org
-```
 
 1. **Using docker** (recommended)
 
@@ -46,12 +43,9 @@ They will be available in the `build` directory
 
 The JMP UI currently has limited support for custom branding without editing the source.
 
-This can be set by modifying the `.env.production` file before building.
+This can be set by setting the following environment variables:
 
-`REACT_APP_APP_NAME`: name of the application in Navbar and documentation
-
-`REACT_APP_APP_MSG`: subheader shown in Navbar
-
-`REACT_APP_APP_NOUN`: the name of a Jump
-
-`REACT_APP_APP_KEY`: what the application recommends the user set their keyword to (will also be used in the future by an automatic installer)
+* `JMP_BRAND_NAME`: name of the application in Navbar and documentation (default: `JMP`)
+* `JMP_BRAND_MSG`: subheader shown in Navbar (optional)
+* `JMP_BRAND_NOUN`: the name of a Jump (default; "Jump")
+* `JMP_BRAND_KEY`: what the application recommends the user set their keyword to (default: `jmp`)

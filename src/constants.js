@@ -15,11 +15,16 @@ export const LS_SORT = "jmpr-sortBy";
 
 export const pageSize = 8;
 
-export const APP_NOUN = process.env.REACT_APP_APP_NOUN || "Jump";
-export const APP_NAME = process.env.REACT_APP_APP_NAME || "JMP";
+export const API_URL = window._env_.JMP_API_URL || "localhost:7000";
+export const APP_NAME = window._env_.JMP_BRAND_NAME || "JMP";
+export const APP_MSG = window._env_.JMP_BRAND_MSG || "";
+export const APP_NOUN = window._env_.JMP_BRAND_NOUN || "Jump";
+export const APP_KEY = window._env_.JMP_BRAND_KEY || "jmp";
 
-export const BASE_URL = `${process.env.REACT_APP_API_SCHEME}://${process.env.REACT_APP_API_URL}`;
-export const SOCKET_URL = `${process.env.NODE_ENV === "production" ? "wss" : "ws"}://${process.env.REACT_APP_API_URL}/api/ws2`;
+const secure = (window._env_.JMP_API_SECURE || "true") === "true";
+
+export const BASE_URL = `http${secure ? "s" : ""}://${API_URL}`;
+export const SOCKET_URL = `ws${secure ? "s" : ""}://${API_URL}/api/ws2`;
 
 export const client = axios.create({
 	baseURL: BASE_URL

@@ -18,8 +18,8 @@
 import React, {useState} from "react";
 import {mdiAppleSafari, mdiEdge, mdiFirefox, mdiGoogleChrome, mdiInternetExplorer} from "@mdi/js";
 import Icon from "@mdi/react";
-import {Typography, IconButton, makeStyles} from "@material-ui/core";
-import {BASE_URL} from "../../../constants";
+import {IconButton, makeStyles, Typography} from "@material-ui/core";
+import {APP_KEY, APP_NAME, BASE_URL} from "../../../constants";
 
 const useStyles = makeStyles(theme => ({
 	name: {
@@ -42,13 +42,12 @@ export default () => {
 			icon: mdiGoogleChrome,
 			colour: '#1da462',
 			name: "Google Chrome",
-			logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Chrome_icon_%28September_2014%29.svg',
 			content: <span>
 				1. Open settings (<code>chrome://settings</code>)<br/>
 				2. Click <b>Manage search engines</b><br/>
 				3. Add new with the following information<br/>
-				&emsp;Search engine = <kbd>{process.env.REACT_APP_APP_NAME}</kbd><br/>
-				&emsp;Keyword = <kbd>{process.env.REACT_APP_APP_KEY}</kbd><br/>
+				&emsp;Search engine = <kbd>{APP_NAME}</kbd><br/>
+				&emsp;Keyword = <kbd>{APP_KEY}</kbd><br/>
 				&emsp;URL = <kbd>{BASE_URL}/jmp?query=%s</kbd>
 			</span>,
 			info: 'This has only been tested in Google Chrome and Chromium. Its usability in other Chromium-based browsers is unknown.',
@@ -58,11 +57,10 @@ export default () => {
 			icon: mdiFirefox,
 			colour: '#ff0039',
 			name: 'Mozilla Firefox',
-			logo: 'https://upload.wikimedia.org/wikipedia/commons/6/67/Firefox_Logo%2C_2017.svg',
 			content: <span>
 				Add a new bookmark with the following values<br/>
-				&emsp;Name = <kbd>{process.env.REACT_APP_APP_NAME}</kbd><br/>
-				&emsp;Keyword = <kbd>{process.env.REACT_APP_APP_KEY}</kbd><br/>
+				&emsp;Name = <kbd>{APP_NAME}</kbd><br/>
+				&emsp;Keyword = <kbd>{APP_KEY}</kbd><br/>
 				&emsp;Location = <kbd>{BASE_URL}/jmp?query=%s</kbd>
 			</span>,
 			supported: 2
@@ -71,11 +69,10 @@ export default () => {
 			icon: mdiEdge,
 			colour: '#3277bc',
 			name: 'Microsoft Edge (pre-Chromium)',
-			logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Microsoft_Edge_logo.svg/450px-Microsoft_Edge_logo.svg.png',
 			content: <span>
-				1. Open {process.env.REACT_APP_APP_NAME}<br/>
+				1. Open {APP_NAME}<br/>
 				2. Open Settings -> Advanced -> Change search provider<br/>
-				3. Set {process.env.REACT_APP_APP_NAME} as default
+				3. Set {APP_NAME} as default
 			</span>,
 			info: 'This applies to EdgeHTML and not Edge-Chromium. Edge-Chromium is the same as Google Chrome',
 			supported: 2
@@ -84,10 +81,9 @@ export default () => {
 			icon: mdiAppleSafari,
 			colour: '#006cff',
 			name: 'Safari',
-			logo: 'https://upload.wikimedia.org/wikipedia/commons/5/52/Safari_browser_logo.svg',
 			content: <span>
 				Safari 10+ is supported, 9 will work with compatibility issues.
-				Due to Apple locking down the search engine choices, you will need to install an extension in order to use {process.env.REACT_APP_APP_NAME}
+				Due to Apple locking down the search engine choices, you will need to install an extension in order to use {APP_NAME}
 			</span>,
 			info: 'Safari is only available for macOS',
 			supported: 1
@@ -96,7 +92,6 @@ export default () => {
 			icon: mdiInternetExplorer,
 			name: 'Internet Explorer',
 			colour: '#1EBBEE',
-			logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Internet_Explorer_10%2B11_logo.svg/489px-Internet_Explorer_10%2B11_logo.svg.png',
 			content: 'Only IE11 and above are supported likely with compatibility issues. We recommend that you use a more modern browser such as Firefox, Chrome or Edge',
 			supported: 0
 		}
