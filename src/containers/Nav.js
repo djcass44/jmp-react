@@ -79,9 +79,10 @@ const useStyles = makeStyles(theme => ({
 	search: {
 		position: 'relative',
 		borderRadius: theme.shape.borderRadius,
-		backgroundColor: fade(theme.palette.primary.light, 0.15),
+		color: theme.palette.text.primary,
+		backgroundColor: fade(theme.palette.search, 0.15),
 		'&:hover': {
-			backgroundColor: fade(theme.palette.primary.light, 0.35),
+			backgroundColor: fade(theme.palette.search, 0.35),
 			transition: bgTransition(250),
 			webkitTransition: bgTransition(250),
 			msTransition: bgTransition(250),
@@ -206,9 +207,11 @@ const Nav = ({loading, history}) => {
 					{loading === false &&
 						<>
 							<div className={classes.sectionDesktop}>
-								<IconButton style={{margin: 8}} component={Link} centerRipple={false} color={"inherit"} to={"/help"}>
+								{location.pathname !== "/help" &&
+								<IconButton style={{margin: 8}} component={Link} centerRipple={false} color={"inherit"}
+								            to={"/help"}>
 									<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
-								</IconButton>
+								</IconButton>}
 							</div>
 							<Avatar name={name2} src={userProfile['avatarUrl']} size={40} style={{marginTop: 4}} onClick={(e) => setAnchorEl(e.currentTarget)} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
 						</>
@@ -232,12 +235,13 @@ const Nav = ({loading, history}) => {
 					<HomeIcon className={classes.menuIcon}/>
 					Home
 				</MenuItem>}
+				{location.pathname !== "/help" &&
 				<MenuItem className={classes.helpButton} component={Link} onClick={() => handleMenuClose()} to={"/help"}
 				          button={true}>
 					<Icon className={classes.menuIcon} path={mdiHelpCircleOutline} size={1}
 					      color={getIconColour(theme)}/>
 					Help
-				</MenuItem>
+				</MenuItem>}
 				{isLoggedIn === true ?
 					<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/identity"} button={true}>
 						<Icon className={classes.menuIcon} path={mdiAccountGroupOutline} size={1}

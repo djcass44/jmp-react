@@ -162,7 +162,7 @@ const JumpItem = ({jump, width}) => {
 								}}
 								iconProps={{
 									path: mdiCallMerge,
-									color: theme.palette.primary.dark
+									color: theme.palette.primary.main
 								}}
 								focus={smallScreen}
 								mouse={mouse}

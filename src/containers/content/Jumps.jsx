@@ -26,7 +26,7 @@ import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 import {fade} from "@material-ui/core/styles";
-import JumpItem2 from "./jmp/JumpItem";
+import JumpItem from "./jmp/JumpItem";
 import SortButton from "../../components/widget/SortButton";
 import {dispatchSort} from "../../actions/Generic";
 import AddIcon from "@material-ui/icons/Add";
@@ -59,9 +59,10 @@ const useStyles = makeStyles(theme => ({
 	search: {
 		position: "relative",
 		borderRadius: 24,
-		backgroundColor: fade(theme.palette.primary.light, 0.35),
+		color: theme.palette.text.primary,
+		backgroundColor: fade(theme.palette.search, 0.35),
 		"&:hover": {
-			backgroundColor: fade(theme.palette.primary.light, 0.65),
+			backgroundColor: fade(theme.palette.search, 0.65),
 			transition: bgTransition(250),
 			webkitTransition: bgTransition(250),
 			msTransition: bgTransition(250)
@@ -135,7 +136,7 @@ export default () => {
 	let sortedJumps = sortItems(jumps, sort);
 	sortedJumps.filter(filterJump).forEach((i, index) => {
 		if (index < offset || index > max) return;
-		listItems.push(<JumpItem2 jump={i} key={i.id} id={i.id}/>);
+		listItems.push(<JumpItem jump={i} key={i.id} id={i.id}/>);
 	});
 
 
@@ -166,7 +167,7 @@ export default () => {
 					<SearchIcon/>
 				</div>
 				<InputBase
-					placeholder={"Search..."}
+					placeholder="Search..."
 					autoFocus
 					classes={{root: classes.inputRoot, input: classes.inputInput}}
 					onChange={(e) => setSearch(e.target.value)}
@@ -174,13 +175,14 @@ export default () => {
 				/>
 			</div>
 			<div>
-				{loading === true && <LinearProgress className={classes.progress} color={"primary"}/>}
-				<div key={"root"} style={{borderRadius: 12, marginBottom: 8}}>
-					<List component={"ul"}>
+				{loading === true && <LinearProgress className={classes.progress} color="primary"/>}
+				<div key="root" style={{borderRadius: 12, marginBottom: 8}}>
+					<List component="ul">
 						{listItems.length > 0 ?
 							listItems
 							:
-							<Typography className={`${classes.title} ${classes.nothing}`}>Nothing could be
+							<Typography className={`${classes.title} ${classes.nothing}`} color="primary">Nothing could
+								be
 								found</Typography>
 						}
 					</List>

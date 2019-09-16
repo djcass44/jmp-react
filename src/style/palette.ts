@@ -4,6 +4,7 @@ export interface Theme {
 export interface PaletteGroup {
 	primary: Palette,
 	secondary: Palette,
+	search: string,
 	warning: Palette,
 	error: Palette,
 	info: Palette,
@@ -16,6 +17,10 @@ export interface PaletteGroup {
 		default: string,
 		paper: string
 	},
+	action: {
+		selected: string,
+		hover: string
+	}
 	type: string
 }
 export interface Palette {
@@ -35,6 +40,7 @@ export const light = {
 		light: '#455570',
 		dark: '#101e35'
 	},
+	search: '#DEEBFF',
 	warning: {
 		main: '#F4B400',
 		light: '#FFE380',
@@ -64,38 +70,43 @@ export const light = {
 
 export const dark = {
 	primary: {
-		main: '#294ab4',
-		light: '#2171cd',
-		dark: '#0d3772'
+		main: '#449df4',
+		light: '#52abff',
+		dark: '#222425'
 	},
 	secondary: {
-		main: '#304FFE',
+		main: '#d1cec7',
 		light: '#3F51B5',
-		dark: '#181d3e'
+		dark: '#222425'
 	},
+	search: '#505355',
 	warning: {
 		main: '#cd6700',
 		light: '#e69400',
 		dark: '#b44400'
 	},
 	error: {
-		main: '#b40000',
-		light: '#cd3a35',
-		dark: '#921c1c'
+		main: '#e26a5f',
+		light: '#ff7a59',
+		dark: '#430f00'
 	},
 	info: {
 		main: '#403294',
-		light: '#6554C0',
-		dark: '#37155c'
+		light: '#9288d0',
+		dark: '#222425'
 	},
 	success: {
-		main: '#00C853',
+		main: '#78f2b7',
 		light: '#4CAF50',
 		dark: '#1B5E20'
 	},
 	background: {
-		paper: '#242424',
-		default: '#121212'
+		paper: '#222425',
+		default: '#1a1b1c'
+	},
+	action: {
+		selected: "#161718",
+		hover: "#161718"
 	},
 	type: 'dark'
 };
