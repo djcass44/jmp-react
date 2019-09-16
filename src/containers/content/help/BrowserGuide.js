@@ -18,8 +18,9 @@
 import React, {useState} from "react";
 import {mdiAppleSafari, mdiEdge, mdiFirefox, mdiGoogleChrome, mdiInternetExplorer} from "@mdi/js";
 import Icon from "@mdi/react";
-import {IconButton, makeStyles, Typography} from "@material-ui/core";
+import {Collapse, IconButton, makeStyles, Typography} from "@material-ui/core";
 import {APP_KEY, APP_NAME, BASE_URL} from "../../../constants";
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles(theme => ({
 	name: {
@@ -37,6 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 export default () => {
 	const [selected, setSelected] = useState(-1);
+	const [open, setOpen] = useState(false);
 	const browserData = [
 		{
 			icon: mdiGoogleChrome,
@@ -57,12 +59,17 @@ export default () => {
 			icon: mdiFirefox,
 			colour: '#ff0039',
 			name: 'Mozilla Firefox',
-			content: <span>
+			content: <div>
+				<Typography variant="subtitle2">Skip setup using the&nbsp;
+					<Link target="_blank" rel="noopener noreferrer"
+					      href="https://addons.mozilla.org/en-US/firefox/addon/jmp-webext/">Firefox addon!</Link>
+				</Typography>
+				<br/>
 				Add a new bookmark with the following values<br/>
 				&emsp;Name = <kbd>{APP_NAME}</kbd><br/>
 				&emsp;Keyword = <kbd>{APP_KEY}</kbd><br/>
 				&emsp;Location = <kbd>{BASE_URL}/jmp?query=%s</kbd>
-			</span>,
+			</div>,
 			supported: 2
 		},
 		{
@@ -101,7 +108,14 @@ export default () => {
 	const browsers = [];
 	browserData.forEach((i, index) => {
 		browsers.push(
-			<IconButton centerRipple={false} style={{color: i.colour}} key={index} onClick={() => setSelected(selected === index ? -1 : index)}>
+			<IconButton centerRipple={false} style={{color: i.colour}} key={index} onClick={() => {
+				if (selected === index && open === true) {
+					setOpen(false);
+					return;
+				}
+				setSelected(index);
+				setOpen(true);
+			}}>
 				<Icon path={i.icon} size={1} color={i.colour}/>
 			</IconButton>
 		)
@@ -111,14 +125,14 @@ export default () => {
 			<div>
 				{browsers}
 			</div>
-			{selected >= 0 &&
-				<div className={classes.content}>
-					<Typography variant={"h6"} className={classes.name} style={{color: browserData[selected].colour}}>
+			<Collapse in={open === true}>
+				{selected >= 0 && <div className={classes.content}>
+					<Typography variant="h6" className={classes.name} style={{color: browserData[selected].colour}}>
 						{browserData[selected].name}
 					</Typography>
-					<Typography variant={"body1"}>{browserData[selected].content}</Typography>
-				</div>
-			}
+					{browserData[selected].content}
+				</div>}
+			</Collapse>
 		</div>
 	);
 };
