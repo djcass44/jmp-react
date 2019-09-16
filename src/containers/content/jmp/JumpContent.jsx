@@ -27,6 +27,7 @@ import {CardActions, Table, TableBody, TableCell, TableRow, Typography} from "@m
 import Moment from "react-moment";
 import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import getColourFromHex from "../../../style/getColourFromHex";
+import getSafeTextColour from "../../../selectors/getSafeTextColour";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -60,7 +61,7 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 		backgroundColor: bg
 	};
 	const textStyle = {
-		color: theme.palette.getContrastText(bg)
+		color: getSafeTextColour(theme, bg)
 	};
 
 	const data = [

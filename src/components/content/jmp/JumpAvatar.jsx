@@ -41,7 +41,7 @@ const JumpAvatar = ({jump, background, palette, loading, error}) => {
 			icon = mdiAccountGroupOutline;
 			break;
 	}
-	const avatarPalette = getAvatarFromPalette(theme, icon, palette);
+	const avatarPalette = error == null && getAvatarFromPalette(theme, icon, palette);
 	const avatar = loading === false && error == null ? {
 		icon: icon,
 		bg: background ? avatarPalette.bg : "transparent",
