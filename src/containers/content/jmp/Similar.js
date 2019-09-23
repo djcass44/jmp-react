@@ -112,7 +112,7 @@ export default () => {
 					label={<span style={{color: textColour}}>{i.name}</span>}
 					clickable
 					component={Link}
-					to={`/jmp?query=${i.name}?id=${i.id}`}
+					to={`/jmp?query=${i.name}&id=${i.id}`}
 					style={{backgroundColor: avatar.bg, color: avatar.fg}}
 					className={classes.chip}/>
 			</Tooltip>

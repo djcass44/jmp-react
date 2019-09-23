@@ -15,7 +15,7 @@
  *
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect} from "react";
 import {MuiThemeProvider} from "@material-ui/core/styles";
 import Theme from "./style/theme";
 import {useDispatch, useSelector} from "react-redux";
@@ -33,8 +33,8 @@ export default () => {
 		connectWebSocket(dispatch, headers);
 		return () => {
 			closeWebSocket(dispatch);
-		}
-	});
+		};
+	}, []);
 
 	const theme = useTheme();
 	return (

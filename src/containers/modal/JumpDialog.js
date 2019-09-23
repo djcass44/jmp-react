@@ -128,21 +128,23 @@ const JumpDialog = () => {
 				{type === 2 && userGroups.length > 0 ?
 					<FormControl fullWidth>
 						<InputLabel htmlFor={"group"}>Group</InputLabel>
-						<Select value={groupId} inputProps={{name: 'group', id: 'group'}} onChange={(e) => setGroupId(e.target.value)}>
+						<Select value={groupId} inputProps={{name: "group", id: "group"}}
+						        onChange={(e) => setGroupId(e.target.value)}>
 							{groups}
 						</Select>
 					</FormControl>
 					:
 					""
 				}
-				<Typography style={{fontWeight: "bold"}} variant={"caption"} color={"error"}>{error}</Typography>
+				<Typography style={{fontWeight: "bold"}} variant={"caption"}
+				            color={"error"}>{error && error.toString()}</Typography>
 			</DialogContent>
 			<DialogActions>
 				{loading === true && <CircularProgress className={classes.progress} size={15} thickness={8}/>}
 				<Button className={classes.button} color={"secondary"} disabled={submit === true}
 				        onClick={() => close()}>Cancel</Button>
 				<Button className={classes.button} color={"primary"} onClick={() => onSubmit()}
-				        disabled={(type === 2 && groupId === '') || name.error !== '' ||
+				        disabled={(type === 2 && groupId === "") || name.error !== "" ||
 				        url.error !== "" || loadingGroups === true || loading === true || submit === true ||
 				        name.value.length === 0 || url.value.length === 0}>
 					Create
