@@ -16,17 +16,12 @@
  */
 
 import {useDispatch, useSelector} from "react-redux";
-import {Grid, makeStyles} from "@material-ui/core";
+import {Avatar, Chip, CircularProgress, Grid, makeStyles, Tooltip, Typography} from "@material-ui/core";
 import React, {useEffect} from "react";
 import {GET_SIMILAR, getSimilar, getSimilarFail} from "../../../actions/Jumps";
-import Typography from "@material-ui/core/es/Typography/Typography";
 import Center from "react-center";
-import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
-import Chip from "@material-ui/core/Chip";
 import Icon from "@mdi/react";
 import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
-import Avatar from "@material-ui/core/Avatar";
-import Tooltip from "@material-ui/core/Tooltip";
 import {Link} from "react-router-dom";
 import ReactImageFallback from "react-image-fallback";
 import getAvatarScheme from "../../../style/getAvatarScheme";

@@ -16,12 +16,12 @@
  */
 
 import React, {useEffect, useState} from "react";
-import {APP_NAME} from "../../../constants";
+import {APP_NAME, client} from "../../../constants";
 import {useDispatch, useSelector} from "react-redux";
 import {CircularProgress, makeStyles} from "@material-ui/core";
 import Center from "react-center";
 import {withRouter} from "react-router-dom";
-import {GET_TARGET, getTargetJump} from "../../../actions/Jumps";
+import {GET_TARGET} from "../../../actions/Jumps";
 
 const useStyles = makeStyles(theme => ({
 	text: {
@@ -46,37 +46,58 @@ export const Token = ({history}) => {
 	const loading = useSelector(state => state.loading[GET_TARGET]);
 	const error = useSelector(state => state.errors[GET_TARGET]);
 	const {headers} = useSelector(state => state.auth);
-	const {target} = useSelector(state => state.jumps);
 
 	const [failure, setFailure] = useState(error);
+
+	/**
+	 * Handle the api response and move us to where we need to go
+	 * @param target
+	 */
+	const handleTargetResponse = target => {
+		if (target.found === true) {
+			// we're leaving jmp, so use the window api call
+			window.location.replace(target.location);
+		} else {
+			// use the router push for performance
+			history.push(target.location);
+		}
+	};
+
+	/**
+	 * Make the api call to get our target.
+	 * This isn't using redux because of a "race-condition" where target isn't the expected value until too late
+	 * @param d: dispatch
+	 * @param query: the path/query parameters to tack onto the end of the get request
+	 */
+	const getTarget = (d, query) => {
+		d({type: `${GET_TARGET}_REQUEST`});
+		client.get(`/api/v2/jump/${query}`, {headers}).then(r => {
+			d({type: `${GET_TARGET}_SUCCESS`, payload: r.data});
+			handleTargetResponse(r.data);
+		}).catch(err => {
+			d({type: `${GET_TARGET}_FAILURE`, payload: err, error: true});
+		});
+	};
 
 	const jumpUser = () => {
 		let url = new URL(window.location.href);
 		let query = url.searchParams.get("query");
 		const id = url.searchParams.get("id");
+		console.dir(query, id);
 		if(query != null && query !== '') {
 			if (id != null && id !== "")
 				query += `?id=${id}`;
 			// find out were we are going
-			getTargetJump(dispatch, headers, query);
-		} else
+			getTarget(dispatch, query);
+		} else {
 			setFailure("You must specify a query!");
+		}
 	};
 	// initial hook run on start (componentdidmount)
 	useEffect(() => {
 		window.document.title = `${APP_NAME}`;
 		jumpUser();
 	}, []);
-
-	// hook which checks for a result from getTargetJump
-	useEffect(() => {
-		if (loading === false && error == null && target != null) {
-			if (target.found === true)
-				window.location.replace(target.location);
-			else
-				history.push(target.location);
-		}
-	}, [loading, error, target]);
 
 	const message = (error != null || failure != null) ? (error || failure) : "Jumping... You can close this window if it stays open";
 	return (

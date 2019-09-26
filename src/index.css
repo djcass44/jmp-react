@@ -15,7 +15,7 @@ body {
 html[data-theme='dark'],
 body[data-theme='dark'] {
 	height: 100%;
-	background-color: #121212;
+	background-color: #1a1b1c;
 }
 
 code {
