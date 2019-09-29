@@ -31,6 +31,7 @@ import SortButton from "../../components/widget/SortButton";
 import {dispatchSort} from "../../actions/Generic";
 import AddIcon from "@material-ui/icons/Add";
 import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
+import {createIndex} from "../../misc/Search";
 
 const bgTransition = time => `background-color ${time}ms linear`;
 const useStyles = makeStyles(theme => ({
@@ -106,6 +107,21 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
+const searchFields = [
+	{
+		name: "name",
+		weight: 0.5
+	},
+	{
+		name: "location",
+		weight: 0.3
+	},
+	{
+		name: "title",
+		weight: 0.2
+	}
+];
+
 export default () => {
 	// hooks
 	const classes = useStyles();
@@ -119,13 +135,23 @@ export default () => {
 	const sorts = [...defaultSorts, {id: "usage", value: "Usage"}];
 	const [offset, setOffset] = useState(0);
 	const [search, setSearch] = useState("");
+	const [idx, setIdx] = useState(null);
+
 	useEffect(() => {
 		window.document.title = `${APP_NAME}`;
 		listJumpsDispatch(dispatch, headers);
 	}, [headers]);
 
-	const filterJump = jump => {
-		return jump.name.includes(search) || jump.location.includes(search);
+	// hook to rebuild the index when jumps change
+	useEffect(() => {
+		setIdx(createIndex(searchFields, jumps));
+	}, [jumps]);
+
+	const filterJump = items => {
+		if (search == null || search === "")
+			return items;
+		console.dir(idx.search(search));
+		return idx.search(search);
 	};
 
 	let listItems = [];
@@ -134,7 +160,7 @@ export default () => {
 	if (max > jumps.length) max = jumps.length;
 	// Loop-d-loop
 	let sortedJumps = sortItems(jumps, sort);
-	sortedJumps.filter(filterJump).forEach((i, index) => {
+	filterJump(sortedJumps).forEach((i, index) => {
 		if (index < offset || index > max) return;
 		listItems.push(<JumpItem jump={i} key={i.id} id={i.id}/>);
 	});

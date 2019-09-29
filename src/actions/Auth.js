@@ -1,5 +1,6 @@
 import {client} from "../constants";
 import {addSnackbar} from "./Snackbar";
+import {get} from "./index";
 
 export const OAUTH_VERIFY = "OAUTH_VERIFY";
 export const OAUTH_REQUEST = "OAUTH_REQUEST";
@@ -7,10 +8,14 @@ export const OAUTH_REFRESH = "OAUTH_REFRESH";
 export const OAUTH_LOGOUT = "OAUTH_LOGOUT";
 export const OAUTH_UNREADY = "OAUTH_UNREADY";
 
+export const GET_PROVIDERS = "GET_PROVIDERS";
+
+export const getProviders = (dispatch, headers) => get(dispatch, GET_PROVIDERS, "/api/v2_1/statistics/providers", {headers});
+
 export const oauthPreverifyDispatch = (dispatch, refresh, headers) => {
 	dispatch({type: `${OAUTH_VERIFY}_REQUEST`});
 	let hasCookie = false;
-	client.get("/api/v2/oauth/cookie", {headers: headers}).then(r => {
+	client.get("/api/v2/oauth/cookie", {headers}).then(r => {
 		hasCookie = r.data;
 		if(shouldVerify(refresh, headers) || hasCookie) {
 			oauthVerifyDispatch(dispatch, refresh, headers, hasCookie);

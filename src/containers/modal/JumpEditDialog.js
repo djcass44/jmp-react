@@ -25,6 +25,9 @@ const useStyles = makeStyles(() => ({
 		fontFamily: "Manrope",
 		fontWeight: 'bold'
 	},
+	field: {
+		color: "red"
+	}
 }));
 
 const initialName = {
@@ -133,11 +136,14 @@ export default () => {
 				<Typography className={classes.title}>Edit {APP_NOUN}</Typography>
 			</DialogTitle>
 			<DialogContent>
-				<TextField required autoFocus margin={"dense"} id={"name"} label={"Name"} value={name.value} fullWidth
+				<TextField className={classes.field} required autoFocus margin={"dense"} id={"name"} label={"Name"}
+				           value={name.value} fullWidth
 				           error={name.error.length !== 0} helperText={name.error} onChange={(e) => onNameChange(e)}/>
-				<TextField required margin={"dense"} id={"location"} label={"Location"} value={url.value} autoComplete={"url"} fullWidth
+				<TextField className={classes.field} required margin={"dense"} id={"location"} label={"Location"}
+				           value={url.value} autoComplete={"url"} fullWidth
 				           error={url.error.length !== 0} helperText={url.error} onChange={(e) => onUrlChange(e)}/>
-				<TextField margin={"dense"} id={"alias"} label={"Aliases (comma separated)"} value={alias.value} fullWidth
+				<TextField className={classes.field} margin={"dense"} id={"alias"} label={"Aliases (comma separated)"}
+				           value={alias.value} fullWidth
 				           error={alias.error.length !== 0} helperText={alias.error} onChange={(e) => onAliasChange(e)}/>
 				<Typography variant={"caption"} color={"error"}>{error}</Typography>
 			</DialogContent>

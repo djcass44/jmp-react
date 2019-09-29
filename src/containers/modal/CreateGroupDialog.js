@@ -1,9 +1,18 @@
-import React, {useState} from 'react';
-import {DialogContentText, makeStyles, TextField, Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
-import PropTypes from "prop-types";
+import React, {useEffect, useState} from 'react';
+import {
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
+	makeStyles,
+	TextField,
+	Typography
+} from "@material-ui/core";
 import {setGroupNew} from "../../actions/Modal";
-import {connect} from "react-redux";
-import {putGroup} from "../../actions/Groups";
+import {useDispatch, useSelector} from "react-redux";
+import {PUT_GROUP, putGroup} from "../../actions/Groups";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -17,12 +26,25 @@ const useStyles = makeStyles(() => ({
 	}
 }));
 
-const CreateGroupDialog = ({open, headers, putGroup, setGroupNew}) => {
+export default () => {
+	const dispatch = useDispatch();
+
+	const {open} = useSelector(state => state.modal.group.new);
+	const {headers} = useSelector(state => state.auth);
+	const loading = useSelector(state => state.loading[PUT_GROUP]);
+	const error = useSelector(state => state.errors[PUT_GROUP]);
+
 	const [name, setName] = useState("");
+	const [submit, setSubmit] = useState(false);
+
+	useEffect(() => {
+		if (loading === false && error == null && submit === true)
+			setGroupNew(dispatch, false);
+	}, [loading, error]);
 
 	const handleSubmit = () => {
-		putGroup(headers, name);
-		setGroupNew(false);
+		putGroup(dispatch, headers, name);
+		setSubmit(true);
 	};
 
 	const classes = useStyles();
@@ -32,31 +54,17 @@ const CreateGroupDialog = ({open, headers, putGroup, setGroupNew}) => {
 				<Typography className={classes.title}>Add group</Typography>
 			</DialogTitle>
 			<DialogContent>
-				<DialogContentText>Please enter the name of the group you wish to create. This name must be unique and can be changed later.</DialogContentText>
+				<DialogContentText>Please enter the name of the group you wish to create. This name must be unique and
+					can only be changed by an admin.</DialogContentText>
 				<TextField required autoFocus margin={"dense"} id={"name"} label={"Group name"} fullWidth onChange={(e) => setName(e.target.value)}/>
+				{error && <Typography variant="caption" color="error">{error.toString()}</Typography>}
 			</DialogContent>
 			<DialogActions>
-				<Button className={classes.button} color={"secondary"} onClick={() => setGroupNew(false)}>Cancel</Button>
-				<Button className={classes.button} color={"primary"} onClick={() => handleSubmit()} disabled={!name.length}>Create</Button>
+				<Button className={classes.button} color={"secondary"} onClick={() => setGroupNew(dispatch, false)}
+				        disabled={loading === true}>Cancel</Button>
+				<Button className={classes.button} color={"primary"} onClick={() => handleSubmit()}
+				        disabled={!name.length || loading === true}>Create</Button>
 			</DialogActions>
 		</Dialog>
 	);
 };
-CreateGroupDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
-	headers: PropTypes.object.isRequired,
-	putGroup: PropTypes.func.isRequired,
-	setGroupNew: PropTypes.func.isRequired
-};
-const mapStateToProps = state => ({
-	open: state.modal.group.new.open,
-	headers: state.auth.headers
-});
-const mapDispatchToProps = ({
-	setGroupNew,
-	putGroup
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(CreateGroupDialog);

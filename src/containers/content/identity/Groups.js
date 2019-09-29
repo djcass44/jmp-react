@@ -15,31 +15,44 @@
  *
  */
 
-import {connect} from "react-redux";
-import {LinearProgress, makeStyles, Avatar, ListItemText, ListItem, Paper, List} from "@material-ui/core";
+import {useDispatch, useSelector} from "react-redux";
+import {
+	Avatar,
+	IconButton,
+	LinearProgress,
+	List,
+	ListItem,
+	ListItemSecondaryAction,
+	ListItemText,
+	makeStyles,
+	Paper,
+	Tooltip
+} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
 import EmptyCard from "../../../components/widget/EmptyCard";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import {pageSize} from "../../../constants";
-import {getGroups, GROUP_LOAD} from "../../../actions/Groups";
+import {getGroupsDispatch, GROUP_LOAD} from "../../../actions/Groups";
 import Icon from "@mdi/react";
-import {mdiAccountGroupOutline} from "@mdi/js";
+import {mdiAccountGroupOutline, mdiPencilOutline} from "@mdi/js";
 import posed, {PoseGroup} from "react-pose";
 import {defaultSorts, sortItems} from "../../../misc/Sort";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
-import {setGroupNew} from "../../../actions/Modal";
-import {setSort} from "../../../actions/Generic";
+import {MODAL_GROUP_EDIT, setDialog, setGroupNew} from "../../../actions/Modal";
 import getAvatarScheme from "../../../style/getAvatarScheme";
 import {useTheme} from "@material-ui/core/styles";
 import SortedSubheader from "../../../components/content/SortedSubheader";
+import GroupEditDialog from "../../modal/GroupEditDialog";
+import getIconColour from "../../../style/getIconColour";
+import {createIndex} from "../../../misc/Search";
 
 const Item = posed.div({
 	enter: {opacity: 1},
 	exit: {opacity: 0}
 });
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
@@ -50,48 +63,91 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Groups = props => {
+const searchFields = [
+	{
+		name: "name",
+		weight: 0.7
+	},
+	{
+		name: "from",
+		weight: 0.3
+	},
+];
+
+export default () => {
+	// hooks
+	const dispatch = useDispatch();
+	const theme = useTheme();
+	const classes = useStyles();
+
+
+	const {groups} = useSelector(state => state.groups);
+	const loading = useSelector(state => state.loading[GROUP_LOAD]);
+	const {headers, isAdmin} = useSelector(state => state.auth);
+	const {sort, searchFilter} = useSelector(state => state.generic);
+
 	const sorts = defaultSorts;
 	const [offset, setOffset] = useState(0);
+	const [idx, setIdx] = useState(null);
 
 	useEffect(() => {
-		props.getGroups(props.headers);
-	}, [props.headers]);
-	const filterGroup = group => {
-		return group.name.toLowerCase().includes(props.searchFilter) ||
-			group.from.toLowerCase() === props.searchFilter.toLowerCase();
+		getGroupsDispatch(dispatch, headers);
+	}, [headers]);
+
+	// hook to rebuild the index when jumps change
+	useEffect(() => {
+		setIdx(createIndex(searchFields, groups));
+	}, [groups]);
+
+	const filterGroup = items => {
+		if (searchFilter == null || searchFilter === "")
+			return items;
+		console.dir(idx.search(searchFilter));
+		return idx.search(searchFilter);
 	};
+
 	const capitalise = text => {
 		if(text == null || text.length === 0) return text;
 		if(text.toLowerCase() === "ldap") return "LDAP";
 		return text.substring(0, 1).toUpperCase() + text.substring(1, text.length).toLowerCase();
 	};
-	const theme = useTheme();
-	const classes = useStyles();
 	// get the colour scheme
 	const scheme = getAvatarScheme(theme, 2);
 
 	let listItems = [];
 	// Tell the loop what our pagination limits are
 	let max = (offset + pageSize);
-	if(max > props.groups.length) max = props.groups.length;
-	let sortedGroups = sortItems(props.groups, props.sort);
-	sortedGroups.filter(filterGroup).forEach((i, index) => {
+	if (max > groups.length) max = groups.length;
+	let sortedGroups = sortItems(groups, sort);
+	filterGroup(sortedGroups).forEach((i, index) => {
 		if(index < offset || index > max) return;
-		let secondary = <span>{capitalise(i.from)}</span>;
+		const secondary = (<span>
+			{capitalise(i.from)}
+			{(i.public === true || i.defaultFor != null) &&
+			<span>&nbsp;&bull;&nbsp;{i.public === true ? "Public" : `Default for ${i.defaultFor} users`}</span>}
+		</span>);
 		listItems.push((
 			<ListItem button disableRipple key={index} component={'li'}>
 				<Avatar component={'div'} style={{backgroundColor: scheme[0], color: scheme[1], marginRight: 12}}>
 					<Icon path={mdiAccountGroupOutline} size={1} color={scheme[1]}/>
 				</Avatar>
 				<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={secondary}/>
+				{isAdmin && <ListItemSecondaryAction>
+					<Tooltip title="Edit group">
+						<IconButton centerRipple={false}
+						            onClick={() => setDialog(dispatch, MODAL_GROUP_EDIT, true, {group: i})}>
+							<Icon path={mdiPencilOutline} size={0.85} color={getIconColour(theme)}/>
+						</IconButton>
+					</Tooltip>
+				</ListItemSecondaryAction>}
 			</ListItem>
 		));
 	});
 	return (
 		<div>
-			<SortedSubheader title="Groups" size={listItems.length} sorts={sorts} onAdd={() => props.setGroupNew(true)}/>
-			{props.loading === true ? <LinearProgress className={classes.progress} color="primary"/> : "" }
+			<SortedSubheader title="Groups" size={listItems.length} sorts={sorts}
+			                 onAdd={() => setGroupNew(dispatch, true)}/>
+			{loading === true ? <LinearProgress className={classes.progress} color="primary"/> : ""}
 			<PoseGroup animateOnMount={true}>
 				<Paper key="root" component={Item} style={{borderRadius: 12, marginBottom: 8}}>
 					<List component='ul'>
@@ -108,23 +164,7 @@ const Groups = props => {
 				<div/>
 			}
 			<CreateGroupDialog/>
+			<GroupEditDialog/>
 		</div>
 	)
 };
-
-const mapStateToProps = state => ({
-	groups: state.groups.groups,
-	loading: state.loading[GROUP_LOAD],
-	headers: state.auth.headers,
-	sort: state.generic.sort,
-	searchFilter: state.generic.searchFilter,
-});
-const mapDispatchToProps = ({
-	getGroups,
-	setGroupNew,
-	setSort
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Groups);

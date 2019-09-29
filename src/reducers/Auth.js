@@ -16,7 +16,7 @@
  */
 
 import {LS_ADM, LS_HEADERS, LS_LOGIN, LS_NAME, LS_REFRESH, LS_REQUEST, LS_SOURCE, LS_USER} from "../constants";
-import {OAUTH_LOGOUT, OAUTH_REFRESH, OAUTH_REQUEST, OAUTH_UNREADY, OAUTH_VERIFY} from "../actions/Auth";
+import {GET_PROVIDERS, OAUTH_LOGOUT, OAUTH_REFRESH, OAUTH_REQUEST, OAUTH_UNREADY, OAUTH_VERIFY} from "../actions/Auth";
 import {OAUTH2_CALLBACK, OAUTH2_DISCOVER, OAUTH2_LOGOUT, OAUTH2_REFRESH} from "../actions/Oauth";
 
 const initialState = {
@@ -29,11 +29,14 @@ const initialState = {
 	isAdmin: localStorage.getItem(LS_ADM) === 'true' || false, // This is just an assumption, the API dictates whether you're an admin or not
 	username: localStorage.getItem(LS_NAME) || '',
 	ready: false,
-	providers: {}
+	providers: {},
+	allProviders: []
 };
 
 const auth = (state = initialState, action) => {
 	switch(action.type) {
+		case `${GET_PROVIDERS}_SUCCESS`:
+			return {...state, allProviders: action.payload};
 		case `${OAUTH_VERIFY}_SUCCESS`: {
 			localStorage.setItem(LS_USER, JSON.stringify(action.payload));
 			localStorage.setItem(LS_LOGIN, "true");

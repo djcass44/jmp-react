@@ -19,14 +19,32 @@ import {addSnackbar} from "./Snackbar";
 
 export const GROUP_LOAD = "GROUP_LOAD";
 export const PUT_GROUP = "PUT_GROUP";
+export const PATCH_GROUP = "PATCH_GROUP";
 export const GET_USER_GROUPS = "GET_USER_GROUPS";
 export const SET_USER_GROUPS = "SET_USER_GROUPS";
 
 export const SOCKET_UPDATE_GROUPS = "EVENT_UPDATE_GROUP";
 
-const getGroupsDispatch = (dispatch, headers) => {
+
+export const patchGroup = (dispatch, headers, group) => {
+	dispatch({type: `${PATCH_GROUP}_REQUEST`, payload: group});
+	client.patch(`/api/v2_1/group`, JSON.stringify(group), {headers}).then(r => {
+		dispatch({
+			type: `${PATCH_GROUP}_SUCCESS`,
+			payload: r.data
+		});
+	}).catch(err => {
+		dispatch(addSnackbar({
+			message: "Failed to update group",
+			options: {key: `${PATCH_GROUP}_FAILURE`, variant: "error"}
+		}));
+		dispatch({type: `${PATCH_GROUP}_FAILURE`, payload: err, error: true});
+	});
+};
+
+export const getGroupsDispatch = (dispatch, headers) => {
 	dispatch({type: `${GROUP_LOAD}_REQUEST`});
-	client.get("/api/v2_1/groups", {headers: headers}).then(r => {
+	client.get("/api/v2_1/groups", {headers}).then(r => {
 		dispatch({
 			type: `${GROUP_LOAD}_SUCCESS`,
 			payload: r.data
@@ -36,9 +54,9 @@ const getGroupsDispatch = (dispatch, headers) => {
 		dispatch({type: `${GROUP_LOAD}_FAILURE`, payload: err, error: true});
 	});
 };
-const putGroupDispatch = (dispatch, headers, name) => {
+export const putGroup = (dispatch, headers, name) => {
 	dispatch({type: `${PUT_GROUP}_REQUEST`});
-	client.put("/api/v2_1/group", {name}, {headers: headers}).then(r => {
+	client.put("/api/v2_1/group", {name}, {headers}).then(r => {
 		dispatch({
 			type: `${PUT_GROUP}_SUCCESS`,
 			payload: r.data
@@ -51,7 +69,7 @@ const putGroupDispatch = (dispatch, headers, name) => {
 };
 export const getUserGroupsDispatch = (dispatch, headers, uid) => {
 	dispatch({type: `${GET_USER_GROUPS}_REQUEST`});
-	client.get(`/api/v2_1/user/groups?uid=${uid}`, {headers: headers}).then(r => {
+	client.get(`/api/v2_1/user/groups?uid=${uid}`, {headers}).then(r => {
 		dispatch({
 			type: `${GET_USER_GROUPS}_SUCCESS`,
 			payload: r.data
@@ -63,7 +81,7 @@ export const getUserGroupsDispatch = (dispatch, headers, uid) => {
 };
 const setUserGroupsDispatch = (dispatch, headers, uid, payload) => {
 	dispatch({type: `${SET_USER_GROUPS}_REQUEST`});
-	client.patch('/api/v2_1/groupmod', payload, {headers: headers, params: {uid: uid}}).then(r => {
+	client.patch('/api/v2_1/groupmod', payload, {headers, params: {uid: uid}}).then(r => {
 		dispatch({
 			type: `${SET_USER_GROUPS}_SUCCESS`,
 			payload: r.data
@@ -78,6 +96,5 @@ const setUserGroupsDispatch = (dispatch, headers, uid, payload) => {
 };
 
 export const getGroups = (headers) => dispatch => getGroupsDispatch(dispatch, headers);
-export const putGroup = (headers, name) => dispatch => putGroupDispatch(dispatch, headers, name);
 export const getUserGroups = (headers, uid) => dispatch => getUserGroupsDispatch(dispatch, headers, uid);
 export const setUserGroups = (headers, uid, payload) => dispatch => setUserGroupsDispatch(dispatch, headers, uid, payload);

@@ -1,19 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {
-	CircularProgress,
-	Typography,
 	Button,
-	DialogTitle,
-	DialogContent,
-	DialogActions,
+	Checkbox,
+	CircularProgress,
 	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogTitle,
 	List,
 	ListItem,
 	ListItemIcon,
-	Checkbox,
-	ListItemText,
 	ListItemSecondaryAction,
-	makeStyles
+	ListItemText,
+	makeStyles,
+	Typography
 } from "@material-ui/core";
 import {
 	GET_USER_GROUPS,
@@ -92,7 +92,9 @@ const GroupModDialog = ({open, user, groups, userGroups, loading, headers, ...pr
 		listItems.push(
 			<ListItem key={i.id} component='li' role={undefined} dense>
 				<ListItemIcon>
-					<Checkbox color="primary" edge="start" checked={i.checked === true} disabled={loading === true || i['loading'] === true} tabIndex={-1} onChange={() => onChecked(index)}/>
+					<Checkbox color="primary" edge="start" checked={i.checked === true}
+					          disabled={loading === true || i.loading === true || i.public === true} tabIndex={-1}
+					          onChange={() => onChecked(index)}/>
 				</ListItemIcon>
 				<ListItemText id={i.id} primary={i.name}/>
 				{loading === true || i['loading'] === true ? <ListItemSecondaryAction><CircularProgress size={15}/></ListItemSecondaryAction> : ""}
