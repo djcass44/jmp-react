@@ -22,9 +22,9 @@ export const PATCH_USER_ROLE = "PATCH_USER_ROLE";
 
 export const SOCKET_UPDATE_USERS = "EVENT_UPDATE_USER";
 
-function getUsersDispatch(dispatch, headers) {
+export const getUsersDispatch = (dispatch, headers) => {
 	dispatch({type: `${USER_LOAD}_REQUEST`});
-	client.get("/api/v2/users?count=9999&offset=0", {headers: headers}).then(r => {
+	client.get("/api/v2/users?count=9999&offset=0", {headers}).then(r => {
 		dispatch({
 			type: `${USER_LOAD}_SUCCESS`,
 			payload: r.data
@@ -33,8 +33,8 @@ function getUsersDispatch(dispatch, headers) {
 		dispatch(addSnackbar({message: "Failed to load users", options: {key: `${USER_LOAD}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${USER_LOAD}_FAILURE`, data: err, error: true});
 	});
-}
-function patchUserRoleDispatch(dispatch, headers, user) {
+};
+export const patchUserRole = (dispatch, headers, user) => {
 	dispatch({type: `${PATCH_USER_ROLE}_REQUEST`});
 	client.patch("/api/v2/user", user, {headers: headers}).then(r => {
 		dispatch({
@@ -46,7 +46,6 @@ function patchUserRoleDispatch(dispatch, headers, user) {
 		dispatch(addSnackbar({message: "Failed to update user role", options: {key: `${PATCH_USER_ROLE}_FAILURE`, variant: "error"}}));
 		dispatch({type: `${PATCH_USER_ROLE}_FAILURE`, payload: err, error: true});
 	});
-}
+};
 
 export const getUsers = headers => dispatch => getUsersDispatch(dispatch, headers);
-export const patchUserRole = (headers, user) => dispatch => patchUserRoleDispatch(dispatch, headers, user);

@@ -21,6 +21,7 @@ import ValidatedTextField from "../../components/field/ValidatedTextField";
 import {PATCH_GROUP, patchGroup} from "../../actions/Groups";
 import {GET_PROVIDERS, getProviders} from "../../actions/Auth";
 import FormControl from "@material-ui/core/FormControl";
+import {resetError} from "../../actions/Generic";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -75,6 +76,7 @@ export default () => {
 		setName({...initialName, value: group.name});
 		setIsPublic(group.public || false);
 		setDefaultFor(group.defaultFor || "");
+		resetError(dispatch, PATCH_GROUP);
 		getProviders(dispatch, headers);
 	};
 
@@ -87,7 +89,7 @@ export default () => {
 		<Dialog open={open === true} aria-labelledby="form-dialog-title" onClose={() => close()}
 		        onEnter={() => onOpen()} maxWidth="sm" fullWidth>
 			<DialogTitle id="form-dialog-title">
-				<Typography className={classes.title}>Edit Group</Typography>
+				<Typography className={classes.title}>Edit group</Typography>
 			</DialogTitle>
 			<DialogContent>
 				<ValidatedTextField
@@ -115,7 +117,8 @@ export default () => {
 				/>
 				{loading2 === true && <CircularProgress size={20}/>}
 				{(loading2 === false && allProviders && allProviders.length > 0) &&
-				<FormControl className={classes.formControl} variant={"outlined"} disabled={isPublic === true}>
+				<FormControl className={classes.formControl} fullWidth variant={"outlined"}
+				             disabled={isPublic === true}>
 					<InputLabel htmlFor="defaultFor">Default for</InputLabel>
 					<Select
 						value={defaultFor}

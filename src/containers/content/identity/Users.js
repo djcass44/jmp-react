@@ -15,19 +15,19 @@
  *
  */
 
-import {getUsers, PATCH_USER_ROLE, patchUserRole, USER_LOAD} from "../../../actions/Users";
-import {connect} from "react-redux";
+import {getUsersDispatch, PATCH_USER_ROLE, patchUserRole, USER_LOAD} from "../../../actions/Users";
+import {useDispatch, useSelector} from "react-redux";
 import {
-	LinearProgress,
-	ListItemSecondaryAction,
-	Menu,
 	Avatar,
-	ListItemText,
-	ListItem,
-	Paper,
+	LinearProgress,
 	List,
+	ListItem,
+	ListItemSecondaryAction,
+	ListItemText,
+	makeStyles,
+	Menu,
 	MenuItem,
-	makeStyles
+	Paper
 } from "@material-ui/core";
 import React, {useEffect, useState} from "react";
 import AccountCircleIcon from "@material-ui/icons/AccountCircleOutlined";
@@ -47,8 +47,7 @@ import GroupModDialog from "../../modal/GroupModDialog";
 import getAvatarScheme from "../../../style/getAvatarScheme";
 import getIconColour from "../../../style/getIconColour";
 import useTheme from "@material-ui/core/styles/useTheme";
-import {setUserGroups} from "../../../actions/Modal";
-import {setSort} from "../../../actions/Generic";
+import {MODAL_USER_GROUPS, setDialog} from "../../../actions/Modal";
 import SortedSubheader from "../../../components/content/SortedSubheader";
 
 const Item = posed.div({
@@ -67,14 +66,25 @@ const useStyles = makeStyles(() => ({
 	}
 }));
 
-const Users = ({users, headers, searchFilter, sort, loading, isAdmin, isLoggedIn, ...props}) => {
+export default () => {
+	// hooks
+	const dispatch = useDispatch();
+	const classes = useStyles();
+	const theme = useTheme();
+
+	const {users} = useSelector(state => state.users);
+	const {headers, isAdmin} = useSelector(state => state.auth);
+	const {searchFilter, sort} = useSelector(state => state.generic);
+	const loading = useSelector(state => state.loading[USER_LOAD]);
+	const loadingPatch = useSelector(state => state.loading[PATCH_USER_ROLE]);
+
 	const sorts = defaultSorts;
 	const [expanded, setExpanded] = useState(-1);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [offset, setOffset] = useState(0);
 
 
-	useEffect(() => props.getUsers(headers), [headers]);
+	useEffect(() => getUsersDispatch(dispatch, headers), [headers]);
 
 	const toggleExpansion = (e, id) => {
 		setExpanded(expanded === id ? -1 : id);
@@ -88,7 +98,7 @@ const Users = ({users, headers, searchFilter, sort, loading, isAdmin, isLoggedIn
 	};
 
 	const handlePatchUser = (user, role) => {
-		props.patchUserRole(headers, JSON.stringify({
+		patchUserRole(dispatch, headers, JSON.stringify({
 			id: user.id,
 			role: role
 		}));
@@ -98,8 +108,6 @@ const Users = ({users, headers, searchFilter, sort, loading, isAdmin, isLoggedIn
 		if(text.toLowerCase() === "ldap") return "LDAP"; // hmm
 		return text.substring(0, 1).toUpperCase() + text.substring(1, text.length).toLowerCase();
 	};
-	const classes = useStyles();
-	const theme = useTheme();
 	// get the colour scheme
 	const scheme = getAvatarScheme(theme, 0);
 	const schemeAdmin = getAvatarScheme(theme, 3);
@@ -136,8 +144,10 @@ const Users = ({users, headers, searchFilter, sort, loading, isAdmin, isLoggedIn
 								:
 								""
 							}
-							<MenuItem button component='li' onClick={() => props.setUserGroups(true, i)}>Modify groups</MenuItem>
-							{isAdmin && i.username !== "admin" && i.from.toLowerCase() === 'local' ? <MenuItem button={true} component='li'>Delete</MenuItem> : ""}
+							<MenuItem button component='li'
+							          onClick={() => setDialog(dispatch, MODAL_USER_GROUPS, true, {user: i})}>Modify
+								groups</MenuItem>
+							{/*{isAdmin && i.username !== "admin" && i.from.toLowerCase() === 'local' ? <MenuItem button component='li'>Delete</MenuItem> : ""}*/}
 						</Menu>
 					</IconButton>
 				</ListItemSecondaryAction>
@@ -148,7 +158,8 @@ const Users = ({users, headers, searchFilter, sort, loading, isAdmin, isLoggedIn
 	return (
 		<div>
 			<SortedSubheader title="Users" size={listItems.length} sorts={sorts}/>
-			{loading === true || props.loadingPatch === true ? <LinearProgress className={classes.progress} color="primary"/> : "" }
+			{loading === true || loadingPatch === true ?
+				<LinearProgress className={classes.progress} color="primary"/> : ""}
 			<PoseGroup animateOnMount={true}>
 				<Paper key="root" component={Item} style={{borderRadius: 12, marginBottom: 8}}>
 					<List component='ul'>
@@ -168,25 +179,3 @@ const Users = ({users, headers, searchFilter, sort, loading, isAdmin, isLoggedIn
 		</div>
 	);
 };
-
-const mapStateToProps = state => ({
-	users: state.users.users,
-	loading: state.loading[USER_LOAD],
-	loadingPatch: state.loading[PATCH_USER_ROLE],
-	headers: state.auth.headers,
-	ready: state.auth.ready,
-	searchFilter: state.generic.searchFilter,
-	sort: state.generic.sort,
-	isAdmin: state.auth.isAdmin,
-	isLoggedIn: state.auth.isLoggedIn
-});
-const mapDispatchToProps = ({
-	getUsers,
-	patchUserRole,
-	setUserGroups,
-	setSort
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Users);

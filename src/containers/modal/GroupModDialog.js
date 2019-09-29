@@ -15,18 +15,12 @@ import {
 	makeStyles,
 	Typography
 } from "@material-ui/core";
-import {
-	GET_USER_GROUPS,
-	getGroups,
-	getUserGroups,
-	GROUP_LOAD,
-	SET_USER_GROUPS,
-	setUserGroups
-} from "../../actions/Groups";
-import {connect} from "react-redux";
+import {GET_USER_GROUPS, getUserGroups, GROUP_LOAD, setUserGroups} from "../../actions/Groups";
+import {useDispatch, useSelector} from "react-redux";
 import {sortItems} from "../../misc/Sort";
 import Center from "react-center";
-import {setUserGroups as mSetUserGroups} from "../../actions/Modal";
+import {MODAL_USER_GROUPS, setDialog} from "../../actions/Modal";
+import {defaultState} from "../../reducers/Modal";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -46,7 +40,19 @@ class GroupModPayload {
 		this.rm = rm;
 	}
 }
-const GroupModDialog = ({open, user, groups, userGroups, loading, headers, ...props}) => {
+
+export default () => {
+	// hooks
+	const dispatch = useDispatch();
+
+	const {headers} = useSelector(state => state.auth);
+	const {groups, userGroups} = useSelector(state => state.groups);
+	const loading = useSelector(state => state.loading[GROUP_LOAD] || state.loading[GET_USER_GROUPS]);
+	const {other, open} = useSelector(state => state.modal[MODAL_USER_GROUPS] || defaultState);
+
+	const user = other.user || {};
+
+
 	const [usermap, setUsermap] = useState([]);
 	const updateGroupMappings = () => {
 		let mapping = [];
@@ -62,9 +68,10 @@ const GroupModDialog = ({open, user, groups, userGroups, loading, headers, ...pr
 		if(open === true)
 			updateGroupMappings()
 	}, [groups, userGroups]);
-	const loadData = () => {
+	const onOpen = () => {
 		if(user == null) return;
-		props.getUserGroups(headers, user.id);
+		setUsermap([]);
+		getUserGroups(dispatch, headers, user.id);
 	};
 	/**
 	 * Add or remove the user from a group
@@ -81,7 +88,7 @@ const GroupModDialog = ({open, user, groups, userGroups, loading, headers, ...pr
 			rm.push(item.id);
 		const payload = new GroupModPayload(add, rm);
 		item.loading = true;
-		props.setUserGroups(headers, user.id, JSON.stringify(payload));
+		setUserGroups(dispatch, headers, user.id, JSON.stringify(payload));
 	};
 	const onChecked = index => onChange(index, !usermap[index].checked);
 
@@ -97,12 +104,13 @@ const GroupModDialog = ({open, user, groups, userGroups, loading, headers, ...pr
 					          onChange={() => onChecked(index)}/>
 				</ListItemIcon>
 				<ListItemText id={i.id} primary={i.name}/>
-				{loading === true || i['loading'] === true ? <ListItemSecondaryAction><CircularProgress size={15}/></ListItemSecondaryAction> : ""}
+				{loading === true || i.loading === true ?
+					<ListItemSecondaryAction><CircularProgress size={15}/></ListItemSecondaryAction> : ""}
 			</ListItem>
 		)
 	});
 	return (
-		<Dialog open={open === true} aria-labelledby="form-dialog-title" onEnter={() => loadData()}>
+		<Dialog open={open === true} aria-labelledby="form-dialog-title" onEnter={() => onOpen()}>
 			<DialogTitle id="form-dialog-title">
 				<Typography className={classes.title}>
 					Modify groups
@@ -123,27 +131,10 @@ const GroupModDialog = ({open, user, groups, userGroups, loading, headers, ...pr
 				</div>
 			</DialogContent>
 			<DialogActions>
-				<Button className={classes.button} color="secondary" onClick={() => props.mSetUserGroups(false, null)}>Done</Button>
+				<Button className={classes.button} color="secondary"
+				        onClick={() => setDialog(dispatch, MODAL_USER_GROUPS, false)}
+				        disabled={loading === true}>Done</Button>
 			</DialogActions>
 		</Dialog>
 	);
 };
-const mapStateToProps = state => ({
-	groups: state.groups.groups,
-	userGroups: state.groups.userGroups,
-	loading: state.loading[GROUP_LOAD] || state.loading[GET_USER_GROUPS],
-	loadingMod: state.loading[SET_USER_GROUPS],
-	headers: state.auth.headers,
-	user: state.modal.user.group.item,
-	open: state.modal.user.group.open
-});
-const mapDispatchToProps = ({
-	getGroups,
-	getUserGroups,
-	setUserGroups,
-	mSetUserGroups
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(GroupModDialog);

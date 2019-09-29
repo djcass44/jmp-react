@@ -18,7 +18,3 @@ export const setDialog = (dispatch, name, open, other = {}) => dispatch({
 	type: SET_DIALOG,
 	payload: {name, open, other: JSON.parse(JSON.stringify(other))}
 });
-
-export const setGroupNew = (dispatch, open) => dispatch({type: MODAL_GROUP_NEW, payload: open});
-
-export const setUserGroups = (open, item) => dispatch => dispatch({type: MODAL_USER_GROUPS, payload: {open, item}});

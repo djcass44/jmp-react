@@ -39,7 +39,7 @@ import {mdiAccountGroupOutline, mdiPencilOutline} from "@mdi/js";
 import posed, {PoseGroup} from "react-pose";
 import {defaultSorts, sortItems} from "../../../misc/Sort";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
-import {MODAL_GROUP_EDIT, setDialog, setGroupNew} from "../../../actions/Modal";
+import {MODAL_GROUP_EDIT, MODAL_GROUP_NEW, setDialog} from "../../../actions/Modal";
 import getAvatarScheme from "../../../style/getAvatarScheme";
 import {useTheme} from "@material-ui/core/styles";
 import SortedSubheader from "../../../components/content/SortedSubheader";
@@ -146,7 +146,7 @@ export default () => {
 	return (
 		<div>
 			<SortedSubheader title="Groups" size={listItems.length} sorts={sorts}
-			                 onAdd={() => setGroupNew(dispatch, true)}/>
+			                 onAdd={() => setDialog(dispatch, MODAL_GROUP_NEW, true)}/>
 			{loading === true ? <LinearProgress className={classes.progress} color="primary"/> : ""}
 			<PoseGroup animateOnMount={true}>
 				<Paper key="root" component={Item} style={{borderRadius: 12, marginBottom: 8}}>

@@ -1,19 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {
-	Button,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	makeStyles,
-	TextField,
-	Typography
-} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles, Typography} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {PATCH_JUMP, patchJumpDispatch} from "../../actions/Jumps";
 import {APP_NOUN} from "../../constants";
 import {MODAL_JUMP_EDIT, setDialog} from "../../actions/Modal";
 import {defaultState} from "../../reducers/Modal";
+import {resetError} from "../../actions/Generic";
+import ValidatedTextField from "../../components/field/ValidatedTextField";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -33,7 +26,7 @@ const useStyles = makeStyles(() => ({
 const initialName = {
 	value: '',
 	error: '',
-	regex: new RegExp('^[a-zA-Z0-9_.-]*$')
+	regex: new RegExp('^[a-zA-Z0-9_.-]+$')
 };
 const initialUrl = {
 	value: '',
@@ -72,6 +65,7 @@ export default () => {
 	}, [loading, error]);
 
 	const onOpen = () => {
+		resetError(dispatch, PATCH_JUMP);
 		setName({...initialName, value: jump.name});
 		setUrl({...initialUrl, value: jump.location});
 
@@ -82,16 +76,6 @@ export default () => {
 
 		setAlias({...initialAlias, value: aliases.join(",")});
 	};
-
-	const onChange = (e, get, set, msg = "Invalid") => {
-		const {value} = e.target;
-		const error = get.regex.test(value) === true ? "" : msg;
-		set({...get, value, error});
-	};
-
-	const onNameChange = (e) => onChange(e, name, setName);
-	const onUrlChange = (e) => onChange(e, url, setUrl);
-	const onAliasChange = (e) => onChange(e, alias, setAlias, "Aliases must be letters or digits separated by commas.");
 
 	const onSubmit = () => {
 		const aliases = [];
@@ -136,19 +120,49 @@ export default () => {
 				<Typography className={classes.title}>Edit {APP_NOUN}</Typography>
 			</DialogTitle>
 			<DialogContent>
-				<TextField className={classes.field} required autoFocus margin={"dense"} id={"name"} label={"Name"}
-				           value={name.value} fullWidth
-				           error={name.error.length !== 0} helperText={name.error} onChange={(e) => onNameChange(e)}/>
-				<TextField className={classes.field} required margin={"dense"} id={"location"} label={"Location"}
-				           value={url.value} autoComplete={"url"} fullWidth
-				           error={url.error.length !== 0} helperText={url.error} onChange={(e) => onUrlChange(e)}/>
-				<TextField className={classes.field} margin={"dense"} id={"alias"} label={"Aliases (comma separated)"}
-				           value={alias.value} fullWidth
-				           error={alias.error.length !== 0} helperText={alias.error} onChange={(e) => onAliasChange(e)}/>
-				<Typography variant={"caption"} color={"error"}>{error}</Typography>
+				<ValidatedTextField
+					data={name}
+					setData={setName}
+					invalidLabel="Name must be at least 1 character or _.-"
+					fieldProps={{
+						required: true,
+						autoFocus: true,
+						margin: "dense",
+						id: "name",
+						label: "Name",
+						fullWidth: true
+					}}
+				/>
+				<ValidatedTextField
+					data={url}
+					setData={setUrl}
+					invalidLabel="Must be a valid URL"
+					fieldProps={{
+						required: true,
+						margin: "dense",
+						id: "url",
+						label: "URL",
+						fullWidth: true,
+						autoComplete: "url"
+					}}
+				/>
+				<ValidatedTextField
+					data={alias}
+					setData={setAlias}
+					invalidLabel="Aliases must be letters or digits separated by commas."
+					fieldProps={{
+						required: true,
+						margin: "dense",
+						id: "alias",
+						label: "Aliases",
+						fullWidth: true
+					}}
+				/>
+				{error && <Typography variant={"caption"} color={"error"}>{error.toString()}</Typography>}
 			</DialogContent>
 			<DialogActions>
-				<Button className={classes.button} color={"secondary"} onClick={() => close()}>Cancel</Button>
+				<Button className={classes.button} color={"secondary"} onClick={() => close()}
+				        disabled={loading === true}>Cancel</Button>
 				<Button className={classes.button} color={"primary"} onClick={() => onSubmit()}
 				        disabled={name.error !== '' || url.error !== '' || alias.error !== '' ||
 				        loading === true || name.value.length === 0 || url.value.length === 0}>
