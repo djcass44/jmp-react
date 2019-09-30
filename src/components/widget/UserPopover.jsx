@@ -41,7 +41,7 @@ const UserPopover = ({user, elevation}) => {
 				<Grid item xs={6}>
 					<Avatar
 						className={classes.avatar}
-						name={user.name || "Anonymous"}
+						name={user.username || "Anonymous"}
 						src={user.avatarUrl}
 						size={64}
 					/>

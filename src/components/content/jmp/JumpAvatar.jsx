@@ -18,11 +18,11 @@ import getAvatarScheme from "../../../style/getAvatarScheme";
 import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
 import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import {useTheme} from "@material-ui/styles";
-import ReactImageFallback from "react-image-fallback";
 import Icon from "@mdi/react";
-import {Avatar} from "@material-ui/core";
+import {Avatar, CircularProgress} from "@material-ui/core";
 import React from "react";
 import PropTypes from "prop-types";
+import Img from "react-image";
 
 const JumpAvatar = ({jump, background, palette, loading, error}) => {
 	// hooks
@@ -53,11 +53,15 @@ const JumpAvatar = ({jump, background, palette, loading, error}) => {
 	};
 	return (
 		<Avatar component={"div"} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
-			<ReactImageFallback style={{borderRadius: 64}} src={jump.image} fallbackImage={
-				<Icon path={avatar.icon} color={avatar.fg} size={1}/>
-			} initialImage={
-				<Icon path={avatar.icon} color={avatar.fg} size={1}/>
-			}/>
+			<Img
+				src={jump.image}
+				loader={
+					<CircularProgress size={20}/>
+				}
+				unloader={
+					<Icon path={avatar.icon} color={avatar.fg} size={1}/>
+				}
+			/>
 		</Avatar>
 	);
 };

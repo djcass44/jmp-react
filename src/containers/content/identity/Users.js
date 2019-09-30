@@ -19,6 +19,7 @@ import {getUsersDispatch, PATCH_USER_ROLE, patchUserRole, USER_LOAD} from "../..
 import {useDispatch, useSelector} from "react-redux";
 import {
 	Avatar,
+	CircularProgress,
 	LinearProgress,
 	List,
 	ListItem,
@@ -32,7 +33,7 @@ import {
 import React, {useEffect, useState} from "react";
 import AccountCircleIcon from "@material-ui/icons/AccountCircleOutlined";
 import AdminCircleIcon from "@material-ui/icons/SupervisedUserCircleOutlined";
-import ReactImageFallback from "react-image-fallback";
+import Img from "react-image";
 import EmptyCard from "../../../components/widget/EmptyCard";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
@@ -129,25 +130,28 @@ export default () => {
 		listItems.push((
 			<ListItem button disableRipple key={index} component='li'>
 				<Avatar component='div' style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
-					<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={avatar.icon}/>
+					<Img
+						src={i.avatarUrl}
+						loader={<CircularProgress size={20}/>}
+						unloader={avatar.icon}
+					/>
 				</Avatar>
 				<ListItemText primary={<span className={classes.title}>{i.username}</span>} secondary={secondary}/>
 				<ListItemSecondaryAction>
 					<IconButton centerRipple={false} onClick={(e) => toggleExpansion(e, i.id)}>
 						<Icon path={mdiDotsVertical} size={1} color={getIconColour(theme)}/>
 						<Menu id={"user-menu"} open={i.id === expanded} anchorEl={anchorEl} anchorOrigin={{horizontal: "left", vertical: "top"}} onExit={() => {i.expanded = false}}>
-							{isAdmin && i.role !== 'ADMIN' ? <MenuItem button component='li' onClick={() => handlePatchUser(i, 'ADMIN')}>Promote to admin</MenuItem> : ""}
-							{isAdmin && i.role === 'ADMIN' && i.username !== "admin" ?
+							{(isAdmin && i.role !== 'ADMIN') &&
+							<MenuItem button component='li' onClick={() => handlePatchUser(i, 'ADMIN')}>Promote to
+								admin</MenuItem>}
+							{(isAdmin && i.role === 'ADMIN' && i.username !== "admin") &&
 								<MenuItem button component='li' onClick={() => handlePatchUser(i, 'USER')}>
 									Demote to user
 								</MenuItem>
-								:
-								""
 							}
 							<MenuItem button component='li'
 							          onClick={() => setDialog(dispatch, MODAL_USER_GROUPS, true, {user: i})}>Modify
 								groups</MenuItem>
-							{/*{isAdmin && i.username !== "admin" && i.from.toLowerCase() === 'local' ? <MenuItem button component='li'>Delete</MenuItem> : ""}*/}
 						</Menu>
 					</IconButton>
 				</ListItemSecondaryAction>
@@ -158,8 +162,8 @@ export default () => {
 	return (
 		<div>
 			<SortedSubheader title="Users" size={listItems.length} sorts={sorts}/>
-			{loading === true || loadingPatch === true ?
-				<LinearProgress className={classes.progress} color="primary"/> : ""}
+			{(loading === true || loadingPatch === true) &&
+			<LinearProgress className={classes.progress} color="primary"/>}
 			<PoseGroup animateOnMount={true}>
 				<Paper key="root" component={Item} style={{borderRadius: 12, marginBottom: 8}}>
 					<List component='ul'>

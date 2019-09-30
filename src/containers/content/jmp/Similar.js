@@ -23,7 +23,7 @@ import Center from "react-center";
 import Icon from "@mdi/react";
 import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
 import {Link} from "react-router-dom";
-import ReactImageFallback from "react-image-fallback";
+import Img from "react-image";
 import getAvatarScheme from "../../../style/getAvatarScheme";
 import useTheme from "@material-ui/core/styles/useTheme";
 import getErrorMessage from "../../../selectors/getErrorMessage";
@@ -100,9 +100,11 @@ export default () => {
 				<Chip
 					avatar={<Avatar style={{backgroundColor: avatar.bg, color: avatar.fg}}>
 						{/* Website icon or MDI icon fallback */}
-						<ReactImageFallback style={{borderRadius: 64}} src={i.image} fallbackImage={
-							<Icon path={avatar.icon} color={avatar.fg} size={1}/>
-						} initialImage={<Icon path={avatar.icon} color={avatar.fg} size={1}/>}/>
+						<Img
+							src={i.image}
+							loader={<CircularProgress size={20}/>}
+							unloader={<Icon path={avatar.icon} color={avatar.fg} size={1}/>}
+						/>
 					</Avatar>}
 					label={<span style={{color: textColour}}>{i.name}</span>}
 					clickable

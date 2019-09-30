@@ -242,14 +242,12 @@ const Nav = ({loading, history}) => {
 					      color={getIconColour(theme)}/>
 					Help
 				</MenuItem>}
-				{isLoggedIn === true ?
+				{isLoggedIn === true &&
 					<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/identity"} button={true}>
 						<Icon className={classes.menuIcon} path={mdiAccountGroupOutline} size={1}
 						      color={getIconColour(theme)}/>
 						Users &amp; Groups
 					</MenuItem>
-					:
-					""
 				}
 				<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/settings"} button={true}>
 					<SettingsIcon className={classes.menuIcon}/>
