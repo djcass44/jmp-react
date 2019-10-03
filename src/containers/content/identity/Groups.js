@@ -118,8 +118,9 @@ export default () => {
 	// Tell the loop what our pagination limits are
 	let max = (offset + pageSize);
 	if (max > groups.length) max = groups.length;
-	let sortedGroups = sortItems(groups, sort);
-	filterGroup(sortedGroups).forEach((i, index) => {
+	sortItems(groups, sort);
+	const sortedGroups = filterGroup(groups);
+	sortedGroups.forEach((i, index) => {
 		if(index < offset || index > max) return;
 		const secondary = (<span>
 			{capitalise(i.from)}

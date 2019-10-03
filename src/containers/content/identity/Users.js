@@ -116,8 +116,9 @@ export default () => {
 	// Tell the loop what our pagination limits are
 	let max = (offset + pageSize);
 	if(max > users.length) max = users.length;
-	let sortedUsers = sortItems(users, sort);
-	sortedUsers.filter(filterUser).forEach((i, index) => {
+	sortItems(users, sort);
+	const sortedUsers = users.filter(filterUser);
+	sortedUsers.forEach((i, index) => {
 		if(index < offset || index > max) return;
 		const userIsAdmin = i.role === 'ADMIN';
 		let avatar = {

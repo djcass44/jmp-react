@@ -159,8 +159,9 @@ export default () => {
 	let max = (offset + pageSize);
 	if (max > jumps.length) max = jumps.length;
 	// Loop-d-loop
-	let sortedJumps = sortItems(jumps, sort);
-	filterJump(sortedJumps).forEach((i, index) => {
+	sortItems(jumps, sort);
+	const sortedJumps = filterJump(jumps);
+	sortedJumps.forEach((i, index) => {
 		if (index < offset || index > max) return;
 		listItems.push(<JumpItem jump={i} key={i.id} id={i.id}/>);
 	});
@@ -207,9 +208,9 @@ export default () => {
 						{listItems.length > 0 ?
 							listItems
 							:
-							<Typography className={`${classes.title} ${classes.nothing}`} color="primary">Nothing could
-								be
-								found</Typography>
+							<Typography className={`${classes.title} ${classes.nothing}`} color="primary">
+								Nothing could be found
+							</Typography>
 						}
 					</List>
 				</div>
