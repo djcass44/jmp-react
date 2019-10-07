@@ -91,8 +91,8 @@ export default ({history}) => {
 		const data = window.btoa(`${username.value}:${password.value}`);
 		oauthRequest(dispatch, data);
 	};
-	let errorMessage = <div/>;
-	if(error != null) {
+	let errorMessage = null;
+	if (error != null) {
 		errorMessage = (
 			<Center>
 				<span style={{color: theme.palette.error.main}}>
@@ -101,7 +101,7 @@ export default ({history}) => {
 			</Center>
 		);
 	}
-	return(
+	return (
 		<>
 			{loading || isLoggedIn === true ?
 				<CircularProgress/>
@@ -142,6 +142,7 @@ export default ({history}) => {
 												invalidLabel="Password must be a minimum of 8 characters"
 												fieldProps={{
 													required: true,
+													type: "password",
 													autoComplete: "password",
 													margin: "dense",
 													id: "password",

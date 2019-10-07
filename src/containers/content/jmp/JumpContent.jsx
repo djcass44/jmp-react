@@ -16,8 +16,7 @@
 
 import {useDispatch, useSelector} from "react-redux";
 import JumpButton from "../../../components/content/jmp/JumpButton";
-import {MODAL_JUMP_EDIT, setDelete2, setDialog} from "../../../actions/Modal";
-import {deleteJumpDispatch} from "../../../actions/Jumps";
+import {DELETABLE_JUMP, MODAL_JUMP_EDIT, setDelete2, setDialog} from "../../../actions/Modal";
 import {mdiContentCopy, mdiDeleteOutline, mdiPencilOutline} from "@mdi/js";
 import React from "react";
 import {makeStyles, useTheme} from "@material-ui/styles";
@@ -144,7 +143,7 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 						buttonProps={{
 							onClick: () => setDelete2(dispatch,
 								true,
-								deleteJumpDispatch,
+								DELETABLE_JUMP,
 								jump.personal === 0,
 								jump
 							),

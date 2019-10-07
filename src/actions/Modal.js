@@ -9,12 +9,14 @@ export const MODAL_USER_GROUPS = "MODAL_USER_GROUPS";
 
 export const SET_DIALOG = "SET_DIALOG";
 
-export const setDelete2 = (dispatch, open, onDelete, requireApproval = false, item = null) => setDialog(dispatch, MODAL_DELETE, open, {
+export const DELETABLE_JUMP = "DELETABLE_JUMP";
+
+export const setDelete2 = (dispatch, open, deletable, requireApproval = false, item = null) => setDialog(dispatch, MODAL_DELETE, open, {
 	requireApproval,
 	item,
-	onSubmit: onDelete
+	deletable
 });
-export const setDialog = (dispatch, name, open, other = {}) => dispatch({
+export const setDialog = (dispatch, name, open, other = {}, ...props) => dispatch({
 	type: SET_DIALOG,
-	payload: {name, open, other: JSON.parse(JSON.stringify(other))}
+	payload: {name, open, other: JSON.parse(JSON.stringify(other)), ...props}
 });

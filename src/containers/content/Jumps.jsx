@@ -150,7 +150,6 @@ export default () => {
 	const filterJump = items => {
 		if (search == null || search === "")
 			return items;
-		console.dir(idx.search(search));
 		return idx.search(search);
 	};
 

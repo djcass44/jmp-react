@@ -12,8 +12,9 @@ import {
 	Typography
 } from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {MODAL_DELETE, setDialog} from "../../actions/Modal";
+import {DELETABLE_JUMP, MODAL_DELETE, setDialog} from "../../actions/Modal";
 import {defaultState} from "../../reducers/Modal";
+import {deleteJumpDispatch} from "../../actions/Jumps";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -41,6 +42,7 @@ export default () => {
 	const [ack, setAck] = useState(false);
 
 	const requireApproval = other.requireApproval || false;
+	const deletable = other.deletable || null;
 
 	const defaultTitle = "Delete";
 	const defaultBody = `Are you sure? This action is immediate and cannot be undone.` +
@@ -56,7 +58,10 @@ export default () => {
 	const close = () => setDialog(dispatch, MODAL_DELETE, false);
 
 	const onSubmit = () => {
-		other.onSubmit(dispatch, headers, other.item);
+		// convert to a switch when there's more cases
+		if (deletable === DELETABLE_JUMP) {
+			deleteJumpDispatch(dispatch, headers, other.item);
+		}
 		close();
 	};
 
