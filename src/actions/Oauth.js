@@ -59,7 +59,12 @@ export const oauth2Discover = (dispatch, provider) => {
 			type: `${OAUTH2_DISCOVER}_SUCCESS`,
 			payload: {provider: provider, active: true}
 		});
-	}).catch(() => {
-		dispatch({type: `${OAUTH2_DISCOVER}_SUCCESS`, payload: {provider: provider, active: false}});
+	}).catch(err => {
+		dispatch({
+			type: `${OAUTH2_DISCOVER}_SUCCESS`,
+			payload: {provider: provider, active: false},
+			meta: err,
+			error: true
+		});
 	});
 };
