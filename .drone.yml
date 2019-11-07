@@ -5,12 +5,10 @@ steps:
   - name: build
     image: plugins/docker
     settings:
-      registry: docker.castive.dev
-      repo: docker.castive.dev/jmp/ui
+      repo: djcass44/jmp-ui
       tags:
         - latest
         - ${DRONE_BRANCH}
-        - ${DRONE_BRANCH}-${DRONE_COMMIT_SHA}
       username:
         from_secret: DOCKER_USERNAME
       password:
@@ -19,6 +17,3 @@ trigger:
   when:
     event:
       - push
-    branch:
-      - master
-      - develop
