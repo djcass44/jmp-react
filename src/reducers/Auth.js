@@ -72,10 +72,6 @@ const auth = (state = initialState, action) => {
 				ready: true
 			}
 		}
-		case `${OAUTH_VERIFY}_FAILURE`:
-			return state;
-		case `${OAUTH_REQUEST}_FAILURE`: // this one shouldn't redirect to /login
-		case `${OAUTH_REFRESH}_FAILURE`:
 		case `${OAUTH2_LOGOUT}_SUCCESS`:
 		case `${OAUTH2_LOGOUT}_REQUEST`:
 		case `${OAUTH_LOGOUT}_SUCCESS`:
