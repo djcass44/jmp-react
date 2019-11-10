@@ -41,17 +41,17 @@ const UserPopover = ({user, elevation}) => {
 				<Grid item xs={6}>
 					<Avatar
 						className={classes.avatar}
-						name={user.username || "Anonymous"}
-						src={user.avatarUrl}
+						name={(user && user.username) || "Anonymous"}
+						src={user && user.avatarUrl}
 						size={64}
 					/>
 				</Grid>
 				<Divider orientation={"horizontal"}/>
 				<Grid item xs={6} style={{float: "left"}}>
 					<Typography variant={"h6"}>
-						{user.displayName || "Anonymous"}
+						{(user && user.displayName) || "Anonymous"}
 					</Typography>
-					{user.username != null && <Typography variant={"subtitle1"}>
+					{(user && user.username) != null && <Typography variant={"subtitle1"}>
 						{user.username}
 					</Typography>}
 				</Grid>
@@ -60,10 +60,11 @@ const UserPopover = ({user, elevation}) => {
 	);
 };
 UserPopover.propTypes = {
-	user: PropTypes.object.isRequired,
+	user: PropTypes.object,
 	elevation: PropTypes.number
 };
 UserPopover.defaultProps = {
+	user: null,
 	elevation: 2
 };
 export default UserPopover;

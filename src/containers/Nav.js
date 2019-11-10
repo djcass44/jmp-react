@@ -226,8 +226,7 @@ const Nav = ({loading, history}) => {
 				open={isMenuOpen}
 				onClose={() => handleMenuClose()}>
 				<MenuItem button={false} component={"div"}>
-					<UserPopover user={userProfile} onClose={() => {
-					}} open={true} anchorEl={null} elevation={0}/>
+					<UserPopover user={userProfile} elevation={0}/>
 				</MenuItem>
 				<Divider/>
 				{location.pathname !== "/" &&

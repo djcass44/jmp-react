@@ -18,15 +18,16 @@ import {useDispatch, useSelector} from "react-redux";
 import JumpButton from "../../../components/content/jmp/JumpButton";
 import {DELETABLE_JUMP, MODAL_JUMP_EDIT, setDelete2, setDialog} from "../../../actions/Modal";
 import {mdiContentCopy, mdiDeleteOutline, mdiPencilOutline} from "@mdi/js";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {makeStyles, useTheme} from "@material-ui/styles";
 import getHelpCardColour from "../../../selectors/getHelpCardColour";
 import PropTypes from "prop-types";
-import {CardActions, Table, TableBody, TableCell, TableRow, Typography} from "@material-ui/core";
+import {CardActions, Link, Popover, Table, TableBody, TableCell, TableRow, Typography} from "@material-ui/core";
 import Moment from "react-moment";
 import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import getColourFromHex from "../../../style/getColourFromHex";
 import getSafeTextColour from "../../../selectors/getSafeTextColour";
+import UserPopover from "../../../components/widget/UserPopover";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -52,6 +53,11 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 
 	const {isLoggedIn, isAdmin} = useSelector(state => state.auth);
 
+	// state
+	const [data, setData] = useState([]);
+	const [anchorEl, setAnchorEl] = useState(null);
+	const [anchorUser, setAnchorUser] = useState(null);
+
 	const hasOwnership = isAdmin || jump.personal > 0;
 	// set the appropriate colours for the card-content
 	const avatarPalette = getAvatarFromPalette(theme, "", palette);
@@ -63,20 +69,46 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 		color: getSafeTextColour(theme, bg)
 	};
 
-	const data = [
-		{
-			key: "Used",
-			value: jump.metaUsage
-		},
-		{
-			key: "Created",
-			value: <Moment fromNow>{jump.metaCreation}</Moment>
-		},
-		{
-			key: "Edited",
-			value: jump.metaUpdate !== jump.metaCreation ? <Moment fromNow>{jump.metaUpdate}</Moment> : "Never"
+	useEffect(() => {
+		const {meta} = jump;
+		const metaData = [
+			{
+				key: "Used",
+				value: jump.metaUsage
+			},
+			{
+				key: "Created",
+				value: <Moment fromNow>{(meta && meta.created) || jump.metaCreation}</Moment>
+			},
+			{
+				key: "Created by",
+				value: <Link onClick={e => {
+					setAnchorEl(e.currentTarget);
+					setAnchorUser(meta.createdBy);
+				}}>
+					{meta && meta.createdBy && meta.createdBy.username}
+				</Link>
+			}
+		];
+		// add edited only if the jump has actually been edited
+		if (meta.created !== meta.edited) {
+			metaData.push({
+					key: "Edited",
+					value: <Moment fromNow>{(meta && meta.edited) || jump.metaUpdate}</Moment>
+				},
+				{
+					key: "Edited by",
+					value: <Link onClick={e => {
+						setAnchorEl(e.currentTarget);
+						setAnchorUser(meta.editedBy);
+					}}>
+						{meta && meta.editedBy && meta.editedBy.username}
+					</Link>
+				}
+			);
 		}
-	];
+		setData(metaData);
+	}, [jump, jump.meta, jump.metaUsage]);
 
 	return (
 		<div className={classes.collapse} style={card}>
@@ -84,14 +116,29 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 				<Typography className={classes.title} noWrap variant="subtitle1" style={textStyle}>
 					{jump.title || jump.name}
 				</Typography>
+				<Popover
+					open={Boolean(anchorEl)}
+					anchorEl={anchorEl}
+					onClose={() => setAnchorEl(null)}
+					onExited={() => setAnchorUser(null)}
+					anchorOrigin={{
+						vertical: "top",
+						horizontal: "center"
+					}}
+					transformOrigin={{
+						vertical: "top",
+						horizontal: "center"
+					}}>
+					<UserPopover user={anchorUser}/>
+				</Popover>
 				<Table>
 					<TableBody>
 						{data.map(row => (
 							<TableRow key={row.key}>
-								<TableCell variant={"head"}>
+								<TableCell variant="head">
 									{row.key}
 								</TableCell>
-								<TableCell variant={"body"}>
+								<TableCell variant="body">
 									{row.value}
 								</TableCell>
 							</TableRow>
@@ -111,8 +158,7 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 						iconProps={{
 							path: mdiContentCopy,
 							color: theme.palette.secondary.main
-						}
-						}
+						}}
 						{...focusProps}
 					/>
 				</div>}
@@ -131,8 +177,7 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 						iconProps={{
 							path: mdiPencilOutline,
 							color: theme.palette.secondary.main
-						}
-						}
+						}}
 						{...focusProps}
 					/>
 				</div>}
@@ -152,8 +197,7 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 						iconProps={{
 							path: mdiDeleteOutline,
 							color: theme.palette.error.main
-						}
-						}
+						}}
 						{...focusProps}
 					/>
 				</div>}
