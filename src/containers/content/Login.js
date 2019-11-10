@@ -41,6 +41,22 @@ const useStyles = makeStyles(theme => ({
 		fontWeight: 500,
 		color: theme.palette.secondary.main
 	},
+	overlay: {
+		position: "fixed",
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		backgroundColor: "transparent",
+		pointerEvents: "none"
+	},
+	resetButton: {
+		fontFamily: "Manrope",
+		fontWeight: "bold",
+		textTransform: "none",
+		marginTop: theme.spacing(1),
+		marginBottom: theme.spacing(1)
+	},
 	oauthMessage: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
@@ -73,6 +89,8 @@ export default ({history}) => {
 	// state hooks
 	const [username, setUsername] = useState(initialUser);
 	const [password, setPassword] = useState(initialPassword);
+	const [page, setPage] = useState(0);
+	const [valid, setValid] = useState(false);
 	// lifecycle hooks
 	useEffect(() => {
 		window.document.title = `Login - ${APP_NAME}`;
@@ -90,10 +108,30 @@ export default ({history}) => {
 		}
 	}, [isLoggedIn]);
 
-	const onSubmit = () => {
-		const data = window.btoa(`${username.value}:${password.value}`);
-		oauthRequest(dispatch, data);
+	useEffect(() => {
+		if (page === 0)
+			setValid(username.error === "" && username.value.length > 0);
+		else if (page === 1)
+			setValid(password.error === "" && password.value.length > 0);
+	}, [username, password, page]);
+
+
+	const onNext = () => {
+		if (page === 1) {
+			const data = window.btoa(`${username.value}:${password.value}`);
+			oauthRequest(dispatch, data);
+		}
+		if (page < 2)
+			setPage(page + 1);
 	};
+
+	const onReset = () => {
+		setPage(0);
+		setUsername(initialUser);
+		setPassword(initialPassword);
+		resetError(dispatch, OAUTH_REQUEST);
+	};
+
 	let errorMessage = null;
 	if (error != null) {
 		errorMessage = (
@@ -105,15 +143,15 @@ export default ({history}) => {
 		);
 	}
 	return (
-		<>
+		<div className={classes.overlay}>
 			{loading || isLoggedIn === true ?
 				<CircularProgress/>
 				:
 				<>
-					<Grid container spacing={4} alignContent="center" justify="center">
+					<Grid style={{height: "100vh"}} container spacing={4} alignContent="center" justify="center">
 						<Grid item lg={2} md={false}/>
 						<Grid item lg={8} md={12}>
-							<CardContent style={{margin: 12}}>
+							<CardContent style={{margin: 12, pointerEvents: "initial"}}>
 								<Grid container spacing={4} alignContent="center" justify="center">
 									<Grid item xs={12}>
 										<Center>
@@ -122,9 +160,9 @@ export default ({history}) => {
 										<Typography className={classes.banner} variant="h2"
 										            align="center">{APP_NAME}</Typography>
 									</Grid>
-									<Grid item xs={12}>
-										<Card style={{padding: 16}}>
-											<ValidatedTextField
+									<Grid item xs={12} sm={9} md={6} lg={4}>
+										<Card style={{padding: 16, borderRadius: 12}}>
+											{page === 0 && <ValidatedTextField
 												data={username}
 												setData={setUsername}
 												invalidLabel="Username must be a minimum of 3 characters"
@@ -138,8 +176,8 @@ export default ({history}) => {
 													variant: "outlined",
 													fullWidth: true
 												}}
-											/>
-											<ValidatedTextField
+											/>}
+											{page === 1 && <ValidatedTextField
 												data={password}
 												setData={setPassword}
 												invalidLabel="Password must be a minimum of 8 characters"
@@ -153,22 +191,23 @@ export default ({history}) => {
 													variant: "outlined",
 													fullWidth: true
 												}}
-											/>
+											/>}
 											<Button style={{
 												marginTop: 8,
 												textTransform: "none",
 												color: getIconColour(theme)
-											}} className={classes.title} onClick={() => onSubmit()} variant="contained"
+											}} className={classes.title} onClick={() => onNext()} variant="contained"
 											        color="primary"
 											        fullWidth size="large" type="submit"
-											        disabled={loading === true || username.error !== '' ||
-													password.error !== '' || username.value.length === 0 || password.value.length === 0}>
-												Sign in
+											        disabled={!valid || page >= 2}>
+												Continue
 											</Button>
+											{(page > 0 || error != null) &&
+											<Button className={classes.resetButton} color="primary"
+											        onClick={() => onReset()}>Reset</Button>}
 										</Card>
 									</Grid>
 								</Grid>
-								{/*<Center className={classes.title} style={{padding: 8}}>{APP_NAME}&nbsp;{version}</Center>*/}
 								<Typography style={{padding: 8}}>
 									{errorMessage}
 								</Typography>
@@ -191,6 +230,6 @@ export default ({history}) => {
 					</Grid>
 				</>
 			}
-		</>
+		</div>
 	);
 };
