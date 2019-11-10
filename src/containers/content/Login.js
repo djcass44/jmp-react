@@ -27,6 +27,8 @@ import {APP_NAME} from "../../constants";
 import {useTheme} from "@material-ui/core/styles";
 import ValidatedTextField from "../../components/field/ValidatedTextField";
 import getIconColour from "../../style/getIconColour";
+import {resetError} from "../../actions/Generic";
+import getProviderCount from "../../selectors/getProviderCount";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -43,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 		fontFamily: "Manrope",
 		fontWeight: 500,
 		textAlign: 'center',
-		color: theme.palette.getContrastText(theme.palette.background.default),
+		color: theme.palette.text.primary,
 	}
 }));
 
@@ -74,6 +76,7 @@ export default ({history}) => {
 	// lifecycle hooks
 	useEffect(() => {
 		window.document.title = `Login - ${APP_NAME}`;
+		resetError(dispatch, OAUTH_REQUEST);
 		oauth2Discover(dispatch, "github");
 		oauth2Discover(dispatch, "google");
 	}, [dispatch]);
@@ -143,7 +146,7 @@ export default ({history}) => {
 												fieldProps={{
 													required: true,
 													type: "password",
-													autoComplete: "password",
+													autoComplete: "current-password",
 													margin: "dense",
 													id: "password",
 													label: "Password",
@@ -169,7 +172,7 @@ export default ({history}) => {
 								<Typography style={{padding: 8}}>
 									{errorMessage}
 								</Typography>
-								{Object.keys(providers).length > 0 &&
+								{getProviderCount(providers) > 0 &&
 									<>
 										<p className={classes.oauthMessage}>Alternatively, login with</p>
 										<Center>
