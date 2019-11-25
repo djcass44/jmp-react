@@ -1,104 +1,59 @@
 import {client} from "../constants";
 import {addSnackbar} from "./Snackbar";
-import {get} from "./index";
+import {failure, get, request, success} from "./index";
 
 export const OAUTH_VERIFY = "OAUTH_VERIFY";
 export const OAUTH_REQUEST = "OAUTH_REQUEST";
 export const OAUTH_REFRESH = "OAUTH_REFRESH";
 export const OAUTH_LOGOUT = "OAUTH_LOGOUT";
-export const OAUTH_UNREADY = "OAUTH_UNREADY";
-
 export const GET_PROVIDERS = "GET_PROVIDERS";
 
 export const getProviders = (dispatch, headers) => get(dispatch, GET_PROVIDERS, "/api/v2_1/statistics/providers", {headers});
 
-export const oauthPreverifyDispatch = (dispatch, refresh, headers) => {
-	dispatch({type: `${OAUTH_VERIFY}_REQUEST`});
-	let hasCookie = false;
-	client.get("/api/v2/oauth/cookie", {headers}).then(r => {
-		hasCookie = r.data;
-		if(shouldVerify(refresh, headers) || hasCookie) {
-			oauthVerifyDispatch(dispatch, refresh, headers, hasCookie);
-		}
-		else {
-			dispatch({type: `${OAUTH_VERIFY}_FAILURE`, error: true});
-		}
-	}).catch(() => {
-		// No sso token, but headers may be okay
-		if(shouldVerify(refresh, headers)) {
-			oauthVerifyDispatch(dispatch, refresh, headers, false);
-		}
-		else {
-			dispatch({type: `${OAUTH_VERIFY}_FAILURE`, error: true});
-		}
-	});
-};
-const oauthVerifyDispatch = (dispatch, refresh, headers, hasCookie) => {
-	client.get("/api/v2/oauth/valid", {headers}).then(r => {
+export const oauthVerify = (dispatch, refresh, headers) => {
+	client.get("/api/v2/user", {headers}).then(r => {
 		dispatch({
 			type: `${OAUTH_VERIFY}_SUCCESS`,
 			payload: r.data
 		});
-		if(hasCookie === true) {
-			oauthRequest2Dispatch(dispatch, headers);
-		}
 	}).catch(err => {
 		dispatch({type: `${OAUTH_VERIFY}_FAILURE`, payload: err, error: true});
-		oauthRefreshDispatch(dispatch, refresh, headers)
+		oauthRefresh(dispatch, refresh, headers);
 	});
 };
-function oauthRequest2Dispatch(dispatch, headers) {
-	dispatch({type: `${OAUTH_REQUEST}_REQUEST`});
-	client.post("/api/v2/oauth/token", {}, {headers}).then(r => {
-		dispatch({type: `${OAUTH_REQUEST}_SUCCESS`, payload: r.data});
-	}).catch(err => {
-		dispatch(addSnackbar({message: "Failed to authenticate", options: {key: `${OAUTH_REQUEST}_FAILURE`, variant: "error"}}));
-		dispatch({type: `${OAUTH_REQUEST}_FAILURE`, payload: err, error: true});
-	})
-}
 
 export const oauthRequest = (dispatch, data) => {
-	let headers = {
-		'Authorization': `Basic ${data}`,
-		'Content-Type': 'application/json'
-	};
-	dispatch({type: `${OAUTH_REFRESH}_REQUEST`});
-	client.post("/api/v2/oauth/token", {}, {headers}).then(r => {
-		dispatch({
-			type: `${OAUTH_REQUEST}_SUCCESS`,
-			payload: r.data
-		});
+	request(dispatch, OAUTH_REQUEST);
+	client.post("/api/a2/login", JSON.stringify(data)).then(r => {
+		success(dispatch, OAUTH_REQUEST, r.data);
 		// Retry verification
-		oauthVerifyDispatch(dispatch, r.data.refresh, {'Authorization': `Bearer ${r.data.request}`});
+		oauthVerify(dispatch, r.data.refresh, {'Authorization': `Bearer ${r.data.request}`});
 	}).catch(err => {
 		dispatch(addSnackbar({message: "Failed to authenticate", options: {key: `${OAUTH_REQUEST}_FAILURE`, variant: "error"}}));
-		dispatch({type: `${OAUTH_REQUEST}_FAILURE`, payload: err, error: true});
+		failure(dispatch, OAUTH_REQUEST, err);
 	});
 };
-function oauthRefreshDispatch(dispatch, refresh, headers) {
-	dispatch({type: `${OAUTH_REFRESH}_REQUEST`});
-	client.get("/api/v2/oauth/refresh", {headers, params: {refreshToken: refresh}}).then(r => {
-		dispatch({
-			type: `${OAUTH_REFRESH}_SUCCESS`,
-			payload: r.data
-		});
+const oauthRefresh = (dispatch, refresh, headers) => {
+	// don't bother refreshing if there's no token
+	if (refresh == null || refresh === "")
+		return;
+	request(dispatch, OAUTH_REFRESH);
+	client.get("/api/a2/refresh", {headers, params: {refreshToken: refresh}}).then(r => {
+		success(dispatch, OAUTH_REFRESH, r.data);
+		// re-verify so that we can get user information
+		oauthVerify(dispatch, refresh, headers);
 	}).catch(err => {
 		dispatch(addSnackbar({message: "Failed to refresh token", options: {key: `${OAUTH_REFRESH}_FAILURE`, variant: "error"}}));
-		dispatch({type: `${OAUTH_REFRESH}_FAILURE`, payload: err, error: true});
-	});
-}
-
-export const oauthLogout = (dispatch, headers) => {
-	dispatch({type: `${OAUTH_LOGOUT}_REQUEST`});
-	client.post("/api/v2/oauth/logout", {}, {headers}).then(() => {
-		dispatch({type: `${OAUTH_LOGOUT}_SUCCESS`});
-	}).catch(err => {
-		dispatch(addSnackbar({message: "Failed to logout", options: {key: `${OAUTH_LOGOUT}_FAILURE`, variant: "error"}}));
-		dispatch({type: `${OAUTH_LOGOUT}_FAILURE`, payload: err, error: true});
+		failure(dispatch, OAUTH_REFRESH, err);
 	});
 };
 
-const shouldVerify = (refresh, headers) => {
-	// Do a quick check to see if the user has purposefully logged out
-	return !((refresh == null || refresh === "") || (headers == null || headers === ""));
+export const oauthLogout = (dispatch, accessToken, headers) => {
+	request(dispatch, OAUTH_LOGOUT);
+	client.post("/api/a2/logout", {}, {params: {accessToken}, headers}).then(() => {
+		success(dispatch, OAUTH_LOGOUT, null);
+	}).catch(err => {
+		dispatch(addSnackbar({message: "Failed to logout", options: {key: `${OAUTH_LOGOUT}_FAILURE`, variant: "error"}}));
+		failure(dispatch, OAUTH_LOGOUT, err);
+	});
 };

@@ -28,23 +28,44 @@ import {oauth2Logout} from "../../actions/Oauth";
 import {APP_NAME} from "../../constants";
 
 const useStyles = makeStyles(theme => ({
+	overlay: {
+		position: "fixed",
+		width: "100%",
+		height: "100%",
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		backgroundColor: "transparent",
+		pointerEvents: "none"
+	},
+	button: {
+		pointerEvents: "initial"
+	},
 	title: {
-		fontSize: 148,
-		fontWeight: 200,
-		color: theme.palette.text.primary
+		fontFamily: "Manrope",
+		fontWeight: 500
+	},
+	progress: {
+		margin: theme.spacing(2)
 	}
 }));
 
 export default ({history}) => {
 	// hooks
 	const dispatch = useDispatch();
+	const classes = useStyles();
+
 	const {isLoggedIn, headers, request, source} = useSelector(state => state.auth);
 
 	useEffect(() => {
 		window.document.title = `Logout - ${APP_NAME}`;
+		// copy the request/headers because they will be wiped by a logout request
+		const r2 = JSON.parse(JSON.stringify(request));
+		const h2 = JSON.parse(JSON.stringify(headers));
 		// Log the user out
-		oauthLogout(dispatch, headers);
-		oauth2Logout(dispatch, request, source, headers);
+		oauth2Logout(dispatch, r2, source, h2);
+		oauthLogout(dispatch, r2, h2);
 	}, []);
 
 	useEffect(() => {
@@ -52,23 +73,26 @@ export default ({history}) => {
 			history.push("/");
 	}, [isLoggedIn]);
 
-	const classes = useStyles();
 
-	const loggedIn = (
-		<>
-			<Typography variant={"h1"} className={classes.title}>Ensuring that you're logged out...</Typography>
-			<Center><CircularProgress/></Center>
-			<Center style={{paddingTop: 16}}>If you're not redirected in a few seconds, click below</Center>
-			<Center>
-				<IconButton component={Link} to={"/"} color={"primary"} centerRipple={false} aria-label={"Return to home"}>
-					<HomeIcon/>
-				</IconButton>
-			</Center>
-		</>
-	);
 	return (
-		<Center>
-			{loggedIn}
+		<Center className={classes.overlay}>
+			<div className={classes.button}>
+				<Typography className={classes.title} variant="h4" color="textPrimary">
+					Ensuring that you're logged out...
+				</Typography>
+				<Center>
+					<CircularProgress className={classes.padding}/>
+				</Center>
+				<Center style={{paddingTop: 16}}>
+					If you're not redirected in a few seconds, click below
+				</Center>
+				<Center>
+					<IconButton component={Link} to="/" color="primary" centerRipple={false}
+					            aria-label="Return to home">
+						<HomeIcon/>
+					</IconButton>
+				</Center>
+			</div>
 		</Center>
 	);
 };

@@ -17,54 +17,36 @@
 
 import {client} from "../constants";
 import {addSnackbar} from "./Snackbar";
+import {failure, request, success} from "./index";
 
 export const OAUTH2_REFRESH = "OAUTH2_REFRESH";
 export const OAUTH2_CALLBACK = "OAUTH2_CALLBACK";
 export const OAUTH2_LOGOUT = "OAUTH2_LOGOUT";
 export const OAUTH2_DISCOVER = "OAUTH2_DISCOVER";
 
-export const oauth2Callback = (query, headers) => dispatch => oauth2CallbackDispatch(dispatch, query, headers);
-
-function oauth2CallbackDispatch(dispatch, query, headers) {
-	dispatch({type: `${OAUTH2_CALLBACK}_REQUEST`});
-	client.get("/api/v2/oauth2/callback", {headers: headers, params: query}).then(r => {
-		console.log("v2: callback success");
-		dispatch({
-			type: `${OAUTH2_CALLBACK}_SUCCESS`,
-			payload: r.data
-		});
+export const oauth2Callback = (dispatch, query) => {
+	request(dispatch, OAUTH2_CALLBACK);
+	client.get("/api/o2/callback", {params: query}).then(r => {
+		success(dispatch, OAUTH2_CALLBACK, r.data);
 	}).catch(err => {
 		console.log(`v2: callback failed: ${err}`);
 		dispatch(addSnackbar({message: "OAuth callback failed", options: {key: `${OAUTH2_CALLBACK}_FAILURE`, variant: "error"}}));
-		dispatch({type: `${OAUTH2_CALLBACK}_FAILURE`, payload: err, error: true});
+		failure(dispatch, OAUTH2_CALLBACK, err);
 	});
-}
+};
 
 export const oauth2Logout = (dispatch, accessToken, source, headers) => {
-	dispatch({type: `${OAUTH2_LOGOUT}_REQUEST`});
-	client.post("/api/v2/oauth2/logout", {}, {headers, params: {accessToken, provider: source}}).then(r => {
-		dispatch({
-			type: `${OAUTH2_LOGOUT}_SUCCESS`,
-			payload: r.data
-		});
+	request(dispatch, OAUTH2_LOGOUT, {source});
+	client.post(`/api/o2/logout/${source}`, {}, {headers, params: {accessToken}}).then(r => {
+		success(dispatch, OAUTH2_LOGOUT, r.data);
 	}).catch(err => {
 		dispatch(addSnackbar({message: "Failed to logout", options: {key: `${OAUTH2_LOGOUT}_FAILURE`, variant: "error"}}));
-		dispatch({type: `${OAUTH2_LOGOUT}_FAILURE`, payload: err, error: true});
+		failure(dispatch, OAUTH2_LOGOUT, err);
 	});
 };
 export const oauth2Discover = (dispatch, provider) => {
-	dispatch({type: `${OAUTH2_DISCOVER}_REQUEST`});
-	client.head("/api/v2/oauth2/authorise", {params: {provider: provider}}).then(() => {
-		dispatch({
-			type: `${OAUTH2_DISCOVER}_SUCCESS`,
-			payload: {provider: provider, active: true}
-		});
-	}).catch(err => {
-		dispatch({
-			type: `${OAUTH2_DISCOVER}_SUCCESS`,
-			payload: {provider: provider, active: false},
-			meta: err,
-			error: true
-		});
-	});
+	request(dispatch, OAUTH2_DISCOVER, {provider});
+	client.get(`/api/o2/${provider}`)
+		.then(r => success(dispatch, OAUTH2_DISCOVER, r.data))
+		.catch(err => failure(dispatch, OAUTH2_DISCOVER, err));
 };

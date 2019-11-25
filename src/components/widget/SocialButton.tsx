@@ -18,7 +18,6 @@
 import * as React from "react";
 import {Button, makeStyles} from "@material-ui/core";
 import Icon from "@mdi/react";
-import {BASE_URL} from "../../constants";
 import {useTheme} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
@@ -40,12 +39,12 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const SocialButton = ({id, colour, name, icon}: {id: string, colour: string, name: string, icon: string}) => {
+const SocialButton = ({url, colour, name, icon}: { url: string, colour: string, name: string, icon: string }) => {
 	const theme = useTheme();
 	const classes = useStyles();
 	const variant = theme.palette.type === "dark" ? "contained" : "text";
 	return (
-		<Button href={`${BASE_URL}/api/v2/oauth2/authorise?provider=${id}`} className={classes.button} variant={variant}>
+		<Button href={url} className={classes.button} variant={variant}>
 			<Icon className={classes.icon} path={icon} size={'1.5rem'} color={colour}/>
 			{name}
 		</Button>

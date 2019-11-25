@@ -111,6 +111,7 @@ const Help = () => {
 				<br/><br/>If using <b>LDAP</b>, your password is never stored and is only used to be verified against the LDAP server.
 				<br/><br/>If using <b>Atlassian Crowd</b>, your password is used in a similar method to LDAP. Your credentials are exchanged for a token which {APP_NAME} uses on your behalf. It also allows Crowd to log you into any other apps which your environment uses.
 				See <a href={"https://confluence.atlassian.com/crowd/overview-of-sso-179445277.html"}>here</a> for more information.
+				<br/><br/>If using <b>OAuth2</b>, you are redirected to the provider (e.g. Google) which returns an authentication token. {APP_NAME} uses this token to verify your identity when you make requests.
 			</span>
 		}
 	];

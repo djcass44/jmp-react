@@ -30,6 +30,12 @@ const useStyles = makeStyles(theme => ({
 	},
 	avatar: {
 		padding: theme.spacing(2)
+	},
+	displayName: {
+		fontFamily: "Manrope",
+		fontWeight: 500,
+		maxWidth: 175,
+		width: 125
 	}
 }));
 
@@ -41,14 +47,14 @@ const UserPopover = ({user, elevation}) => {
 				<Grid item xs={6}>
 					<Avatar
 						className={classes.avatar}
-						name={(user && user.username) || "Anonymous"}
+						name={(user && (user.displayName || user.username)) || "Anonymous"}
 						src={user && user.avatarUrl}
 						size={64}
 					/>
 				</Grid>
 				<Divider orientation={"horizontal"}/>
 				<Grid item xs={6} style={{float: "left"}}>
-					<Typography variant={"h6"}>
+					<Typography className={classes.displayName} noWrap variant={"h6"}>
 						{(user && user.displayName) || "Anonymous"}
 					</Typography>
 					{(user && user.username) != null && <Typography variant={"subtitle1"}>

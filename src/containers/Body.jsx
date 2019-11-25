@@ -5,7 +5,7 @@ import AdminPanel from "../components/AdminPanel";
 import {makeStyles} from "@material-ui/core";
 import PropTypes from "prop-types";
 import {useDispatch, useSelector} from "react-redux";
-import {OAUTH_VERIFY, oauthPreverifyDispatch} from "../actions/Auth";
+import {OAUTH_VERIFY, oauthVerify} from "../actions/Auth";
 import {withRouter} from "react-router";
 
 const useStyles = makeStyles(theme => ({
@@ -38,7 +38,7 @@ export const Body = ({history}) => {
 	const dispatch = useDispatch();
 
 	useLayoutEffect(() => {
-		oauthPreverifyDispatch(dispatch, refresh, headers);
+		oauthVerify(dispatch, refresh, headers);
 	}, [history.location.key]);
 
 	const classes = useStyles();
@@ -48,13 +48,11 @@ export const Body = ({history}) => {
 				<div className={classes.hero}>
 					<div className={classes.hero2}>
 						<Nav loading={loading}/>
-						{loading === false ?
+						{loading === false &&
 							<>
 								<Content/>
 								<AdminPanel/>
 							</>
-							:
-							""
 						}
 					</div>
 				</div>

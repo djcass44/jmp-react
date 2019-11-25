@@ -121,13 +121,13 @@ export default () => {
 	sortedUsers.forEach((i, index) => {
 		if(index < offset || index > max) return;
 		const userIsAdmin = i.role === 'ADMIN';
-		let avatar = {
+		const avatar = {
 			icon: userIsAdmin ? <AdminCircleIcon/> : <AccountCircleIcon/>,
 			bg: userIsAdmin ? schemeAdmin[0] : scheme[0],
 			fg: userIsAdmin ? schemeAdmin[1] : scheme[1],
 			banner: userIsAdmin ? <Badge color="red">Admin</Badge> : ""
 		};
-		let secondary = <span>{capitalise(i.from)}&nbsp;{avatar.banner}</span>;
+		const secondary = (<span>{capitalise(i.from)}&nbsp;{avatar.banner}</span>);
 		listItems.push((
 			<ListItem button disableRipple key={index} component='li'>
 				<Avatar component='div' style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
@@ -142,9 +142,10 @@ export default () => {
 					<IconButton centerRipple={false} onClick={(e) => toggleExpansion(e, i.id)}>
 						<Icon path={mdiDotsVertical} size={1} color={getIconColour(theme)}/>
 						<Menu id={"user-menu"} open={i.id === expanded} anchorEl={anchorEl} anchorOrigin={{horizontal: "left", vertical: "top"}} onExit={() => {i.expanded = false}}>
-							{(isAdmin && i.role !== 'ADMIN') &&
-							<MenuItem button component='li' onClick={() => handlePatchUser(i, 'ADMIN')}>Promote to
-								admin</MenuItem>}
+							{(isAdmin && i.role !== 'ADMIN' && i.username !== "system") &&
+							<MenuItem button component='li' onClick={() => handlePatchUser(i, 'ADMIN')}>
+								Promote to admin
+							</MenuItem>}
 							{(isAdmin && i.role === 'ADMIN' && i.username !== "admin") &&
 								<MenuItem button component='li' onClick={() => handlePatchUser(i, 'USER')}>
 									Demote to user
@@ -164,7 +165,8 @@ export default () => {
 		<div>
 			<SortedSubheader title="Users" size={listItems.length} sorts={sorts}/>
 			{(loading === true || loadingPatch === true) &&
-			<LinearProgress className={classes.progress} color="primary"/>}
+			<LinearProgress className={classes.progress} color="primary"/>
+			}
 			<PoseGroup animateOnMount={true}>
 				<Paper key="root" component={Item} style={{borderRadius: 12, marginBottom: 8}}>
 					<List component='ul'>
@@ -173,13 +175,11 @@ export default () => {
 					<GroupModDialog/>
 				</Paper>
 			</PoseGroup>
-			{listItems.length > pageSize ?
+			{listItems.length > pageSize &&
 				<Center>
 					<Pagination limit={pageSize} offset={offset} total={sortedUsers.length}
 					            nextPageLabel="▶" previousPageLabel="◀" onClick={(e, off) => setOffset(off)}/>
 				</Center>
-				:
-				<div/>
 			}
 		</div>
 	);

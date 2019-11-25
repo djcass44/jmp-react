@@ -18,11 +18,10 @@
 import React, {useEffect} from "react";
 import Typography from "@material-ui/core/es/Typography/Typography";
 import Center from "react-center";
-import {makeStyles, withTheme} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {OAUTH2_CALLBACK, oauth2Callback} from "../../actions/Oauth";
-import PropTypes from "prop-types";
 import {APP_NAME} from "../../constants";
 
 const useStyles = makeStyles(theme => ({
@@ -30,82 +29,58 @@ const useStyles = makeStyles(theme => ({
 		textAlign: 'center',
 		fontFamily: "Manrope",
 		fontWeight: 500,
-		color: theme.palette.text.primary
+		color: theme.palette.text.primary,
+		pointerEvents: "initial"
 	},
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		height: '80vh'
-	},
-	inner: {
-		justifyContent: 'center',
-		alignItems: 'center'
+	overlay: {
+		position: "fixed",
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		backgroundColor: "transparent",
+		pointerEvents: "none"
 	}
 }));
 
-const Callback = ({headers, loading, error, oauth2Callback, ...props}) => {
+export default ({history}) => {
+	const dispatch = useDispatch();
+
+	const loading = useSelector(state => state.loading[OAUTH2_CALLBACK]);
+	const error = useSelector(state => state.errors[OAUTH2_CALLBACK]);
+
 	useEffect(() => {
 		window.document.title = `Callback - ${APP_NAME}`;
 		// Get the list of parameters
-		const params = new URLSearchParams(props.location.search);
-		// Create the callback request to the backend
-		const provider = props.location.pathname.split("/callback-")[1];
-
-		const sentHeaders = headers;
-		sentHeaders['X-Auth-Source'] = provider;
-		oauth2Callback(params, sentHeaders);
+		const params = new URLSearchParams(history.location.search);
+		oauth2Callback(dispatch, {code: params.get("code"), state: params.get("state")});
 	}, []);
 
 	useEffect(() => {
 		if(loading === false && error == null)
-			props.history.push('/');
+			history.push('/');
 	}, [loading, error]);
 
 	const classes = useStyles();
 	return (
-		<div className={classes.container}>
-			<div className={classes.inner}>
-				{error == null ?
-					<>
-						<Center>
-							<CircularProgress style={{margin: 24}}/>
-						</Center>
-						<Center>
-							<Typography className={classes.subtitle} variant={"subtitle1"}>We're just doing some setup...</Typography>
-						</Center>
-					</>
-					:
-					<>
-						<Center>
-							<Typography className={classes.subtitle} variant={"subtitle1"}>{error.toString()}</Typography>
-						</Center>
-					</>
-				}
-			</div>
-		</div>
+		<Center className={classes.overlay}>
+			{error == null ?
+				<div>
+					<Center>
+						<CircularProgress style={{margin: 24}}/>
+					</Center>
+					<Center>
+						<Typography className={classes.subtitle} variant={"subtitle1"}>We're just doing some
+							setup...</Typography>
+					</Center>
+				</div>
+				:
+				<div>
+					<Center>
+						<Typography className={classes.subtitle} variant={"subtitle1"}>{error.toString()}</Typography>
+					</Center>
+				</div>
+			}
+		</Center>
 	);
 };
-Callback.propTypes = {
-	headers: PropTypes.object.isRequired,
-	loading: PropTypes.bool,
-	error: PropTypes.object,
-	oauth2Callback: PropTypes.func.isRequired
-};
-Callback.defaultProps = {
-	loading: false,
-	error: null
-};
-const mapStateToProps = state => ({
-	headers: state.auth.headers,
-	loading: state.loading[OAUTH2_CALLBACK],
-	error: state.errors[OAUTH2_CALLBACK]
-});
-const mapDispatchToProps = ({
-	oauth2Callback
-});
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(withTheme(Callback));

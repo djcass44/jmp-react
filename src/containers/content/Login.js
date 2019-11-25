@@ -118,8 +118,7 @@ export default ({history}) => {
 
 	const onNext = () => {
 		if (page === 1) {
-			const data = window.btoa(`${username.value}:${password.value}`);
-			oauthRequest(dispatch, data);
+			oauthRequest(dispatch, {username: username.value, password: password.value});
 		}
 		if (page < 2)
 			setPage(page + 1);
@@ -143,7 +142,7 @@ export default ({history}) => {
 		);
 	}
 	return (
-		<div className={classes.overlay}>
+		<Center className={classes.overlay}>
 			{loading || isLoggedIn === true ?
 				<CircularProgress/>
 				:
@@ -215,11 +214,11 @@ export default ({history}) => {
 									<>
 										<p className={classes.oauthMessage}>Alternatively, login with</p>
 										<Center>
-											{providers['github'] === true &&
-												<SocialButton id={"github"} name={"GitHub"} colour={"#171516"}
+											{providers['github'] != null &&
+											<SocialButton url={providers['github']} name={"GitHub"} colour={"#171516"}
 												              icon={mdiGithubCircle}/>}
-											{providers['google'] === true &&
-												<SocialButton id={"google"} name={"Google"} colour={"#4285F4"}
+											{providers['google'] != null &&
+											<SocialButton url={providers['google']} name={"Google"} colour={"#4285F4"}
 												              icon={mdiGoogle}/>}
 										</Center>
 									</>
@@ -230,6 +229,6 @@ export default ({history}) => {
 					</Grid>
 				</>
 			}
-		</div>
+		</Center>
 	);
 };

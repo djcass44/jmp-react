@@ -15,20 +15,22 @@
  *
  */
 
-import {LS_ADM, LS_HEADERS, LS_LOGIN, LS_NAME, LS_REFRESH, LS_REQUEST, LS_SOURCE, LS_USER} from "../constants";
-import {GET_PROVIDERS, OAUTH_LOGOUT, OAUTH_REFRESH, OAUTH_REQUEST, OAUTH_UNREADY, OAUTH_VERIFY} from "../actions/Auth";
+import {LS_REFRESH, LS_REQUEST, LS_SOURCE} from "../constants";
+import {GET_PROVIDERS, OAUTH_LOGOUT, OAUTH_REFRESH, OAUTH_REQUEST, OAUTH_VERIFY} from "../actions/Auth";
 import {OAUTH2_CALLBACK, OAUTH2_DISCOVER, OAUTH2_LOGOUT, OAUTH2_REFRESH} from "../actions/Oauth";
 
 const initialState = {
 	request: localStorage.getItem(LS_REQUEST) || '',
 	refresh: localStorage.getItem(LS_REFRESH) || '',
 	source: localStorage.getItem(LS_SOURCE) || '',
-	userProfile: JSON.parse(localStorage.getItem(LS_USER)) || {},
-	headers: JSON.parse(localStorage.getItem(LS_HEADERS)) || {},
-	isLoggedIn: localStorage.getItem(LS_LOGIN) === 'true' || false,
-	isAdmin: localStorage.getItem(LS_ADM) === 'true' || false, // This is just an assumption, the API dictates whether you're an admin or not
-	username: localStorage.getItem(LS_NAME) || '',
-	ready: false,
+	headers: {
+		'Authorization': `Bearer ${localStorage.getItem(LS_REQUEST) || ""}`,
+		'X-Auth-Source': localStorage.getItem(LS_SOURCE) || ""
+	},
+	userProfile: {},
+	isLoggedIn: false,
+	isAdmin: false,
+
 	providers: {},
 	allProviders: []
 };
@@ -38,38 +40,30 @@ const auth = (state = initialState, action) => {
 		case `${GET_PROVIDERS}_SUCCESS`:
 			return {...state, allProviders: action.payload};
 		case `${OAUTH_VERIFY}_SUCCESS`: {
-			localStorage.setItem(LS_USER, JSON.stringify(action.payload));
-			localStorage.setItem(LS_LOGIN, "true");
-			localStorage.setItem(LS_ADM, (action.payload.role === 'ADMIN').toString());
-			let username = '';
-			if(action.payload.username != null) username = action.payload.username;
-			localStorage.setItem(LS_NAME, username);
-			return {...state,
-				userProfile: action.payload,
-				username: username,
-				isLoggedIn: true,
-				isAdmin: action.payload.role === 'ADMIN',
-				ready: true
-			}
+			// if there's not request token there's no point saving the userProfile
+			// weird hack to stop the userProfile coming in AFTER a successful logout
+			if (state.request == null || state.request === "")
+				return state;
+			return {...state, userProfile: action.payload, isLoggedIn: true, isAdmin: action.payload.role === "ADMIN"};
 		}
 		case `${OAUTH2_CALLBACK}_SUCCESS`:
 		case `${OAUTH2_REFRESH}_SUCCESS`:
 		case `${OAUTH_REFRESH}_SUCCESS`:
 		case `${OAUTH_REQUEST}_SUCCESS`: {
-			const source = action.payload.source || '';
-			const headers = {'Authorization': `Bearer ${action.payload.request}`, 'X-Auth-Source': source};
-			localStorage.setItem(LS_REQUEST, action.payload.request);
-			localStorage.setItem(LS_REFRESH, action.payload.refresh);
-			localStorage.setItem(LS_SOURCE, source); // will be null if not using OAuth2
-			localStorage.setItem(LS_HEADERS, JSON.stringify(headers));
-			localStorage.setItem(LS_LOGIN, "true");
+			const {request, refresh, source = ""} = action.payload;
+			const headers = {
+				'Authorization': `Bearer ${request}`,
+				'X-Auth-Source': source
+			};
+			localStorage.setItem(LS_REQUEST, request);
+			localStorage.setItem(LS_REFRESH, refresh);
+			localStorage.setItem(LS_SOURCE, source);
 			return {...state,
-				request: action.payload.request,
-				refresh: action.payload.refresh,
-				source: source,
-				headers: headers,
+				request,
+				refresh,
+				source,
+				headers,
 				isLoggedIn: true,
-				ready: true
 			}
 		}
 		case `${OAUTH2_LOGOUT}_SUCCESS`:
@@ -77,35 +71,24 @@ const auth = (state = initialState, action) => {
 		case `${OAUTH_LOGOUT}_SUCCESS`:
 		case `${OAUTH_LOGOUT}_REQUEST`: {
 			// Only clear localstorage if we truly want to logout
-			if(action.type === `${OAUTH_LOGOUT}_SUCCESS` || action.type === `${OAUTH_LOGOUT}_REQUEST`) {
+			if (action.type === `${OAUTH_LOGOUT}_SUCCESS` || action.type === `${OAUTH_LOGOUT}_REQUEST` || action.type === `${OAUTH2_LOGOUT}_REQUEST` || action.type === `${OAUTH2_LOGOUT}_SUCCESS`) {
 				localStorage.removeItem(LS_REQUEST);
 				localStorage.removeItem(LS_REFRESH);
 				localStorage.removeItem(LS_SOURCE);
-				localStorage.removeItem(LS_HEADERS);
 			}
-			localStorage.removeItem(LS_USER);
-			localStorage.removeItem(LS_LOGIN);
-			localStorage.removeItem(LS_ADM);
-			localStorage.removeItem(LS_NAME);
 			return {...state,
 				request: '',
 				refresh: '',
 				source: '',
-				userProfile: {},
 				headers: {},
+				userProfile: {},
 				isLoggedIn: false,
 				isAdmin: false,
-				username: '',
-				ready: true
 			}
 		}
-		case `${OAUTH_UNREADY}_REQUEST`:
-			return {...state, ready: false};
 		case `${OAUTH2_DISCOVER}_SUCCESS`: {
-			// Attempt to set the provider status
-			const {providers} = state;
-			providers[action.payload['provider']] = action.payload['active'];
-			return {...state, providers};
+			const {first, second} = action.payload;
+			return {...state, providers: {...state.providers, [first]: second}};
 		}
 		default:
 			return state;
