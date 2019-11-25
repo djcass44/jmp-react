@@ -147,7 +147,7 @@ const Nav = ({loading, history}) => {
 		"/identity"
 	];
 	// hooks
-	const {isLoggedIn, username, userProfile} = useSelector(state => state.auth);
+	const {isLoggedIn, userProfile} = useSelector(state => state.auth);
 	const {searchFilter} = useSelector(state => state.generic);
 	const {location} = history;
 	const dispatch = useDispatch();
@@ -173,10 +173,8 @@ const Nav = ({loading, history}) => {
 	const isMenuOpen = anchorEl != null;
 
 	let name = userProfile['displayName'];
-	if(name === "") name = username;
-	let name2 = name;
-	if (name != null)
-		name2 = name.replace(".", " ");
+	if (name == null || name === "") name = userProfile.username || "Anonymous";
+	const name2 = name.replace(".", " ");
 	const url = location.pathname + location.search;
 	let loginUrl = '/login';
 	if(url !== '')

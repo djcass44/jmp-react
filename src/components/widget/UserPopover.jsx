@@ -55,7 +55,7 @@ const UserPopover = ({user, elevation}) => {
 				<Divider orientation={"horizontal"}/>
 				<Grid item xs={6} style={{float: "left"}}>
 					<Typography className={classes.displayName} noWrap variant={"h6"}>
-						{(user && user.displayName) || "Anonymous"}
+						{(user && (user.displayName || user.username)) || "Anonymous"}
 					</Typography>
 					{(user && user.username) != null && <Typography variant={"subtitle1"}>
 						{user.username}
