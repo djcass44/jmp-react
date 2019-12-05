@@ -23,14 +23,16 @@ import {Avatar, CircularProgress} from "@material-ui/core";
 import React from "react";
 import PropTypes from "prop-types";
 import Img from "react-image";
+import getLegacyJumpType from "../../../selectors/getLegacyJumpType";
 
 const JumpAvatar = ({jump, background, palette, loading, error}) => {
 	// hooks
 	const theme = useTheme();
 
-	const scheme = getAvatarScheme(theme, jump.personal);
+	const personal = getLegacyJumpType(jump);
+	const scheme = getAvatarScheme(theme, personal);
 	let icon;
-	switch (jump.personal) {
+	switch (personal) {
 		default:
 			icon = mdiEarth;
 			break;

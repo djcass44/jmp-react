@@ -11,7 +11,7 @@ export const GET_PROVIDERS = "GET_PROVIDERS";
 export const getProviders = (dispatch, headers) => get(dispatch, GET_PROVIDERS, "/api/v2_1/statistics/providers", {headers});
 
 export const oauthVerify = (dispatch, refresh, headers) => {
-	client.get("/api/v2/user", {headers}).then(r => {
+	client.get("/api/v2/user/me", {headers}).then(r => {
 		dispatch({
 			type: `${OAUTH_VERIFY}_SUCCESS`,
 			payload: r.data

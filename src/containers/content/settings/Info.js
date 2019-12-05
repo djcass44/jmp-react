@@ -1,21 +1,12 @@
 import React, {useEffect} from "react";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {ListSubheader, makeStyles, Typography} from "@material-ui/core";
 import {useTheme} from "@material-ui/core/styles";
 import InfoItem from "../../../components/content/settings/InfoItem";
-import {
-	GET_INFO_APP, GET_INFO_ERROR,
-	GET_INFO_SYS,
-	getInfoApp, getInfoError,
-	getInfoSystem
-} from "../../../actions/Info";
+import {GET_INFO_ERROR, GET_INFO_SYS, getInfoSystem} from "../../../actions/Info";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import JSONPretty from "react-json-pretty";
-import {
-	mdiApplication,
-	mdiBugCheckOutline,
-	mdiMemory
-} from "@mdi/js";
+import {mdiBugCheckOutline, mdiMemory} from "@mdi/js";
 import Icon from "@mdi/react";
 import Status from "./Status";
 
@@ -38,12 +29,17 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Info = ({headers, isAdmin, isLoggedIn, error, ...props}) => {
+export default () => {
+	const dispatch = useDispatch();
+
+	const {headers} = useSelector(state => state.auth);
+	const {systemInfo, error} = useSelector(state => state.info);
+	const systemInfoError = useSelector(state => state.errors[GET_INFO_SYS]);
+	const errorLoad = useSelector(state => state.loading[GET_INFO_ERROR]);
+
 	useEffect(() => {
-		props.getInfoApp(headers);
-		props.getInfoSystem(headers);
-		props.getInfoError(headers);
-	}, []);
+		getInfoSystem(dispatch, headers);
+	}, [headers]);
 	const classes = useStyles();
 	const theme = useTheme();
 	const status = (
@@ -51,43 +47,21 @@ const Info = ({headers, isAdmin, isLoggedIn, error, ...props}) => {
 			<Status showReload/>
 			<Typography variant={"body1"} className={classes.title}>Recent exceptions</Typography>
 			<p>There have been {error.length} exceptions in the last 15 minutes.</p>
-			{props.errorLoad === true ? <LinearProgress className={classes.progress}/> : ""}
+			{errorLoad === true ? <LinearProgress className={classes.progress}/> : ""}
 		</div>
 	);
-	const appInfo = (<JSONPretty data={JSON.stringify(props.appInfo)}/>);
-	const sysInfo = (<JSONPretty data={JSON.stringify(props.systemInfo)}/>);
+
 	return (
 		<div>
 			<ListSubheader className={classes.title} inset component={"div"}>Information &amp; status</ListSubheader>
 			<InfoItem title={<span>Application health</span>} content={status} open={true} icon={
 				<Icon style={{paddingRight: 8}} path={mdiBugCheckOutline} size={1} color={theme.palette.error.main}/>
 			}/>
-			<InfoItem title={<span>Application information</span>} content={appInfo} error={props.appInfoError} icon={
-				<Icon style={{paddingRight: 8}} path={mdiApplication} size={1} color={theme.palette.info.main}/>
-			}/>
-			<InfoItem title={<span>System information</span>} content={sysInfo} error={props.systemInfoError} icon={
+			<InfoItem title={<span>System information</span>} content={
+				<JSONPretty data={JSON.stringify(systemInfo)}/>
+			} error={systemInfoError} icon={
 				<Icon style={{paddingRight: 8}} path={mdiMemory} size={1} color={theme.palette.secondary.main}/>
 			}/>
 		</div>
 	);
 };
-const mapStateToProps = state => ({
-	isAdmin: state.auth.isAdmin,
-	isLoggedIn: state.auth.isLoggedIn,
-	headers: state.auth.headers,
-	appInfo: state.info.appInfo,
-	appInfoError: state.errors[GET_INFO_APP],
-	systemInfo: state.info.systemInfo,
-	systemInfoError: state.errors[GET_INFO_SYS],
-	error: state.info.error,
-	errorLoad: state.loading[GET_INFO_ERROR]
-});
-const mapDispatchToProps = ({
-	getInfoApp,
-	getInfoSystem,
-	getInfoError
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Info);

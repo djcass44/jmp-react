@@ -85,7 +85,7 @@ const JumpItem = ({jump, width}) => {
 	const smallScreen = isWidthDown("sm", width);
 
 	const getAliases = () => {
-		if (jump.alias.length === 0) return "";
+		if (jump.alias == null || jump.alias.length === 0) return "";
 		let items = [];
 		jump.alias.forEach((i) => {
 			items.push(i.name);
@@ -99,7 +99,7 @@ const JumpItem = ({jump, width}) => {
 			<span className={classes.title}>
 				{jump.name}
 			</span>
-			{((selected || mouse) && jump.alias.length > 0) && <small className={classes.subtitle}>
+			{((selected || mouse) && jump.alias && jump.alias.length > 0) && <small className={classes.subtitle}>
 				&nbsp;&bull;&nbsp;{getAliases()}
 			</small>}
 		</>
@@ -109,8 +109,8 @@ const JumpItem = ({jump, width}) => {
 	const secondary = (
 		<span>
 			<Domain text={jump.location}/>
-			{jump.owner != null && <span>
-				&nbsp;&bull;&nbsp;{jump.owner}
+			{jump.public === false && <span>
+				&nbsp;&bull;&nbsp;{jump.owner || jump.ownerGroup}
 			</span>}
 		</span>
 	);

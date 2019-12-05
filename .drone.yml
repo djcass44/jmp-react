@@ -7,7 +7,6 @@ steps:
     settings:
       repo: djcass44/jmp-ui
       tags:
-        - latest
         - ${DRONE_BRANCH}
       username:
         from_secret: DOCKER_USERNAME

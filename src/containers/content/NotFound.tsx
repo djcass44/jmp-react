@@ -16,11 +16,10 @@
  */
 
 import React, {useEffect} from "react";
-import {Typography, makeStyles} from "@material-ui/core";
+import {IconButton, makeStyles, Typography} from "@material-ui/core";
 import {useTheme} from "@material-ui/core/styles";
 // @ts-ignore
 import Center from "react-center";
-import {IconButton} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHomeOutline} from "@mdi/js";
@@ -38,15 +37,18 @@ const useStyles = makeStyles(theme => ({
 		fontWeight: 500,
 		color: theme.palette.text.secondary
 	},
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		height: '80vh'
+	overlay: {
+		position: "fixed",
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		backgroundColor: "transparent",
+		pointerEvents: "none"
 	}
 }));
 
-const NotFound = () => {
+export default ({history}: { history: any }) => {
 	useEffect(() => {
 		window.document.title = `404 - ${APP_NAME}`;
 	}, []);
@@ -54,20 +56,27 @@ const NotFound = () => {
 	const classes = useStyles();
 	const theme = useTheme();
 	return (
-		<div className={classes.container}>
-			<div style={{justifyContent: 'center', alignItems: 'center'}}>
-				<Center><Typography className={classes.title} variant={"h1"}>404</Typography></Center>
-				<Center><Typography className={classes.subtitle} variant={"subtitle1"}>The page you're looking for doesn't exist or the server refused to disclose it.</Typography></Center>
+		<Center className={classes.overlay}>
+			<div style={{pointerEvents: "initial"}}>
 				<Center>
-					<IconButton color={"secondary"} href={"javascript:window.history.back()"} centerRipple={false} aria-label={"Go back"}>
+					<Typography className={classes.title} variant={"h1"}>404</Typography>
+				</Center>
+				<Center>
+					<Typography className={classes.subtitle} variant={"subtitle1"}>
+						The page you're looking for doesn't exist or the server refused to disclose it.
+					</Typography>
+				</Center>
+				<Center>
+					<IconButton color={"secondary"} centerRipple={false} aria-label={"Go back"}
+					            onClick={() => history.goBack()}>
 						<Icon path={mdiArrowLeft} size={1} color={theme.palette.secondary.main}/>
 					</IconButton>
-					<IconButton component={Link} to={"/"} color={"primary"} centerRipple={false} aria-label={"Return to home"}>
+					<IconButton component={Link} to={"/"} color={"primary"} centerRipple={false}
+					            aria-label={"Return to home"}>
 						<Icon path={mdiHomeOutline} size={1} color={theme.palette.primary.main}/>
 					</IconButton>
 				</Center>
 			</div>
-		</div>
+		</Center>
 	);
 };
-export default NotFound;

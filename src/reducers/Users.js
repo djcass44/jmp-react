@@ -24,7 +24,7 @@ const initialState = {
 const users = (state = initialState, action) => {
 	switch (action.type) {
 		case `${USER_LOAD}_SUCCESS`: {
-			return {...state, users: action.payload['users']}
+			return {...state, users: action.payload}
 		}
 		default:
 			return state;

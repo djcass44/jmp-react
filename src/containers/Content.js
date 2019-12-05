@@ -27,7 +27,6 @@ import Similar from "./content/jmp/Similar";
 import Settings from "./content/Settings";
 import Help from "./content/Help";
 import Callback from "./content/Callback";
-import Status from "./content/Status/index";
 import Jumps from "./content/Jumps";
 import JumpEditDialog from "./modal/JumpEditDialog";
 import DeleteDialog from "./modal/DeleteDialog";
@@ -69,7 +68,6 @@ export const Content = () => {
 						<Route exact path="/settings" component={Settings} key={"settings"}/>
 						<Route exact path="/help" component={Help} key={"help"}/>
 						<Route exact path="/callback-*" component={Callback} key={"callback"}/>
-						<Route exact path="/status" component={Status} key="status"/>
 						<Route component={NotFound} key={"notfound"}/>
 					</Switch>
 				</Grid>

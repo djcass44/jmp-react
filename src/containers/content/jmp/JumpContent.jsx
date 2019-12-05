@@ -58,7 +58,7 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [anchorUser, setAnchorUser] = useState(null);
 
-	const hasOwnership = isAdmin || jump.personal > 0;
+	const hasOwnership = isAdmin || jump.public === false;
 	// set the appropriate colours for the card-content
 	const avatarPalette = getAvatarFromPalette(theme, "", palette);
 	const bg = loading === false && error == null ? getColourFromHex(avatarPalette.bg, 0.2) : getHelpCardColour(theme);
@@ -74,7 +74,7 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 		const metaData = [
 			{
 				key: "Used",
-				value: jump.metaUsage
+				value: jump.usage
 			},
 			{
 				key: "Created",
@@ -86,7 +86,7 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 					setAnchorEl(e.currentTarget);
 					setAnchorUser(meta.createdBy);
 				}}>
-					{meta && meta.createdBy && meta.createdBy.username}
+					{meta && meta.createdBy && meta.createdBy}
 				</Link>
 			}
 		];
@@ -102,13 +102,13 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 						setAnchorEl(e.currentTarget);
 						setAnchorUser(meta.editedBy);
 					}}>
-						{meta && meta.editedBy && meta.editedBy.username}
+						{meta && meta.editedBy}
 					</Link>
 				}
 			);
 		}
 		setData(metaData);
-	}, [jump, jump.meta, jump.metaUsage]);
+	}, [jump, jump.meta, jump.usage]);
 
 	return (
 		<div className={classes.collapse} style={card}>
@@ -189,7 +189,7 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 							onClick: () => setDelete2(dispatch,
 								true,
 								DELETABLE_JUMP,
-								jump.personal === 0,
+								jump.public === true,
 								jump
 							),
 							style: {color: theme.palette.error.main}

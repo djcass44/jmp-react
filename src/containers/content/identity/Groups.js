@@ -33,7 +33,7 @@ import EmptyCard from "../../../components/widget/EmptyCard";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import {pageSize} from "../../../constants";
-import {getGroupsDispatch, GROUP_LOAD} from "../../../actions/Groups";
+import {getGroups, GROUP_LOAD} from "../../../actions/Groups";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline, mdiPencilOutline} from "@mdi/js";
 import posed, {PoseGroup} from "react-pose";
@@ -91,7 +91,7 @@ export default () => {
 	const [idx, setIdx] = useState(null);
 
 	useEffect(() => {
-		getGroupsDispatch(dispatch, headers);
+		getGroups(dispatch, headers);
 	}, [headers]);
 
 	// hook to rebuild the index when jumps change
@@ -123,7 +123,7 @@ export default () => {
 	sortedGroups.forEach((i, index) => {
 		if(index < offset || index > max) return;
 		const secondary = (<span>
-			{capitalise(i.from)}
+			{capitalise(i.source)}
 			{(i.public === true || i.defaultFor != null) &&
 			<span>&nbsp;&bull;&nbsp;{i.public === true ? "Public" : `Default for ${i.defaultFor} users`}</span>}
 		</span>);

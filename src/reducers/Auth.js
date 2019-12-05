@@ -44,7 +44,7 @@ const auth = (state = initialState, action) => {
 			// weird hack to stop the userProfile coming in AFTER a successful logout
 			if (state.request == null || state.request === "")
 				return state;
-			return {...state, userProfile: action.payload, isLoggedIn: true, isAdmin: action.payload.role === "ADMIN"};
+			return {...state, userProfile: action.payload, isLoggedIn: true, isAdmin: action.payload.admin === true};
 		}
 		case `${OAUTH2_CALLBACK}_SUCCESS`:
 		case `${OAUTH2_REFRESH}_SUCCESS`:

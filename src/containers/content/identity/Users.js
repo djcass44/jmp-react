@@ -95,18 +95,15 @@ export default () => {
 	const filterUser = user => {
 		return user.username.toLowerCase().includes(searchFilter) ||
 			user.role.toLowerCase() === searchFilter.toLowerCase() ||
-			user.from.toLowerCase() === searchFilter.toLowerCase();
+			user.source.toLowerCase() === searchFilter.toLowerCase();
 	};
 
-	const handlePatchUser = (user, role) => {
-		patchUserRole(dispatch, headers, JSON.stringify({
-			id: user.id,
-			role: role
-		}));
+	const handlePatchUser = (user, admin) => {
+		patchUserRole(dispatch, headers, user.id, admin);
 	};
 	const capitalise = (text) => {
-		if(text == null || text.length === 0) return text;
-		if(text.toLowerCase() === "ldap") return "LDAP"; // hmm
+		if (text == null || text.length === 0) return text;
+		if (text.toLowerCase() === "ldap") return "LDAP"; // hmm
 		return text.substring(0, 1).toUpperCase() + text.substring(1, text.length).toLowerCase();
 	};
 	// get the colour scheme
@@ -119,15 +116,15 @@ export default () => {
 	sortItems(users, sort);
 	const sortedUsers = users.filter(filterUser);
 	sortedUsers.forEach((i, index) => {
-		if(index < offset || index > max) return;
-		const userIsAdmin = i.role === 'ADMIN';
+		if (index < offset || index > max) return;
+		const userIsAdmin = i.admin === true;
 		const avatar = {
 			icon: userIsAdmin ? <AdminCircleIcon/> : <AccountCircleIcon/>,
 			bg: userIsAdmin ? schemeAdmin[0] : scheme[0],
 			fg: userIsAdmin ? schemeAdmin[1] : scheme[1],
 			banner: userIsAdmin ? <Badge color="red">Admin</Badge> : ""
 		};
-		const secondary = (<span>{capitalise(i.from)}&nbsp;{avatar.banner}</span>);
+		const secondary = (<span>{capitalise(i.source)}&nbsp;{avatar.banner}</span>);
 		listItems.push((
 			<ListItem button disableRipple key={index} component='li'>
 				<Avatar component='div' style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
@@ -141,15 +138,18 @@ export default () => {
 				<ListItemSecondaryAction>
 					<IconButton centerRipple={false} onClick={(e) => toggleExpansion(e, i.id)}>
 						<Icon path={mdiDotsVertical} size={1} color={getIconColour(theme)}/>
-						<Menu id={"user-menu"} open={i.id === expanded} anchorEl={anchorEl} anchorOrigin={{horizontal: "left", vertical: "top"}} onExit={() => {i.expanded = false}}>
-							{(isAdmin && i.role !== 'ADMIN' && i.username !== "system") &&
-							<MenuItem button component='li' onClick={() => handlePatchUser(i, 'ADMIN')}>
+						<Menu id={"user-menu"} open={i.id === expanded} anchorEl={anchorEl}
+						      anchorOrigin={{horizontal: "left", vertical: "top"}} onExit={() => {
+							i.expanded = false
+						}}>
+							{(isAdmin && i.admin !== true && i.username !== "system") &&
+							<MenuItem button component='li' onClick={() => handlePatchUser(i, true)}>
 								Promote to admin
 							</MenuItem>}
-							{(isAdmin && i.role === 'ADMIN' && i.username !== "admin") &&
-								<MenuItem button component='li' onClick={() => handlePatchUser(i, 'USER')}>
-									Demote to user
-								</MenuItem>
+							{(isAdmin && i.admin === true && i.username !== "admin") &&
+							<MenuItem button component='li' onClick={() => handlePatchUser(i, false)}>
+								Demote to user
+							</MenuItem>
 							}
 							<MenuItem button component='li'
 							          onClick={() => setDialog(dispatch, MODAL_USER_GROUPS, true, {user: i})}>Modify

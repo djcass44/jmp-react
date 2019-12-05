@@ -27,5 +27,8 @@ export const BASE_URL = `http${secure ? "s" : ""}://${API_URL}`;
 export const SOCKET_URL = `ws${secure ? "s" : ""}://${API_URL}/api/ws2`;
 
 export const client = axios.create({
-	baseURL: BASE_URL
+	baseURL: BASE_URL,
+	headers: {
+		'Content-Type': 'application/json'
+	}
 });

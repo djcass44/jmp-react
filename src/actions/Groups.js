@@ -16,6 +16,7 @@
  */
 import {client} from "../constants";
 import {addSnackbar} from "./Snackbar";
+import {failure, request, success} from "./index";
 
 export const GROUP_LOAD = "GROUP_LOAD";
 export const PUT_GROUP = "PUT_GROUP";
@@ -27,72 +28,80 @@ export const SOCKET_UPDATE_GROUPS = "EVENT_UPDATE_GROUP";
 
 
 export const patchGroup = (dispatch, headers, group) => {
-	dispatch({type: `${PATCH_GROUP}_REQUEST`, payload: group});
+	request(dispatch, PATCH_GROUP, group);
 	client.patch(`/api/v2_1/group`, JSON.stringify(group), {headers}).then(r => {
-		dispatch({
-			type: `${PATCH_GROUP}_SUCCESS`,
-			payload: r.data
-		});
+		success(dispatch, PATCH_GROUP, r.data);
 	}).catch(err => {
 		dispatch(addSnackbar({
 			message: "Failed to update group",
 			options: {key: `${PATCH_GROUP}_FAILURE`, variant: "error"}
 		}));
-		dispatch({type: `${PATCH_GROUP}_FAILURE`, payload: err, error: true});
+		failure(dispatch, PATCH_GROUP, err);
 	});
 };
 
-export const getGroupsDispatch = (dispatch, headers) => {
-	dispatch({type: `${GROUP_LOAD}_REQUEST`});
-	client.get("/api/v2_1/groups", {headers}).then(r => {
-		dispatch({
-			type: `${GROUP_LOAD}_SUCCESS`,
-			payload: r.data
-		});
+export const getGroups = (dispatch, headers) => {
+	request(dispatch, GROUP_LOAD);
+	client.get("/api/v2_1/group", {headers}).then(r => {
+		success(dispatch, GROUP_LOAD, r.data);
 	}).catch(err => {
-		dispatch(addSnackbar({message: "Failed to load groups", options: {key: `${GROUP_LOAD}_FAILURE`, variant: "error"}}));
-		dispatch({type: `${GROUP_LOAD}_FAILURE`, payload: err, error: true});
+		dispatch(addSnackbar({
+			message: "Failed to load groups",
+			options: {key: `${GROUP_LOAD}_FAILURE`, variant: "error"}
+		}));
+		failure(dispatch, GROUP_LOAD, err);
 	});
 };
 export const putGroup = (dispatch, headers, name) => {
-	dispatch({type: `${PUT_GROUP}_REQUEST`});
-	client.put("/api/v2_1/group", {name}, {headers}).then(r => {
-		dispatch({
-			type: `${PUT_GROUP}_SUCCESS`,
-			payload: r.data
-		});
+	request(dispatch, PUT_GROUP);
+	client.put("/api/v2_1/group", {
+		name,
+		public: false,
+		defaultFor: null
+	}, {headers}).then(r => {
+		success(dispatch, PUT_GROUP, r.data);
 		dispatch(addSnackbar({message: "Created group", options: {key: `${PUT_GROUP}_SUCCESS`, variant: "success"}}));
 	}).catch(err => {
-		dispatch(addSnackbar({message: "Failed to create group", options: {key: `${PUT_GROUP}_FAILURE`, variant: "error"}}));
-		dispatch({type: `${PUT_GROUP}_FAILURE`, payload: err, error: true});
+		failure(dispatch, PUT_GROUP, err);
+		dispatch(addSnackbar({
+			message: "Failed to create group",
+			options: {key: `${PUT_GROUP}_FAILURE`, variant: "error"}
+		}));
 	});
 };
 export const getUserGroups = (dispatch, headers, uid) => {
 	dispatch({type: `${GET_USER_GROUPS}_REQUEST`});
-	client.get(`/api/v2_1/user/groups?uid=${uid}`, {headers}).then(r => {
+	client.get(`/api/v2/user/groups?uid=${uid}`, {headers}).then(r => {
 		dispatch({
 			type: `${GET_USER_GROUPS}_SUCCESS`,
 			payload: r.data
 		});
 	}).catch(err => {
-		dispatch(addSnackbar({message: "Failed to load group memberships", options: {key: `${GET_USER_GROUPS}_FAILURE`, variant: "error"}}));
+		dispatch(addSnackbar({
+			message: "Failed to load group memberships",
+			options: {key: `${GET_USER_GROUPS}_FAILURE`, variant: "error"}
+		}));
 		dispatch({type: `${GET_USER_GROUPS}_FAILURE`, payload: err, error: true});
 	});
 };
 export const setUserGroups = (dispatch, headers, uid, payload) => {
 	dispatch({type: `${SET_USER_GROUPS}_REQUEST`});
-	client.patch('/api/v2_1/groupmod', payload, {headers, params: {uid: uid}}).then(r => {
+	client.patch('/api/v2_1/groupmod', payload, {headers, params: {uid}}).then(r => {
 		dispatch({
 			type: `${SET_USER_GROUPS}_SUCCESS`,
 			payload: r.data
 		});
-		dispatch(addSnackbar({message: "Updated group membership", options: {key: `${SET_USER_GROUPS}_SUCCESS`, variant: "success"}}));
+		dispatch(addSnackbar({
+			message: "Updated group membership",
+			options: {key: `${SET_USER_GROUPS}_SUCCESS`, variant: "success"}
+		}));
 		// Automatically reload the group memberships
 		getUserGroups(dispatch, headers, uid);
 	}).catch(err => {
-		dispatch(addSnackbar({message: "Failed to update group membership", options: {key: `${SET_USER_GROUPS}_FAILURE`, variant: "error"}}));
+		dispatch(addSnackbar({
+			message: "Failed to update group membership",
+			options: {key: `${SET_USER_GROUPS}_FAILURE`, variant: "error"}
+		}));
 		dispatch({type: `${SET_USER_GROUPS}_FAILURE`, payload: err, error: true});
 	});
 };
-
-export const getGroups = (headers) => dispatch => getGroupsDispatch(dispatch, headers);
