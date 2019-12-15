@@ -81,7 +81,12 @@ export default () => {
 	};
 
 	const onSubmit = () => {
-		patchGroup(dispatch, headers, {...group, public: isPublic, defaultFor: isPublic !== true && defaultFor});
+		patchGroup(dispatch, headers, {
+			...group,
+			name: name.value,
+			public: isPublic,
+			defaultFor: isPublic !== true && defaultFor
+		});
 		setSubmit(true);
 	};
 

@@ -18,7 +18,7 @@ import {Avatar, IconButton, LinearProgress, makeStyles, Paper, Tooltip, Typograp
 import {defaultSorts, sortItems} from "../../misc/Sort";
 import React, {useEffect, useState} from "react";
 import {APP_NAME, pageSize} from "../../constants";
-import {JUMP_LOAD, listJumpsDispatch} from "../../actions/Jumps";
+import {JUMP_LOAD, listJumps} from "../../actions/Jumps";
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import List from "@material-ui/core/List";
@@ -139,7 +139,7 @@ export default () => {
 
 	useEffect(() => {
 		window.document.title = `${APP_NAME}`;
-		listJumpsDispatch(dispatch, headers);
+		listJumps(dispatch, headers);
 	}, [headers]);
 
 	// hook to rebuild the index when jumps change
@@ -153,7 +153,7 @@ export default () => {
 		return idx.search(search);
 	};
 
-	let listItems = [];
+	const listItems = [];
 	// Tell the loop what our pagination limits are
 	let max = (offset + pageSize);
 	if (max > jumps.length) max = jumps.length;

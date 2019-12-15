@@ -17,17 +17,17 @@
 import {useDispatch, useSelector} from "react-redux";
 import JumpButton from "../../../components/content/jmp/JumpButton";
 import {DELETABLE_JUMP, MODAL_JUMP_EDIT, setDelete2, setDialog} from "../../../actions/Modal";
-import {mdiContentCopy, mdiDeleteOutline, mdiPencilOutline} from "@mdi/js";
+import {mdiChartDonut, mdiContentCopy, mdiDeleteOutline, mdiDelta, mdiPencilOutline, mdiPlusCircle,} from "@mdi/js";
 import React, {useEffect, useState} from "react";
 import {makeStyles, useTheme} from "@material-ui/styles";
 import getHelpCardColour from "../../../selectors/getHelpCardColour";
 import PropTypes from "prop-types";
-import {CardActions, Link, Popover, Table, TableBody, TableCell, TableRow, Typography} from "@material-ui/core";
+import {CardActions, Table, TableBody, TableCell, TableRow, Typography} from "@material-ui/core";
 import Moment from "react-moment";
 import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import getColourFromHex from "../../../style/getColourFromHex";
 import getSafeTextColour from "../../../selectors/getSafeTextColour";
-import UserPopover from "../../../components/widget/UserPopover";
+import Icon from "@mdi/react";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -43,6 +43,10 @@ const useStyles = makeStyles(theme => ({
 	action: {},
 	content: {
 		padding: theme.spacing(2)
+	},
+	icon: {
+		width: 24,
+		paddingRight: theme.spacing(1)
 	}
 }));
 
@@ -55,8 +59,6 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 
 	// state
 	const [data, setData] = useState([]);
-	const [anchorEl, setAnchorEl] = useState(null);
-	const [anchorUser, setAnchorUser] = useState(null);
 
 	const hasOwnership = isAdmin || jump.public === false;
 	// set the appropriate colours for the card-content
@@ -73,37 +75,22 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 		const {meta} = jump;
 		const metaData = [
 			{
+				icon: <Icon path={mdiChartDonut} size={0.725} color={theme.palette.success.main}/>,
 				key: "Used",
 				value: jump.usage
 			},
 			{
+				icon: <Icon path={mdiPlusCircle} size={0.725} color={theme.palette.primary.main}/>,
 				key: "Created",
 				value: <Moment fromNow>{(meta && meta.created) || jump.metaCreation}</Moment>
-			},
-			{
-				key: "Created by",
-				value: <Link onClick={e => {
-					setAnchorEl(e.currentTarget);
-					setAnchorUser(meta.createdBy);
-				}}>
-					{meta && meta.createdBy && meta.createdBy}
-				</Link>
 			}
 		];
 		// add edited only if the jump has actually been edited
 		if (meta.created !== meta.edited) {
 			metaData.push({
+					icon: <Icon path={mdiDelta} size={0.725} color={theme.palette.error.main}/>,
 					key: "Edited",
 					value: <Moment fromNow>{(meta && meta.edited) || jump.metaUpdate}</Moment>
-				},
-				{
-					key: "Edited by",
-					value: <Link onClick={e => {
-						setAnchorEl(e.currentTarget);
-						setAnchorUser(meta.editedBy);
-					}}>
-						{meta && meta.editedBy}
-					</Link>
 				}
 			);
 		}
@@ -116,25 +103,13 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 				<Typography className={classes.title} noWrap variant="subtitle1" style={textStyle}>
 					{jump.title || jump.name}
 				</Typography>
-				<Popover
-					open={Boolean(anchorEl)}
-					anchorEl={anchorEl}
-					onClose={() => setAnchorEl(null)}
-					onExited={() => setAnchorUser(null)}
-					anchorOrigin={{
-						vertical: "top",
-						horizontal: "center"
-					}}
-					transformOrigin={{
-						vertical: "top",
-						horizontal: "center"
-					}}>
-					<UserPopover user={anchorUser}/>
-				</Popover>
 				<Table>
 					<TableBody>
 						{data.map(row => (
 							<TableRow key={row.key}>
+								<TableCell className={classes.icon}>
+									{row.icon}
+								</TableCell>
 								<TableCell variant="head">
 									{row.key}
 								</TableCell>

@@ -8,7 +8,7 @@ export const OAUTH_REFRESH = "OAUTH_REFRESH";
 export const OAUTH_LOGOUT = "OAUTH_LOGOUT";
 export const GET_PROVIDERS = "GET_PROVIDERS";
 
-export const getProviders = (dispatch, headers) => get(dispatch, GET_PROVIDERS, "/api/v2_1/statistics/providers", {headers});
+export const getProviders = (dispatch, headers) => get(dispatch, GET_PROVIDERS, "/api/v2/providers", {headers});
 
 export const oauthVerify = (dispatch, refresh, headers) => {
 	client.get("/api/v2/user/me", {headers}).then(r => {

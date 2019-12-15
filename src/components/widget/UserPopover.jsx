@@ -34,6 +34,7 @@ const useStyles = makeStyles(theme => ({
 	displayName: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
+		fontSize: 20,
 		maxWidth: 175,
 		width: 125
 	}
@@ -54,12 +55,12 @@ const UserPopover = ({user, elevation}) => {
 				</Grid>
 				<Divider orientation={"horizontal"}/>
 				<Grid item xs={6} style={{float: "left"}}>
-					<Typography className={classes.displayName} noWrap variant={"h6"}>
+					<Typography className={classes.displayName} noWrap>
 						{(user && (user.displayName || user.username)) || "Anonymous"}
 					</Typography>
-					{(user && user.username) != null && <Typography variant={"subtitle1"}>
-						{user.username}
-					</Typography>}
+					<Typography variant={"subtitle1"}>
+						@{(user && user.username) || "Anonymous"}
+					</Typography>
 				</Grid>
 			</Grid>
 		</Paper>

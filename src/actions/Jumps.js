@@ -1,5 +1,6 @@
 import {APP_NOUN, client} from "../constants";
 import {addSnackbar} from "./Snackbar";
+import {failure, request, success} from "./index";
 
 export const JUMP_LOAD = "JUMP_LOAD";
 export const JUMP_SET = "JUMP_SET";
@@ -15,21 +16,21 @@ export const SOCKET_UPDATE_JUMP = "EVENT_UPDATE";
 export const SOCKET_UPDATE_TITLE = "EVENT_UPDATE_TITLE";
 export const SOCKET_UPDATE_FAVICON = "EVENT_UPDATE_FAVICON";
 
-export const listJumpsDispatch = (dispatch, headers) => {
-	dispatch({type: `${JUMP_LOAD}_REQUEST`});
-	client.get("/api/v2/jump", {headers: headers}).then(r => {
-		dispatch({type: `${JUMP_LOAD}_SUCCESS`, payload: r.data});
+export const listJumps = (dispatch, headers) => {
+	request(dispatch, JUMP_LOAD);
+	client.get("/api/v2/jump", {headers}).then(r => {
+		success(dispatch, JUMP_LOAD, r.data);
 	}).catch(err => {
 		dispatch(addSnackbar({
 			message: `Failed to load ${APP_NOUN}s`,
 			options: {key: `${JUMP_LOAD}_FAILURE`, variant: "error"}
 		}));
-		dispatch({type: `${JUMP_LOAD}_FAILURE`, payload: err, error: true});
+		failure(dispatch, JUMP_LOAD, err);
 	});
 };
 export const deleteJumpDispatch = (dispatch, headers, item) => {
 	dispatch({type: `${DELETE_JUMP}_REQUEST`});
-	client.delete(`/api/v2/jump/${item.id}`, {headers: headers}).then(r => {
+	client.delete(`/api/v2/jump/${item.id}`, {headers}).then(r => {
 		dispatch({type: `${DELETE_JUMP}_SUCCESS`, payload: r.data});
 		dispatch(addSnackbar({
 			message: `Deleted ${APP_NOUN}`,
@@ -57,7 +58,7 @@ export const getSimilar = (dispatch, headers, query) => {
 };
 export const putJumpDispatch = (dispatch, headers, jump, gid) => {
 	dispatch({type: `${PUT_JUMP}_REQUEST`});
-	client.put(`/api/v2/jump${gid}`, jump, {headers: headers}).then(r => {
+	client.put(`/api/v2/jump${gid}`, jump, {headers}).then(r => {
 		dispatch({
 			type: `${PUT_JUMP}_SUCCESS`,
 			payload: r.data
@@ -72,9 +73,9 @@ export const putJumpDispatch = (dispatch, headers, jump, gid) => {
 	});
 };
 export const patchJumpDispatch = (dispatch, headers, jump) => {
-	dispatch({type: `${PATCH_JUMP}_REQUEST`});
+	request(dispatch, PATCH_JUMP);
 	client.patch(`/api/v2/jump`, jump, {headers: headers}).then(r => {
-		dispatch({type: `${PATCH_JUMP}_SUCCESS`, payload: r.data});
+		success(dispatch, PATCH_JUMP, r.data);
 		dispatch(addSnackbar({
 			message: `Updated ${APP_NOUN}`,
 			options: {key: `${PATCH_JUMP}_SUCCESS`, variant: "success"}
@@ -84,11 +85,10 @@ export const patchJumpDispatch = (dispatch, headers, jump) => {
 			message: `Failed to update ${APP_NOUN}`,
 			options: {key: `${PATCH_JUMP}_FAILURE`, variant: "error"}
 		}));
-		dispatch({type: `${PATCH_JUMP}_FAILURE`, payload: err, error: true});
+		failure(dispatch, PATCH_JUMP, err);
 	});
 };
 
-export const listJumps = headers => dispatch => listJumpsDispatch(dispatch, headers);
 export const setJumpExpand = (dispatch, id) => dispatch({type: JUMP_SET_EXPAND, payload: id});
 
 export const getSimilarFail = (dispatch, error) => dispatch({

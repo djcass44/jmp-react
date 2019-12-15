@@ -20,7 +20,6 @@ import {APP_NAME, client} from "../../../constants";
 import {useDispatch, useSelector} from "react-redux";
 import {CircularProgress, makeStyles} from "@material-ui/core";
 import Center from "react-center";
-import {withRouter} from "react-router-dom";
 import {GET_TARGET} from "../../../actions/Jumps";
 
 const useStyles = makeStyles(theme => ({
@@ -40,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export const Token = ({history}) => {
+export default ({history}) => {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 	const loading = useSelector(state => state.loading[GET_TARGET]);
@@ -80,11 +79,11 @@ export const Token = ({history}) => {
 	};
 
 	const jumpUser = () => {
-		let url = new URL(window.location.href);
+		const url = new URL(window.location.href);
 		let query = url.searchParams.get("query");
 		const id = url.searchParams.get("id");
 		console.dir(query, id);
-		if(query != null && query !== '') {
+		if (query != null && query !== '') {
 			if (id != null && id !== "")
 				query += `?id=${id}`;
 			// find out were we are going
@@ -110,4 +109,3 @@ export const Token = ({history}) => {
 		</Center>
 	);
 };
-export default withRouter(Token);

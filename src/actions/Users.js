@@ -16,25 +16,23 @@
  */
 import {client} from "../constants";
 import {addSnackbar} from "./Snackbar";
+import {failure, request, success} from "./index";
 
 export const USER_LOAD = "USER_LOAD";
 export const PATCH_USER_ROLE = "PATCH_USER_ROLE";
 
 export const SOCKET_UPDATE_USERS = "EVENT_UPDATE_USER";
 
-export const getUsersDispatch = (dispatch, headers) => {
-	dispatch({type: `${USER_LOAD}_REQUEST`});
+export const getUsers = (dispatch, headers) => {
+	request(dispatch, USER_LOAD);
 	client.get("/api/v2/user", {headers}).then(r => {
-		dispatch({
-			type: `${USER_LOAD}_SUCCESS`,
-			payload: r.data
-		});
+		success(dispatch, USER_LOAD, r.data);
 	}).catch(err => {
 		dispatch(addSnackbar({
 			message: "Failed to load users",
 			options: {key: `${USER_LOAD}_FAILURE`, variant: "error"}
 		}));
-		dispatch({type: `${USER_LOAD}_FAILURE`, data: err, error: true});
+		failure(dispatch, USER_LOAD, err);
 	});
 };
 export const patchUserRole = (dispatch, headers, uid, admin = false) => {
@@ -44,7 +42,7 @@ export const patchUserRole = (dispatch, headers, uid, admin = false) => {
 			type: `${PATCH_USER_ROLE}_SUCCESS`,
 			payload: r.data
 		});
-		getUsersDispatch(dispatch, headers);
+		getUsers(dispatch, headers);
 	}).catch(err => {
 		dispatch(addSnackbar({
 			message: "Failed to update user role",
@@ -53,5 +51,3 @@ export const patchUserRole = (dispatch, headers, uid, admin = false) => {
 		dispatch({type: `${PATCH_USER_ROLE}_FAILURE`, payload: err, error: true});
 	});
 };
-
-export const getUsers = headers => dispatch => getUsersDispatch(dispatch, headers);

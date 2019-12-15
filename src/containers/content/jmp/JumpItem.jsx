@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-import {Collapse, ListItem, ListItemSecondaryAction, ListItemText} from "@material-ui/core";
+import {Collapse, ListItem, ListItemSecondaryAction, ListItemText, withWidth} from "@material-ui/core";
 import {mdiCallMerge, mdiChevronDown, mdiChevronUp} from "@mdi/js";
 import React, {useState} from "react";
 import {makeStyles, useTheme} from "@material-ui/styles";
@@ -29,7 +29,7 @@ import {setJumpExpand} from "../../../actions/Jumps";
 import JumpContent from "./JumpContent";
 import JumpAvatar from "../../../components/content/jmp/JumpAvatar";
 import {usePalette} from "react-palette";
-import withWidth, {isWidthDown} from "@material-ui/core/withWidth";
+import {isWidthDown} from "@material-ui/core/withWidth";
 
 const Item = posed.div({
 	enter: {
@@ -79,19 +79,15 @@ const JumpItem = ({jump, width}) => {
 	const dispatch = useDispatch();
 	const {expanded} = useSelector(state => state.jumps);
 	const [mouse, setMouse] = useState(false);
+	const {data, loading, error} = usePalette(jump.image);
 
+	// misc data
 	const selected = expanded === jump.id;
-
 	const smallScreen = isWidthDown("sm", width);
 
 	const getAliases = () => {
 		if (jump.alias == null || jump.alias.length === 0) return "";
-		let items = [];
-		jump.alias.forEach((i) => {
-			items.push(i.name);
-		});
-		let alias = items.join(", ");
-		return `AKA ${alias}`;
+		return `AKA ${jump.alias.map(i => i.name).join(", ")}`;
 	};
 
 	const primary = (
@@ -110,12 +106,10 @@ const JumpItem = ({jump, width}) => {
 		<span>
 			<Domain text={jump.location}/>
 			{jump.public === false && <span>
-				&nbsp;&bull;&nbsp;{jump.owner || jump.ownerGroup}
+				&nbsp;&bull;&nbsp;{(jump.owner && jump.owner.username) || (jump.ownerGroup && jump.ownerGroup.name)}
 			</span>}
 		</span>
 	);
-
-	const {data, loading, error} = usePalette(jump.image);
 
 	const onMouse = (active) => setMouse(active);
 

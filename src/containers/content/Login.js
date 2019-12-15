@@ -143,7 +143,7 @@ export default ({history}) => {
 	}
 	return (
 		<Center className={classes.overlay}>
-			{loading || isLoggedIn === true ?
+			{isLoggedIn === true ?
 				<CircularProgress/>
 				:
 				<>
@@ -161,6 +161,9 @@ export default ({history}) => {
 									</Grid>
 									<Grid item xs={12} sm={9} md={6} lg={4}>
 										<Card style={{padding: 16, borderRadius: 12}}>
+											{errorMessage && <Typography style={{padding: 8}}>
+												{errorMessage}
+											</Typography>}
 											{page === 0 && <ValidatedTextField
 												data={username}
 												setData={setUsername}
@@ -198,18 +201,18 @@ export default ({history}) => {
 											}} className={classes.title} onClick={() => onNext()} variant="contained"
 											        color="primary"
 											        fullWidth size="large" type="submit"
-											        disabled={!valid || page >= 2}>
+											        disabled={!valid || page >= 2 || loading === true}>
 												Continue
+												{loading === true &&
+												<CircularProgress style={{padding: 4}} size={15} thickness={7}/>}
 											</Button>
 											{(page > 0 || error != null) &&
 											<Button className={classes.resetButton} color="primary"
+											        disabled={loading === true}
 											        onClick={() => onReset()}>Reset</Button>}
 										</Card>
 									</Grid>
 								</Grid>
-								<Typography style={{padding: 8}}>
-									{errorMessage}
-								</Typography>
 								{getProviderCount(providers) > 0 &&
 									<>
 										<p className={classes.oauthMessage}>Alternatively, login with</p>

@@ -36,10 +36,7 @@ export default (state = initialState, action) => {
 	switch (action.type) {
 		case JUMP_SET_EXPAND: {
 			const {payload} = action;
-			if(state.expanded === payload)
-				return {...state, expanded: null};
-			else
-				return {...state, expanded: payload};
+			return {...state, expanded: state.expanded === payload ? null : payload};
 		}
 		case `${GET_TARGET}_SUCCESS`:
 			return {...state, target: action.payload};
@@ -50,25 +47,25 @@ export default (state = initialState, action) => {
 			return {...state, similar: action.payload};
 		case SOCKET_UPDATE_TITLE: {
 			const {payload} = action;
-			let idx = indexFromId(state.jumps, payload.id);
-			if(idx < 0) {
+			const idx = indexFromId(state.jumps, payload.id);
+			if (idx < 0) {
 				console.error(`${SOCKET_UPDATE_TITLE}: Failed to find item with id: ${payload.id}`);
 				return state;
 			}
 			const j = state.jumps;
 			j[idx].title = payload.url; // the name is for class reuse api-side
-			return {...state, j};
+			return {...state, jumps: j};
 		}
 		case SOCKET_UPDATE_FAVICON: {
 			const {payload} = action;
-			let idx = indexFromId(state.jumps, payload.id);
-			if(idx < 0) {
+			const idx = indexFromId(state.jumps, payload.id);
+			if (idx < 0) {
 				console.error(`${SOCKET_UPDATE_FAVICON}: Failed to find item with id: ${payload.id}`);
 				return state;
 			}
 			const j = state.jumps;
 			j[idx].image = payload.url; // the name is for class reuse api-side
-			return {...state, j};
+			return {...state, jumps: j};
 		}
 		default:
 			return state;

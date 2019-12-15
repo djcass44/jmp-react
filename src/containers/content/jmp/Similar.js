@@ -119,17 +119,19 @@ export default () => {
 		<Grid item sm={3}/>
 		<Grid item sm={6}>
 			<Center>
-				<Typography className={classes.title} variant={"h1"}>Woah</Typography>
+				<Typography className={classes.title}
+				            variant={"h1"}>{similar.length > 0 ? "Woah" : "Oh no"}</Typography>
 			</Center>
 			{error == null && similar.length > 0 && <Center>
 				<Typography className={classes.subtitle} variant={"subtitle1"}>Before you go&nbsp;
 					<span role={"img"} aria-label={"Rocket"}>🚀</span>
 				</Typography>
 			</Center>}
-			<Center>
-				<Typography variant={"subtitle1"} className={classes.title}>{error == null ? status : getErrorMessage(error)}</Typography>
-			</Center>
-			{loading === true ? <Center><CircularProgress/></Center> : ""}
+			{loading === false && <Center>
+				<Typography variant={"subtitle1"}
+				            className={classes.title}>{error == null ? status : getErrorMessage(error)}</Typography>
+			</Center>}
+			{loading === true && <Center><CircularProgress/></Center>}
 			<Center style={{padding: 16}}>{chips}</Center>
 		</Grid>
 		<Grid item sm={3}/>

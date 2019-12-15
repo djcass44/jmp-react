@@ -8,12 +8,16 @@ export const WS_OPEN = "WS_OPEN";
 export const WS_RECONNECT = "WS_RECONNECT";
 export const WS_CLOSE = "WS_CLOSE";
 export const WS_CLOSE_USER = "WS_CLOSE_USER"; // user requested
+export const WS_BAD_TICK = "WS_BAD_TICK";
 
 let socket = null;
+let badTicks = 0;
 
 export const connectWebSocket = (dispatch, headers) => {
 	socket = new WebSocket(SOCKET_URL);
 	socket.addEventListener('open', () => {
+		badTicks = 0;
+		dispatch({type: WS_BAD_TICK, payload: badTicks});
 		dispatch(removeSnackbar(WS_CLOSE));
 		dispatch(closeSnackbar(WS_CLOSE));
 		dispatch({type: WS_OPEN})
@@ -25,8 +29,15 @@ export const connectWebSocket = (dispatch, headers) => {
 		}, 2000);
 		dispatch({type: WS_CLOSE});
 		setTimeout(() => {
-			// add a slight delay
-			dispatch(addSnackbar({message: "Trouble reaching servers", options: {key: WS_CLOSE, variant: "warning"}}));
+			badTicks++;
+			dispatch({type: WS_BAD_TICK, payload: badTicks});
+			if (badTicks > 3) {
+				// add a slight delay
+				dispatch(addSnackbar({
+					message: "Trouble reaching servers",
+					options: {key: WS_CLOSE, variant: "warning"}
+				}));
+			}
 		}, 500);
 	});
 	socket.addEventListener('message', ev => {
@@ -40,15 +51,15 @@ export const connectWebSocket = (dispatch, headers) => {
 const checkType = (dispatch, type, payload, headers) => {
 	switch(type) {
 		case SOCKET_UPDATE_JUMP: {
-			dispatch(listJumps(headers));
+			listJumps(dispatch, headers);
 			break;
 		}
 		case SOCKET_UPDATE_GROUPS: {
-			dispatch(getGroups(headers));
+			getGroups(dispatch, headers);
 			break;
 		}
 		case SOCKET_UPDATE_USERS: {
-			dispatch(getUsers(headers));
+			getUsers(dispatch, headers);
 			break;
 		}
 		default:

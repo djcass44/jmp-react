@@ -15,7 +15,7 @@
  *
  */
 
-import {getUsersDispatch, PATCH_USER_ROLE, patchUserRole, USER_LOAD} from "../../../actions/Users";
+import {getUsers, PATCH_USER_ROLE, patchUserRole, USER_LOAD} from "../../../actions/Users";
 import {useDispatch, useSelector} from "react-redux";
 import {
 	Avatar,
@@ -85,7 +85,7 @@ export default () => {
 	const [offset, setOffset] = useState(0);
 
 
-	useEffect(() => getUsersDispatch(dispatch, headers), [headers]);
+	useEffect(() => getUsers(dispatch, headers), [headers]);
 
 	const toggleExpansion = (e, id) => {
 		setExpanded(expanded === id ? -1 : id);
