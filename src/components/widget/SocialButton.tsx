@@ -39,13 +39,20 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const SocialButton = ({url, colour, name, icon}: { url: string, colour: string, name: string, icon: string }) => {
+interface SocialButtonProps {
+	url: string;
+	colour: string;
+	name: string;
+	icon: string;
+}
+
+const SocialButton: React.FC<SocialButtonProps> = ({url, colour, name, icon}: SocialButtonProps) => {
 	const theme = useTheme();
 	const classes = useStyles();
 	const variant = theme.palette.type === "dark" ? "contained" : "text";
 	return (
 		<Button href={url} className={classes.button} variant={variant}>
-			<Icon className={classes.icon} path={icon} size={'1.5rem'} color={colour}/>
+			<Icon className={classes.icon} path={icon} size={"1.5rem"} color={colour}/>
 			{name}
 		</Button>
 	);

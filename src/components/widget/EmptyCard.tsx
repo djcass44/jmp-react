@@ -14,13 +14,12 @@
  *    limitations under the License.
  */
 
-import {Avatar, ListItemText, makeStyles} from "@material-ui/core";
+import {Avatar, ListItemText, makeStyles, Theme} from "@material-ui/core";
 import getAvatarScheme from "../../style/getAvatarScheme";
 import {SentimentDissatisfied} from "@material-ui/icons";
 import ListItem from "@material-ui/core/ListItem";
 import React from "react";
 import {useTheme} from "@material-ui/core/styles";
-import {Theme} from "../../style/palette";
 
 const useStyles = makeStyles(() => ({
 	title: {

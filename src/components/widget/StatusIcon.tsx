@@ -4,10 +4,16 @@ import Icon from "@mdi/react";
 import React from "react";
 import {Theme} from "../../style/palette";
 
-export default ({active = null, title, icon}: { active: string | null, title: string, icon: string }) => {
+interface StatusIconProps {
+	active: string | null;
+	title: string;
+	icon: string;
+}
+
+const StatusIcon: React.FC<StatusIconProps> = ({active = null, title, icon}: StatusIconProps) => {
 	const theme = useTheme<Theme>();
 
-	if (active == null) return "";
+	if (active == null) return null;
 
 	const ok = active === "UP";
 	const colour = ok ? theme.palette.success.main : theme.palette.error.main;
@@ -18,5 +24,7 @@ export default ({active = null, title, icon}: { active: string | null, title: st
 				<Icon path={icon} size={1} color={colour}/>
 			</IconButton>
 		</Tooltip>
-	)
+	);
 };
+
+export default StatusIcon;

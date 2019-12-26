@@ -12,27 +12,23 @@
  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
- *
  */
 
-import React from "react";
-import {Alert} from "evergreen-ui";
-import PropTypes from "prop-types";
+export interface Jump {
+	image?: string;
+	public: boolean,
+	owner?: string,
+	ownerGroup?: string
+}
 
-// THIS CLASS CANNOT BE CONVERTED TO TYPESCRIPT UNTIL EVERGREEN-UI HAS TYPE DEFINITIONS
+export interface User {
+	username: string;
+	displayName?: string;
+	avatarUrl?: string;
+}
 
-const Banner = ({open, label}) => {
-	return open === true ?
-		<Alert intent={"danger"} title={(label && label.toString()) || "No information could be provided"}
-		       style={{marginBottom: 32, borderRadius: 8}}/>
-		:
-		<div/>
-};
-Banner.propTypes = {
-	open: PropTypes.bool.isRequired,
-	label: PropTypes.object
-};
-Banner.defaultProps = {
-	label: null
-};
-export default Banner;
+export interface ValidatedData {
+	value: string;
+	error: string;
+	regex: RegExp;
+}

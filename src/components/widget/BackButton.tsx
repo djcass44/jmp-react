@@ -18,7 +18,7 @@ import Icon from "@mdi/react";
 import {mdiArrowLeft} from "@mdi/js";
 import IconButton from "@material-ui/core/IconButton";
 import React from "react";
-import {makeStyles, withTheme} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core";
 import {useTheme} from "@material-ui/core/styles";
 import {Link} from "react-router-dom";
 
@@ -30,16 +30,22 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export const BackButton = ({to, label}: {to: string, label: string}) => {
+interface BackButtonProps {
+	to: string;
+	label: string | null;
+}
+
+export const BackButton: React.FC<BackButtonProps> = ({to, label}: BackButtonProps) => {
 	const classes = useStyles();
 	const theme = useTheme();
 	return (
 		<div>
 			<IconButton component={Link} to={to} centerRipple={false}>
-				<Icon path={mdiArrowLeft} size={1} color={theme.palette.getContrastText(theme.palette.background.default)}/>
+				<Icon path={mdiArrowLeft} size={1}
+				      color={theme.palette.getContrastText(theme.palette.background.default)}/>
 			</IconButton>
 			<span className={classes.title}>{label != null ? label : "Back"}</span>
 		</div>
-	)
+	);
 };
-export default withTheme(BackButton);
+export default BackButton;

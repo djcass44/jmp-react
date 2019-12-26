@@ -25,14 +25,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 	http: {
 		color: theme.palette.error.main,
-		textDecorationLine: 'line-through'
+		textDecorationLine: "line-through"
 	},
 	secondaryText: {
 		color: theme.palette.text.secondary
 	}
 }));
 
-export default ({text}: {text: string}) => {
+interface DomainProps {
+	text: string;
+}
+
+const Domain: React.FC<DomainProps> = ({text}: DomainProps) => {
 	const theme = useTheme<Theme>();
 	const classes = useStyles(theme);
 
@@ -40,8 +44,10 @@ export default ({text}: {text: string}) => {
 		const split = url.split("://");
 		const scheme = split[0];
 		const domain = split[1];
-		return (<span className={classes[scheme]}>{scheme}://<span className={classes.secondaryText}>{domain}</span></span>);
+		return (<span className={classes[scheme]}>{scheme}://<span
+			className={classes.secondaryText}>{domain}</span></span>);
 	};
-	return (<span>{highlighted(text, classes)}</span>)
-
+	return (<span>{highlighted(text, classes)}</span>);
 };
+
+export default Domain;

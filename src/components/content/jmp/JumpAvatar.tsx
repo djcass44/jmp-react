@@ -19,15 +19,23 @@ import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js
 import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import {useTheme} from "@material-ui/styles";
 import Icon from "@mdi/react";
-import {Avatar, CircularProgress} from "@material-ui/core";
+import {Avatar, CircularProgress, Theme} from "@material-ui/core";
 import React from "react";
-import PropTypes from "prop-types";
 import Img from "react-image";
 import getLegacyJumpType from "../../../selectors/getLegacyJumpType";
+import {Jump} from "../../../types";
 
-const JumpAvatar = ({jump, background, palette, loading, error}) => {
+interface JumpAvatarProps {
+	jump: Jump;
+	background?: boolean;
+	palette: any;
+	loading: boolean;
+	error: Error | null;
+}
+
+const JumpAvatar: React.FC<JumpAvatarProps> = ({jump, background = true, palette, loading, error}: JumpAvatarProps) => {
 	// hooks
-	const theme = useTheme();
+	const theme = useTheme<Theme>();
 
 	const personal = getLegacyJumpType(jump);
 	const scheme = getAvatarScheme(theme, personal);
@@ -43,11 +51,11 @@ const JumpAvatar = ({jump, background, palette, loading, error}) => {
 			icon = mdiAccountGroupOutline;
 			break;
 	}
-	const avatarPalette = error == null && getAvatarFromPalette(theme, icon, palette);
-	const avatar = loading === false && error == null ? {
+	const avatarPalette = error == null ? getAvatarFromPalette(theme, icon, palette) : null;
+	const avatar = !loading && error == null ? {
 		icon: icon,
-		bg: background ? avatarPalette.bg : "transparent",
-		fg: avatarPalette.fg
+		bg: background ? avatarPalette?.bg : "transparent",
+		fg: avatarPalette?.fg
 	} : {
 		icon: icon,
 		bg: background ? scheme[0] : "transparent",
@@ -66,12 +74,5 @@ const JumpAvatar = ({jump, background, palette, loading, error}) => {
 			/>
 		</Avatar>
 	);
-};
-JumpAvatar.propTypes = {
-	jump: PropTypes.object.isRequired,
-	background: PropTypes.bool
-};
-JumpAvatar.defaultProps = {
-	background: true
 };
 export default JumpAvatar;

@@ -16,23 +16,23 @@
  */
 
 import React, {useEffect} from "react";
-import {IconButton, makeStyles, Typography} from "@material-ui/core";
+import {IconButton, makeStyles, Theme, Typography} from "@material-ui/core";
 import {useTheme} from "@material-ui/core/styles";
-// @ts-ignore
 import Center from "react-center";
 import {Link} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHomeOutline} from "@mdi/js";
 import {APP_NAME} from "../../constants";
+import * as H from "history";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	title: {
 		fontSize: 148,
 		fontWeight: 200,
 		color: theme.palette.text.primary
 	},
 	subtitle: {
-		textAlign: 'center',
+		textAlign: "center",
 		fontFamily: "Manrope",
 		fontWeight: 500,
 		color: theme.palette.text.secondary
@@ -48,13 +48,17 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export default ({history}: { history: any }) => {
+interface NotFoundProps {
+	history: H.History;
+}
+
+const NotFound: React.FC<NotFoundProps> = ({history}: NotFoundProps) => {
 	useEffect(() => {
 		window.document.title = `404 - ${APP_NAME}`;
 	}, []);
 
 	const classes = useStyles();
-	const theme = useTheme();
+	const theme = useTheme<Theme>();
 	return (
 		<Center className={classes.overlay}>
 			<div style={{pointerEvents: "initial"}}>
@@ -80,3 +84,4 @@ export default ({history}: { history: any }) => {
 		</Center>
 	);
 };
+export default NotFound;
