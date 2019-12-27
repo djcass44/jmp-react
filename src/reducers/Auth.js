@@ -35,8 +35,8 @@ const initialState = {
 	allProviders: []
 };
 
-const auth = (state = initialState, action) => {
-	switch(action.type) {
+export default (state = initialState, action) => {
+	switch (action.type) {
 		case `${GET_PROVIDERS}_SUCCESS`:
 			return {...state, allProviders: action.payload};
 		case `${OAUTH_VERIFY}_SUCCESS`: {
@@ -94,4 +94,3 @@ const auth = (state = initialState, action) => {
 			return state;
 	}
 };
-export default auth;

@@ -27,7 +27,7 @@ import info from "./Info";
 import modal from "./Modal";
 import snackbar from "./Snackbar";
 
-const main = combineReducers({
+export default combineReducers({
 	auth,
 	loading,
 	errors,
@@ -39,4 +39,3 @@ const main = combineReducers({
 	modal,
 	snackbar
 });
-export default main;

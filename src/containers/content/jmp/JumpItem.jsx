@@ -110,7 +110,7 @@ const JumpItem = ({jump, width}) => {
 		<span>
 			<Domain text={jump.location}/>
 			{jump.public === false && <span>
-				&nbsp;&bull;&nbsp;{jump.owner || jump.ownerGroup}
+				&nbsp;&bull;&nbsp;{jump.owner?.username || jump.ownerGroup?.name}
 			</span>}
 		</span>
 	);

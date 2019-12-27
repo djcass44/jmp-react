@@ -45,7 +45,7 @@ export default (state = initialState, action) => {
 			return {...state, target: action.payload};
 		case JUMP_SET:
 		case `${JUMP_LOAD}_SUCCESS`:
-			return {...state, jumps: action.payload};
+			return {...state, jumps: action.payload.content};
 		case `${GET_SIMILAR}_SUCCESS`:
 			return {...state, similar: action.payload};
 		case SOCKET_UPDATE_TITLE: {
