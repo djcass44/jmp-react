@@ -15,9 +15,8 @@
  *
  */
 
-import React, {useState} from "react";
-import {Collapse, ListItemSecondaryAction, makeStyles, Paper, Typography} from "@material-ui/core";
-// @ts-ignore
+import React, {ReactNode, useEffect, useState} from "react";
+import {Collapse, ListItemSecondaryAction, makeStyles, Paper, Theme, Typography} from "@material-ui/core";
 import Center from "react-center";
 import Avatar from "@material-ui/core/Avatar";
 import List from "@material-ui/core/List";
@@ -30,7 +29,7 @@ import getHelpCardColour from "../../selectors/getHelpCardColour";
 import useTheme from "@material-ui/core/styles/useTheme";
 import {APP_NAME, APP_NOUN} from "../../constants";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
@@ -61,9 +60,11 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Help = () => {
+const Help: React.FC = () => {
+	const theme = useTheme<Theme>();
+
 	const [expand, setExpand] = useState<number>(-1);
-	const qna = [
+	const [qna] = useState([
 		{
 			q: "Browser setup guides",
 			a: <BrowserGuide/>
@@ -114,42 +115,52 @@ const Help = () => {
 				<br/><br/>If using <b>OAuth2</b>, you are redirected to the provider (e.g. Google) which returns an authentication token. {APP_NAME} uses this token to verify your identity when you make requests.
 			</span>
 		}
-	];
-	const toggleExpansion = (index: number) => setExpand(index !== expand ? index : -1);
-	
-	const theme = useTheme();
-	// set the appropriate colours for the card-content
-	const card = {
-		backgroundColor: getHelpCardColour(theme)
+	]);
+	const [data, setData] = useState<Array<ReactNode>>([]);
+
+	useEffect(() => {
+		// set the appropriate colours for the card-content
+		const card = {
+			backgroundColor: getHelpCardColour(theme)
+		};
+		setData(qna.map((i, index) => {
+			return (
+				<div key={index}>
+					<ListItem button className={classes.item} value={index} onClick={() => toggleExpansion(index)}
+					          component={"li"}>
+						<ListItemText
+							primary={<span className={classes.title} style={{color: textColour}}>{i.q}</span>}/>
+						<ListItemSecondaryAction className={classes.itemAction}>
+							<Icon path={index === expand ? mdiChevronUp : mdiChevronDown} size={1}
+							      color={theme.palette.primary.main}/>
+						</ListItemSecondaryAction>
+					</ListItem>
+					<Collapse in={index === expand} unmountOnExit timeout={"auto"}>
+						<Typography component={"div"} className={classes.content} style={card}
+						            variant={"body1"}>{i.a}</Typography>
+					</Collapse>
+				</div>
+			);
+		}));
+	}, [qna]);
+
+	const toggleExpansion = (index: number): void => {
+		setExpand(index !== expand ? index : -1);
 	};
+
 	const textColour = theme.palette.getContrastText(theme.palette.background.default);
 	const classes = useStyles();
-	const items = new Array<object>();
-	qna.forEach((i, index) => {
-		items.push(
-			<div key={index}>
-				<ListItem button className={classes.item} value={index} onClick={() => toggleExpansion(index)} component={'li'}>
-					<ListItemText primary={<span className={classes.title} style={{color: textColour}}>{i.q}</span>}/>
-					<ListItemSecondaryAction className={classes.itemAction}>
-						<Icon path={index === expand ? mdiChevronUp : mdiChevronDown} size={1} color={theme.palette.primary.main}/>
-					</ListItemSecondaryAction>
-				</ListItem>
-				<Collapse in={index === expand} unmountOnExit timeout={"auto"}>
-					<Typography component={'div'} className={classes.content} style={card} variant={"body1"}>{i.a}</Typography>
-				</Collapse>
-			</div>
-		)
-	});
 	return (
 		<>
 			<Center>
-				<Avatar className={classes.avatar} component={Paper} src={`${process.env.PUBLIC_URL}/jmp.png`} alt={process.env.REACT_APP_APP_NAME}/>
+				<Avatar className={classes.avatar} component={Paper} src={`${process.env.PUBLIC_URL}/jmp.png`}
+				        alt={process.env.REACT_APP_APP_NAME}/>
 			</Center>
 			<Center>
 				<Typography variant="h4" className={classes.name}>How can we help you?</Typography>
 			</Center>
 			<List component='ul'>
-				{items}
+				{data}
 			</List>
 		</>
 	);

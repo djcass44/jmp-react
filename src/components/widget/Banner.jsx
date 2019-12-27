@@ -23,9 +23,10 @@ import PropTypes from "prop-types";
 
 const Banner = ({open, label}) => {
 	return open === true ?
-			<Alert intent={"danger"} title={label && label.toString() || "No information could be provided"} style={{marginBottom: 32, borderRadius: 8}} />
-			:
-			<div/>
+		<Alert intent={"danger"} title={(label && label.toString()) || "No information could be provided"}
+		       style={{marginBottom: 32, borderRadius: 8}}/>
+		:
+		<div/>
 };
 Banner.propTypes = {
 	open: PropTypes.bool.isRequired,

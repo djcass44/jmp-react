@@ -16,7 +16,7 @@
  */
 
 import React, {useEffect, useState} from "react";
-import {FormControlLabel, ListSubheader, makeStyles, Switch, Typography, Badge, Button} from "@material-ui/core";
+import {Badge, Button, FormControlLabel, ListSubheader, makeStyles, Switch, Typography} from "@material-ui/core";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import {LS_DARK} from "../../../constants";
 import Icon from "@mdi/react";
@@ -40,11 +40,11 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const General = () => {
-	const [dark, setDark] = useState(false);
+const General: React.FC = () => {
+	const [dark, setDark] = useState<boolean>(false);
 
 	useEffect(() => {
-		setDark(localStorage.getItem(LS_DARK) === 'true');
+		setDark(localStorage.getItem(LS_DARK) === "true");
 	}, []);
 
 	const onSetDark = (e: React.ChangeEvent<HTMLInputElement>) => {

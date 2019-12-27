@@ -1,10 +1,6 @@
-interface JumpType {
-	public: boolean,
-	owner?: string,
-	ownerGroup?: string
-}
+import {Jump} from "../types";
 
-export default (jump: JumpType) => {
+export default (jump: Jump) => {
 	if (jump.public)
 		return 0;
 	else if (jump.owner != null)

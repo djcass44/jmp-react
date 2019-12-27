@@ -1,4 +1,4 @@
-import {Theme} from "./palette";
+import {Theme} from "@material-ui/core";
 
 export default (theme: Theme, type: number) => {
 	const {palette} = theme;

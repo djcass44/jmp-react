@@ -157,3 +157,4 @@ typings/
 .scannerwork
 
 env-config.js
+/Dockerfile

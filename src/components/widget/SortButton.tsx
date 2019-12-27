@@ -10,20 +10,18 @@ interface Sort {
 	value: string
 }
 
-export const SortButton = ({selectedSort, sorts, onSubmit}: {selectedSort: string, sorts: Array<Sort>, onSubmit: Function}) => {
+interface SortButtonProps {
+	selectedSort: string;
+	sorts: Array<Sort>;
+	onSubmit: Function;
+}
+
+const SortButton: React.FC<SortButtonProps> = ({selectedSort, sorts, onSubmit}: SortButtonProps) => {
 	const [anchorEl, setAnchorEl] = React.useState<any>(null);
-
-	const handleClick = (e: any) => {
-		setAnchorEl(e.currentTarget);
-	};
-
-	const handleClose = () => {
-		setAnchorEl(null);
-	};
 
 	const handleSubmit = (id: string) => {
 		onSubmit(id);
-		handleClose();
+		setAnchorEl(null);
 	};
 
 	const items = sorts.map(s => {
@@ -38,11 +36,12 @@ export const SortButton = ({selectedSort, sorts, onSubmit}: {selectedSort: strin
 	return (
 		<span>
 			<Tooltip title="Sort">
-				<IconButton aria-owns={anchorEl ? 'simple-menu' : undefined} aria-haspopup="true" onClick={handleClick} centerRipple={false} aria-label="Sort">
+				<IconButton aria-owns={anchorEl ? "simple-menu" : undefined} aria-haspopup="true"
+				            onClick={(e) => setAnchorEl(e.currentTarget)} centerRipple={false} aria-label="Sort">
 					<SortIcon fontSize="small"/>
 				</IconButton>
 			</Tooltip>
-			<Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+			<Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
 				{items}
 			</Menu>
 		</span>

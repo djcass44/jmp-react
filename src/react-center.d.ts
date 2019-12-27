@@ -12,30 +12,6 @@
  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
- *
  */
 
-import {combineReducers} from "redux";
-import auth from "./Auth";
-import loading from "./Loading";
-import errors from "./Errors";
-import jumps from "./Jumps";
-import generic from "./Generic";
-import users from "./Users";
-import groups from "./Groups";
-import info from "./Info";
-import modal from "./Modal";
-import snackbar from "./Snackbar";
-
-export default combineReducers({
-	auth,
-	loading,
-	errors,
-	jumps,
-	generic,
-	users,
-	groups,
-	info,
-	modal,
-	snackbar
-});
+declare module "react-center";

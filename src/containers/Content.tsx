@@ -16,8 +16,8 @@
  */
 
 import React from "react";
-import {Grid, makeStyles} from "@material-ui/core";
-import {Route, Switch, withRouter} from "react-router-dom";
+import {Grid, makeStyles, Theme} from "@material-ui/core";
+import {Route, Switch} from "react-router-dom";
 import Login from "./content/Login";
 import NotFound from "./content/NotFound";
 import Logout from "./content/Logout";
@@ -32,30 +32,30 @@ import JumpEditDialog from "./modal/JumpEditDialog";
 import DeleteDialog from "./modal/DeleteDialog";
 import JumpDialog from "./modal/JumpDialog";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	container: {
 		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
+		justifyContent: "center",
+		alignItems: "center",
 		padding: 20
 	},
-	centred: {
+	centered: {
 		flex: 1,
-		justifyContent: 'center'
+		justifyContent: "center"
 	},
 	padding: {
-		display: 'none',
-		[theme.breakpoints.up('sm')]: {
-			display: 'initial'
-		},
+		display: "none",
+		[theme.breakpoints.up("sm")]: {
+			display: "initial"
+		}
 	}
 }));
 
-export const Content = () => {
+const Content: React.FC = () => {
 	const classes = useStyles();
 	return (
 		<div className={classes.container}>
-			<Grid container spacing={5} className={classes.centred}>
+			<Grid container spacing={5} className={classes.centered}>
 				<Grid item xs={false} sm={1} md={3} className={classes.padding}/>
 				<Grid item xs={12} sm={10} md={6}>
 					<Switch>
@@ -79,4 +79,4 @@ export const Content = () => {
 		</div>
 	);
 };
-export default withRouter(Content);
+export default Content;

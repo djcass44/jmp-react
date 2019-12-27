@@ -16,15 +16,15 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import {makeStyles} from "@material-ui/styles";
 import Paper from "@material-ui/core/Paper";
-import {Typography} from "@material-ui/core";
+import {Theme, Typography} from "@material-ui/core";
 import {Avatar} from "evergreen-ui";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
+import {User} from "../../types";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	paper: {
 		padding: theme.spacing(2)
 	},
@@ -40,7 +40,12 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const UserPopover = ({user, elevation}) => {
+interface UserPopoverProps {
+	user: User | null;
+	elevation: number;
+}
+
+const UserPopover: React.FC<UserPopoverProps> = ({user, elevation = 2}: UserPopoverProps) => {
 	const classes = useStyles();
 	return (
 		<Paper elevation={elevation} className={classes.paper}>
@@ -49,7 +54,7 @@ const UserPopover = ({user, elevation}) => {
 					<Avatar
 						className={classes.avatar}
 						name={(user && (user.displayName || user.username)) || "Anonymous"}
-						src={user && user.avatarUrl}
+						src={(user && user.avatarUrl) || undefined}
 						size={64}
 					/>
 				</Grid>
@@ -59,19 +64,11 @@ const UserPopover = ({user, elevation}) => {
 						{(user && (user.displayName || user.username)) || "Anonymous"}
 					</Typography>
 					<Typography variant={"subtitle1"}>
-						@{(user && user.username) || "Anonymous"}
+						@{user?.username || "Anonymous"}
 					</Typography>
 				</Grid>
 			</Grid>
 		</Paper>
 	);
-};
-UserPopover.propTypes = {
-	user: PropTypes.object,
-	elevation: PropTypes.number
-};
-UserPopover.defaultProps = {
-	user: null,
-	elevation: 2
 };
 export default UserPopover;
