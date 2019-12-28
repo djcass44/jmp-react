@@ -15,27 +15,16 @@
  *
  */
 
-import {combineReducers} from "redux";
-import auth from "./Auth";
-import loading from "./Loading";
-import errors from "./Errors";
-import jumps from "./Jumps";
-import generic from "./Generic";
-import users from "./Users";
-import groups from "./Groups";
-import info from "./Info";
-import modal from "./Modal";
-import snackbar from "./Snackbar";
+import {Dispatch} from "redux";
 
-export default combineReducers({
-	auth,
-	loading,
-	errors,
-	jumps,
-	generic,
-	users,
-	groups,
-	info,
-	modal,
-	snackbar
-});
+interface Action {
+	(
+		dispatch: Dispatch,
+		action: string,
+		data: any | null
+	): void;
+}
+
+export const request = (action: string): string => `${action}_REQUEST`;
+export const success = (action: string): string => `${action}_SUCCESS`;
+export const failure = (action: string): string => `${action}_FAILURE`;

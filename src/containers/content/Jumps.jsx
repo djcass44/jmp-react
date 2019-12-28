@@ -18,7 +18,7 @@ import {Avatar, IconButton, LinearProgress, makeStyles, Paper, Tooltip, Typograp
 import {defaultSorts, sortItems} from "../../misc/Sort";
 import React, {useEffect, useState} from "react";
 import {APP_NAME, pageSize} from "../../constants";
-import {JUMP_LOAD, listJumps} from "../../actions/Jumps";
+import {JUMP_LOAD} from "../../actions/Jumps";
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import List from "@material-ui/core/List";
@@ -32,6 +32,7 @@ import {dispatchSort} from "../../actions/Generic";
 import AddIcon from "@material-ui/icons/Add";
 import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
 import {createIndex} from "../../misc/Search";
+import {getJumps} from "../../store/actions/jumps/GetJumps";
 
 const bgTransition = time => `background-color ${time}ms linear`;
 const useStyles = makeStyles(theme => ({
@@ -126,11 +127,12 @@ export default () => {
 	// hooks
 	const classes = useStyles();
 	const dispatch = useDispatch();
-	const {jumps} = useSelector(state => state.jumps);
+	const pagedJumps = useSelector(state => state.jumps.jumps);
 	const {sort} = useSelector(state => state.generic);
 	const {headers} = useSelector(state => state.auth);
 	const loading = useSelector(state => state.loading[JUMP_LOAD]);
 
+	const jumps = pagedJumps.content;
 
 	const sorts = [...defaultSorts, {id: "usage", value: "Usage"}];
 	const [offset, setOffset] = useState(0);
@@ -139,7 +141,7 @@ export default () => {
 
 	useEffect(() => {
 		window.document.title = `${APP_NAME}`;
-		listJumps(dispatch, headers);
+		getJumps(dispatch, headers);
 	}, [headers]);
 
 	// hook to rebuild the index when jumps change

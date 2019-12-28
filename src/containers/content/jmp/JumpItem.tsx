@@ -14,22 +14,25 @@
  *    limitations under the License.
  */
 
-import {Collapse, ListItem, ListItemSecondaryAction, ListItemText, withWidth} from "@material-ui/core";
+import {Collapse, ListItem, ListItemSecondaryAction, ListItemText, Theme, withWidth} from "@material-ui/core";
 import {mdiCallMerge, mdiChevronDown, mdiChevronUp} from "@mdi/js";
 import React, {useState} from "react";
 import {makeStyles, useTheme} from "@material-ui/styles";
 import {useDispatch, useSelector} from "react-redux";
-import PropTypes from "prop-types";
 import Domain from "../../../components/widget/Domain";
 import {Link} from "react-router-dom";
 import {APP_NOUN} from "../../../constants";
 import posed, {PoseGroup} from "react-pose";
 import JumpButton from "../../../components/content/jmp/JumpButton";
-import {setJumpExpand} from "../../../actions/Jumps";
 import JumpContent from "./JumpContent";
 import JumpAvatar from "../../../components/content/jmp/JumpAvatar";
 import {usePalette} from "react-palette";
 import {isWidthDown} from "@material-ui/core/withWidth";
+import {setJumpExpand} from "../../../store/actions/jumps";
+import {Jump} from "../../../types";
+import {Breakpoint} from "@material-ui/core/styles/createBreakpoints";
+import {TState} from "../../../store/reducers";
+import {JumpsState} from "../../../store/reducers/jumps";
 
 const Item = posed.div({
 	enter: {
@@ -46,7 +49,7 @@ const Item = posed.div({
 	}
 });
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	item: {
 		borderRadius: 12
 	},
@@ -72,14 +75,19 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const JumpItem = ({jump, width}) => {
+interface JumpItemProps {
+	jump: Jump;
+	width: Breakpoint;
+}
+
+const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 	// hooks
 	const classes = useStyles();
-	const theme = useTheme();
+	const theme = useTheme<Theme>();
 	const dispatch = useDispatch();
-	const {expanded} = useSelector(state => state.jumps);
-	const [mouse, setMouse] = useState(false);
-	const {data, loading, error} = usePalette(jump.image);
+	const {expanded} = useSelector<TState, JumpsState>(state => state.jumps);
+	const [mouse, setMouse] = useState<boolean>(false);
+	const {data, loading, error} = usePalette(jump.image || "");
 
 	// misc data
 	const selected = expanded === jump.id;
@@ -105,13 +113,13 @@ const JumpItem = ({jump, width}) => {
 	const secondary = (
 		<span>
 			<Domain text={jump.location}/>
-			{jump.public === false && <span>
+			{!jump.public && <span>
 				&nbsp;&bull;&nbsp;{jump.owner?.username || jump.ownerGroup?.name}
 			</span>}
 		</span>
 	);
 
-	const onMouse = (active) => setMouse(active);
+	const onMouse = (active: boolean) => setMouse(active);
 
 	const focusProps = {
 		onMouseEnter: () => setMouse(true),
@@ -171,8 +179,5 @@ const JumpItem = ({jump, width}) => {
 			</Collapse>
 		</div>
 	);
-};
-JumpItem.propTypes = {
-	jump: PropTypes.object.isRequired
 };
 export default withWidth()(JumpItem);

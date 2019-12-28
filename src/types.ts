@@ -15,10 +15,20 @@
  */
 
 export interface Jump {
+	id: number;
+	name: string;
+	location: string;
+	title?: string;
 	image?: string;
-	public: boolean,
-	owner?: string,
-	ownerGroup?: string
+	public: boolean;
+	owner?: User | null;
+	ownerGroup?: Group | null;
+	alias: Array<Alias>;
+}
+
+export interface Alias {
+	id?: number | null;
+	name: string;
 }
 
 export interface User {
@@ -27,8 +37,29 @@ export interface User {
 	avatarUrl?: string;
 }
 
+export interface Group {
+	id: string;
+	name: string;
+	source: string;
+	public: boolean;
+	defaultFor?: string | null;
+}
+
 export interface ValidatedData {
 	value: string;
 	error: string;
 	regex: RegExp;
+}
+
+export interface Page<T> {
+	content: Array<T>;
+	size: number; // page size
+	number: number; // page count
+	totalElements: number; // total items
+	numberOfElements: number; // elements on page
+}
+
+export interface FaviconPayload {
+	id: number;
+	url: string;
 }

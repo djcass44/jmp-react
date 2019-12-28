@@ -15,18 +15,20 @@
  *
  */
 
-import {applyMiddleware} from "redux/es/redux";
-import {compose, createStore} from "redux";
-import thunkMiddleware from "redux-thunk";
-import main from "../reducers";
+import {applyMiddleware, compose, createStore} from "redux";
+import thunk from "redux-thunk";
+import reducers from "./reducers";
+import {apiMiddleware} from "redux-api-middleware";
 
+// @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-let store = createStore(
-	main,
+
+export default createStore(
+	reducers,
 	composeEnhancers(
 		applyMiddleware(
-			thunkMiddleware
+			thunk,
+			apiMiddleware
 		)
 	)
 );
-export default store;

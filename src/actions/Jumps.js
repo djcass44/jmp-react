@@ -13,21 +13,7 @@ export const PATCH_JUMP = "PATCH_JUMP";
 export const GET_TARGET = "GET_TARGET";
 
 export const SOCKET_UPDATE_JUMP = "EVENT_UPDATE";
-export const SOCKET_UPDATE_TITLE = "EVENT_UPDATE_TITLE";
-export const SOCKET_UPDATE_FAVICON = "EVENT_UPDATE_FAVICON";
 
-export const listJumps = (dispatch, headers) => {
-	request(dispatch, JUMP_LOAD);
-	client.get("/api/v2/jump", {headers}).then(r => {
-		success(dispatch, JUMP_LOAD, r.data);
-	}).catch(err => {
-		dispatch(addSnackbar({
-			message: `Failed to load ${APP_NOUN}s`,
-			options: {key: `${JUMP_LOAD}_FAILURE`, variant: "error"}
-		}));
-		failure(dispatch, JUMP_LOAD, err);
-	});
-};
 export const deleteJumpDispatch = (dispatch, headers, item) => {
 	dispatch({type: `${DELETE_JUMP}_REQUEST`});
 	client.delete(`/api/v2/jump/${item.id}`, {headers}).then(r => {
@@ -42,18 +28,6 @@ export const deleteJumpDispatch = (dispatch, headers, item) => {
 			options: {key: `${DELETE_JUMP}_FAILURE`, variant: "error"}
 		}));
 		dispatch({type: `${DELETE_JUMP}_FAILURE`, payload: err, error: true});
-	});
-};
-export const getSimilar = (dispatch, headers, query) => {
-	dispatch({type: `${GET_SIMILAR}_REQUEST`});
-	client.get(`/api/v2/similar/${query}`, {headers}).then(r => {
-		dispatch({
-			type: `${GET_SIMILAR}_SUCCESS`,
-			payload: r.data
-		});
-	}).catch(err => {
-		dispatch(addSnackbar({message: `Failed to load ${APP_NOUN}`, options: {key: `${GET_SIMILAR}_FAILURE`, variant: "error"}}));
-		dispatch({type: `${GET_SIMILAR}_FAILURE`, payload: err, error: true});
 	});
 };
 export const putJumpDispatch = (dispatch, headers, jump, gid) => {

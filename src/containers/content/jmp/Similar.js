@@ -18,7 +18,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {Avatar, Chip, CircularProgress, Grid, makeStyles, Tooltip, Typography} from "@material-ui/core";
 import React, {useEffect} from "react";
-import {GET_SIMILAR, getSimilar, getSimilarFail} from "../../../actions/Jumps";
+import {getSimilarFail} from "../../../actions/Jumps";
 import Center from "react-center";
 import Icon from "@mdi/react";
 import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
@@ -28,6 +28,7 @@ import getAvatarScheme from "../../../style/getAvatarScheme";
 import useTheme from "@material-ui/core/styles/useTheme";
 import getErrorMessage from "../../../selectors/getErrorMessage";
 import {APP_NAME} from "../../../constants";
+import {GET_SIMILAR, getSimilar} from "../../../store/actions/jumps/GetSimilar";
 
 const useStyles = makeStyles(theme => ({
 	title: {

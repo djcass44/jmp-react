@@ -1,8 +1,9 @@
 import {SOCKET_URL} from "../constants";
-import {listJumps, SOCKET_UPDATE_JUMP} from "./Jumps";
+import {SOCKET_UPDATE_JUMP} from "./Jumps";
 import {getGroups, SOCKET_UPDATE_GROUPS} from "./Groups";
 import {getUsers, SOCKET_UPDATE_USERS} from "./Users";
 import {addSnackbar, closeSnackbar, removeSnackbar} from "./Snackbar";
+import {getJumps} from "../store/actions/jumps/GetJumps";
 
 export const WS_OPEN = "WS_OPEN";
 export const WS_RECONNECT = "WS_RECONNECT";
@@ -51,7 +52,7 @@ export const connectWebSocket = (dispatch, headers) => {
 const checkType = (dispatch, type, payload, headers) => {
 	switch(type) {
 		case SOCKET_UPDATE_JUMP: {
-			listJumps(dispatch, headers);
+			getJumps(dispatch, headers);
 			break;
 		}
 		case SOCKET_UPDATE_GROUPS: {
