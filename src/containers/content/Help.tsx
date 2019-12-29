@@ -64,6 +64,7 @@ const Help: React.FC = () => {
 	const theme = useTheme<Theme>();
 
 	const [expand, setExpand] = useState<number>(-1);
+	const [data, setData] = useState<Array<ReactNode>>([]);
 	const [qna] = useState([
 		{
 			q: "Browser setup guides",
@@ -116,7 +117,6 @@ const Help: React.FC = () => {
 			</span>
 		}
 	]);
-	const [data, setData] = useState<Array<ReactNode>>([]);
 
 	useEffect(() => {
 		// set the appropriate colours for the card-content
@@ -142,7 +142,7 @@ const Help: React.FC = () => {
 				</div>
 			);
 		}));
-	}, [qna]);
+	}, [qna, expand]);
 
 	const toggleExpansion = (index: number): void => {
 		setExpand(index !== expand ? index : -1);

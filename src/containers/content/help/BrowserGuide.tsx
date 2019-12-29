@@ -15,14 +15,14 @@
  *
  */
 
-import React, {useState} from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 import {mdiAppleSafari, mdiEdge, mdiFirefox, mdiGoogleChrome, mdiInternetExplorer} from "@mdi/js";
 import Icon from "@mdi/react";
-import {Collapse, IconButton, makeStyles, Typography} from "@material-ui/core";
+import {Collapse, IconButton, makeStyles, Theme, Typography} from "@material-ui/core";
 import {APP_KEY, APP_NAME, BASE_URL} from "../../../constants";
 import Link from "@material-ui/core/Link";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	name: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
@@ -36,10 +36,22 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export default () => {
-	const [selected, setSelected] = useState(-1);
-	const [open, setOpen] = useState(false);
-	const browserData = [
+interface Browser {
+	icon: string;
+	colour: string;
+	name: string;
+	content: ReactNode;
+	info?: string | null;
+	supported: number;
+}
+
+const BrowserGuide: React.FC = () => {
+	const classes = useStyles();
+	const [selected, setSelected] = useState<number>(-1);
+	const [open, setOpen] = useState<boolean>(false);
+
+	const [data, setData] = useState<Array<ReactNode>>([]);
+	const [browserData] = useState<Array<Browser>>([
 		{
 			icon: mdiGoogleChrome,
 			colour: '#1da462',
@@ -89,8 +101,7 @@ export default () => {
 			colour: '#006cff',
 			name: 'Safari',
 			content: <span>
-				Safari 10+ is supported, 9 will work with compatibility issues.
-				Due to Apple locking down the search engine choices, you will need to install an extension in order to use {APP_NAME}
+				Safari 10+ may be supported, however due to Apple locking down the search engine choices you will need to install an extension in order to use {APP_NAME}
 			</span>,
 			info: 'Safari is only available for macOS',
 			supported: 1
@@ -102,14 +113,12 @@ export default () => {
 			content: 'Only IE11 and above are supported likely with compatibility issues. We recommend that you use a more modern browser such as Firefox, Chrome or Edge',
 			supported: 0
 		}
-	];
+	]);
 
-	const classes = useStyles();
-	const browsers = [];
-	browserData.forEach((i, index) => {
-		browsers.push(
+	useEffect(() => {
+		setData(browserData.map((i, index) => (
 			<IconButton centerRipple={false} style={{color: i.colour}} key={index} onClick={() => {
-				if (selected === index && open === true) {
+				if (selected === index && open) {
 					setOpen(false);
 					return;
 				}
@@ -117,15 +126,15 @@ export default () => {
 				setOpen(true);
 			}}>
 				<Icon path={i.icon} size={1} color={i.colour}/>
-			</IconButton>
-		)
-	});
+			</IconButton>)))
+	}, [browserData]);
+
 	return (
 		<div>
 			<div>
-				{browsers}
+				{data}
 			</div>
-			<Collapse in={open === true}>
+			<Collapse in={open}>
 				{selected >= 0 && <div className={classes.content}>
 					<Typography variant="h6" className={classes.name} style={{color: browserData[selected].colour}}>
 						{browserData[selected].name}
@@ -136,3 +145,5 @@ export default () => {
 		</div>
 	);
 };
+
+export default BrowserGuide;
