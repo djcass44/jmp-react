@@ -19,11 +19,10 @@ import React, {useEffect} from "react";
 import {IconButton, makeStyles, Theme, Typography} from "@material-ui/core";
 import {useTheme} from "@material-ui/core/styles";
 import Center from "react-center";
-import {Link} from "react-router-dom";
+import {Link, RouteComponentProps} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHomeOutline} from "@mdi/js";
 import {APP_NAME} from "../../constants";
-import * as H from "history";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -48,17 +47,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-interface NotFoundProps {
-	history: H.History;
-}
+const NotFound: React.FC<RouteComponentProps> = ({history}) => {
+	const classes = useStyles();
+	const theme = useTheme<Theme>();
 
-const NotFound: React.FC<NotFoundProps> = ({history}: NotFoundProps) => {
 	useEffect(() => {
 		window.document.title = `404 - ${APP_NAME}`;
 	}, []);
 
-	const classes = useStyles();
-	const theme = useTheme<Theme>();
 	return (
 		<Center className={classes.overlay}>
 			<div style={{pointerEvents: "initial"}}>

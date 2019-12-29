@@ -26,18 +26,14 @@ const codes = {
 	"504": "Gateway timeout: the API it taking too long to respond"
 };
 export default status => {
-	if(status == null) return status;
+	if (status == null) return status;
 	let maybeCode = 0;
 	try {
 		maybeCode = parseInt(status.substring(status.length - 3, status.length));
-	}
-	catch (e) {
+	} catch (e) {
 		return status;
 	}
-	if(isNaN(maybeCode)) return status.toString();
+	if (isNaN(maybeCode)) return status;
 
-	let resp = codes[maybeCode.toString()];
-	console.log(resp);
-	if(resp == null) resp = status;
-	return resp;
+	return codes[maybeCode.toString()] || status;
 }

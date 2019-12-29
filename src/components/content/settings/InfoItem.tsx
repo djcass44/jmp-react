@@ -27,7 +27,7 @@ interface InfoItemProps {
 	error?: Error | null;
 	open: boolean;
 	icon: ReactNode;
-	content: object;
+	content: ReactNode;
 }
 
 const InfoItem: React.FC<InfoItemProps> = ({title, error, open, icon, content}: InfoItemProps) => {

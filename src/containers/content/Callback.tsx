@@ -16,15 +16,16 @@
  */
 
 import React, {useEffect} from "react";
-import Typography from "@material-ui/core/es/Typography/Typography";
 import Center from "react-center";
-import {makeStyles} from "@material-ui/core";
+import {makeStyles, Theme, Typography} from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {useDispatch, useSelector} from "react-redux";
 import {OAUTH2_CALLBACK, oauth2Callback} from "../../actions/Oauth";
 import {APP_NAME} from "../../constants";
+import {RouteComponentProps} from "react-router";
+import {TState} from "../../store/reducers";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	subtitle: {
 		textAlign: 'center',
 		fontFamily: "Manrope",
@@ -43,11 +44,14 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export default ({history}) => {
+const Callback: React.FC<RouteComponentProps> = ({history}) => {
 	const dispatch = useDispatch();
+	const classes = useStyles();
 
-	const loading = useSelector(state => state.loading[OAUTH2_CALLBACK]);
-	const error = useSelector(state => state.errors[OAUTH2_CALLBACK]);
+	// @ts-ignore
+	const loading = useSelector<TState, boolean>(state => state.loading[OAUTH2_CALLBACK] ?? false);
+	// @ts-ignore
+	const error = useSelector<TState, any | null>(state => state.errors[OAUTH2_CALLBACK] ?? null);
 
 	useEffect(() => {
 		window.document.title = `Callback - ${APP_NAME}`;
@@ -57,11 +61,10 @@ export default ({history}) => {
 	}, []);
 
 	useEffect(() => {
-		if(loading === false && error == null)
+		if (!loading && error == null)
 			history.push('/');
 	}, [loading, error]);
 
-	const classes = useStyles();
 	return (
 		<Center className={classes.overlay}>
 			{error == null ?
@@ -70,8 +73,9 @@ export default ({history}) => {
 						<CircularProgress style={{margin: 24}}/>
 					</Center>
 					<Center>
-						<Typography className={classes.subtitle} variant={"subtitle1"}>We're just doing some
-							setup...</Typography>
+						<Typography className={classes.subtitle} variant={"subtitle1"}>
+							We're just doing some setup...
+						</Typography>
 					</Center>
 				</div>
 				:
@@ -84,3 +88,5 @@ export default ({history}) => {
 		</Center>
 	);
 };
+
+export default Callback;

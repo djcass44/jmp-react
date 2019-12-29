@@ -1,9 +1,10 @@
 import React from "react";
 import Status from "../containers/content/settings/Status";
 import {useSelector} from "react-redux";
-import {Card, makeStyles} from "@material-ui/core";
+import {Card, makeStyles, Theme} from "@material-ui/core";
+import {TState} from "../store/reducers";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	root: {
 		position: "fixed",
 		bottom: theme.spacing(2),
@@ -19,16 +20,19 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export default () => {
-	const {isAdmin} = useSelector(state => state.auth);
+const AdminPanel: React.FC = () => {
+	// @ts-ignore
+	const {isAdmin} = useSelector<TState, boolean>(state => state.auth);
 	const classes = useStyles();
 
-	if(isAdmin === false) return <div/>;
+	if (!isAdmin) return <div/>;
 	return (
 		<div className={classes.root}>
 			<Card className={classes.card}>
 				<Status/>
 			</Card>
 		</div>
-	)
+	);
 };
+
+export default AdminPanel;

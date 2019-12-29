@@ -17,22 +17,18 @@
 
 import React from "react";
 import {Alert} from "evergreen-ui";
-import PropTypes from "prop-types";
 
-// THIS CLASS CANNOT BE CONVERTED TO TYPESCRIPT UNTIL EVERGREEN-UI HAS TYPE DEFINITIONS
+interface BannerProps {
+	open: boolean;
+	label?: any | null;
+}
 
-const Banner = ({open, label}) => {
-	return open === true ?
-		<Alert intent={"danger"} title={(label && label.toString()) || "No information could be provided"}
+const Banner: React.FC<BannerProps> = ({open, label}: BannerProps) => {
+	return open ?
+		<Alert intent={"danger"} title={(label?.toString()) || "No information could be provided"}
 		       style={{marginBottom: 32, borderRadius: 8}}/>
 		:
 		<div/>
 };
-Banner.propTypes = {
-	open: PropTypes.bool.isRequired,
-	label: PropTypes.object
-};
-Banner.defaultProps = {
-	label: null
-};
+
 export default Banner;

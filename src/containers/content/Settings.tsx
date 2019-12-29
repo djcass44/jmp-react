@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import Center from "react-center";
-import {Paper, makeStyles, Typography, Avatar} from "@material-ui/core";
+import {Avatar, makeStyles, Paper, Theme, Typography} from "@material-ui/core";
 import Info from "./settings/Info";
 import General from "./settings/General";
 import Auth from "./settings/Auth";
@@ -9,8 +9,9 @@ import Icon from "@mdi/react";
 import {mdiSettingsOutline} from "@mdi/js";
 import {APP_NAME} from "../../constants";
 import {useTheme} from "@material-ui/core/styles";
+import {TState} from "../../store/reducers";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	name: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
@@ -26,15 +27,18 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-export default () => {
+const Settings: React.FC = () => {
+	const classes = useStyles();
+	const theme = useTheme();
+
 	useEffect(() => {
 		window.document.title = `Settings - ${APP_NAME}`;
 	}, []);
 
-	const isAdmin = useSelector(state => state.auth.isAdmin);
+	// TODO fix this once reducer conversion is complete
+	// @ts-ignore
+	const isAdmin = useSelector<TState, boolean>(state => state.auth.isAdmin);
 
-	const classes = useStyles();
-	const theme = useTheme();
 	return (
 		<div>
 			<Center>
@@ -46,14 +50,12 @@ export default () => {
 				<Typography variant={"h4"} className={classes.name}>Settings</Typography>
 			</Center>
 			<General/>
-			{isAdmin === true ?
-				<div>
-					<Auth/>
-					<Info/>
-				</div>
-				:
-				""
-			}
+			{isAdmin && <div>
+				<Auth/>
+				<Info/>
+			</div>}
 		</div>
 	);
 };
+
+export default Settings;

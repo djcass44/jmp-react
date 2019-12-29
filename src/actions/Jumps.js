@@ -62,20 +62,8 @@ export const patchJumpDispatch = (dispatch, headers, jump) => {
 		failure(dispatch, PATCH_JUMP, err);
 	});
 };
-
-export const setJumpExpand = (dispatch, id) => dispatch({type: JUMP_SET_EXPAND, payload: id});
-
 export const getSimilarFail = (dispatch, error) => dispatch({
 	type: `${GET_SIMILAR}_FAILURE`,
 	payload: error,
 	error: true
 });
-
-export const getTargetJump = (dispatch, headers, query) => {
-	dispatch({type: `${GET_TARGET}_REQUEST`});
-	client.get(`/api/v2/jump/${query}`, {headers}).then(r => {
-		dispatch({type: `${GET_TARGET}_SUCCESS`, payload: r.data});
-	}).catch(err => {
-		dispatch({type: `${GET_TARGET}_FAILURE`, payload: err, error: true});
-	});
-};

@@ -19,7 +19,7 @@ import jumps, {JumpsState} from "./jumps";
 import {combineReducers} from "redux";
 import auth from "../../reducers/Auth";
 import loading from "./loading";
-import errors from "../../reducers/Errors";
+import errors from "./errors";
 import generic from "../../reducers/Generic";
 import users from "../../reducers/Users";
 import groups from "../../reducers/Groups";
@@ -30,6 +30,7 @@ import snackbar from "../../reducers/Snackbar";
 export interface TState {
 	jumps: JumpsState;
 	loading: Map<string, boolean>;
+	errors: Map<string, any | null>;
 }
 
 export default combineReducers({
