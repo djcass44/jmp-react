@@ -14,11 +14,20 @@
  *    limitations under the License.
  */
 
-import {Avatar, IconButton, LinearProgress, makeStyles, Paper, Tooltip, Typography} from "@material-ui/core";
+import {
+	Avatar,
+	Fade,
+	IconButton,
+	LinearProgress,
+	makeStyles,
+	Paper,
+	Tooltip,
+	Typography,
+	Zoom
+} from "@material-ui/core";
 import {defaultSorts, sortItems} from "../../misc/Sort";
 import React, {useEffect, useState} from "react";
-import {APP_NAME, pageSize} from "../../constants";
-import {JUMP_LOAD} from "../../actions/Jumps";
+import {APP_NAME} from "../../constants";
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import List from "@material-ui/core/List";
@@ -31,8 +40,8 @@ import SortButton from "../../components/widget/SortButton";
 import {dispatchSort} from "../../actions/Generic";
 import AddIcon from "@material-ui/icons/Add";
 import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
-import {createIndex} from "../../misc/Search";
-import {getJumps} from "../../store/actions/jumps/GetJumps";
+import {GET_JUMP, getJumps} from "../../store/actions/jumps/GetJumps";
+import {setJumpExpand} from "../../store/actions/jumps";
 
 const bgTransition = time => `background-color ${time}ms linear`;
 const useStyles = makeStyles(theme => ({
@@ -41,8 +50,14 @@ const useStyles = makeStyles(theme => ({
 		fontWeight: 500
 	},
 	progress: {
+		position: "fixed",
+		width: "100%",
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
 		backgroundColor: "transparent",
-		flexGrow: 1
+		pointerEvents: "none"
 	},
 	name: {
 		fontFamily: "Manrope",
@@ -108,21 +123,6 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const searchFields = [
-	{
-		name: "name",
-		weight: 0.5
-	},
-	{
-		name: "location",
-		weight: 0.3
-	},
-	{
-		name: "title",
-		weight: 0.2
-	}
-];
-
 export default () => {
 	// hooks
 	const classes = useStyles();
@@ -130,42 +130,30 @@ export default () => {
 	const pagedJumps = useSelector(state => state.jumps.jumps);
 	const {sort} = useSelector(state => state.generic);
 	const {headers} = useSelector(state => state.auth);
-	const loading = useSelector(state => state.loading[JUMP_LOAD]);
-
-	const jumps = pagedJumps.content;
+	const loading = useSelector(state => state.loading[GET_JUMP] ?? false);
 
 	const sorts = [...defaultSorts, {id: "usage", value: "Usage"}];
 	const [offset, setOffset] = useState(0);
 	const [search, setSearch] = useState("");
-	const [idx, setIdx] = useState(null);
+
+	const [data, setData] = useState([]);
 
 	useEffect(() => {
 		window.document.title = `${APP_NAME}`;
-		getJumps(dispatch, headers);
-	}, [headers]);
+		getJumps(dispatch, headers, search, Number(offset / 8) || 0, 8);
+	}, [headers, search, offset]);
 
-	// hook to rebuild the index when jumps change
 	useEffect(() => {
-		setIdx(createIndex(searchFields, jumps));
-	}, [jumps]);
+		const {content} = pagedJumps;
+		// Loop-d-loop
+		sortItems(content, sort);
+		setData(content.map(i => (<JumpItem jump={i} key={i.id} id={i.id}/>)));
+	}, [pagedJumps, sort]);
 
-	const filterJump = items => {
-		if (search == null || search === "")
-			return items;
-		return idx.search(search);
+	const onPageChange = (off) => {
+		setOffset(off);
+		setJumpExpand(dispatch, null);
 	};
-
-	const listItems = [];
-	// Tell the loop what our pagination limits are
-	let max = (offset + pageSize);
-	if (max > jumps.length) max = jumps.length;
-	// Loop-d-loop
-	sortItems(jumps, sort);
-	const sortedJumps = filterJump(jumps);
-	sortedJumps.forEach((i, index) => {
-		if (index < offset || index > max) return;
-		listItems.push(<JumpItem jump={i} key={i.id} id={i.id}/>);
-	});
 
 
 	return (
@@ -203,26 +191,26 @@ export default () => {
 				/>
 			</div>
 			<div>
-				{loading === true && <LinearProgress className={classes.progress} color="primary"/>}
+				<Fade in={loading === true}>
+					<LinearProgress className={classes.progress} color="primary"/>
+				</Fade>
 				<div key="root" style={{borderRadius: 12, marginBottom: 8}}>
 					<List component="ul">
-						{listItems.length > 0 ?
-							listItems
-							:
+						{data}
+						<Zoom in={data.length === 0}>
 							<Typography className={`${classes.title} ${classes.nothing}`} color="primary">
 								Nothing could be found
 							</Typography>
-						}
+						</Zoom>
 					</List>
 				</div>
-				{listItems.length > pageSize || offset > 0 ?
+				<Zoom in={pagedJumps.totalElements > pagedJumps.size}>
 					<Center>
-						<Pagination limit={pageSize} offset={offset} total={sortedJumps.length}
-						            nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, off) => setOffset(off)}/>
+						<Pagination limit={pagedJumps.size} offset={offset} total={pagedJumps.totalElements}
+						            nextPageLabel={"▶"} previousPageLabel={"◀"}
+						            onClick={(e, off) => onPageChange(off)}/>
 					</Center>
-					:
-					<div/>
-				}
+				</Zoom>
 			</div>
 		</React.Fragment>
 	);

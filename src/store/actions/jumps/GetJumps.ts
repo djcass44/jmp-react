@@ -40,10 +40,10 @@ interface GetJumpsFailureAction {
 	payload: Error;
 }
 
-export const getJumps = (dispatch: Dispatch, headers: any): void => {
+export const getJumps = (dispatch: Dispatch, headers: any, query = "", page = 0, size = 8): void => {
 	dispatch({
 		[RSAA]: {
-			endpoint: `${BASE_URL}/api/v2/jump`,
+			endpoint: `${BASE_URL}/api/v2/jump?query=${query}&page=${page}&size=${size}`,
 			method: "GET",
 			headers,
 			types: [GET_JUMP_REQUEST, GET_JUMP_SUCCESS, GET_JUMP_FAILURE]
