@@ -2,13 +2,14 @@ import React, {useLayoutEffect} from 'react';
 import Content from "./Content";
 import Nav from "./Nav";
 import AdminPanel from "../components/AdminPanel";
-import {makeStyles} from "@material-ui/core";
-import PropTypes from "prop-types";
+import {makeStyles, Theme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {OAUTH_VERIFY, oauthVerify} from "../actions/Auth";
-import {withRouter} from "react-router";
+import {RouteComponentProps, withRouter} from "react-router-dom";
+import {OAUTH_VERIFY, oauthVerify} from "../store/actions/auth/AuthVerify";
+import {TState} from "../store/reducers";
+import {AuthState} from "../store/reducers/auth";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	main: {
 		display: 'flex',
 		flexDirection: 'column'
@@ -31,14 +32,15 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export const Body = ({history}) => {
+export const Body: React.FC<RouteComponentProps> = ({history}) => {
 	// hooks
-	const loading = useSelector(state => state.loading[OAUTH_VERIFY]);
-	const {headers, refresh} = useSelector(state => state.auth);
 	const dispatch = useDispatch();
+	// @ts-ignore
+	const loading = useSelector<TState, boolean>(state => state.loading[OAUTH_VERIFY] ?? false);
+	const {headers, refresh} = useSelector<TState, AuthState>(state => state.auth);
 
 	useLayoutEffect(() => {
-		oauthVerify(dispatch, refresh, headers);
+		oauthVerify(dispatch, refresh || "", headers);
 	}, [history.location.key]);
 
 	const classes = useStyles();
@@ -48,19 +50,16 @@ export const Body = ({history}) => {
 				<div className={classes.hero}>
 					<div className={classes.hero2}>
 						<Nav loading={loading}/>
-						{loading === false &&
-							<>
-								<Content/>
-								<AdminPanel/>
-							</>
+						{!loading &&
+						<>
+							<Content/>
+							<AdminPanel/>
+						</>
 						}
 					</div>
 				</div>
 			</div>
 		</div>
 	);
-};
-Body.propTypes = {
-	history: PropTypes.any.isRequired,
 };
 export default withRouter(Body);

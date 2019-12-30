@@ -15,22 +15,4 @@
  *
  */
 
-import {applyMiddleware, compose, createStore} from "redux";
-import thunk from "redux-thunk";
-import reducers from "./reducers";
-import {apiMiddleware} from "redux-api-middleware";
-import apiDefaultValues from "../config/apiDefaultValues";
-
-// @ts-ignore
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-export default createStore(
-	reducers,
-	composeEnhancers(
-		applyMiddleware(
-			thunk,
-			apiDefaultValues,
-			apiMiddleware
-		)
-	)
-);
+export const clone = (obj: any): any => JSON.parse(JSON.stringify(obj));

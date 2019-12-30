@@ -17,7 +17,6 @@
 
 import React, {useEffect, useState} from "react";
 import {Button, Card, CardContent, CircularProgress, Grid, makeStyles, Typography} from "@material-ui/core";
-import {OAUTH_REQUEST, oauthRequest} from "../../actions/Auth";
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import SocialButton from "../../components/widget/SocialButton";
@@ -29,6 +28,7 @@ import ValidatedTextField from "../../components/field/ValidatedTextField";
 import getIconColour from "../../style/getIconColour";
 import {resetError} from "../../actions/Generic";
 import getProviderCount from "../../selectors/getProviderCount";
+import {OAUTH_REQUEST, oauthRequest} from "../../store/actions/auth/AuthRequest";
 
 const useStyles = makeStyles(theme => ({
 	title: {

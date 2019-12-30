@@ -53,15 +53,15 @@ const UserPopover: React.FC<UserPopoverProps> = ({user, elevation = 2}: UserPopo
 				<Grid item xs={6}>
 					<Avatar
 						className={classes.avatar}
-						name={(user && (user.displayName || user.username)) || "Anonymous"}
-						src={(user && user.avatarUrl) || undefined}
+						name={user?.displayName || user?.username || "Anonymous"}
+						src={user?.avatarUrl || undefined}
 						size={64}
 					/>
 				</Grid>
 				<Divider orientation={"horizontal"}/>
 				<Grid item xs={6} style={{float: "left"}}>
 					<Typography className={classes.displayName} noWrap>
-						{(user && (user.displayName || user.username)) || "Anonymous"}
+						{user?.displayName || user?.username || "Anonymous"}
 					</Typography>
 					<Typography variant={"subtitle1"}>
 						@{user?.username || "Anonymous"}

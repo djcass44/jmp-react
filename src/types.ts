@@ -35,6 +35,7 @@ export interface User {
 	username: string;
 	displayName?: string;
 	avatarUrl?: string;
+	admin: boolean;
 }
 
 export interface Group {
@@ -62,4 +63,20 @@ export interface Page<T> {
 export interface FaviconPayload {
 	id: number;
 	url: string;
+}
+
+export interface AuthHeaders {
+	Authorization: string | null;
+	"X-Auth-Source"?: string | null;
+}
+
+export interface Token {
+	request: string;
+	refresh: string;
+	source?: string | null;
+}
+
+export interface BasicAuth {
+	username: string;
+	password: string;
 }

@@ -17,17 +17,19 @@
 
 import React, {useEffect} from "react";
 import Center from "react-center";
-import {oauthLogout} from "../../actions/Auth";
 import {useDispatch, useSelector} from "react-redux";
-import {Link} from "react-router-dom";
+import {Link, RouteComponentProps} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
-import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
-import {makeStyles, Typography} from "@material-ui/core";
+import {CircularProgress, makeStyles, Theme, Typography} from "@material-ui/core";
 import {oauth2Logout} from "../../actions/Oauth";
 import {APP_NAME} from "../../constants";
+import {oauthLogout} from "../../store/actions/auth/AuthLogout";
+import {TState} from "../../store/reducers";
+import {AuthState} from "../../store/reducers/auth";
+import {clone} from "../../util";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	overlay: {
 		position: "fixed",
 		width: "100%",
@@ -51,25 +53,25 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export default ({history}) => {
+const Logout: React.FC<RouteComponentProps> = ({history}) => {
 	// hooks
 	const dispatch = useDispatch();
 	const classes = useStyles();
 
-	const {isLoggedIn, headers, request, source} = useSelector(state => state.auth);
+	const {isLoggedIn, headers, request, source} = useSelector<TState, AuthState>(state => state.auth);
 
 	useEffect(() => {
 		window.document.title = `Logout - ${APP_NAME}`;
 		// copy the request/headers because they will be wiped by a logout request
-		const r2 = JSON.parse(JSON.stringify(request));
-		const h2 = JSON.parse(JSON.stringify(headers));
+		const r2 = clone(request);
+		const h2 = clone(headers);
 		// Log the user out
 		oauth2Logout(dispatch, r2, source, h2);
 		oauthLogout(dispatch, r2, h2);
 	}, []);
 
 	useEffect(() => {
-		if(isLoggedIn === false)
+		if (!isLoggedIn)
 			history.push("/");
 	}, [isLoggedIn]);
 
@@ -81,7 +83,7 @@ export default ({history}) => {
 					Ensuring that you're logged out...
 				</Typography>
 				<Center>
-					<CircularProgress className={classes.padding}/>
+					<CircularProgress className={classes.progress}/>
 				</Center>
 				<Center style={{paddingTop: 16}}>
 					If you're not redirected in a few seconds, click below
@@ -96,3 +98,5 @@ export default ({history}) => {
 		</Center>
 	);
 };
+
+export default Logout;

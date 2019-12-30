@@ -15,22 +15,22 @@
  *
  */
 
-import {applyMiddleware, compose, createStore} from "redux";
-import thunk from "redux-thunk";
-import reducers from "./reducers";
-import {apiMiddleware} from "redux-api-middleware";
-import apiDefaultValues from "../config/apiDefaultValues";
+import {RSAA} from "redux-api-middleware";
 
-// @ts-ignore
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-export default createStore(
-	reducers,
-	composeEnhancers(
-		applyMiddleware(
-			thunk,
-			apiDefaultValues,
-			apiMiddleware
-		)
-	)
-);
+export default () => {
+	return (next) => {
+		return (action) => {
+			const rsaa = action[RSAA];
+			// check if this is a redux-api-middleware action
+			if (rsaa) {
+				// set content headers
+				rsaa.headers = Object.assign({}, rsaa.headers, {
+					"Content-Type": "application/json",
+					"Accept": "application/json"
+				})
+			}
+			// continue in FSA chain
+			return next(action);
+		}
+	}
+}

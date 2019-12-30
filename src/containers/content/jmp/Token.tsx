@@ -16,13 +16,18 @@
  */
 
 import React, {useEffect, useState} from "react";
-import {APP_NAME, client} from "../../../constants";
+import {APP_NAME, BASE_URL} from "../../../constants";
 import {useDispatch, useSelector} from "react-redux";
-import {CircularProgress, makeStyles} from "@material-ui/core";
+import {CircularProgress, makeStyles, Theme} from "@material-ui/core";
 import Center from "react-center";
 import {GET_TARGET} from "../../../actions/Jumps";
+import {RouteComponentProps} from "react-router";
+import {TState} from "../../../store/reducers";
+import {AuthState} from "../../../store/reducers/auth";
+import {RSAA} from "redux-api-middleware";
+import {Dispatch} from "redux";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	text: {
 		color: theme.palette.text.primary
 	},
@@ -39,21 +44,28 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export default ({history}) => {
-	const classes = useStyles();
-	const dispatch = useDispatch();
-	const loading = useSelector(state => state.loading[GET_TARGET]);
-	const error = useSelector(state => state.errors[GET_TARGET]);
-	const {headers} = useSelector(state => state.auth);
+interface DoJumpDTO {
+	found: boolean;
+	location: string;
+}
 
-	const [failure, setFailure] = useState(error);
+const Token: React.FC<RouteComponentProps> = ({history}) => {
+	const classes = useStyles();
+	const dispatch = useDispatch<Dispatch>();
+	const {headers} = useSelector<TState, AuthState>(state => state.auth);
+	// @ts-ignore
+	const loading = useSelector<TState, boolean>(state => state.loading[GET_TARGET] ?? false);
+	// @ts-ignore
+	const error = useSelector<TState, Error | null>(state => state.errors[GET_TARGET]);
+
+	const [failure, setFailure] = useState<Error | string | null>(error);
 
 	/**
 	 * Handle the api response and move us to where we need to go
 	 * @param target
 	 */
-	const handleTargetResponse = target => {
-		if (target.found === true) {
+	const handleTargetResponse = (target: DoJumpDTO) => {
+		if (target.found) {
 			// we're leaving jmp, so use the window api call
 			window.location.replace(target.location);
 		} else {
@@ -68,13 +80,16 @@ export default ({history}) => {
 	 * @param d: dispatch
 	 * @param query: the path/query parameters to tack onto the end of the get request
 	 */
-	const getTarget = (d, query) => {
-		d({type: `${GET_TARGET}_REQUEST`});
-		client.get(`/api/v2/jump/${query}`, {headers}).then(r => {
-			d({type: `${GET_TARGET}_SUCCESS`, payload: r.data});
-			handleTargetResponse(r.data);
-		}).catch(err => {
-			d({type: `${GET_TARGET}_FAILURE`, payload: err, error: true});
+	const getTarget = (d: Dispatch, query: string): void => {
+		dispatch({
+			[RSAA]: {
+				endpoint: `${BASE_URL}/api/v2/jump/${query}`,
+				method: "GET",
+				headers: headers as any,
+				types: [`${GET_TARGET}_REQUEST`, `${GET_TARGET}_SUCCESS`, `${GET_TARGET}_FAILURE`]
+			}
+		}).then(r => {
+			handleTargetResponse(r.payload as DoJumpDTO);
 		});
 	};
 
@@ -82,7 +97,6 @@ export default ({history}) => {
 		const url = new URL(window.location.href);
 		let query = url.searchParams.get("query");
 		const id = url.searchParams.get("id");
-		console.dir(query, id);
 		if (query != null && query !== '') {
 			if (id != null && id !== "")
 				query += `?id=${id}`;
@@ -98,10 +112,10 @@ export default ({history}) => {
 		jumpUser();
 	}, []);
 
-	const message = (error != null || failure != null) ? (error || failure) : "Jumping... You can close this window if it stays open";
+	const message = (error != null || failure != null) ? (error?.toString() || failure) : "Jumping... You can close this window if it stays open";
 	return (
 		<Center className={classes.overlay}>
-			{loading === true ?
+			{loading ?
 				<CircularProgress/>
 				:
 				<span className={classes.text}>{message}</span>
@@ -109,3 +123,5 @@ export default ({history}) => {
 		</Center>
 	);
 };
+
+export default Token;

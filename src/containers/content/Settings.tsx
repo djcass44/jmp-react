@@ -10,6 +10,7 @@ import {mdiSettingsOutline} from "@mdi/js";
 import {APP_NAME} from "../../constants";
 import {useTheme} from "@material-ui/core/styles";
 import {TState} from "../../store/reducers";
+import {AuthState} from "../../store/reducers/auth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	name: {
@@ -35,9 +36,7 @@ const Settings: React.FC = () => {
 		window.document.title = `Settings - ${APP_NAME}`;
 	}, []);
 
-	// TODO fix this once reducer conversion is complete
-	// @ts-ignore
-	const isAdmin = useSelector<TState, boolean>(state => state.auth.isAdmin);
+	const {isAdmin} = useSelector<TState, AuthState>(state => state.auth);
 
 	return (
 		<div>

@@ -17,7 +17,7 @@
 
 import jumps, {JumpsState} from "./jumps";
 import {combineReducers} from "redux";
-import auth from "../../reducers/Auth";
+import auth, {AuthState} from "./auth";
 import loading from "./loading";
 import errors from "./errors";
 import generic from "../../reducers/Generic";
@@ -29,6 +29,7 @@ import snackbar from "../../reducers/Snackbar";
 
 export interface TState {
 	jumps: JumpsState;
+	auth: AuthState;
 	loading: Map<string, boolean>;
 	errors: Map<string, any | null>;
 }

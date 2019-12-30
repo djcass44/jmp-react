@@ -172,12 +172,12 @@ const Nav = ({loading, history}) => {
 	const theme = useTheme();
 	const isMenuOpen = anchorEl != null;
 
-	let name = userProfile['displayName'];
-	if (name == null || name === "") name = userProfile.username || "Anonymous";
+	let name = userProfile?.displayName;
+	if (name == null || name === "") name = userProfile?.username || "Anonymous";
 	const name2 = name.replace(".", " ");
 	const url = location.pathname + location.search;
 	let loginUrl = '/login';
-	if(url !== '')
+	if (url !== '')
 		loginUrl = `/login?target=${url}`;
 
 	return (
@@ -203,16 +203,18 @@ const Nav = ({loading, history}) => {
 					}
 					<div className={classes.grow}/>
 					{loading === false &&
-						<>
-							<div className={classes.sectionDesktop}>
-								{location.pathname !== "/help" &&
-								<IconButton style={{margin: 8}} component={Link} centerRipple={false} color={"inherit"}
-								            to={"/help"}>
-									<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
-								</IconButton>}
-							</div>
-							<Avatar name={name2} src={userProfile['avatarUrl']} size={40} style={{marginTop: 4}} onClick={(e) => setAnchorEl(e.currentTarget)} aria-haspopup="true" aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
-						</>
+					<>
+						<div className={classes.sectionDesktop}>
+							{location.pathname !== "/help" &&
+							<IconButton style={{margin: 8}} component={Link} centerRipple={false} color={"inherit"}
+							            to={"/help"}>
+								<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
+							</IconButton>}
+						</div>
+						<Avatar name={name2} src={userProfile?.avatarUrl || undefined} size={40} style={{marginTop: 4}}
+						        onClick={(e) => setAnchorEl(e.currentTarget)} aria-haspopup="true"
+						        aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
+					</>
 					}
 				</Toolbar>
 				{loading === true && <LinearProgress className={classes.progress} />}
