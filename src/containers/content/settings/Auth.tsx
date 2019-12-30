@@ -66,7 +66,7 @@ const Auth: React.FC = () => {
 	return (
 		<div>
 			<ListSubheader className={classes.title} inset component={"div"}>Authentication</ListSubheader>
-			<InfoItem open title={<span>Identity Provider</span>} content={data} icon={
+			<InfoItem title={<span>Identity Provider</span>} content={data} icon={
 				<Icon style={{paddingRight: 8}} path={mdiFolderAccountOutline} size={1}
 				      color={theme.palette.success.dark}/>
 			}/>

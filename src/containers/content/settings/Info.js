@@ -54,7 +54,7 @@ export default () => {
 	return (
 		<div>
 			<ListSubheader className={classes.title} inset component={"div"}>Information &amp; status</ListSubheader>
-			<InfoItem title={<span>Application health</span>} content={status} open={true} icon={
+			<InfoItem title={<span>Application health</span>} content={status} open icon={
 				<Icon style={{paddingRight: 8}} path={mdiBugCheckOutline} size={1} color={theme.palette.error.main}/>
 			}/>
 			<InfoItem title={<span>System information</span>} content={

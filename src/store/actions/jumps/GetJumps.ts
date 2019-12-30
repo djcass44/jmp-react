@@ -41,9 +41,13 @@ interface GetJumpsFailureAction {
 }
 
 export const getJumps = (dispatch: Dispatch, headers: any, query = "", page = 0, size = 8): void => {
+	let queryString = `page=${page}&size=${size}`;
+	if (query.length > 0) {
+		queryString += `&query=${query}`;
+	}
 	dispatch({
 		[RSAA]: {
-			endpoint: `${BASE_URL}/api/v2/jump?query=${query}&page=${page}&size=${size}`,
+			endpoint: `${BASE_URL}/api/v2/jump?${queryString}`,
 			method: "GET",
 			headers,
 			types: [GET_JUMP_REQUEST, GET_JUMP_SUCCESS, GET_JUMP_FAILURE]

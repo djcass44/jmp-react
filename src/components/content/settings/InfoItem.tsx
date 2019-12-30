@@ -25,12 +25,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface InfoItemProps {
 	title: ReactNode;
 	error?: Error | null;
-	open: boolean;
+	open?: boolean;
 	icon: ReactNode;
 	content: ReactNode;
 }
 
-const InfoItem: React.FC<InfoItemProps> = ({title, error, open, icon, content}: InfoItemProps) => {
+const InfoItem: React.FC<InfoItemProps> = ({title, error, open = false, icon, content}: InfoItemProps) => {
 	const classes = useStyles();
 	return (
 		<ExpansionPanel defaultExpanded={open}>
