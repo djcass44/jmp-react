@@ -85,8 +85,8 @@ export const getUserGroups = (dispatch, headers, uid) => {
 	});
 };
 export const setUserGroups = (dispatch, headers, uid, payload) => {
-	dispatch({type: `${SET_USER_GROUPS}_REQUEST`});
-	client.patch('/api/v2_1/groupmod', payload, {headers, params: {uid}}).then(r => {
+	dispatch({type: `${SET_USER_GROUPS}_REQUEST`, payload});
+	client.patch('/api/v2_1/group/mod', payload, {headers, params: {uid}}).then(r => {
 		dispatch({
 			type: `${SET_USER_GROUPS}_SUCCESS`,
 			payload: r.data
