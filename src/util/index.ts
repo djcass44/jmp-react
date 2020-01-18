@@ -15,4 +15,20 @@
  *
  */
 
+import {Token} from "../types";
+
 export const clone = (obj: any): any => JSON.parse(JSON.stringify(obj));
+
+export const plural = (count: number, text: string): string => {
+	if (count === 1)
+		return text;
+	else
+		return `${text}s`
+};
+
+export const getHeaders = (token: Token) => {
+	return {
+		"Authorization": `Bearer ${token.request}`,
+		"X-Auth-Source": token.source
+	}
+};

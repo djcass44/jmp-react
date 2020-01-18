@@ -19,9 +19,9 @@ import {MODAL_GROUP_EDIT, setDialog} from "../../actions/Modal";
 import {defaultState} from "../../reducers/Modal";
 import ValidatedTextField from "../../components/field/ValidatedTextField";
 import {PATCH_GROUP, patchGroup} from "../../actions/Groups";
-import {GET_PROVIDERS, getProviders} from "../../actions/Auth";
 import FormControl from "@material-ui/core/FormControl";
 import {resetError} from "../../actions/Generic";
+import {GET_PROVIDERS, getProviders} from "../../store/actions/auth/GetProviders";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -132,7 +132,7 @@ export default () => {
 							id: "defaultFor"
 						}}
 						onChange={(e) => setDefaultFor(e.target.value)}>
-						{allProviders.map(i => <MenuItem key={i} value={i}>{i}</MenuItem>)}
+						{allProviders.map(i => <MenuItem key={i.first} value={i.first}>{i.first}</MenuItem>)}
 					</Select>
 				</FormControl>}
 				{error && <Typography variant="caption" color="error">{error.toString()}</Typography>}

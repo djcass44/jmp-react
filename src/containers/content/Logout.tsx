@@ -22,12 +22,12 @@ import {Link, RouteComponentProps} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
 import {CircularProgress, makeStyles, Theme, Typography} from "@material-ui/core";
-import {oauth2Logout} from "../../actions/Oauth";
 import {APP_NAME} from "../../constants";
 import {oauthLogout} from "../../store/actions/auth/AuthLogout";
 import {TState} from "../../store/reducers";
 import {AuthState} from "../../store/reducers/auth";
 import {clone} from "../../util";
+import {oauth2Logout} from "../../store/actions/auth/OAuth2Logout";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	overlay: {
@@ -66,8 +66,10 @@ const Logout: React.FC<RouteComponentProps> = ({history}) => {
 		const r2 = clone(request);
 		const h2 = clone(headers);
 		// Log the user out
-		oauth2Logout(dispatch, r2, source, h2);
-		oauthLogout(dispatch, r2, h2);
+		if (source?.startsWith("oauth2/")) {
+			oauth2Logout(dispatch, r2, source, h2);
+		} else
+			oauthLogout(dispatch, r2, h2);
 	}, []);
 
 	useEffect(() => {

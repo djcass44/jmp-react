@@ -16,11 +16,16 @@
  */
 
 import React, {ReactNode, useEffect, useState} from "react";
-import {ListSubheader, makeStyles, Theme} from "@material-ui/core";
+import {List, ListItem, ListItemAvatar, ListItemText, ListSubheader, makeStyles, Theme} from "@material-ui/core";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import Icon from "@mdi/react";
-import {mdiFolderAccountOutline} from "@mdi/js";
+import {mdiAccountBadgeOutline, mdiDatabase, mdiFolderAccountOutline, mdiGithubCircle, mdiGoogle} from "@mdi/js";
 import {useTheme} from "@material-ui/core/styles";
+import {useDispatch, useSelector} from "react-redux";
+import {TState} from "../../../store/reducers";
+import {AuthState} from "../../../store/reducers/auth";
+import {getProviders} from "../../../store/actions/auth/GetProviders";
+import {plural} from "../../../util";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -38,35 +43,59 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
-interface AuthInfo {
-	connected: boolean;
-	name: string;
-	users: number;
-	groups: number;
+interface Provider {
+	icon: string;
+	colour: string;
 }
 
 const Auth: React.FC = () => {
+	const dispatch = useDispatch();
 	const classes = useStyles();
 	const theme = useTheme();
 
-	let auth: AuthInfo | null;
+	const {allProviders, headers} = useSelector<TState, AuthState>(state => state.auth);
 
 	const [data, setData] = useState<ReactNode | null>(null);
+	const [providers] = useState<any>({
+		ldap: {
+			icon: mdiAccountBadgeOutline,
+			colour: theme.palette.success.main
+		},
+		local: {
+			icon: mdiDatabase,
+			colour: theme.palette.primary.main
+		},
+		"oauth2/github": {
+			icon: mdiGithubCircle,
+			colour: theme.palette.text.secondary
+		},
+		"oauth2/google": {
+			icon: mdiGoogle,
+			colour: theme.palette.primary.main
+		}
+	});
 
 	useEffect(() => {
-		setData((
-			<div>
-				<p>Connected... {auth?.connected === true ? <span className={classes.statusOK}>Yes</span> :
-					<span className={classes.statusFail}>No</span>}</p>
-				<p>{auth?.name || "Unknown"} provides {auth?.users || 0} users and {auth?.groups || 0} groups.</p>
-			</div>
-		));
-	}, []);
+		getProviders(dispatch, headers);
+	}, [dispatch, headers]);
+
+	useEffect(() => {
+		setData(allProviders.map(i => (
+			<ListItem component="li" key={i.first}>
+				{providers[i.first] && <ListItemAvatar>
+					<Icon path={providers[i.first].icon} size={1} color={providers[i.first].colour}/>
+				</ListItemAvatar>}
+				<ListItemText primary={i.first} secondary={`${i.second} ${plural(i.second, "user")}`}/>
+			</ListItem>
+		)));
+	}, [allProviders, providers]);
 
 	return (
 		<div>
 			<ListSubheader className={classes.title} inset component={"div"}>Authentication</ListSubheader>
-			<InfoItem title={<span>Identity Provider</span>} content={data} icon={
+			<InfoItem title={<span>Identity Provider</span>} content={<List component="ul">
+				{data}
+			</List>} icon={
 				<Icon style={{paddingRight: 8}} path={mdiFolderAccountOutline} size={1}
 				      color={theme.palette.success.dark}/>
 			}/>

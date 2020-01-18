@@ -21,7 +21,6 @@ import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import SocialButton from "../../components/widget/SocialButton";
 import {mdiGithubCircle, mdiGoogle} from "@mdi/js";
-import {oauth2Discover} from "../../actions/Oauth";
 import {APP_NAME} from "../../constants";
 import {useTheme} from "@material-ui/core/styles";
 import ValidatedTextField from "../../components/field/ValidatedTextField";
@@ -29,6 +28,7 @@ import getIconColour from "../../style/getIconColour";
 import {resetError} from "../../actions/Generic";
 import getProviderCount from "../../selectors/getProviderCount";
 import {OAUTH_REQUEST, oauthRequest} from "../../store/actions/auth/AuthRequest";
+import {discoverOAuth} from "../../store/actions/auth/DiscoverOAuth";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -95,8 +95,8 @@ export default ({history}) => {
 	useEffect(() => {
 		window.document.title = `Login - ${APP_NAME}`;
 		resetError(dispatch, OAUTH_REQUEST);
-		oauth2Discover(dispatch, "github");
-		oauth2Discover(dispatch, "google");
+		discoverOAuth(dispatch, "github");
+		discoverOAuth(dispatch, "google");
 	}, [dispatch]);
 
 	useEffect(() => {

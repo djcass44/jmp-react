@@ -20,10 +20,10 @@ import Center from "react-center";
 import {makeStyles, Theme, Typography} from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {useDispatch, useSelector} from "react-redux";
-import {OAUTH2_CALLBACK, oauth2Callback} from "../../actions/Oauth";
 import {APP_NAME} from "../../constants";
 import {RouteComponentProps} from "react-router";
 import {TState} from "../../store/reducers";
+import {OAUTH2_CALLBACK, oauth2Callback} from "../../store/actions/auth/OAuth2Callback";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	subtitle: {
@@ -57,8 +57,8 @@ const Callback: React.FC<RouteComponentProps> = ({history}) => {
 		window.document.title = `Callback - ${APP_NAME}`;
 		// Get the list of parameters
 		const params = new URLSearchParams(history.location.search);
-		oauth2Callback(dispatch, {code: params.get("code"), state: params.get("state")});
-	}, []);
+		oauth2Callback(dispatch, `code=${params.get("code")}&state=${params.get("state")}`);
+	}, [dispatch]);
 
 	useEffect(() => {
 		if (!loading && error == null)

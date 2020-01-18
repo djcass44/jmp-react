@@ -133,7 +133,7 @@ export default () => {
 					<Icon path={mdiAccountGroupOutline} size={1} color={scheme[1]}/>
 				</Avatar>
 				<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={secondary}/>
-				{isAdmin && <ListItemSecondaryAction>
+				{isAdmin && !i.name.startsWith("_") && <ListItemSecondaryAction>
 					<Tooltip title="Edit group">
 						<IconButton centerRipple={false}
 						            onClick={() => setDialog(dispatch, MODAL_GROUP_EDIT, true, {group: i})}>

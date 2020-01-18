@@ -18,5 +18,16 @@
 import {AuthLogoutActionType} from "./AuthLogout";
 import {AuthVerifyActionType} from "./AuthVerify";
 import {AuthRequestActionType} from "./AuthRequest";
+import {GetProvidersActionType} from "./GetProviders";
+import {DiscoverOAuthActionType} from "./DiscoverOAuth";
+import {OAuth2CallbackActionType} from "./OAuth2Callback";
+import {OAuth2LogoutActionType} from "./OAuth2Logout";
 
-export type AuthActionType = AuthLogoutActionType | AuthVerifyActionType | AuthRequestActionType;
+export type AuthActionType =
+	AuthLogoutActionType
+	| AuthVerifyActionType
+	| AuthRequestActionType
+	| GetProvidersActionType
+	| DiscoverOAuthActionType
+	| OAuth2CallbackActionType
+	| OAuth2LogoutActionType;

@@ -40,7 +40,7 @@ interface AuthVerifyFailureAction {
 	payload: Error;
 }
 
-export const oauthVerify = (dispatch: Dispatch, refresh: string, headers: any): void => {
+export const oauthVerify = (dispatch: Dispatch, refresh: string | null, headers: any): void => {
 	dispatch({
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/user/me`,
@@ -49,7 +49,10 @@ export const oauthVerify = (dispatch: Dispatch, refresh: string, headers: any): 
 			types: [OAUTH_VERIFY_REQUEST, OAUTH_VERIFY_SUCCESS, OAUTH_VERIFY_FAILURE]
 		}
 	}).catch(() => {
-		oauthRefresh(dispatch, refresh, headers);
+		// only attempt to refresh if the auth method requests it (by providing the refresh parameter)
+		if (refresh != null) {
+			oauthRefresh(dispatch, refresh, headers);
+		}
 	})
 };
 

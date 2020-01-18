@@ -15,13 +15,18 @@
  *
  */
 
-import {AuthHeaders, User} from "../../types";
+import {AuthHeaders, Pair, User} from "../../types";
 import {LS_REFRESH, LS_REQUEST, LS_SOURCE} from "../../constants";
 import {AuthActionType} from "../actions/auth";
 import {OAUTH_LOGOUT_REQUEST, OAUTH_LOGOUT_SUCCESS} from "../actions/auth/AuthLogout";
 import {OAUTH_VERIFY_SUCCESS} from "../actions/auth/AuthVerify";
 import {OAUTH_REQUEST_SUCCESS} from "../actions/auth/AuthRequest";
 import {OAUTH_REFRESH_SUCCESS} from "../actions/auth/AuthRefresh";
+import {GET_PROVIDERS_SUCCESS} from "../actions/auth/GetProviders";
+import {DISCOVER_OAUTH_SUCCESS} from "../actions/auth/DiscoverOAuth";
+import {OAUTH2_CALLBACK_SUCCESS} from "../actions/auth/OAuth2Callback";
+import {getHeaders} from "../../util";
+import {OAUTH2_LOGOUT_REQUEST, OAUTH2_LOGOUT_SUCCESS} from "../actions/auth/OAuth2Logout";
 
 export interface AuthState {
 	request: string | null;
@@ -32,7 +37,7 @@ export interface AuthState {
 	isLoggedIn: boolean;
 	isAdmin: boolean;
 	providers: Map<string, any>;
-	allProviders: Array<any>;
+	allProviders: Array<Pair<string, number>>;
 }
 
 const initialState: AuthState = {
@@ -52,6 +57,12 @@ const initialState: AuthState = {
 
 export default (state = initialState, action: AuthActionType) => {
 	switch (action.type) {
+		case GET_PROVIDERS_SUCCESS:
+			return {...state, allProviders: action.payload};
+		case DISCOVER_OAUTH_SUCCESS: {
+			const {first, second} = action.payload;
+			return {...state, providers: {...state.providers, [first]: second}}
+		}
 		case OAUTH_VERIFY_SUCCESS: {
 			// if there's not request token there's no point saving the userProfile
 			// weird hack to stop the userProfile coming in AFTER a successful logout
@@ -64,13 +75,11 @@ export default (state = initialState, action: AuthActionType) => {
 				isAdmin: action.payload.admin
 			}
 		}
+		case OAUTH2_CALLBACK_SUCCESS:
 		case OAUTH_REFRESH_SUCCESS:
 		case OAUTH_REQUEST_SUCCESS: {
 			const {request, refresh, source = null} = action.payload;
-			const headers = {
-				"Authorization": `Bearer ${request}`,
-				"X-Auth-Source": source
-			};
+			const headers = getHeaders(action.payload);
 			localStorage.setItem(LS_REQUEST, request);
 			localStorage.setItem(LS_REFRESH, refresh);
 			localStorage.setItem(LS_SOURCE, source ?? "");
@@ -83,6 +92,8 @@ export default (state = initialState, action: AuthActionType) => {
 				isLoggedIn: true,
 			}
 		}
+		case OAUTH2_LOGOUT_REQUEST:
+		case OAUTH2_LOGOUT_SUCCESS:
 		case OAUTH_LOGOUT_REQUEST:
 		case OAUTH_LOGOUT_SUCCESS: {
 			// drop values from localStorage
