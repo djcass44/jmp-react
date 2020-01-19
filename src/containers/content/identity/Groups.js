@@ -36,7 +36,6 @@ import {pageSize} from "../../../constants";
 import {getGroups, GROUP_LOAD} from "../../../actions/Groups";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline, mdiPencilOutline} from "@mdi/js";
-import posed, {PoseGroup} from "react-pose";
 import {defaultSorts, sortItems} from "../../../misc/Sort";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
 import {MODAL_GROUP_EDIT, MODAL_GROUP_NEW, setDialog} from "../../../actions/Modal";
@@ -48,11 +47,6 @@ import getIconColour from "../../../style/getIconColour";
 import {createIndex} from "../../../misc/Search";
 import {clone} from "../../../util";
 
-const Item = posed.div({
-	enter: {opacity: 1},
-	exit: {opacity: 0}
-});
-
 const useStyles = makeStyles(() => ({
 	title: {
 		fontFamily: "Manrope",
@@ -61,6 +55,9 @@ const useStyles = makeStyles(() => ({
 	progress: {
 		backgroundColor: 'transparent',
 		flexGrow: 1
+	},
+	item: {
+		animation: "fadein 300ms ease-in-out"
 	}
 }));
 
@@ -117,7 +114,7 @@ export default () => {
 					&nbsp;&bull;&nbsp;{i.public === true ? "Public" : `Default for ${i.defaultFor} users`}
 				</span>}
 			</span>);
-			tempItems.push(<ListItem button disableRipple key={index} component={'li'}>
+			tempItems.push(<ListItem className={classes.item} button disableRipple key={index}>
 				<Avatar component={'div'} style={{backgroundColor: scheme[0], color: scheme[1], marginRight: 12}}>
 					<Icon path={mdiAccountGroupOutline} size={1} color={scheme[1]}/>
 				</Avatar>
@@ -154,13 +151,11 @@ export default () => {
 			<SortedSubheader title="Groups" size={items.length} sorts={sorts}
 			                 onAdd={() => setDialog(dispatch, MODAL_GROUP_NEW, true)}/>
 			{loading === true ? <LinearProgress className={classes.progress} color="primary"/> : ""}
-			<PoseGroup animateOnMount={true}>
-				<Paper key="root" component={Item} style={{borderRadius: 12, marginBottom: 8}}>
-					<List component='ul'>
-						{items.length > 0 ? items : <EmptyCard/>}
-					</List>
-				</Paper>
-			</PoseGroup>
+			<Paper key="root" style={{borderRadius: 12, marginBottom: 8}}>
+				<List component='ul'>
+					{items.length > 0 ? items : <EmptyCard/>}
+				</List>
+			</Paper>
 			{items.length > pageSize || offset > 0 ?
 				<Center>
 					<Pagination limit={pageSize} offset={offset} total={groups.length}

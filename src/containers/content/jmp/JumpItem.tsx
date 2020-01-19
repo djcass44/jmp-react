@@ -22,7 +22,6 @@ import {useDispatch, useSelector} from "react-redux";
 import Domain from "../../../components/widget/Domain";
 import {Link} from "react-router-dom";
 import {APP_NOUN} from "../../../constants";
-import posed, {PoseGroup} from "react-pose";
 import JumpButton from "../../../components/content/jmp/JumpButton";
 import JumpContent from "./JumpContent";
 import JumpAvatar from "../../../components/content/jmp/JumpAvatar";
@@ -33,21 +32,6 @@ import {Jump} from "../../../types";
 import {Breakpoint} from "@material-ui/core/styles/createBreakpoints";
 import {TState} from "../../../store/reducers";
 import {JumpsState} from "../../../store/reducers/jumps";
-
-const Item = posed.div({
-	enter: {
-		opacity: 1,
-		transition: {
-			ease: "easeInOut"
-		}
-	},
-	exit: {
-		opacity: 0,
-		transition: {
-			ease: "easeInOut"
-		}
-	}
-});
 
 const useStyles = makeStyles((theme: Theme) => ({
 	item: {
@@ -136,42 +120,40 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 				<JumpAvatar jump={jump} background={false} palette={data} loading={loading} error={error}/>
 				<ListItemText primary={primary} secondary={secondary}/>
 				<ListItemSecondaryAction>
-					<PoseGroup animateOnMount={true}>
-						<Item className={classes.action} key="expand">
-							<JumpButton
-								title="More"
-								buttonProps={{
-									onClick: () => setJumpExpand(dispatch,
-										// collapse if we're already expanded
-										selected ? null : jump.id
-									)
-								}}
-								iconProps={{
-									path: selected ? mdiChevronUp : mdiChevronDown,
-									color: theme.palette.primary.main
-								}}
-								focus={selected || smallScreen}
-								mouse={mouse}
-								focusProps={focusProps}
-							/>
-						</Item>
-						<Item className={classes.action} key="jump">
-							<JumpButton
-								title={APP_NOUN}
-								buttonProps={{
-									component: Link,
-									to: `/jmp?query=${jump.name}&id=${jump.id}`
-								}}
-								iconProps={{
-									path: mdiCallMerge,
-									color: theme.palette.primary.main
-								}}
-								focus={smallScreen}
-								mouse={mouse}
-								focusProps={focusProps}
-							/>
-						</Item>
-					</PoseGroup>
+					<div className={classes.action} key="expand">
+						<JumpButton
+							title="More"
+							buttonProps={{
+								onClick: () => setJumpExpand(dispatch,
+									// collapse if we're already expanded
+									selected ? null : jump.id
+								)
+							}}
+							iconProps={{
+								path: selected ? mdiChevronUp : mdiChevronDown,
+								color: theme.palette.primary.main
+							}}
+							focus={selected || smallScreen}
+							mouse={mouse}
+							focusProps={focusProps}
+						/>
+					</div>
+					<div className={classes.action} key="jump">
+						<JumpButton
+							title={APP_NOUN}
+							buttonProps={{
+								component: Link,
+								to: `/jmp?query=${jump.name}&id=${jump.id}`
+							}}
+							iconProps={{
+								path: mdiCallMerge,
+								color: theme.palette.primary.main
+							}}
+							focus={smallScreen}
+							mouse={mouse}
+							focusProps={focusProps}
+						/>
+					</div>
 				</ListItemSecondaryAction>
 			</ListItem>
 			<Collapse in={selected} unmountOnExit timeout={"auto"}>

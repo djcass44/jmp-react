@@ -38,7 +38,6 @@ import EmptyCard from "../../../components/widget/EmptyCard";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import {pageSize} from "../../../constants";
-import posed, {PoseGroup} from "react-pose";
 import {defaultSorts, sortItems} from "../../../misc/Sort";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@mdi/react";
@@ -51,11 +50,6 @@ import useTheme from "@material-ui/core/styles/useTheme";
 import {MODAL_USER_GROUPS, setDialog} from "../../../actions/Modal";
 import SortedSubheader from "../../../components/content/SortedSubheader";
 
-const Item = posed.div({
-	enter: {opacity: 1},
-	exit: {opacity: 0}
-});
-
 const useStyles = makeStyles(() => ({
 	title: {
 		fontFamily: "Manrope",
@@ -64,6 +58,9 @@ const useStyles = makeStyles(() => ({
 	progress: {
 		backgroundColor: 'transparent',
 		flexGrow: 1
+	},
+	item: {
+		animation: "fadein 300ms ease-in-out"
 	}
 }));
 
@@ -113,7 +110,7 @@ export default () => {
 			};
 			const secondary = (<span>{capitalise(i.source)}&nbsp;{avatar.banner}</span>);
 			tempItems.push((
-				<ListItem button disableRipple key={index} component='li'>
+				<ListItem className={classes.item} button disableRipple key={i.id}>
 					<Avatar component='div' style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
 						<Img
 							src={i.avatarUrl}
@@ -148,7 +145,7 @@ export default () => {
 			));
 		});
 		setItems(tempItems);
-	}, [users, expanded, sort]);
+	}, [users, expanded, sort, searchFilter]);
 
 	const toggleExpansion = (e, id) => {
 		setExpanded(expanded === id ? -1 : id);
@@ -176,14 +173,12 @@ export default () => {
 			{(loading === true || loadingPatch === true) &&
 			<LinearProgress className={classes.progress} color="primary"/>
 			}
-			<PoseGroup animateOnMount={true}>
-				<Paper key="root" component={Item} style={{borderRadius: 12, marginBottom: 8}}>
-					<List component='ul'>
-						{items.length > 0 ? items : <EmptyCard/>}
-					</List>
-					<GroupModDialog/>
-				</Paper>
-			</PoseGroup>
+			<Paper key="root" style={{borderRadius: 12, marginBottom: 8}}>
+				<List>
+					{items.length > 0 ? items : <EmptyCard key="null"/>}
+				</List>
+				<GroupModDialog/>
+			</Paper>
 			{items.length > pageSize &&
 			<Center>
 				<Pagination limit={pageSize} offset={offset} total={users.length}
