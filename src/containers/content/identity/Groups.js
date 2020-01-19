@@ -46,6 +46,7 @@ import SortedSubheader from "../../../components/content/SortedSubheader";
 import GroupEditDialog from "../../modal/GroupEditDialog";
 import getIconColour from "../../../style/getIconColour";
 import {createIndex} from "../../../misc/Search";
+import {clone} from "../../../util";
 
 const Item = posed.div({
 	enter: {opacity: 1},
@@ -87,6 +88,7 @@ export default () => {
 	const {sort, searchFilter} = useSelector(state => state.generic);
 
 	const sorts = defaultSorts;
+	const [items, setItems] = useState([]);
 	const [offset, setOffset] = useState(0);
 	const [idx, setIdx] = useState(null);
 
@@ -97,42 +99,29 @@ export default () => {
 	// hook to rebuild the index when jumps change
 	useEffect(() => {
 		setIdx(createIndex(searchFields, groups));
-	}, [groups]);
+		const g2 = clone(groups);
+		sortItems(g2, sort);
+		const tempItems = [];
 
-	const filterGroup = items => {
-		if (searchFilter == null || searchFilter === "")
-			return items;
-		console.dir(idx.search(searchFilter));
-		return idx.search(searchFilter);
-	};
+		// Tell the loop what our pagination limits are
+		let max = (offset + pageSize);
+		if (max > groups.length) max = groups.length;
 
-	const capitalise = text => {
-		if(text == null || text.length === 0) return text;
-		if(text.toLowerCase() === "ldap") return "LDAP";
-		return text.substring(0, 1).toUpperCase() + text.substring(1, text.length).toLowerCase();
-	};
-	// get the colour scheme
-	const scheme = getAvatarScheme(theme, 2);
-
-	let listItems = [];
-	// Tell the loop what our pagination limits are
-	let max = (offset + pageSize);
-	if (max > groups.length) max = groups.length;
-	sortItems(groups, sort);
-	const sortedGroups = filterGroup(groups);
-	sortedGroups.forEach((i, index) => {
-		if(index < offset || index > max) return;
-		const secondary = (<span>
-			{capitalise(i.source)}
-			{(i.public === true || i.defaultFor != null) &&
-			<span>&nbsp;&bull;&nbsp;{i.public === true ? "Public" : `Default for ${i.defaultFor} users`}</span>}
-		</span>);
-		listItems.push((
-			<ListItem button disableRipple key={index} component={'li'}>
+		filterGroup(g2).forEach((i, index) => {
+			if (index < offset || index > max) return;
+			const primary = (<span className={classes.title}>{i.name}</span>);
+			const secondary = (<span>
+				{capitalise(i.source)}
+				{(i.public === true || i.defaultFor != null) &&
+				<span>
+					&nbsp;&bull;&nbsp;{i.public === true ? "Public" : `Default for ${i.defaultFor} users`}
+				</span>}
+			</span>);
+			tempItems.push(<ListItem button disableRipple key={index} component={'li'}>
 				<Avatar component={'div'} style={{backgroundColor: scheme[0], color: scheme[1], marginRight: 12}}>
 					<Icon path={mdiAccountGroupOutline} size={1} color={scheme[1]}/>
 				</Avatar>
-				<ListItemText primary={<span className={classes.title}>{i.name}</span>} secondary={secondary}/>
+				<ListItemText primary={primary} secondary={secondary}/>
 				{isAdmin && !i.name.startsWith("_") && <ListItemSecondaryAction>
 					<Tooltip title="Edit group">
 						<IconButton centerRipple={false}
@@ -141,25 +130,41 @@ export default () => {
 						</IconButton>
 					</Tooltip>
 				</ListItemSecondaryAction>}
-			</ListItem>
-		));
-	});
+			</ListItem>);
+		});
+		setItems(tempItems);
+	}, [offset, sort, groups, searchFilter]);
+
+	const filterGroup = collection => {
+		if (searchFilter == null || searchFilter === "")
+			return collection;
+		return idx.search(searchFilter);
+	};
+
+	const capitalise = text => {
+		if (text == null || text.length === 0) return text;
+		if (text.toLowerCase() === "ldap") return "LDAP";
+		return text.substring(0, 1).toUpperCase() + text.substring(1, text.length).toLowerCase();
+	};
+	// get the colour scheme
+	const scheme = getAvatarScheme(theme, 2);
+
 	return (
 		<div>
-			<SortedSubheader title="Groups" size={listItems.length} sorts={sorts}
+			<SortedSubheader title="Groups" size={items.length} sorts={sorts}
 			                 onAdd={() => setDialog(dispatch, MODAL_GROUP_NEW, true)}/>
 			{loading === true ? <LinearProgress className={classes.progress} color="primary"/> : ""}
 			<PoseGroup animateOnMount={true}>
 				<Paper key="root" component={Item} style={{borderRadius: 12, marginBottom: 8}}>
 					<List component='ul'>
-						{listItems.length > 0 ? listItems : <EmptyCard/>}
+						{items.length > 0 ? items : <EmptyCard/>}
 					</List>
 				</Paper>
 			</PoseGroup>
-			{listItems.length > pageSize || offset > 0 ?
+			{items.length > pageSize || offset > 0 ?
 				<Center>
-					<Pagination limit={pageSize} offset={offset} total={sortedGroups.length}
-		                nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, off) => setOffset(off)}/>
+					<Pagination limit={pageSize} offset={offset} total={groups.length}
+					            nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, off) => setOffset(off)}/>
 				</Center>
 				:
 				<div/>

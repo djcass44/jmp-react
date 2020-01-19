@@ -80,12 +80,75 @@ export default () => {
 	const loadingPatch = useSelector(state => state.loading[PATCH_USER_ROLE]);
 
 	const sorts = defaultSorts;
+	const [items, setItems] = useState([]);
 	const [expanded, setExpanded] = useState(-1);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [offset, setOffset] = useState(0);
 
 
-	useEffect(() => getUsers(dispatch, headers), [headers]);
+	useEffect(() => {
+		getUsers(dispatch, headers)
+	}, [dispatch, headers]);
+
+	const handlePatchUser = (user, admin) => {
+		patchUserRole(dispatch, headers, user.id, admin);
+	};
+
+	useEffect(() => {
+		const tempItems = [];
+		// Tell the loop what our pagination limits are
+		let max = (offset + pageSize);
+		if (max > users.length) max = users.length;
+
+		const sortedUsers = users.filter(filterUser);
+		sortItems(sortedUsers, sort);
+		sortedUsers.forEach((i, index) => {
+			if (index < offset || index > max) return;
+			const userIsAdmin = i.admin === true;
+			const avatar = {
+				icon: userIsAdmin ? <AdminCircleIcon/> : <AccountCircleIcon/>,
+				bg: userIsAdmin ? schemeAdmin[0] : scheme[0],
+				fg: userIsAdmin ? schemeAdmin[1] : scheme[1],
+				banner: userIsAdmin ? <Badge color="red">Admin</Badge> : ""
+			};
+			const secondary = (<span>{capitalise(i.source)}&nbsp;{avatar.banner}</span>);
+			tempItems.push((
+				<ListItem button disableRipple key={index} component='li'>
+					<Avatar component='div' style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
+						<Img
+							src={i.avatarUrl}
+							loader={<CircularProgress size={20}/>}
+							unloader={avatar.icon}
+						/>
+					</Avatar>
+					<ListItemText primary={<span className={classes.title}>{i.username}</span>} secondary={secondary}/>
+					<ListItemSecondaryAction>
+						<IconButton centerRipple={false} onClick={(e) => toggleExpansion(e, i.id)}>
+							<Icon path={mdiDotsVertical} size={1} color={getIconColour(theme)}/>
+							<Menu id={"user-menu"} open={i.id === expanded} anchorEl={anchorEl}
+							      anchorOrigin={{horizontal: "left", vertical: "top"}} onExit={() => {
+								i.expanded = false
+							}}>
+								{(isAdmin && i.admin !== true && i.username !== "system") &&
+								<MenuItem button component='li' onClick={() => handlePatchUser(i, true)}>
+									Promote to admin
+								</MenuItem>}
+								{(isAdmin && i.admin === true && i.username !== "admin") &&
+								<MenuItem button component='li' onClick={() => handlePatchUser(i, false)}>
+									Demote to user
+								</MenuItem>
+								}
+								<MenuItem button component='li'
+								          onClick={() => setDialog(dispatch, MODAL_USER_GROUPS, true, {user: i})}>Modify
+									groups</MenuItem>
+							</Menu>
+						</IconButton>
+					</ListItemSecondaryAction>
+				</ListItem>
+			));
+		});
+		setItems(tempItems);
+	}, [users, expanded, sort]);
 
 	const toggleExpansion = (e, id) => {
 		setExpanded(expanded === id ? -1 : id);
@@ -94,13 +157,9 @@ export default () => {
 
 	const filterUser = user => {
 		return user.username.toLowerCase().includes(searchFilter) ||
-			user.role.toLowerCase() === searchFilter.toLowerCase() ||
 			user.source.toLowerCase() === searchFilter.toLowerCase();
 	};
 
-	const handlePatchUser = (user, admin) => {
-		patchUserRole(dispatch, headers, user.id, admin);
-	};
 	const capitalise = (text) => {
 		if (text == null || text.length === 0) return text;
 		if (text.toLowerCase() === "ldap") return "LDAP"; // hmm
@@ -109,77 +168,27 @@ export default () => {
 	// get the colour scheme
 	const scheme = getAvatarScheme(theme, 0);
 	const schemeAdmin = getAvatarScheme(theme, 3);
-	let listItems = [];
-	// Tell the loop what our pagination limits are
-	let max = (offset + pageSize);
-	if(max > users.length) max = users.length;
-	sortItems(users, sort);
-	const sortedUsers = users.filter(filterUser);
-	sortedUsers.forEach((i, index) => {
-		if (index < offset || index > max) return;
-		const userIsAdmin = i.admin === true;
-		const avatar = {
-			icon: userIsAdmin ? <AdminCircleIcon/> : <AccountCircleIcon/>,
-			bg: userIsAdmin ? schemeAdmin[0] : scheme[0],
-			fg: userIsAdmin ? schemeAdmin[1] : scheme[1],
-			banner: userIsAdmin ? <Badge color="red">Admin</Badge> : ""
-		};
-		const secondary = (<span>{capitalise(i.source)}&nbsp;{avatar.banner}</span>);
-		listItems.push((
-			<ListItem button disableRipple key={index} component='li'>
-				<Avatar component='div' style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
-					<Img
-						src={i.avatarUrl}
-						loader={<CircularProgress size={20}/>}
-						unloader={avatar.icon}
-					/>
-				</Avatar>
-				<ListItemText primary={<span className={classes.title}>{i.username}</span>} secondary={secondary}/>
-				<ListItemSecondaryAction>
-					<IconButton centerRipple={false} onClick={(e) => toggleExpansion(e, i.id)}>
-						<Icon path={mdiDotsVertical} size={1} color={getIconColour(theme)}/>
-						<Menu id={"user-menu"} open={i.id === expanded} anchorEl={anchorEl}
-						      anchorOrigin={{horizontal: "left", vertical: "top"}} onExit={() => {
-							i.expanded = false
-						}}>
-							{(isAdmin && i.admin !== true && i.username !== "system") &&
-							<MenuItem button component='li' onClick={() => handlePatchUser(i, true)}>
-								Promote to admin
-							</MenuItem>}
-							{(isAdmin && i.admin === true && i.username !== "admin") &&
-							<MenuItem button component='li' onClick={() => handlePatchUser(i, false)}>
-								Demote to user
-							</MenuItem>
-							}
-							<MenuItem button component='li'
-							          onClick={() => setDialog(dispatch, MODAL_USER_GROUPS, true, {user: i})}>Modify
-								groups</MenuItem>
-						</Menu>
-					</IconButton>
-				</ListItemSecondaryAction>
-			</ListItem>
-		));
-	});
+
 
 	return (
 		<div>
-			<SortedSubheader title="Users" size={listItems.length} sorts={sorts}/>
+			<SortedSubheader title="Users" size={items.length} sorts={sorts}/>
 			{(loading === true || loadingPatch === true) &&
 			<LinearProgress className={classes.progress} color="primary"/>
 			}
 			<PoseGroup animateOnMount={true}>
 				<Paper key="root" component={Item} style={{borderRadius: 12, marginBottom: 8}}>
 					<List component='ul'>
-						{listItems.length > 0 ? listItems : <EmptyCard/>}
+						{items.length > 0 ? items : <EmptyCard/>}
 					</List>
 					<GroupModDialog/>
 				</Paper>
 			</PoseGroup>
-			{listItems.length > pageSize &&
-				<Center>
-					<Pagination limit={pageSize} offset={offset} total={sortedUsers.length}
-					            nextPageLabel="▶" previousPageLabel="◀" onClick={(e, off) => setOffset(off)}/>
-				</Center>
+			{items.length > pageSize &&
+			<Center>
+				<Pagination limit={pageSize} offset={offset} total={users.length}
+				            nextPageLabel="▶" previousPageLabel="◀" onClick={(e, off) => setOffset(off)}/>
+			</Center>
 			}
 		</div>
 	);
