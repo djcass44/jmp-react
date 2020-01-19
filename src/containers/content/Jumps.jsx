@@ -33,7 +33,6 @@ import Center from "react-center";
 import List from "@material-ui/core/List";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import SearchIcon from "@material-ui/icons/Search";
-import InputBase from "@material-ui/core/InputBase";
 import {fade} from "@material-ui/core/styles";
 import JumpItem from "./jmp/JumpItem";
 import SortButton from "../../components/widget/SortButton";
@@ -42,6 +41,7 @@ import AddIcon from "@material-ui/icons/Add";
 import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
 import {GET_JUMP, getJumps} from "../../store/actions/jumps/GetJumps";
 import {setJumpExpand} from "../../store/actions/jumps";
+import DwellInputBase from "../../components/widget/DwellInputBase";
 
 const bgTransition = time => `background-color ${time}ms linear`;
 const useStyles = makeStyles(theme => ({
@@ -138,13 +138,18 @@ export default () => {
 
 	const [data, setData] = useState([]);
 
+	const onSearch = () => {
+		getJumps(dispatch, headers, search, Number(offset / 8) || 0, 8);
+	};
+
 	useEffect(() => {
 		window.document.title = `${APP_NAME}`;
-		getJumps(dispatch, headers, search, Number(offset / 8) || 0, 8);
-	}, [headers, search, offset]);
+		onSearch();
+	}, [headers]);
 
 	useEffect(() => {
 		const {content} = pagedJumps;
+		setOffset(pagedJumps.number * 8);
 		// Loop-d-loop
 		sortItems(content, sort);
 		setData(content.map(i => (<JumpItem jump={i} key={i.id} id={i.id}/>)));
@@ -152,6 +157,7 @@ export default () => {
 
 	const onPageChange = (off) => {
 		setOffset(off);
+		onSearch();
 		setJumpExpand(dispatch, null);
 	};
 
@@ -182,12 +188,15 @@ export default () => {
 				<div className={classes.searchIcon}>
 					<SearchIcon/>
 				</div>
-				<InputBase
-					placeholder="Search..."
-					autoFocus
-					classes={{root: classes.inputRoot, input: classes.inputInput}}
-					onChange={(e) => setSearch(e.target.value)}
-					value={search}
+				<DwellInputBase
+					inputProps={{
+						placeholder: "Search...",
+						autoFocus: true,
+						classes: {root: classes.inputRoot, input: classes.inputInput},
+						onChange: (e) => setSearch(e.target.value),
+						value: search,
+					}}
+					onDwell={() => onSearch()}
 				/>
 			</div>
 			<div>
