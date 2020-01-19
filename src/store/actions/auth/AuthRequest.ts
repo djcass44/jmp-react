@@ -15,7 +15,7 @@
  *
  */
 
-import {Token} from "../../../types";
+import {BasicAuth, Pair, PublicKeyGet, Token} from "../../../types";
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
 import {BASE_URL} from "../../../constants";
@@ -33,7 +33,7 @@ interface AuthRequestRequestAction {
 
 interface AuthRequestSuccessAction {
 	type: typeof OAUTH_REQUEST_SUCCESS | typeof OAUTH_REFRESH_SUCCESS;
-	payload: Token;
+	payload: Token | Pair<string, PublicKeyGet>;
 }
 
 interface AuthRequestFailureAction {
@@ -41,7 +41,7 @@ interface AuthRequestFailureAction {
 	payload: Error;
 }
 
-export const oauthRequest = (dispatch: Dispatch, data: any): void => {
+export const oauthRequest = (dispatch: Dispatch, data: BasicAuth): void => {
 	dispatch({
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/a2/login`,
@@ -50,7 +50,9 @@ export const oauthRequest = (dispatch: Dispatch, data: any): void => {
 			types: [OAUTH_REQUEST_REQUEST, OAUTH_REQUEST_SUCCESS, OAUTH_REQUEST_FAILURE]
 		}
 	}).then((r) => {
-		// retry verification
+		if (r.payload as Pair<string, PublicKeyGet>)
+			return;
+		// retry verification (only if we weren't hit with a 2FA challenge
 		const payload = r.payload as Token;
 		oauthVerify(dispatch, payload.refresh, {'Authorization': `Bearer ${payload.request}`});
 	});

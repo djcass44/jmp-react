@@ -15,7 +15,7 @@
  *
  */
 
-import {AuthHeaders, Pair, User} from "../../types";
+import {AuthHeaders, Pair, PublicKeyGet, Token, User} from "../../types";
 import {LS_REFRESH, LS_REQUEST, LS_SOURCE} from "../../constants";
 import {AuthActionType} from "../actions/auth";
 import {OAUTH_LOGOUT_REQUEST, OAUTH_LOGOUT_SUCCESS} from "../actions/auth/AuthLogout";
@@ -27,6 +27,8 @@ import {DISCOVER_OAUTH_SUCCESS} from "../actions/auth/DiscoverOAuth";
 import {OAUTH2_CALLBACK_SUCCESS} from "../actions/auth/OAuth2Callback";
 import {getHeaders} from "../../util";
 import {OAUTH2_LOGOUT_REQUEST, OAUTH2_LOGOUT_SUCCESS} from "../actions/auth/OAuth2Logout";
+import {U2F_GET_RESPONSE_SUCCESS} from "../actions/settings/general/U2FGetResponse";
+import {WEB_U2F_CHALLENGE_FAILURE} from "../actions/settings/general";
 
 export interface AuthState {
 	request: string | null;
@@ -38,6 +40,10 @@ export interface AuthState {
 	isAdmin: boolean;
 	providers: Map<string, any>;
 	allProviders: Array<Pair<string, number>>;
+	u2f: {
+		uid: string | null;
+		publicKey: PublicKeyCredentialRequestOptions | null;
+	}
 }
 
 const initialState: AuthState = {
@@ -52,11 +58,17 @@ const initialState: AuthState = {
 	isLoggedIn: false,
 	isAdmin: false,
 	providers: new Map<string, any>(),
-	allProviders: []
+	allProviders: [],
+	u2f: {
+		uid: null,
+		publicKey: null
+	}
 };
 
 export default (state = initialState, action: AuthActionType) => {
 	switch (action.type) {
+		case WEB_U2F_CHALLENGE_FAILURE:
+			return {...state, u2f: {uid: null, publicKey: null}};
 		case GET_PROVIDERS_SUCCESS:
 			return {...state, allProviders: action.payload};
 		case DISCOVER_OAUTH_SUCCESS: {
@@ -75,11 +87,17 @@ export default (state = initialState, action: AuthActionType) => {
 				isAdmin: action.payload.admin
 			}
 		}
+		case U2F_GET_RESPONSE_SUCCESS:
 		case OAUTH2_CALLBACK_SUCCESS:
 		case OAUTH_REFRESH_SUCCESS:
 		case OAUTH_REQUEST_SUCCESS: {
-			const {request, refresh, source = null} = action.payload;
-			const headers = getHeaders(action.payload);
+			if (action.payload as Pair<string, PublicKeyGet>) {
+				const {first, second} = action.payload as Pair<string, PublicKeyGet>;
+				// we got a U2F request
+				return {...state, u2f: {uid: first, publicKey: second}}
+			}
+			const {request, refresh, source = null} = action.payload as Token;
+			const headers = getHeaders(action.payload as Token);
 			localStorage.setItem(LS_REQUEST, request);
 			localStorage.setItem(LS_REFRESH, refresh);
 			localStorage.setItem(LS_SOURCE, source ?? "");

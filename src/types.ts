@@ -36,6 +36,7 @@ export interface User {
 	displayName?: string;
 	avatarUrl?: string;
 	admin: boolean;
+	provided: boolean;
 }
 
 export interface Group {
@@ -84,4 +85,9 @@ export interface BasicAuth {
 export interface Pair<K, V> {
 	first: K;
 	second: V;
+}
+
+export interface PublicKeyGet {
+	username: string;
+	publicKeyCredentialRequestOptions: PublicKeyCredentialRequestOptions;
 }

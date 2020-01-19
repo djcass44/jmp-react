@@ -42,7 +42,8 @@
 		"redux-thunk": "^2.3.0",
 		"typeface-roboto": "0.0.54",
 		"typesafe-actions": "^4.4.2",
-		"typescript": "^3.7.4"
+		"typescript": "^3.7.4",
+		"webauth-helpers": "0.0.12"
 	},
 	"scripts": {
 		"start": "./env.sh && mv ./env-config.js ./public/ && react-scripts start",

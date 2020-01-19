@@ -16,24 +16,22 @@
  */
 
 import React, {useEffect, useState} from "react";
-import {Badge, Button, FormControlLabel, ListSubheader, makeStyles, Switch, Typography} from "@material-ui/core";
+import {ListSubheader, makeStyles} from "@material-ui/core";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import {LS_DARK} from "../../../constants";
 import Icon from "@mdi/react";
-import {mdiSettingsOutline} from "@mdi/js";
+import {mdiSettingsOutline, mdiShieldAccountOutline} from "@mdi/js";
 import {useTheme} from "@material-ui/core/styles";
+import Theme from "./general/Theme";
+import Security from "./general/Security";
+import {useSelector} from "react-redux";
+import {TState} from "../../../store/reducers";
+import {AuthState} from "../../../store/reducers/auth";
 
 const useStyles = makeStyles(theme => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
-	},
-	content: {
-		fontSize: 14,
-		flex: 1
-	},
-	warningText: {
-		color: theme.palette.error.main
 	},
 	icon: {
 		paddingRight: 8
@@ -41,6 +39,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const General: React.FC = () => {
+	const {isLoggedIn} = useSelector<TState, AuthState>(state => state.auth);
 	const [dark, setDark] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -58,21 +57,17 @@ const General: React.FC = () => {
 
 	const classes = useStyles();
 	const theme = useTheme();
-	const visual = (
-		<div>
-			<Typography className={classes.warningText} variant="body1">This feature is in active development and may contain graphical issues.</Typography>
-			<FormControlLabel control={
-				<Switch checked={dark} onChange={(e) => onSetDark(e)}/>
-			} label="Dark theme"/>
-			<Button variant="contained" color="primary" onClick={() => onSave()}>Save</Button>
-		</div>
-	);
 	return (
 		<div>
 			<ListSubheader className={classes.title} inset component="div">General</ListSubheader>
-			<InfoItem title={<Badge color="primary" badgeContent="BETA">Visuals & theme</Badge>} content={visual} icon={
+			<InfoItem title={<span>Visuals &amp; theme</span>}
+			          content={<Theme dark={dark} onSetDark={onSetDark} onSave={onSave}/>} icon={
 				<Icon className={classes.icon} path={mdiSettingsOutline} size={1} color={theme.palette.primary.main}/>
 			} error={null} open={false}/>
+			{isLoggedIn && <InfoItem title={<span>Security</span>} content={<Security/>} icon={
+				<Icon className={classes.icon} path={mdiShieldAccountOutline} size={1}
+				      color={theme.palette.success.main}/>
+			} error={null} open={false}/>}
 		</div>
 	)
 };

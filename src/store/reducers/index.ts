@@ -26,12 +26,14 @@ import groups from "../../reducers/Groups";
 import info from "../../reducers/Info";
 import modal from "../../reducers/Modal";
 import snackbar from "../../reducers/Snackbar";
+import misc, {MiscState} from "./misc";
 
 export interface TState {
 	jumps: JumpsState;
 	auth: AuthState;
 	loading: Map<string, boolean>;
 	errors: Map<string, any | null>;
+	misc: MiscState;
 }
 
 export default combineReducers({
@@ -44,5 +46,6 @@ export default combineReducers({
 	groups,
 	info,
 	modal,
-	snackbar
+	snackbar,
+	misc
 })

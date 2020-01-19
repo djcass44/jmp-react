@@ -22,6 +22,7 @@ import {GetProvidersActionType} from "./GetProviders";
 import {DiscoverOAuthActionType} from "./DiscoverOAuth";
 import {OAuth2CallbackActionType} from "./OAuth2Callback";
 import {OAuth2LogoutActionType} from "./OAuth2Logout";
+import {U2FGetResponseActionType} from "../settings/general/U2FGetResponse";
 
 export type AuthActionType =
 	AuthLogoutActionType
@@ -30,4 +31,5 @@ export type AuthActionType =
 	| GetProvidersActionType
 	| DiscoverOAuthActionType
 	| OAuth2CallbackActionType
-	| OAuth2LogoutActionType;
+	| OAuth2LogoutActionType
+	| U2FGetResponseActionType;

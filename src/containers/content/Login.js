@@ -29,6 +29,10 @@ import {resetError} from "../../actions/Generic";
 import getProviderCount from "../../selectors/getProviderCount";
 import {OAUTH_REQUEST, oauthRequest} from "../../store/actions/auth/AuthRequest";
 import {discoverOAuth} from "../../store/actions/auth/DiscoverOAuth";
+import {u2FGetResponse} from "../../store/actions/settings/general/U2FGetResponse";
+import {u2fChallengeFailure, WEB_U2F_CHALLENGE} from "../../store/actions/settings/general";
+
+var WebAuthHelpers = require("webauth-helpers");
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -82,9 +86,9 @@ export default ({history}) => {
 	const classes = useStyles();
 	const theme = useTheme();
 
-	const {isLoggedIn, providers} = useSelector(state => state.auth);
+	const {isLoggedIn, providers, u2f} = useSelector(state => state.auth);
 	const loading = useSelector(state => state.loading[OAUTH_REQUEST]);
-	const error = useSelector(state => state.errors[OAUTH_REQUEST]);
+	const error = useSelector(state => state.errors[OAUTH_REQUEST] || state.errors[WEB_U2F_CHALLENGE]);
 
 	// state hooks
 	const [username, setUsername] = useState(initialUser);
@@ -100,7 +104,32 @@ export default ({history}) => {
 	}, [dispatch]);
 
 	useEffect(() => {
-		if(isLoggedIn === true) {
+		const {publicKey, uid} = u2f;
+		if (publicKey == null || uid == null)
+			return;
+		// @ts-ignore
+		const decodedPublicKey = WebAuthHelpers.formatRequest(publicKey.publicKeyCredentialRequestOptions);
+		decodedPublicKey.allowCredentials[0].transports = undefined;
+		decodedPublicKey.extensions.appid = "https://localhost:3000";
+		console.dir(decodedPublicKey);
+		// @ts-ignore
+		navigator.credentials.get({publicKey: decodedPublicKey}).then((creds) => {
+			if (creds == null)
+				return;
+			const safeCreds = WebAuthHelpers.formatResponse(creds);
+			// patch the field names to be what Java is expecting
+			safeCreds.clientExtensionResults = safeCreds.getClientExtensionResults;
+			safeCreds.getClientExtensionResults = undefined;
+			safeCreds.rawId = undefined;
+			u2FGetResponse(dispatch, safeCreds, uid);
+		}).catch(err => {
+			console.error(err);
+			u2fChallengeFailure(dispatch, err);
+		});
+	}, [u2f]);
+
+	useEffect(() => {
+		if (isLoggedIn === true) {
 			// The user is already logged in, we can leave here
 			const url = new URL(window.location.href);
 			const target = url.searchParams.get("target");
@@ -131,16 +160,6 @@ export default ({history}) => {
 		resetError(dispatch, OAUTH_REQUEST);
 	};
 
-	let errorMessage = null;
-	if (error != null) {
-		errorMessage = (
-			<Center>
-				<span style={{color: theme.palette.error.main}}>
-					{(error.toString().startsWith("Unauthorized") || error.toString().includes("status code 404")) ? "Incorrect username or password" : error.toString()}
-				</span>
-			</Center>
-		);
-	}
 	return (
 		<Center className={classes.overlay}>
 			{isLoggedIn === true ?
@@ -161,9 +180,14 @@ export default ({history}) => {
 									</Grid>
 									<Grid item xs={12} sm={9} md={6} lg={4}>
 										<Card style={{padding: 16, borderRadius: 12}}>
-											{errorMessage && <Typography style={{padding: 8}}>
-												{errorMessage}
+											{error != null &&
+											<Typography style={{padding: 8}} color="error" align="center">
+												{(error.toString().startsWith("Unauthorized") || error.toString().includes("status code 404")) ? "Incorrect username or password" : error.toString()}
 											</Typography>}
+											{u2f.publicKey != null && <Center>
+												<CircularProgress style={{padding: 4}} size={15} thickness={7}/>
+												<Typography>Waiting for U2F</Typography>
+											</Center>}
 											{page === 0 && <ValidatedTextField
 												data={username}
 												setData={setUsername}
