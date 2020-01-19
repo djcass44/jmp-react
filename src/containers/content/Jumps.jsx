@@ -14,18 +14,7 @@
  *    limitations under the License.
  */
 
-import {
-	Avatar,
-	Fade,
-	IconButton,
-	LinearProgress,
-	makeStyles,
-	Paper,
-	Tooltip,
-	Typography,
-	Zoom
-} from "@material-ui/core";
-import {defaultSorts, sortItems} from "../../misc/Sort";
+import {Avatar, Button, Fade, LinearProgress, makeStyles, Paper, Typography, Zoom} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
 import {APP_NAME} from "../../constants";
 import {useDispatch, useSelector} from "react-redux";
@@ -35,9 +24,6 @@ import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import SearchIcon from "@material-ui/icons/Search";
 import {fade} from "@material-ui/core/styles";
 import JumpItem from "./jmp/JumpItem";
-import SortButton from "../../components/widget/SortButton";
-import {dispatchSort} from "../../actions/Generic";
-import AddIcon from "@material-ui/icons/Add";
 import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
 import {GET_JUMP, getJumps} from "../../store/actions/jumps/GetJumps";
 import {setJumpExpand} from "../../store/actions/jumps";
@@ -120,6 +106,11 @@ const useStyles = makeStyles(theme => ({
 	nothing: {
 		textAlign: "center",
 		padding: theme.spacing(2)
+	},
+	addButton: {
+		borderRadius: theme.spacing(3),
+		margin: theme.spacing(2),
+		textTransform: "none"
 	}
 }));
 
@@ -128,11 +119,9 @@ export default () => {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 	const pagedJumps = useSelector(state => state.jumps.jumps);
-	const {sort} = useSelector(state => state.generic);
 	const {headers} = useSelector(state => state.auth);
 	const loading = useSelector(state => state.loading[GET_JUMP] ?? false);
 
-	const sorts = [...defaultSorts, {id: "usage", value: "Usage"}];
 	const [offset, setOffset] = useState(0);
 	const [search, setSearch] = useState("");
 
@@ -151,9 +140,8 @@ export default () => {
 		const {content} = pagedJumps;
 		setOffset(pagedJumps.number * 8);
 		// Loop-d-loop
-		sortItems(content, sort);
 		setData(content.map(i => (<JumpItem jump={i} key={i.id} id={i.id}/>)));
-	}, [pagedJumps, sort]);
+	}, [pagedJumps]);
 
 	const onPageChange = (off) => {
 		setOffset(off);
@@ -169,20 +157,15 @@ export default () => {
 				        alt={APP_NAME}/>
 			</Center>
 			<Center>
-				<Typography variant="h4" className={classes.name}>Where do you want to go?</Typography>
+				<Typography variant="h4" className={classes.name}>Where to?</Typography>
 			</Center>
 			<Center>
-				<SortButton selectedSort={sort} sorts={sorts} onSubmit={e => dispatchSort(dispatch, e)}/>
-				<Tooltip title="Add">
-					<IconButton centerRipple={false} aria-label="Add" onClick={
-						() => setDialog(dispatch,
-							MODAL_JUMP_NEW,
-							true
-						)
-					}>
-						<AddIcon fontSize="small"/>
-					</IconButton>
-				</Tooltip>
+				<Button className={classes.addButton} color={"primary"} variant={"outlined"} aria-label="Add" onClick={
+					() => setDialog(dispatch,
+						MODAL_JUMP_NEW,
+						true
+					)
+				}>Add</Button>
 			</Center>
 			<div className={classes.search}>
 				<div className={classes.searchIcon}>

@@ -64,8 +64,8 @@ export default () => {
 	const theme = useTheme();
 
 	const getMatches = () => {
-		let url = new URL(window.location.href);
-		let query = url.searchParams.get("query");
+		const url = new URL(window.location.href);
+		const query = url.searchParams.get("query");
 		if (query != null && query !== '')
 			getSimilar(dispatch, headers, query);
 		else
@@ -91,7 +91,7 @@ export default () => {
 	const chips = similar.map(i => {
 		const scheme = getAvatarScheme(theme, i.personal);
 		const textColour = theme.palette.getContrastText(scheme[0]);
-		let avatar = {
+		const avatar = {
 			icon: i.personal === 0 ? mdiEarth : i.personal === 1 ? mdiAccountCircleOutline : mdiAccountGroupOutline,
 			bg: scheme[0],
 			fg: scheme[1]
