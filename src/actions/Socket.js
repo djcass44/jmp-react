@@ -4,6 +4,7 @@ import {getGroups, SOCKET_UPDATE_GROUPS} from "./Groups";
 import {getUsers, SOCKET_UPDATE_USERS} from "./Users";
 import {addSnackbar, closeSnackbar, removeSnackbar} from "./Snackbar";
 import {getJumps} from "../store/actions/jumps/GetJumps";
+import store from "../store";
 
 export const WS_OPEN = "WS_OPEN";
 export const WS_RECONNECT = "WS_RECONNECT";
@@ -14,7 +15,7 @@ export const WS_BAD_TICK = "WS_BAD_TICK";
 let socket = null;
 let badTicks = 0;
 
-export const connectWebSocket = (dispatch, headers) => {
+export const connectWebSocket = (dispatch) => {
 	socket = new WebSocket(SOCKET_URL);
 	socket.addEventListener('open', () => {
 		badTicks = 0;
@@ -25,7 +26,7 @@ export const connectWebSocket = (dispatch, headers) => {
 	});
 	socket.addEventListener('close', () => {
 		setTimeout(() => {
-			connectWebSocket(dispatch, headers);
+			connectWebSocket(dispatch);
 			dispatch({type: WS_RECONNECT});
 		}, 2000);
 		dispatch({type: WS_CLOSE});
@@ -45,14 +46,18 @@ export const connectWebSocket = (dispatch, headers) => {
 		const data = JSON.parse(ev.data);
 		const {type} = data;
 		const {payload} = data;
-		checkType(dispatch, type, payload, headers);
+		checkType(dispatch, type, payload);
 	});
 };
 
-const checkType = (dispatch, type, payload, headers) => {
-	switch(type) {
+const checkType = (dispatch, type, payload) => {
+	// get values we need from the state
+	const state = store.getState();
+	const {headers} = state.auth;
+	switch (type) {
 		case SOCKET_UPDATE_JUMP: {
-			getJumps(dispatch, headers);
+			const {offset, search} = state.jumps;
+			getJumps(dispatch, headers, search, Number(offset / 8) || 0);
 			break;
 		}
 		case SOCKET_UPDATE_GROUPS: {

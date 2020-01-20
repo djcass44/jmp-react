@@ -26,7 +26,7 @@ import {fade} from "@material-ui/core/styles";
 import JumpItem from "./jmp/JumpItem";
 import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
 import {GET_JUMP, getJumps} from "../../store/actions/jumps/GetJumps";
-import {setJumpExpand} from "../../store/actions/jumps";
+import {setJumpExpand, setJumpOffset, setJumpSearch} from "../../store/actions/jumps";
 import DwellInputBase from "../../components/widget/DwellInputBase";
 
 const bgTransition = time => `background-color ${time}ms linear`;
@@ -119,16 +119,14 @@ export default () => {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 	const pagedJumps = useSelector(state => state.jumps.jumps);
+	const {offset, search} = useSelector(state => state.jumps);
 	const {headers} = useSelector(state => state.auth);
 	const loading = useSelector(state => state.loading[GET_JUMP] ?? false);
 
-	const [offset, setOffset] = useState(0);
-	const [search, setSearch] = useState("");
-
 	const [data, setData] = useState([]);
 
-	const onSearch = () => {
-		getJumps(dispatch, headers, search, Number(offset / 8) || 0, 8);
+	const onSearch = (o = offset) => {
+		getJumps(dispatch, headers, search, Number(o / 8) || 0, 8);
 	};
 
 	useEffect(() => {
@@ -138,14 +136,14 @@ export default () => {
 
 	useEffect(() => {
 		const {content} = pagedJumps;
-		setOffset(pagedJumps.number * 8);
+		setJumpOffset(dispatch, pagedJumps.number * 8);
 		// Loop-d-loop
 		setData(content.map(i => (<JumpItem jump={i} key={i.id} id={i.id}/>)));
-	}, [pagedJumps]);
+	}, [pagedJumps, offset]);
 
 	const onPageChange = (off) => {
-		setOffset(off);
-		onSearch();
+		setJumpOffset(dispatch, off);
+		onSearch(off);
 		setJumpExpand(dispatch, null);
 	};
 
@@ -176,7 +174,7 @@ export default () => {
 						placeholder: "Search...",
 						autoFocus: true,
 						classes: {root: classes.inputRoot, input: classes.inputInput},
-						onChange: (e) => setSearch(e.target.value),
+						onChange: (e) => setJumpSearch(dispatch, e.target.value),
 						value: search,
 					}}
 					onDwell={() => onSearch()}

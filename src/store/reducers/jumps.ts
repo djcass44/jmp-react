@@ -16,7 +16,14 @@
  */
 
 import {FaviconPayload, Jump, Page} from "../../types";
-import {JumpsActionType, SET_JUMP_EXPAND, SOCKET_UPDATE_FAVICON, SOCKET_UPDATE_TITLE} from "../actions/jumps";
+import {
+	JumpsActionType,
+	SET_JUMP_EXPAND,
+	SET_JUMP_OFFSET,
+	SET_JUMP_SEARCH,
+	SOCKET_UPDATE_FAVICON,
+	SOCKET_UPDATE_TITLE
+} from "../actions/jumps";
 import {GET_JUMP_SUCCESS} from "../actions/jumps/GetJumps";
 import {GET_SIMILAR_SUCCESS} from "../actions/jumps/GetSimilar";
 
@@ -24,6 +31,8 @@ export interface JumpsState {
 	jumps: Page<Jump>;
 	similar: Array<Jump>;
 	expanded?: number | null;
+	offset: number;
+	search: string;
 }
 
 const initialState: JumpsState = {
@@ -35,7 +44,9 @@ const initialState: JumpsState = {
 		number: 0
 	},
 	similar: [],
-	expanded: null
+	expanded: null,
+	offset: 0,
+	search: ""
 };
 
 export default (state = initialState, action: JumpsActionType) => {
@@ -44,6 +55,10 @@ export default (state = initialState, action: JumpsActionType) => {
 			const {payload} = action;
 			return {...state, expanded: state.expanded === payload ? null : payload};
 		}
+		case SET_JUMP_OFFSET:
+			return {...state, offset: action.payload};
+		case SET_JUMP_SEARCH:
+			return {...state, search: action.payload};
 		case GET_JUMP_SUCCESS:
 			return {...state, jumps: action.payload};
 		case GET_SIMILAR_SUCCESS:

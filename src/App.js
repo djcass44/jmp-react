@@ -18,7 +18,7 @@
 import React, {useEffect} from "react";
 import {MuiThemeProvider} from "@material-ui/core/styles";
 import Theme from "./style/theme";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {Helmet} from "react-helmet";
 import {closeWebSocket, connectWebSocket} from "./actions/Socket";
 import Body from "./containers/Body";
@@ -27,10 +27,9 @@ import Snackbar from "./containers/Snackbar";
 import useTheme from "@material-ui/core/styles/useTheme";
 
 export default () => {
-	const headers = useSelector(state => state.auth.headers);
 	const dispatch = useDispatch();
 	useEffect(() => {
-		connectWebSocket(dispatch, headers);
+		connectWebSocket(dispatch);
 		return () => {
 			closeWebSocket(dispatch);
 		};

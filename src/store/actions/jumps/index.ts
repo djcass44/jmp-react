@@ -21,6 +21,8 @@ import {GetSimilarActionType} from "./GetSimilar";
 import {FaviconPayload} from "../../../types";
 
 export const SET_JUMP_EXPAND = "SET_JUMP_EXPAND";
+export const SET_JUMP_OFFSET = "SET_JUMP_OFFSET";
+export const SET_JUMP_SEARCH = "SET_JUMP_SEARCH";
 
 export const SOCKET_UPDATE_TITLE = "SOCKET_UPDATE_TITLE";
 export const SOCKET_UPDATE_FAVICON = "SOCKET_UPDATE_FAVICON";
@@ -30,6 +32,16 @@ interface SetJumpExpandActionType {
 	payload: number | null;
 }
 
+interface SetJumpOffsetActionType {
+	type: typeof SET_JUMP_OFFSET;
+	payload: number;
+}
+
+interface SetJumpSearchActionType {
+	type: typeof SET_JUMP_SEARCH;
+	payload: string;
+}
+
 interface SocketUpdateActionType {
 	type: typeof SOCKET_UPDATE_TITLE | typeof SOCKET_UPDATE_FAVICON;
 	payload: FaviconPayload;
@@ -37,8 +49,14 @@ interface SocketUpdateActionType {
 
 export const setJumpExpand = (dispatch: Dispatch, id: number | null) => dispatch({type: SET_JUMP_EXPAND, payload: id});
 
+export const setJumpOffset = (dispatch: Dispatch, offset: number) => dispatch({type: SET_JUMP_OFFSET, payload: offset});
+
+export const setJumpSearch = (dispatch: Dispatch, search: string) => dispatch({type: SET_JUMP_SEARCH, payload: search});
+
 export type JumpsActionType =
 	GetJumpsActionType
 	| GetSimilarActionType
 	| SetJumpExpandActionType
+	| SetJumpOffsetActionType
+	| SetJumpSearchActionType
 	| SocketUpdateActionType;
