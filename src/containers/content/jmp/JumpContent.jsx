@@ -17,7 +17,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import JumpButton from "../../../components/content/jmp/JumpButton";
 import {DELETABLE_JUMP, MODAL_JUMP_EDIT, setDelete2, setDialog} from "../../../actions/Modal";
-import {mdiChartDonut, mdiContentCopy, mdiDeleteOutline, mdiDelta, mdiPencilOutline, mdiPlusCircle,} from "@mdi/js";
+import {mdiChartDonut, mdiContentCopy, mdiDeleteOutline, mdiDelta, mdiPencilOutline, mdiPlusCircle} from "@mdi/js";
 import React, {useEffect, useState} from "react";
 import {makeStyles, useTheme} from "@material-ui/styles";
 import getHelpCardColour from "../../../selectors/getHelpCardColour";
@@ -63,10 +63,13 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 	const hasOwnership = isAdmin || jump.public === false;
 	// set the appropriate colours for the card-content
 	const avatarPalette = getAvatarFromPalette(theme, "", palette);
-	const bg = loading === false && error == null ? getColourFromHex(avatarPalette.bg, 0.2) : getHelpCardColour(theme);
-	const card = {
-		backgroundColor: bg
-	};
+	let bg = getHelpCardColour(theme);
+	if (loading === false && error == null) {
+		try {
+			bg = getColourFromHex(avatarPalette.bg, 0.2);
+		} catch (e) {
+		} // this will probably only be thrown by firefox, so just swallow it
+	}
 	const textStyle = {
 		color: getSafeTextColour(theme, bg)
 	};
@@ -98,7 +101,7 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 	}, [jump, jump.meta, jump.usage]);
 
 	return (
-		<div className={classes.collapse} style={card}>
+		<div className={classes.collapse} style={{backgroundColor: bg}}>
 			<div className={classes.content}>
 				<Typography className={classes.title} noWrap variant="subtitle1" style={textStyle}>
 					{jump.title || jump.name}
