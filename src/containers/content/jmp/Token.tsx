@@ -99,7 +99,7 @@ const Token: React.FC<RouteComponentProps> = ({history}) => {
 		const id = url.searchParams.get("id");
 		if (query != null && query !== '') {
 			if (id != null && id !== "")
-				query += `?id=${id}`;
+				query += `&id=${id}`;
 			// find out were we are going
 			getTarget(dispatch, query);
 		} else {
