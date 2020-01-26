@@ -46,7 +46,7 @@ export const oauthRefresh = (dispatch: Dispatch, refresh: string, headers: any):
 		return;
 	dispatch({
 		[RSAA]: {
-			endpoint: `${BASE_URL}/api/a2/refresh?refreshToken=${refresh}`,
+			endpoint: `${BASE_URL}/api/auth/refresh?refreshToken=${refresh}`,
 			method: "GET",
 			headers: headers,
 			types: [OAUTH_REFRESH_REQUEST, OAUTH_REFRESH_SUCCESS, OAUTH_REFRESH_FAILURE]

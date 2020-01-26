@@ -44,7 +44,7 @@ interface OAuth2CallbackFailureAction {
 export const oauth2Callback = (dispatch: Dispatch, query: string): void => {
 	dispatch({
 		[RSAA]: {
-			endpoint: `${BASE_URL}/api/o2/callback?${query}`,
+			endpoint: `${BASE_URL}/api/oauth2/callback?${query}`,
 			method: "GET",
 			types: [OAUTH2_CALLBACK_REQUEST, OAUTH2_CALLBACK_SUCCESS, OAUTH2_CALLBACK_FAILURE]
 		}

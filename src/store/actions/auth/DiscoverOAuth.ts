@@ -42,7 +42,7 @@ interface DiscoverOAuthFailureAction {
 export const discoverOAuth = (dispatch: Dispatch, name: string): void => {
 	dispatch({
 		[RSAA]: {
-			endpoint: `${BASE_URL}/api/o2/${name}`,
+			endpoint: `${BASE_URL}/api/oauth2/${name}`,
 			method: "GET",
 			types: [DISCOVER_OAUTH_REQUEST, DISCOVER_OAUTH_SUCCESS, DISCOVER_OAUTH_FAILURE]
 		}

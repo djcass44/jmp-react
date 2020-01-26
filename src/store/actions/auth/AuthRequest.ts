@@ -44,7 +44,7 @@ interface AuthRequestFailureAction {
 export const oauthRequest = (dispatch: Dispatch, data: any): void => {
 	dispatch({
 		[RSAA]: {
-			endpoint: `${BASE_URL}/api/a2/login`,
+			endpoint: `${BASE_URL}/api/auth/login`,
 			method: "POST",
 			body: JSON.stringify(data),
 			types: [OAUTH_REQUEST_REQUEST, OAUTH_REQUEST_SUCCESS, OAUTH_REQUEST_FAILURE]
