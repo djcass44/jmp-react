@@ -78,12 +78,13 @@ const Token: React.FC<RouteComponentProps> = ({history}) => {
 	 * Make the api call to get our target.
 	 * This isn't using redux because of a "race-condition" where target isn't the expected value until too late
 	 * @param d: dispatch
-	 * @param query: the path/query parameters to tack onto the end of the get request
+	 * @param path: the path (jump name)
+	 * @param query: the query parameters to tack onto the end of the get request
 	 */
-	const getTarget = (d: Dispatch, query: string): void => {
+	const getTarget = (d: Dispatch, path: string, query: string): void => {
 		dispatch({
 			[RSAA]: {
-				endpoint: `${BASE_URL}/api/v2/jump/${encodeURIComponent(query)}`,
+				endpoint: `${BASE_URL}/api/v2/jump/${encodeURIComponent(path)}${query}`,
 				method: "GET",
 				headers: headers as any,
 				types: [`${GET_TARGET}_REQUEST`, `${GET_TARGET}_SUCCESS`, `${GET_TARGET}_FAILURE`]
@@ -95,13 +96,14 @@ const Token: React.FC<RouteComponentProps> = ({history}) => {
 
 	const jumpUser = () => {
 		const url = new URL(window.location.href);
-		let query = url.searchParams.get("query");
+		const path = url.searchParams.get("query");
+		let query = "";
 		const id = url.searchParams.get("id");
-		if (query != null && query !== '') {
+		if (path != null && path !== '') {
 			if (id != null && id !== "")
-				query += `&id=${id}`;
+				query = `?id=${id}`;
 			// find out were we are going
-			getTarget(dispatch, query);
+			getTarget(dispatch, path, query);
 		} else {
 			setFailure("You must specify a query!");
 		}
