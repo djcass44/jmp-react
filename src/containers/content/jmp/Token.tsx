@@ -83,7 +83,7 @@ const Token: React.FC<RouteComponentProps> = ({history}) => {
 	const getTarget = (d: Dispatch, query: string): void => {
 		dispatch({
 			[RSAA]: {
-				endpoint: `${BASE_URL}/api/v2/jump/${query}`,
+				endpoint: `${BASE_URL}/api/v2/jump/${encodeURIComponent(query)}`,
 				method: "GET",
 				headers: headers as any,
 				types: [`${GET_TARGET}_REQUEST`, `${GET_TARGET}_SUCCESS`, `${GET_TARGET}_FAILURE`]
