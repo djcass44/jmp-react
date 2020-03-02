@@ -17,7 +17,7 @@
 
 import processHTTPCode from "../../misc/Codes";
 
-const initialState = {};
+const initialState = new Map<string, any | null>();
 
 interface Action {
 	type: string;
@@ -35,8 +35,6 @@ export default (state = initialState, action: Action) => {
 	if (!matches) return state;
 	const [, requestName, requestState] = matches;
 	const data = processHTTPCode(payload);
-	return {
-		...state,
-		[`${requestName}${payload?.tag ? `_${payload.tag}` : ""}`]: requestState === "FAILURE" ? data : null
-	};
+	state.set(`${requestName}${payload?.tag ? `_${payload.tag}` : ""}`, requestState === "FAILURE" ? data : null);
+	return state;
 }

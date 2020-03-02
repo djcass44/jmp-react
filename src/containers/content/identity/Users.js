@@ -73,8 +73,8 @@ export default () => {
 	const {users} = useSelector(state => state.users);
 	const {headers, isAdmin} = useSelector(state => state.auth);
 	const {searchFilter, sort} = useSelector(state => state.generic);
-	const loading = useSelector(state => state.loading[USER_LOAD]);
-	const loadingPatch = useSelector(state => state.loading[PATCH_USER_ROLE]);
+	const loading = useSelector(state => state.loading.get(USER_LOAD));
+	const loadingPatch = useSelector(state => state.loading.get(PATCH_USER_ROLE));
 
 	const sorts = defaultSorts;
 	const [items, setItems] = useState([]);

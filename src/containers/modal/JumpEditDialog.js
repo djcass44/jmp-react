@@ -44,8 +44,8 @@ export default () => {
 	const dispatch = useDispatch();
 
 	// seletors
-	const loading = useSelector(state => state.loading[PATCH_JUMP]);
-	const error = useSelector(state => state.errors[PATCH_JUMP]);
+	const loading = useSelector(state => state.loading.get(PATCH_JUMP));
+	const error = useSelector(state => state.errors.get(PATCH_JUMP));
 	const {headers} = useSelector(state => state.auth);
 	const {other, open} = useSelector(state => state.modal[MODAL_JUMP_EDIT] || defaultState);
 

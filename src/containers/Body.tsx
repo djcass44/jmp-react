@@ -36,7 +36,7 @@ export const Body: React.FC<RouteComponentProps> = ({history}) => {
 	// hooks
 	const dispatch = useDispatch();
 	// @ts-ignore
-	const loading = useSelector<TState, boolean>(state => state.loading[OAUTH_VERIFY] ?? false);
+	const loading = useSelector<TState, boolean>(state => state.loading.get(OAUTH_VERIFY) ?? false);
 	const {headers, refresh} = useSelector<TState, AuthState>(state => state.auth);
 
 	useLayoutEffect(() => {

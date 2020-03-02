@@ -15,7 +15,7 @@
  *
  */
 
-const initialState = {};
+const initialState = new Map<string, boolean>();
 
 export default (state = initialState, action: { type: string; }) => {
 	const {type} = action;
@@ -25,5 +25,6 @@ export default (state = initialState, action: { type: string; }) => {
 	if (!matches) return state;
 
 	const [, requestName, requestState] = matches;
-	return {...state, [requestName]: requestState === "REQUEST"};
+	state.set(requestName, requestState === "REQUEST");
+	return state;
 }

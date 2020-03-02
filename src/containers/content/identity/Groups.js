@@ -80,7 +80,7 @@ export default () => {
 
 
 	const {groups} = useSelector(state => state.groups);
-	const loading = useSelector(state => state.loading[GROUP_LOAD]);
+	const loading = useSelector(state => state.loading.get(GROUP_LOAD));
 	const {headers, isAdmin} = useSelector(state => state.auth);
 	const {sort, searchFilter} = useSelector(state => state.generic);
 

@@ -20,13 +20,12 @@ import {Button, Card, CardContent, CircularProgress, Grid, makeStyles, Typograph
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import SocialButton from "../../components/widget/SocialButton";
-import {mdiGithubCircle, mdiGoogle} from "@mdi/js";
+import {mdiGithubCircle, mdiGoogle, mdiShieldAccount} from "@mdi/js";
 import {APP_NAME} from "../../constants";
 import {useTheme} from "@material-ui/core/styles";
 import ValidatedTextField from "../../components/field/ValidatedTextField";
 import getIconColour from "../../style/getIconColour";
 import {resetError} from "../../actions/Generic";
-import getProviderCount from "../../selectors/getProviderCount";
 import {OAUTH_REQUEST, oauthRequest} from "../../store/actions/auth/AuthRequest";
 import {discoverOAuth} from "../../store/actions/auth/DiscoverOAuth";
 
@@ -83,8 +82,8 @@ export default ({history}) => {
 	const theme = useTheme();
 
 	const {isLoggedIn, providers} = useSelector(state => state.auth);
-	const loading = useSelector(state => state.loading[OAUTH_REQUEST]);
-	const error = useSelector(state => state.errors[OAUTH_REQUEST]);
+	const loading = useSelector(state => state.loading.get(OAUTH_REQUEST));
+	const error = useSelector(state => state.errors.get(OAUTH_REQUEST));
 
 	// state hooks
 	const [username, setUsername] = useState(initialUser);
@@ -94,9 +93,9 @@ export default ({history}) => {
 	// lifecycle hooks
 	useEffect(() => {
 		window.document.title = `Login - ${APP_NAME}`;
-		resetError(dispatch, OAUTH_REQUEST);
 		discoverOAuth(dispatch, "github");
 		discoverOAuth(dispatch, "google");
+		discoverOAuth(dispatch, "keycloak");
 	}, [dispatch]);
 
 	useEffect(() => {
@@ -131,16 +130,6 @@ export default ({history}) => {
 		resetError(dispatch, OAUTH_REQUEST);
 	};
 
-	let errorMessage = null;
-	if (error != null) {
-		errorMessage = (
-			<Center>
-				<span style={{color: theme.palette.error.main}}>
-					{(error.toString().startsWith("Unauthorized") || error.toString().includes("status code 404")) ? "Incorrect username or password" : error.toString()}
-				</span>
-			</Center>
-		);
-	}
 	return (
 		<Center className={classes.overlay}>
 			{isLoggedIn === true ?
@@ -161,9 +150,6 @@ export default ({history}) => {
 									</Grid>
 									<Grid item xs={12} sm={9} md={6} lg={4}>
 										<Card style={{padding: 16, borderRadius: 12}}>
-											{errorMessage && <Typography style={{padding: 8}}>
-												{errorMessage}
-											</Typography>}
 											{page === 0 && <ValidatedTextField
 												data={username}
 												setData={setUsername}
@@ -206,6 +192,9 @@ export default ({history}) => {
 												{loading === true &&
 												<CircularProgress style={{padding: 4}} size={15} thickness={7}/>}
 											</Button>
+											{error && <Typography style={{padding: 8}} color="error" align="center">
+												{error.toString().startsWith("ApiError: 401") ? "Incorrect username or password" : "Something went wrong"}
+											</Typography>}
 											{(page > 0 || error != null) &&
 											<Button className={classes.resetButton} color="primary"
 											        disabled={loading === true}
@@ -213,17 +202,21 @@ export default ({history}) => {
 										</Card>
 									</Grid>
 								</Grid>
-								{getProviderCount(providers) > 0 &&
-									<>
-										<p className={classes.oauthMessage}>Alternatively, login with</p>
-										<Center>
-											{providers['github'] != null &&
-											<SocialButton url={providers['github']} name={"GitHub"} colour={"#171516"}
-												              icon={mdiGithubCircle}/>}
-											{providers['google'] != null &&
-											<SocialButton url={providers['google']} name={"Google"} colour={"#4285F4"}
-												              icon={mdiGoogle}/>}
-										</Center>
+								{providers.size > 0 &&
+								<>
+									<p className={classes.oauthMessage}>Alternatively, login with</p>
+									<Center>
+										{providers.get('github') != null &&
+										<SocialButton url={providers.get('github')} name={"GitHub"} colour={"#171516"}
+										              icon={mdiGithubCircle}/>}
+										{providers.get('google') != null &&
+										<SocialButton url={providers.get('google')} name={"Google"} colour={"#4285F4"}
+										              icon={mdiGoogle}/>}
+										{providers.get('keycloak') != null &&
+										<SocialButton url={providers.get('keycloak')} name={"Keycloak"}
+										              colour={"#568bf4"}
+										              icon={mdiShieldAccount}/>}
+									</Center>
 									</>
 								}
 							</CardContent>

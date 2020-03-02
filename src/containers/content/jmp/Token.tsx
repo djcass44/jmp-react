@@ -54,9 +54,9 @@ const Token: React.FC<RouteComponentProps> = ({history}) => {
 	const dispatch = useDispatch<Dispatch>();
 	const {headers} = useSelector<TState, AuthState>(state => state.auth);
 	// @ts-ignore
-	const loading = useSelector<TState, boolean>(state => state.loading[GET_TARGET] ?? false);
+	const loading = useSelector<TState, boolean>(state => state.loading.get(GET_TARGET) ?? false);
 	// @ts-ignore
-	const error = useSelector<TState, Error | null>(state => state.errors[GET_TARGET]);
+	const error = useSelector<TState, Error | null>(state => state.errors.get(GET_TARGET));
 
 	const [failure, setFailure] = useState<Error | string | null>(error);
 

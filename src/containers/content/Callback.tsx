@@ -48,10 +48,8 @@ const Callback: React.FC<RouteComponentProps> = ({history}) => {
 	const dispatch = useDispatch();
 	const classes = useStyles();
 
-	// @ts-ignore
-	const loading = useSelector<TState, boolean>(state => state.loading[OAUTH2_CALLBACK] ?? false);
-	// @ts-ignore
-	const error = useSelector<TState, any | null>(state => state.errors[OAUTH2_CALLBACK] ?? null);
+	const loading = useSelector<TState, boolean>(state => state.loading.get(OAUTH2_CALLBACK) || false);
+	const error = useSelector<TState, any | null>(state => state.errors.get(OAUTH2_CALLBACK));
 
 	useEffect(() => {
 		window.document.title = `Callback - ${APP_NAME}`;

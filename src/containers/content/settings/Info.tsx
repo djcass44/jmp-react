@@ -1,16 +1,17 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {ListSubheader, makeStyles, Typography} from "@material-ui/core";
+import {LinearProgress, ListSubheader, makeStyles, Theme, Typography} from "@material-ui/core";
 import {useTheme} from "@material-ui/core/styles";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import {GET_INFO_ERROR, GET_INFO_SYS, getInfoSystem} from "../../../actions/Info";
-import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import JSONPretty from "react-json-pretty";
 import {mdiBugCheckOutline, mdiMemory} from "@mdi/js";
 import Icon from "@mdi/react";
 import Status from "./Status";
+import {TState} from "../../../store/reducers";
+import {AuthState} from "../../../store/reducers/auth";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
@@ -32,16 +33,20 @@ const useStyles = makeStyles(theme => ({
 export default () => {
 	const dispatch = useDispatch();
 
-	const {headers} = useSelector(state => state.auth);
-	const {systemInfo, error} = useSelector(state => state.info);
-	const systemInfoError = useSelector(state => state.errors[GET_INFO_SYS]);
-	const errorLoad = useSelector(state => state.loading[GET_INFO_ERROR]);
+	const classes = useStyles();
+	const theme = useTheme();
+
+	const {headers} = useSelector<TState, AuthState>(state => state.auth);
+	// @ts-ignore
+	const {systemInfo, error} = useSelector<TState, any>(state => state.info);
+	const systemInfoError = useSelector<TState, any | null>(state => state.errors.get(GET_INFO_SYS));
+	const errorLoad = useSelector<TState, any | null>(state => state.loading.get(GET_INFO_ERROR));
 
 	useEffect(() => {
 		getInfoSystem(dispatch, headers);
 	}, [headers]);
-	const classes = useStyles();
-	const theme = useTheme();
+
+
 	const status = (
 		<div>
 			<Status showReload/>

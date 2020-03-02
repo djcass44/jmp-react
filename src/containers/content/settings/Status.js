@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 const Status = ({showReload}) => {
 	const dispatch = useDispatch();
 
-	const loading = useSelector(state => state.loading[GET_INFO_STAT]);
+	const loading = useSelector(state => state.loading.get(GET_INFO_STAT));
 	const {components} = useSelector(state => state.info.status);
 	const {headers} = useSelector(state => state.auth);
 

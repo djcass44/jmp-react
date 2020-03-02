@@ -51,9 +51,9 @@ export default () => {
 	const classes = useStyles();
 
 	// selectors
-	const loading = useSelector(state => state.loading[PATCH_GROUP]);
-	const loading2 = useSelector(state => state.loading[GET_PROVIDERS]);
-	const error = useSelector(state => state.errors[PATCH_GROUP]);
+	const loading = useSelector(state => state.loading.get(PATCH_GROUP));
+	const loading2 = useSelector(state => state.loading.get(GET_PROVIDERS));
+	const error = useSelector(state => state.errors.get(PATCH_GROUP));
 	const {headers, allProviders} = useSelector(state => state.auth);
 	const {other, open} = useSelector(state => state.modal[MODAL_GROUP_EDIT] || defaultState);
 

@@ -39,8 +39,8 @@ export default () => {
 
 	const {open} = useSelector(state => state.modal[MODAL_GROUP_NEW] || defaultState);
 	const {headers} = useSelector(state => state.auth);
-	const loading = useSelector(state => state.loading[PUT_GROUP]);
-	const error = useSelector(state => state.errors[PUT_GROUP]);
+	const loading = useSelector(state => state.loading.get(PUT_GROUP));
+	const error = useSelector(state => state.errors.get(PUT_GROUP));
 
 	const [name, setName] = useState(initialName);
 	const [submit, setSubmit] = useState(false);

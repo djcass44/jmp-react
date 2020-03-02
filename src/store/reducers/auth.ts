@@ -61,7 +61,9 @@ export default (state = initialState, action: AuthActionType) => {
 			return {...state, allProviders: action.payload};
 		case DISCOVER_OAUTH_SUCCESS: {
 			const {first, second} = action.payload;
-			return {...state, providers: {...state.providers, [first]: second}}
+			const {providers} = state;
+			providers.set(first, second);
+			return {...state, providers}
 		}
 		case OAUTH_VERIFY_SUCCESS: {
 			// if there's not request token there's no point saving the userProfile

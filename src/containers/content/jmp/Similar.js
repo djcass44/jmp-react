@@ -56,8 +56,8 @@ export default () => {
 	// hooks
 	const dispatch = useDispatch();
 	const {headers} = useSelector(state => state.auth);
-	const loading = useSelector(state => state.loading[GET_SIMILAR]);
-	const error = useSelector(state => state.errors[GET_SIMILAR]);
+	const loading = useSelector(state => state.loading.get(GET_SIMILAR));
+	const error = useSelector(state => state.errors.get(GET_SIMILAR));
 	const {similar} = useSelector(state => state.jumps);
 
 	const classes = useStyles();
