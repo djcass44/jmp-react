@@ -22,9 +22,9 @@ import {useTheme} from "@material-ui/styles";
 
 interface JumpButtonProps {
 	title: string;
-	focus: boolean;
-	mouse: boolean;
-	focusProps: any;
+	focus?: boolean;
+	mouse?: boolean;
+	focusProps?: any;
 	buttonProps: any;
 	iconProps: any;
 }

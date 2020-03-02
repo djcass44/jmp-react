@@ -19,7 +19,8 @@ import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js
 import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import {useTheme} from "@material-ui/styles";
 import Icon from "@mdi/react";
-import {Avatar, CircularProgress, Theme} from "@material-ui/core";
+import {Avatar, Theme} from "@material-ui/core";
+import {Skeleton} from "@material-ui/lab";
 import React from "react";
 import Img from "react-image";
 import getLegacyJumpType from "../../../selectors/getLegacyJumpType";
@@ -66,7 +67,7 @@ const JumpAvatar: React.FC<JumpAvatarProps> = ({jump, background = true, palette
 			<Img
 				src={jump.image}
 				loader={
-					<CircularProgress size={20}/>
+					<Skeleton animation="wave" variant="circle" width={32} height={32}/>
 				}
 				unloader={
 					<Icon path={avatar.icon} color={avatar.fg} size={1}/>

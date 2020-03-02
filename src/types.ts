@@ -24,6 +24,16 @@ export interface Jump {
 	owner?: User | null;
 	ownerGroup?: Group | null;
 	alias: Array<Alias>;
+	meta: Meta;
+	usage: number;
+}
+
+export interface Meta {
+	id: number;
+	created: number;
+	edited: number;
+	createdBy: string;
+	editedBy: string
 }
 
 export interface Alias {

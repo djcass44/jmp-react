@@ -132,99 +132,95 @@ export default ({history}) => {
 
 	return (
 		<Center className={classes.overlay}>
-			{isLoggedIn === true ?
-				<CircularProgress/>
-				:
-				<>
-					<Grid style={{height: "100vh"}} container spacing={4} alignContent="center" justify="center">
-						<Grid item lg={2} md={false}/>
-						<Grid item lg={8} md={12}>
-							<CardContent style={{margin: 12, pointerEvents: "initial"}}>
-								<Grid container spacing={4} alignContent="center" justify="center">
-									<Grid item xs={12}>
-										<Center>
-											<img src={`${process.env.PUBLIC_URL}/jmp.png`} alt="App icon" height={72}/>
-										</Center>
-										<Typography className={classes.banner} variant="h2"
-										            align="center">{APP_NAME}</Typography>
-									</Grid>
-									<Grid item xs={12} sm={9} md={6} lg={4}>
-										<Card style={{padding: 16, borderRadius: 12}}>
-											{page === 0 && <ValidatedTextField
-												data={username}
-												setData={setUsername}
-												invalidLabel="Username must be a minimum of 3 characters"
-												fieldProps={{
-													required: true,
-													autoFocus: true,
-													autoComplete: "username",
-													margin: "dense",
-													id: "username",
-													label: "Username",
-													variant: "outlined",
-													fullWidth: true
-												}}
-											/>}
-											{page === 1 && <ValidatedTextField
-												data={password}
-												setData={setPassword}
-												invalidLabel="Password must be a minimum of 8 characters"
-												fieldProps={{
-													required: true,
-													type: "password",
-													autoComplete: "current-password",
-													margin: "dense",
-													id: "password",
-													label: "Password",
-													variant: "outlined",
-													fullWidth: true
-												}}
-											/>}
-											<Button style={{
-												marginTop: 8,
-												textTransform: "none",
-												color: getIconColour(theme)
-											}} className={classes.title} onClick={() => onNext()} variant="contained"
-											        color="primary"
-											        fullWidth size="large" type="submit"
-											        disabled={!valid || page >= 2 || loading === true}>
-												Continue
-												{loading === true &&
-												<CircularProgress style={{padding: 4}} size={15} thickness={7}/>}
-											</Button>
-											{error && <Typography style={{padding: 8}} color="error" align="center">
-												{error.toString().startsWith("ApiError: 401") ? "Incorrect username or password" : "Something went wrong"}
-											</Typography>}
-											{(page > 0 || error != null) &&
-											<Button className={classes.resetButton} color="primary"
-											        disabled={loading === true}
-											        onClick={() => onReset()}>Reset</Button>}
-										</Card>
-									</Grid>
-								</Grid>
-								{providers.size > 0 &&
-								<>
-									<p className={classes.oauthMessage}>Alternatively, login with</p>
+			<>
+				<Grid style={{height: "100vh"}} container spacing={4} alignContent="center" justify="center">
+					<Grid item lg={2} md={false}/>
+					<Grid item lg={8} md={12}>
+						<CardContent style={{margin: 12, pointerEvents: "initial"}}>
+							<Grid container spacing={4} alignContent="center" justify="center">
+								<Grid item xs={12}>
 									<Center>
-										{providers.get('github') != null &&
-										<SocialButton url={providers.get('github')} name={"GitHub"} colour={"#171516"}
-										              icon={mdiGithubCircle}/>}
-										{providers.get('google') != null &&
-										<SocialButton url={providers.get('google')} name={"Google"} colour={"#4285F4"}
-										              icon={mdiGoogle}/>}
-										{providers.get('keycloak') != null &&
-										<SocialButton url={providers.get('keycloak')} name={"Keycloak"}
-										              colour={"#568bf4"}
-										              icon={mdiShieldAccount}/>}
+										<img src={`${process.env.PUBLIC_URL}/jmp.png`} alt="App icon" height={72}/>
 									</Center>
-									</>
-								}
-							</CardContent>
-						</Grid>
-						<Grid item lg={2} md={false}/>
+									<Typography className={classes.banner} variant="h2"
+									            align="center">{APP_NAME}</Typography>
+								</Grid>
+								<Grid item xs={12} sm={9} md={6} lg={4}>
+									<Card style={{padding: 16, borderRadius: 12}}>
+										{page === 0 && <ValidatedTextField
+											data={username}
+											setData={setUsername}
+											invalidLabel="Username must be a minimum of 3 characters"
+											fieldProps={{
+												required: true,
+												autoFocus: true,
+												autoComplete: "username",
+												margin: "dense",
+												id: "username",
+												label: "Username",
+												variant: "outlined",
+												fullWidth: true
+											}}
+										/>}
+										{page === 1 && <ValidatedTextField
+											data={password}
+											setData={setPassword}
+											invalidLabel="Password must be a minimum of 8 characters"
+											fieldProps={{
+												required: true,
+												type: "password",
+												autoComplete: "current-password",
+												margin: "dense",
+												id: "password",
+												label: "Password",
+												variant: "outlined",
+												fullWidth: true
+											}}
+										/>}
+										<Button style={{
+											marginTop: 8,
+											textTransform: "none",
+											color: getIconColour(theme)
+										}} className={classes.title} onClick={() => onNext()} variant="contained"
+										        color="primary"
+										        fullWidth size="large" type="submit"
+										        disabled={!valid || page >= 2 || loading === true || isLoggedIn === true}>
+											Continue
+											{(loading === true || isLoggedIn === true) &&
+											<CircularProgress style={{padding: 4}} size={15} thickness={7}/>}
+										</Button>
+										{error && <Typography style={{padding: 8}} color="error" align="center">
+											{error.toString().startsWith("ApiError: 401") ? "Incorrect username or password" : "Something went wrong"}
+										</Typography>}
+										{(page > 0 || error != null) &&
+										<Button className={classes.resetButton} color="primary"
+										        disabled={loading === true || isLoggedIn === true}
+										        onClick={() => onReset()}>Reset</Button>}
+									</Card>
+								</Grid>
+							</Grid>
+							{providers.size > 0 &&
+							<>
+								<p className={classes.oauthMessage}>Alternatively, login with</p>
+								<Center>
+									{providers.get('github') != null &&
+									<SocialButton url={providers.get('github')} name={"GitHub"} colour={"#171516"}
+									              icon={mdiGithubCircle}/>}
+									{providers.get('google') != null &&
+									<SocialButton url={providers.get('google')} name={"Google"} colour={"#4285F4"}
+									              icon={mdiGoogle}/>}
+									{providers.get('keycloak') != null &&
+									<SocialButton url={providers.get('keycloak')} name={"Keycloak"}
+									              colour={"#568bf4"}
+									              icon={mdiShieldAccount}/>}
+								</Center>
+							</>
+							}
+						</CardContent>
 					</Grid>
-				</>
-			}
+					<Grid item lg={2} md={false}/>
+				</Grid>
+			</>
 		</Center>
 	);
 };

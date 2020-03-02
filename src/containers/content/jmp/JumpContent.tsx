@@ -18,18 +18,21 @@ import {useDispatch, useSelector} from "react-redux";
 import JumpButton from "../../../components/content/jmp/JumpButton";
 import {DELETABLE_JUMP, MODAL_JUMP_EDIT, setDelete2, setDialog} from "../../../actions/Modal";
 import {mdiChartDonut, mdiContentCopy, mdiDeleteOutline, mdiDelta, mdiPencilOutline, mdiPlusCircle} from "@mdi/js";
-import React, {useEffect, useState} from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 import {makeStyles, useTheme} from "@material-ui/styles";
 import getHelpCardColour from "../../../selectors/getHelpCardColour";
-import PropTypes from "prop-types";
-import {CardActions, Table, TableBody, TableCell, TableRow, Typography} from "@material-ui/core";
+import {CardActions, Table, TableBody, TableCell, TableRow, Theme, Typography} from "@material-ui/core";
 import Moment from "react-moment";
 import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import getColourFromHex from "../../../style/getColourFromHex";
 import getSafeTextColour from "../../../selectors/getSafeTextColour";
 import Icon from "@mdi/react";
+import {Jump} from "../../../types";
+import {TState} from "../../../store/reducers";
+import {AuthState} from "../../../store/reducers/auth";
+import {PaletteColors} from "react-palette";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
@@ -50,24 +53,39 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const JumpContent = ({jump, focusProps, palette, loading, error}) => {
+interface JumpContentProps {
+	jump: Jump;
+	focusProps: object;
+	palette: PaletteColors;
+	loading?: boolean;
+	error?: any | null;
+}
+
+interface JumpData {
+	icon: ReactNode;
+	key: string;
+	value: any;
+}
+
+const JumpContent: React.FC<JumpContentProps> = ({jump, focusProps, palette, loading = false, error = null}) => {
 	const dispatch = useDispatch();
 	const classes = useStyles();
-	const theme = useTheme();
+	const theme = useTheme<Theme>();
 
-	const {isLoggedIn, isAdmin} = useSelector(state => state.auth);
+	const {isLoggedIn, isAdmin} = useSelector<TState, AuthState>(state => state.auth);
 
 	// state
-	const [data, setData] = useState([]);
+	const [data, setData] = useState<Array<JumpData>>([]);
 
-	const hasOwnership = isAdmin || jump.public === false;
+	const hasOwnership = isAdmin || !jump.public;
 	// set the appropriate colours for the card-content
 	const avatarPalette = getAvatarFromPalette(theme, "", palette);
-	let bg = getHelpCardColour(theme);
+	let bg: string | null = getHelpCardColour(theme);
 	if (loading === false && error == null) {
 		try {
 			bg = getColourFromHex(avatarPalette.bg, 0.2);
 		} catch (e) {
+			console.error(e);
 		} // this will probably only be thrown by firefox, so just swallow it
 	}
 	const textStyle = {
@@ -85,7 +103,7 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 			{
 				icon: <Icon path={mdiPlusCircle} size={0.725} color={theme.palette.primary.main}/>,
 				key: "Created",
-				value: <Moment fromNow>{(meta && meta.created) || jump.metaCreation}</Moment>
+				value: <Moment fromNow>{(meta?.created)}</Moment>
 			}
 		];
 		// add edited only if the jump has actually been edited
@@ -93,7 +111,7 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 			metaData.push({
 					icon: <Icon path={mdiDelta} size={0.725} color={theme.palette.error.main}/>,
 					key: "Edited",
-					value: <Moment fromNow>{(meta && meta.edited) || jump.metaUpdate}</Moment>
+					value: <Moment fromNow>{(meta?.edited)}</Moment>
 				}
 			);
 		}
@@ -101,7 +119,7 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 	}, [jump, jump.meta, jump.usage]);
 
 	return (
-		<div className={classes.collapse} style={{backgroundColor: bg}}>
+		<div className={classes.collapse} style={{backgroundColor: bg || ""}}>
 			<div className={classes.content}>
 				<Typography className={classes.title} noWrap variant="subtitle1" style={textStyle}>
 					{jump.title || jump.name}
@@ -167,7 +185,7 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 							onClick: () => setDelete2(dispatch,
 								true,
 								DELETABLE_JUMP,
-								jump.public === true,
+								jump.public,
 								jump
 							),
 							style: {color: theme.palette.error.main}
@@ -182,10 +200,5 @@ const JumpContent = ({jump, focusProps, palette, loading, error}) => {
 			</CardActions>
 		</div>
 	);
-};
-JumpContent.propTypes = {
-	jump: PropTypes.object.isRequired,
-	focusProps: PropTypes.object.isRequired,
-	palette: PropTypes.object.isRequired
 };
 export default JumpContent;
