@@ -19,7 +19,15 @@ import React, {ReactNode, useEffect, useState} from "react";
 import {List, ListItem, ListItemAvatar, ListItemText, ListSubheader, makeStyles, Theme} from "@material-ui/core";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import Icon from "@mdi/react";
-import {mdiAccountBadgeOutline, mdiDatabase, mdiFolderAccountOutline, mdiGithubCircle, mdiGoogle} from "@mdi/js";
+import {
+	mdiAccountBadgeOutline,
+	mdiAccountOutline,
+	mdiDatabase,
+	mdiFolderAccountOutline,
+	mdiGithubCircle,
+	mdiGoogle,
+	mdiShieldAccount
+} from "@mdi/js";
 import {useTheme} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {TState} from "../../../store/reducers";
@@ -51,27 +59,36 @@ interface Provider {
 const Auth: React.FC = () => {
 	const dispatch = useDispatch();
 	const classes = useStyles();
-	const theme = useTheme();
+	const {palette} = useTheme();
 
 	const {allProviders, headers} = useSelector<TState, AuthState>(state => state.auth);
 
 	const [data, setData] = useState<ReactNode | null>(null);
 	const [providers] = useState<any>({
 		ldap: {
+			name: "LDAP",
 			icon: mdiAccountBadgeOutline,
-			colour: theme.palette.success.main
+			colour: palette.success.main
 		},
 		local: {
+			name: "Internal Database",
 			icon: mdiDatabase,
-			colour: theme.palette.primary.main
+			colour: palette.primary.main
 		},
 		"oauth2/github": {
+			name: "GitHub (OAuth2)",
 			icon: mdiGithubCircle,
-			colour: theme.palette.text.secondary
+			colour: palette.text.secondary
 		},
 		"oauth2/google": {
+			name: "Google (OAuth2)",
 			icon: mdiGoogle,
-			colour: theme.palette.primary.main
+			colour: palette.primary.main
+		},
+		"oauth2/keycloak": {
+			name: "Keycloak (OIDC)",
+			icon: mdiShieldAccount,
+			colour: "#568bf4"
 		}
 	});
 
@@ -82,10 +99,12 @@ const Auth: React.FC = () => {
 	useEffect(() => {
 		setData(allProviders.map(i => (
 			<ListItem component="li" key={i.first}>
-				{providers[i.first] && <ListItemAvatar>
-					<Icon path={providers[i.first].icon} size={1} color={providers[i.first].colour}/>
-				</ListItemAvatar>}
-				<ListItemText primary={i.first} secondary={`${i.second} ${plural(i.second, "user")}`}/>
+				<ListItemAvatar>
+					<Icon path={providers[i.first]?.icon || mdiAccountOutline} size={1}
+					      color={providers[i.first]?.colour || palette.primary.main}/>
+				</ListItemAvatar>
+				<ListItemText primary={providers[i.first]?.name || i.first}
+				              secondary={`${i.second} ${plural(i.second, "user")}`}/>
 			</ListItem>
 		)));
 	}, [allProviders, providers]);
@@ -97,7 +116,7 @@ const Auth: React.FC = () => {
 				{data}
 			</List>} icon={
 				<Icon style={{paddingRight: 8}} path={mdiFolderAccountOutline} size={1}
-				      color={theme.palette.success.dark}/>
+				      color={palette.success.dark}/>
 			}/>
 		</div>
 	);
