@@ -23,22 +23,18 @@ import {fade} from "@material-ui/core/styles/colorManipulator";
 import InputBase from "@material-ui/core/InputBase";
 import {IconButton, LinearProgress, makeStyles} from "@material-ui/core";
 import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
-import Divider from "@material-ui/core/es/Divider/Divider";
 import {setFilter} from "../actions/Generic";
-import HomeIcon from "@material-ui/icons/HomeOutlined";
-import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 import Icon from "@mdi/react";
-import {mdiAccountGroupOutline, mdiHelpCircleOutline, mdiLogin, mdiLogout} from "@mdi/js";
+import {mdiHelpCircleOutline} from "@mdi/js";
 import {Avatar} from "evergreen-ui";
 import BackButton from "../components/widget/BackButton";
 import getIconColour from "../style/getIconColour";
 import {APP_MSG, APP_NAME} from "../constants";
 import {useTheme} from "@material-ui/core/styles";
 import PropTypes from "prop-types";
-import UserPopover from "../components/widget/UserPopover";
+import UserMenu from "./content/identity/profile/UserMenu";
 
 const bgTransition = time => `background-color ${time}ms linear`;
 
@@ -217,52 +213,19 @@ const Nav = ({loading, history}) => {
 					</>
 					}
 				</Toolbar>
-				{loading === true && <LinearProgress className={classes.progress} />}
+				{loading === true && <LinearProgress className={classes.progress}/>}
 			</>
 			<Menu
 				anchorEl={anchorEl}
-				anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-				transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+				anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+				transformOrigin={{vertical: 'top', horizontal: 'right'}}
 				open={isMenuOpen}
 				onClose={() => handleMenuClose()}>
-				<MenuItem button={false} component={"div"}>
-					<UserPopover user={userProfile} elevation={0}/>
-				</MenuItem>
-				<Divider/>
-				{location.pathname !== "/" &&
-				<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/"} button={true}>
-					<HomeIcon className={classes.menuIcon}/>
-					Home
-				</MenuItem>}
-				{location.pathname !== "/help" &&
-				<MenuItem className={classes.helpButton} component={Link} onClick={() => handleMenuClose()} to={"/help"}
-				          button={true}>
-					<Icon className={classes.menuIcon} path={mdiHelpCircleOutline} size={1}
-					      color={getIconColour(theme)}/>
-					Help
-				</MenuItem>}
-				{isLoggedIn === true &&
-					<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/identity"} button={true}>
-						<Icon className={classes.menuIcon} path={mdiAccountGroupOutline} size={1}
-						      color={getIconColour(theme)}/>
-						Users &amp; Groups
-					</MenuItem>
-				}
-				<MenuItem component={Link} onClick={() => handleMenuClose()} to={"/settings"} button={true}>
-					<SettingsIcon className={classes.menuIcon}/>
-					Settings
-				</MenuItem>
-				{isLoggedIn === false ?
-					<MenuItem component={Link} onClick={() => handleMenuClose()} to={loginUrl} button={true}>
-						<Icon className={classes.menuIcon} path={mdiLogin} size={1} color={getIconColour(theme)}/>
-						Login
-					</MenuItem>
-					:
-					<MenuItem component={Link} onClick={() => handleMenuClose()} to={'/logout'} button={true}>
-						<Icon className={classes.menuIcon} path={mdiLogout} size={1} color={getIconColour(theme)}/>
-						Logout
-					</MenuItem>
-				}
+				<UserMenu
+					user={userProfile}
+					loginUrl={loginUrl}
+					onClose={handleMenuClose}
+				/>
 			</Menu>
 		</div>
 	);
