@@ -21,10 +21,10 @@ import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
 import {fade} from "@material-ui/core/styles/colorManipulator";
 import InputBase from "@material-ui/core/InputBase";
-import {IconButton, LinearProgress, makeStyles} from "@material-ui/core";
+import {IconButton, LinearProgress, makeStyles, Theme} from "@material-ui/core";
 import Menu from "@material-ui/core/Menu";
 import {useDispatch, useSelector} from "react-redux";
-import {Link, withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {setFilter} from "../actions/Generic";
 import Icon from "@mdi/react";
 import {mdiHelpCircleOutline} from "@mdi/js";
@@ -33,12 +33,14 @@ import BackButton from "../components/widget/BackButton";
 import getIconColour from "../style/getIconColour";
 import {APP_MSG, APP_NAME} from "../constants";
 import {useTheme} from "@material-ui/core/styles";
-import PropTypes from "prop-types";
 import UserMenu from "./content/identity/profile/UserMenu";
+import {TState} from "../store/reducers";
+import {AuthState} from "../store/reducers/auth";
+import {useLocation} from "react-router";
 
-const bgTransition = time => `background-color ${time}ms linear`;
+const bgTransition = (time: number | string): string => `background-color ${time}ms linear`;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	root: {
 		position: "fixed",
 		width: "100%",
@@ -76,8 +78,10 @@ const useStyles = makeStyles(theme => ({
 		position: 'relative',
 		borderRadius: theme.shape.borderRadius,
 		color: theme.palette.text.primary,
+		// @ts-ignore
 		backgroundColor: fade(theme.palette.search, 0.15),
 		'&:hover': {
+			// @ts-ignore
 			backgroundColor: fade(theme.palette.search, 0.35),
 			transition: bgTransition(250),
 			webkitTransition: bgTransition(250),
@@ -125,11 +129,6 @@ const useStyles = makeStyles(theme => ({
 			display: 'flex',
 		},
 	},
-	helpButton: {
-		[theme.breakpoints.up("md")]: {
-			display: "none"
-		}
-	},
 	progress: {
 		backgroundColor: 'transparent'
 	},
@@ -138,43 +137,45 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Nav = ({loading, history}) => {
+interface NavProps {
+	loading?: boolean;
+}
+
+const Nav: React.FC<NavProps> = ({loading = false}) => {
 	const searchRoutes = [
 		"/identity"
 	];
 	// hooks
-	const {isLoggedIn, userProfile} = useSelector(state => state.auth);
-	const {searchFilter} = useSelector(state => state.generic);
-	const {location} = history;
+	const location = useLocation();
 	const dispatch = useDispatch();
+	const classes = useStyles();
+	const theme = useTheme();
 
-	const [showSearch, setShowSearch] = useState(true);
+	// global state
+	const {userProfile} = useSelector<TState, AuthState>(state => state.auth);
+	// @ts-ignore
+	const {searchFilter} = useSelector(state => state.generic);
+
+	// component state
+	const [showSearch, setShowSearch] = useState<boolean>(true);
 	const [anchorEl, setAnchorEl] = useState(null);
+	const [loginUrl, setLoginUrl] = useState("/login");
 
 	useEffect(() => {
 		setShowSearch(searchRoutes.includes(location.pathname));
+		const url = location.pathname + location.search;
+		if (url !== '')
+			setLoginUrl(`/login?target=${url}`);
 	}, [location.key, searchRoutes]);
 
 	const handleMenuClose = () => {
 		setAnchorEl(null);
 	};
 
-	const handleSearchChange = e => {
+	const handleSearchChange = (e: any) => {
 		let s = e.target.value.toLowerCase();
 		setFilter(dispatch, s);
 	};
-
-	const classes = useStyles();
-	const theme = useTheme();
-	const isMenuOpen = anchorEl != null;
-
-	let name = userProfile?.displayName;
-	if (name == null || name === "") name = userProfile?.username || "Anonymous";
-	const name2 = name.replace(".", " ");
-	const url = location.pathname + location.search;
-	let loginUrl = '/login';
-	if (url !== '')
-		loginUrl = `/login?target=${url}`;
 
 	return (
 		<div className={classes.root}>
@@ -187,16 +188,17 @@ const Nav = ({loading, history}) => {
 					<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"secondary"}>
 						{APP_MSG}
 					</Typography>
-					{showSearch === true && loading !== true ?
-						<div className={classes.search}>
-							<div className={classes.searchIcon}>
-								<SearchIcon/>
-							</div>
-							<InputBase placeholder={"Search..."} classes={{root: classes.inputRoot, input: classes.inputInput}} onChange={(e) => handleSearchChange(e)} value={searchFilter}/>
+					{(showSearch && loading !== true) && <div className={classes.search}>
+						<div className={classes.searchIcon}>
+							<SearchIcon/>
 						</div>
-						:
-						<div/>
-					}
+						<InputBase
+							placeholder={"Search..."}
+							classes={{root: classes.inputRoot, input: classes.inputInput}}
+							onChange={(e) => handleSearchChange(e)}
+							value={searchFilter}
+						/>
+					</div>}
 					<div className={classes.grow}/>
 					{loading === false &&
 					<>
@@ -207,9 +209,15 @@ const Nav = ({loading, history}) => {
 								<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
 							</IconButton>}
 						</div>
-						<Avatar name={name2} src={userProfile?.avatarUrl || undefined} size={40} style={{marginTop: 4}}
-						        onClick={(e) => setAnchorEl(e.currentTarget)} aria-haspopup="true"
-						        aria-owns={isMenuOpen ? 'material-appbar' : undefined}/>
+						<Avatar
+							name={userProfile?.displayName || userProfile?.username || "Anonymous"}
+							src={userProfile?.avatarUrl || undefined}
+							size={40}
+							style={{marginTop: 4}}
+							onClick={(e: any) => setAnchorEl(e.currentTarget)}
+							aria-haspopup="true"
+							aria-owns={anchorEl != null ? 'material-appbar' : undefined}
+						/>
 					</>
 					}
 				</Toolbar>
@@ -219,7 +227,7 @@ const Nav = ({loading, history}) => {
 				anchorEl={anchorEl}
 				anchorOrigin={{vertical: 'top', horizontal: 'right'}}
 				transformOrigin={{vertical: 'top', horizontal: 'right'}}
-				open={isMenuOpen}
+				open={anchorEl != null}
 				onClose={() => handleMenuClose()}>
 				<UserMenu
 					user={userProfile}
@@ -230,11 +238,4 @@ const Nav = ({loading, history}) => {
 		</div>
 	);
 };
-Nav.propTypes = {
-	loading: PropTypes.bool,
-	history: PropTypes.object.isRequired
-};
-Nav.defaultProps = {
-	loading: false
-};
-export default withRouter(Nav);
+export default Nav;

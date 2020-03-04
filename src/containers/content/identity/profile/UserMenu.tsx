@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface UserMenuProps {
-	user: User;
+	user: User | null;
 	loginUrl?: string | null;
 	onClose: () => void;
 }

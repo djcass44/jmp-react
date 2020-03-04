@@ -4,10 +4,11 @@ import Nav from "./Nav";
 import AdminPanel from "../components/AdminPanel";
 import {makeStyles, Theme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {RouteComponentProps, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import {OAUTH_VERIFY, oauthVerify} from "../store/actions/auth/AuthVerify";
 import {TState} from "../store/reducers";
 import {AuthState} from "../store/reducers/auth";
+import {useLocation} from "react-router";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	main: {
@@ -32,16 +33,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-export const Body: React.FC<RouteComponentProps> = ({history}) => {
+export const Body: React.FC = () => {
 	// hooks
 	const dispatch = useDispatch();
+	const location = useLocation();
 	// @ts-ignore
 	const loading = useSelector<TState, boolean>(state => state.loading.get(OAUTH_VERIFY) ?? false);
 	const {headers, refresh} = useSelector<TState, AuthState>(state => state.auth);
 
 	useLayoutEffect(() => {
 		oauthVerify(dispatch, refresh || "", headers);
-	}, [history.location.key]);
+	}, [location.key]);
 
 	const classes = useStyles();
 	return (
@@ -50,12 +52,10 @@ export const Body: React.FC<RouteComponentProps> = ({history}) => {
 				<div className={classes.hero}>
 					<div className={classes.hero2}>
 						<Nav loading={loading}/>
-						{!loading &&
-						<>
+						{!loading && <>
 							<Content/>
 							<AdminPanel/>
-						</>
-						}
+						</>}
 					</div>
 				</div>
 			</div>
