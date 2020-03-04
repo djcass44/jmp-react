@@ -26,8 +26,10 @@ import {SnackbarProvider} from "notistack";
 import Snackbar from "./containers/Snackbar";
 import useTheme from "@material-ui/core/styles/useTheme";
 
-export default () => {
+const App: React.FC = () => {
 	const dispatch = useDispatch();
+	const {palette} = useTheme();
+
 	useEffect(() => {
 		connectWebSocket(dispatch);
 		return () => {
@@ -35,13 +37,12 @@ export default () => {
 		};
 	}, []);
 
-	const theme = useTheme();
 	return (
-		<div className={"App"}>
+		<div>
 			<MuiThemeProvider theme={Theme}>
 				<SnackbarProvider maxSnack={3} autoHideDuration={3500} preventDuplicate>
 					<Helmet>
-						<meta name={"theme-color"} content={theme.palette.primary.main}/>
+						<meta name={"theme-color"} content={palette.primary.main}/>
 					</Helmet>
 					<Body/>
 					<Snackbar/>
@@ -50,3 +51,4 @@ export default () => {
 		</div>
 	);
 };
+export default App;

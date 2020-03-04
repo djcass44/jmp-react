@@ -11,12 +11,12 @@ interface StatusIconProps {
 }
 
 const StatusIcon: React.FC<StatusIconProps> = ({active = null, title, icon}: StatusIconProps) => {
-	const theme = useTheme<Theme>();
+	const {palette} = useTheme<Theme>();
 
 	if (active == null) return null;
 
 	const ok = active === "UP";
-	const colour = ok ? theme.palette.success.main : theme.palette.error.main;
+	const colour = ok ? palette.success.main : palette.error.main;
 	const colourName = ok ? "primary" : "secondary";
 	return (
 		<Tooltip title={`${title}: ${active || "DOWN"}`}>

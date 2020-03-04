@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
 	}
 }));
 
-export default () => {
+const EmptyCard: React.FC = () => {
 	const theme = useTheme<Theme>();
 	const classes = useStyles();
 
@@ -41,11 +41,12 @@ export default () => {
 		color: scheme[1]
 	};
 	return (
-		<ListItem key={"null"} component={'li'}>
+		<ListItem key="null" component='li'>
 			<Avatar className={classes.avatar} style={avatar}>
 				<SentimentDissatisfied/>
 			</Avatar>
-			<ListItemText className={classes.title} primary={"Nothing could be found."}/>
+			<ListItemText className={classes.title} primary="Nothing could be found."/>
 		</ListItem>
 	);
 };
+export default EmptyCard;
