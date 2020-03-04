@@ -21,7 +21,7 @@ import {makeStyles, Theme, Typography} from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {useDispatch, useSelector} from "react-redux";
 import {APP_NAME} from "../../constants";
-import {RouteComponentProps} from "react-router";
+import {useHistory, useLocation} from "react-router";
 import {TState} from "../../store/reducers";
 import {OAUTH2_CALLBACK, oauth2Callback} from "../../store/actions/auth/OAuth2Callback";
 
@@ -44,9 +44,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-const Callback: React.FC<RouteComponentProps> = ({history}) => {
+const Callback: React.FC = () => {
 	const dispatch = useDispatch();
 	const classes = useStyles();
+	const history = useHistory();
+	const location = useLocation();
 
 	const loading = useSelector<TState, boolean>(state => state.loading.get(OAUTH2_CALLBACK) || false);
 	const error = useSelector<TState, any | null>(state => state.errors.get(OAUTH2_CALLBACK));
@@ -54,7 +56,7 @@ const Callback: React.FC<RouteComponentProps> = ({history}) => {
 	useEffect(() => {
 		window.document.title = `Callback - ${APP_NAME}`;
 		// Get the list of parameters
-		const params = new URLSearchParams(history.location.search);
+		const params = new URLSearchParams(location.search);
 		oauth2Callback(dispatch, `code=${params.get("code")}&state=${params.get("state")}`);
 	}, [dispatch]);
 

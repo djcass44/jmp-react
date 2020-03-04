@@ -18,7 +18,7 @@
 import React, {useEffect} from "react";
 import Center from "react-center";
 import {useDispatch, useSelector} from "react-redux";
-import {Link, RouteComponentProps} from "react-router-dom";
+import {Link} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
 import {CircularProgress, makeStyles, Theme, Typography} from "@material-ui/core";
@@ -28,6 +28,7 @@ import {TState} from "../../store/reducers";
 import {AuthState} from "../../store/reducers/auth";
 import {clone} from "../../util";
 import {oauth2Logout} from "../../store/actions/auth/OAuth2Logout";
+import {useHistory} from "react-router";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	overlay: {
@@ -53,10 +54,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-const Logout: React.FC<RouteComponentProps> = ({history}) => {
+const Logout: React.FC = () => {
 	// hooks
 	const dispatch = useDispatch();
 	const classes = useStyles();
+	const history = useHistory();
 
 	const {isLoggedIn, headers, request, source} = useSelector<TState, AuthState>(state => state.auth);
 

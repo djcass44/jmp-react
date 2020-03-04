@@ -19,10 +19,11 @@ import React, {useEffect} from "react";
 import {IconButton, makeStyles, Theme, Typography} from "@material-ui/core";
 import {useTheme} from "@material-ui/core/styles";
 import Center from "react-center";
-import {Link, RouteComponentProps} from "react-router-dom";
+import {Link} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHomeOutline} from "@mdi/js";
 import {APP_NAME} from "../../constants";
+import {useHistory} from "react-router";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -47,9 +48,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-const NotFound: React.FC<RouteComponentProps> = ({history}) => {
+const NotFound: React.FC = () => {
 	const classes = useStyles();
 	const theme = useTheme<Theme>();
+	const history = useHistory();
 
 	useEffect(() => {
 		window.document.title = `404 - ${APP_NAME}`;

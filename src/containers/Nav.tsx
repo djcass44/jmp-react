@@ -21,8 +21,7 @@ import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
 import {fade} from "@material-ui/core/styles/colorManipulator";
 import InputBase from "@material-ui/core/InputBase";
-import {IconButton, LinearProgress, makeStyles, Theme} from "@material-ui/core";
-import Menu from "@material-ui/core/Menu";
+import {IconButton, LinearProgress, makeStyles, Popover, Theme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import {setFilter} from "../actions/Generic";
@@ -223,7 +222,7 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 				</Toolbar>
 				{loading === true && <LinearProgress className={classes.progress}/>}
 			</>
-			<Menu
+			<Popover
 				anchorEl={anchorEl}
 				anchorOrigin={{vertical: 'top', horizontal: 'right'}}
 				transformOrigin={{vertical: 'top', horizontal: 'right'}}
@@ -234,7 +233,7 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 					loginUrl={loginUrl}
 					onClose={handleMenuClose}
 				/>
-			</Menu>
+			</Popover>
 		</div>
 	);
 };

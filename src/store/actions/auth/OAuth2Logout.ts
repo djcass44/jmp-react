@@ -40,9 +40,14 @@ interface OAuth2LogoutFailureAction {
 }
 
 export const oauth2Logout = (dispatch: Dispatch, accessToken: string, source: string, headers: any): void => {
+	let sourceName = source;
+	// strip the leading 'oauth2/'
+	if (sourceName.startsWith("oauth2/")) {
+		sourceName = sourceName.split("/")[1];
+	}
 	dispatch({
 		[RSAA]: {
-			endpoint: `${BASE_URL}/api/oauth2/logout/${source}?accessToken=${accessToken}`,
+			endpoint: `${BASE_URL}/api/oauth2/logout/${sourceName}?accessToken=${accessToken}`,
 			method: "POST",
 			headers,
 			types: [OAUTH2_LOGOUT_REQUEST, OAUTH2_LOGOUT_SUCCESS, OAUTH2_LOGOUT_FAILURE]

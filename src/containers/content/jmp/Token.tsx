@@ -21,7 +21,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {CircularProgress, makeStyles, Theme} from "@material-ui/core";
 import Center from "react-center";
 import {GET_TARGET} from "../../../actions/Jumps";
-import {RouteComponentProps} from "react-router";
+import {useHistory} from "react-router";
 import {TState} from "../../../store/reducers";
 import {AuthState} from "../../../store/reducers/auth";
 import {RSAA} from "redux-api-middleware";
@@ -49,15 +49,18 @@ interface DoJumpDTO {
 	location: string;
 }
 
-const Token: React.FC<RouteComponentProps> = ({history}) => {
+const Token: React.FC = () => {
+	// hooks
 	const classes = useStyles();
 	const dispatch = useDispatch<Dispatch>();
+	const history = useHistory();
+
+	// global state
 	const {headers} = useSelector<TState, AuthState>(state => state.auth);
-	// @ts-ignore
 	const loading = useSelector<TState, boolean>(state => state.loading.get(GET_TARGET) ?? false);
-	// @ts-ignore
 	const error = useSelector<TState, Error | null>(state => state.errors.get(GET_TARGET));
 
+	// component state
 	const [failure, setFailure] = useState<Error | string | null>(error);
 
 	/**
