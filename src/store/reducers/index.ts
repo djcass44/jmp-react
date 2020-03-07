@@ -21,15 +21,17 @@ import auth, {AuthState} from "./auth";
 import loading from "./loading";
 import errors from "./errors";
 import generic from "../../reducers/Generic";
-import groups from "../../reducers/Groups";
 import info from "../../reducers/Info";
 import modal from "../../reducers/Modal";
 import snackbar from "../../reducers/Snackbar";
-import users from "./users";
+import users, {UsersState} from "./users";
+import groups, {GroupsState} from "./groups";
 
 export interface TState {
 	jumps: JumpsState;
 	auth: AuthState;
+	users: UsersState;
+	groups: GroupsState;
 	loading: Map<string, boolean>;
 	errors: Map<string, any | null>;
 }
@@ -45,4 +47,4 @@ export default combineReducers({
 	info,
 	modal,
 	snackbar
-})
+});

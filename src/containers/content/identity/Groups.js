@@ -26,14 +26,14 @@ import {
 	ListItemText,
 	makeStyles,
 	Paper,
-	Tooltip
+	Tooltip,
+	Zoom
 } from "@material-ui/core";
 import React, {useEffect, useState} from "react";
 import EmptyCard from "../../../components/widget/EmptyCard";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import {pageSize} from "../../../constants";
-import {getGroups, GROUP_LOAD} from "../../../actions/Groups";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline, mdiPencilOutline} from "@mdi/js";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
@@ -42,6 +42,7 @@ import getAvatarScheme from "../../../style/getAvatarScheme";
 import {useTheme} from "@material-ui/core/styles";
 import GroupEditDialog from "../../modal/GroupEditDialog";
 import getIconColour from "../../../style/getIconColour";
+import {getGroups, GROUP_LOAD} from "../../../store/actions/groups/GetGroups";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -125,7 +126,9 @@ export default () => {
 
 	return (
 		<div>
-			{loading === true ? <LinearProgress className={classes.progress} color="primary"/> : ""}
+			<Zoom in={loading === true}>
+				<LinearProgress className={classes.progress}/>
+			</Zoom>
 			<Paper key="root" style={{borderRadius: 12, marginBottom: 8}}>
 				<List component='ul'>
 					{items.length > 0 ? items : <EmptyCard/>}

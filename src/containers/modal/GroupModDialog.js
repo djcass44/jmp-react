@@ -15,13 +15,15 @@ import {
 	makeStyles,
 	Typography
 } from "@material-ui/core";
-import {GET_USER_GROUPS, getUserGroups, GROUP_LOAD, SET_USER_GROUPS, setUserGroups} from "../../actions/Groups";
 import {useDispatch, useSelector} from "react-redux";
 import {sortItems} from "../../misc/Sort";
 import Center from "react-center";
 import {MODAL_USER_GROUPS, setDialog} from "../../actions/Modal";
 import {defaultState} from "../../reducers/Modal";
 import {clone} from "../../util";
+import {GROUP_LOAD} from "../../store/actions/groups/GetGroups";
+import {GET_USER_GROUPS, getUserGroups} from "../../store/actions/groups/GetUserGroups";
+import {SET_USER_GROUPS, setUserGroups} from "../../store/actions/groups/SetUserGroups";
 
 const useStyles = makeStyles(() => ({
 	title: {

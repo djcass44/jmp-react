@@ -16,7 +16,7 @@
  */
 
 import {useDispatch, useSelector} from "react-redux";
-import {Grid, makeStyles, Zoom} from "@material-ui/core";
+import {Grid, LinearProgress, makeStyles, Typography, Zoom} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
@@ -42,7 +42,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 	item: {
 		animation: "fadein 300ms ease-in-out"
-	}
+	},
+	nothing: {
+		textAlign: "center",
+		padding: theme.spacing(2)
+	},
 }));
 
 export default () => {
@@ -97,9 +101,17 @@ export default () => {
 
 	return (
 		<div className={classes.root}>
+			<Zoom in={loading === true || loadingPatch === true}>
+				<LinearProgress/>
+			</Zoom>
 			<Grid container spacing={3}>
 				{items}
 			</Grid>
+			<Zoom in={items.length === 0}>
+				<Typography className={`${classes.title} ${classes.nothing}`} color="primary">
+					No users could be found
+				</Typography>
+			</Zoom>
 			<Zoom in={users.totalElements > users.size}>
 				<Center>
 					<Pagination limit={users.size} offset={offset} total={users.totalElements}

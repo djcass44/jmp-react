@@ -15,22 +15,34 @@
  *
  */
 
-import {GET_USER_GROUPS, GROUP_LOAD} from "../actions/Groups";
+import {Group, Page} from "../../types";
+import {GROUP_LOAD_SUCCESS} from "../actions/groups/GetGroups";
+import {GET_USER_GROUPS_SUCCESS} from "../actions/groups/GetUserGroups";
+import {GroupsActionType} from "../actions/groups";
 
-const initialState = {
-	groups: [],
+export interface GroupsState {
+	groups: Page<Group>;
+	userGroups: Array<Group>;
+}
+
+const initialState: GroupsState = {
+	groups: {
+		content: [],
+		size: 0,
+		totalElements: 0,
+		numberOfElements: 0,
+		number: 0
+	},
 	userGroups: []
 };
 
-const groups = (state = initialState, action) => {
+export default (state = initialState, action: GroupsActionType) => {
 	switch (action.type) {
-		case `${GROUP_LOAD}_SUCCESS`:
+		case GROUP_LOAD_SUCCESS:
 			return {...state, groups: action.payload};
-		case `${GET_USER_GROUPS}_SUCCESS`:
+		case GET_USER_GROUPS_SUCCESS:
 			return {...state, userGroups: action.payload};
 		default:
 			return state;
-
 	}
 };
-export default groups;
