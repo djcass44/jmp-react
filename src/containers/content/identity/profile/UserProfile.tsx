@@ -18,8 +18,7 @@
 import React from "react";
 import {User} from "../../../../types";
 import {Avatar} from "evergreen-ui";
-import {makeStyles} from "@material-ui/styles";
-import {Button, Theme, Typography} from "@material-ui/core";
+import {Button, makeStyles, Theme, Typography} from "@material-ui/core";
 import Center from "react-center";
 
 const useStyles = makeStyles((theme: Theme) => ({

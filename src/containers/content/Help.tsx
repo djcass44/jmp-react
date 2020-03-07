@@ -61,8 +61,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Help: React.FC = () => {
+	// hooks
+	const classes = useStyles();
 	const theme = useTheme<Theme>();
 
+	// local state
 	const [expand, setExpand] = useState<number>(-1);
 	const [data, setData] = useState<Array<ReactNode>>([]);
 	const [qna] = useState([
@@ -129,7 +132,8 @@ const Help: React.FC = () => {
 					<ListItem button className={classes.item} value={index} onClick={() => toggleExpansion(index)}
 					          component={"li"}>
 						<ListItemText
-							primary={<span className={classes.title} style={{color: textColour}}>{i.q}</span>}/>
+							primary={<span className={classes.title}
+							               style={{color: theme.palette.text.primary}}>{i.q}</span>}/>
 						<ListItemSecondaryAction className={classes.itemAction}>
 							<Icon path={index === expand ? mdiChevronUp : mdiChevronDown} size={1}
 							      color={theme.palette.primary.main}/>
@@ -148,13 +152,11 @@ const Help: React.FC = () => {
 		setExpand(index !== expand ? index : -1);
 	};
 
-	const textColour = theme.palette.getContrastText(theme.palette.background.default);
-	const classes = useStyles();
 	return (
 		<>
 			<Center>
 				<Avatar className={classes.avatar} component={Paper} src={`${process.env.PUBLIC_URL}/jmp.png`}
-				        alt={process.env.REACT_APP_APP_NAME}/>
+				        alt={APP_NAME}/>
 			</Center>
 			<Center>
 				<Typography variant="h4" className={classes.name}>How can we help you?</Typography>

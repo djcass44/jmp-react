@@ -19,9 +19,18 @@ import JumpButton from "../../../components/content/jmp/JumpButton";
 import {DELETABLE_JUMP, MODAL_JUMP_EDIT, setDelete2, setDialog} from "../../../actions/Modal";
 import {mdiChartDonut, mdiContentCopy, mdiDeleteOutline, mdiDelta, mdiPencilOutline, mdiPlusCircle} from "@mdi/js";
 import React, {ReactNode, useEffect, useState} from "react";
-import {makeStyles, useTheme} from "@material-ui/styles";
+import {
+	CardActions,
+	makeStyles,
+	Table,
+	TableBody,
+	TableCell,
+	TableRow,
+	Theme,
+	Typography,
+	useTheme
+} from "@material-ui/core";
 import getHelpCardColour from "../../../selectors/getHelpCardColour";
-import {CardActions, Table, TableBody, TableCell, TableRow, Theme, Typography} from "@material-ui/core";
 import Moment from "react-moment";
 import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import getColourFromHex from "../../../style/getColourFromHex";

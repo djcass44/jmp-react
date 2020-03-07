@@ -16,8 +16,7 @@
  */
 
 import React, {ReactNode} from "react";
-import {Card, CardActions, CardContent, Theme} from "@material-ui/core";
-import {makeStyles} from "@material-ui/styles";
+import {Card, CardActions, CardContent, makeStyles, Theme} from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {

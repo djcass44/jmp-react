@@ -18,13 +18,12 @@
 import React, {ChangeEvent, useEffect, useState} from "react";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import SearchIcon from "@material-ui/icons/Search";
 import {fade} from "@material-ui/core/styles/colorManipulator";
 import {IconButton, makeStyles, Popover, Theme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import Icon from "@mdi/react";
-import {mdiHelpCircleOutline} from "@mdi/js";
+import {mdiHelpCircleOutline, mdiMagnify} from "@mdi/js";
 import {Avatar} from "evergreen-ui";
 import BackButton from "../components/widget/BackButton";
 import getIconColour from "../style/getIconColour";
@@ -191,7 +190,7 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 					</Typography>
 					{(showSearch && loading !== true) && <div className={classes.search}>
 						<div className={classes.searchIcon}>
-							<SearchIcon/>
+							<Icon path={mdiMagnify} color={theme.palette.text.secondary} size={1}/>
 						</div>
 						<DwellInputBase
 							inputProps={{

@@ -14,11 +14,10 @@
  *    limitations under the License.
  */
 
-import {IconButton, Theme, Tooltip} from "@material-ui/core";
+import {IconButton, Theme, Tooltip, useTheme} from "@material-ui/core";
 import Icon from "@mdi/react";
 import React from "react";
 import {mdiCircleSmall} from "@mdi/js";
-import {useTheme} from "@material-ui/styles";
 
 interface JumpButtonProps {
 	title: string;

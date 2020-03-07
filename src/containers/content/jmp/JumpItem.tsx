@@ -14,10 +14,18 @@
  *    limitations under the License.
  */
 
-import {Collapse, ListItem, ListItemSecondaryAction, ListItemText, Theme, withWidth} from "@material-ui/core";
+import {
+	Collapse,
+	ListItem,
+	ListItemSecondaryAction,
+	ListItemText,
+	makeStyles,
+	Theme,
+	useTheme,
+	withWidth
+} from "@material-ui/core";
 import {mdiCallMerge, mdiChevronDown, mdiChevronUp} from "@mdi/js";
 import React, {useState} from "react";
-import {makeStyles, useTheme} from "@material-ui/styles";
 import {useDispatch, useSelector} from "react-redux";
 import Domain from "../../../components/widget/Domain";
 import {Link} from "react-router-dom";

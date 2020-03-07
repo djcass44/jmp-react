@@ -16,8 +16,7 @@
  */
 
 import React, {useState} from "react";
-import {Avatar, Theme, Tooltip, Typography, useTheme} from "@material-ui/core";
-import {makeStyles} from "@material-ui/styles";
+import {Avatar, makeStyles, Theme, Tooltip, Typography, useTheme} from "@material-ui/core";
 import {Group} from "../../../../types";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline, mdiEarth, mdiEyeOff, mdiPencilOutline, mdiWidgets} from "@mdi/js";

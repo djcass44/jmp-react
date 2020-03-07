@@ -16,8 +16,7 @@
  */
 
 import React, {useState} from "react";
-import {Theme, Tooltip, Typography, useTheme} from "@material-ui/core";
-import {makeStyles} from "@material-ui/styles";
+import {makeStyles, Theme, Tooltip, Typography, useTheme} from "@material-ui/core";
 import {User} from "../../../../types";
 import {Avatar} from "evergreen-ui";
 import Icon from "@mdi/react";

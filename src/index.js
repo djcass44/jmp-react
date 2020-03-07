@@ -25,8 +25,6 @@ import Provider from "react-redux/es/components/Provider";
 import "typeface-roboto";
 import App from "./App";
 
-require('dotenv').config();
-
 ReactDOM.render(
 	<Provider store={store}>
 		<BrowserRouter basename={"/"}>

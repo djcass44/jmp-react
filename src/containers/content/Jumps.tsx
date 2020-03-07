@@ -21,7 +21,6 @@ import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import List from "@material-ui/core/List";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
-import SearchIcon from "@material-ui/icons/Search";
 import {fade} from "@material-ui/core/styles";
 import JumpItem from "./jmp/JumpItem";
 import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
@@ -29,7 +28,7 @@ import {getJumps} from "../../store/actions/jumps/GetJumps";
 import {setJumpExpand, setJumpOffset, setJumpSearch} from "../../store/actions/jumps";
 import DwellInputBase from "../../components/widget/DwellInputBase";
 import Icon from "@mdi/react";
-import {mdiAccountAlertOutline} from "@mdi/js";
+import {mdiAccountAlertOutline, mdiMagnify} from "@mdi/js";
 import {TState} from "../../store/reducers";
 import {Jump, Page} from "../../types";
 import {JumpsState} from "../../store/reducers/jumps";
@@ -173,7 +172,7 @@ export default () => {
 			</Center>
 			<div className={classes.search}>
 				<div className={classes.searchIcon}>
-					<SearchIcon/>
+					<Icon path={mdiMagnify} color={palette.text.secondary} size={1}/>
 				</div>
 				<DwellInputBase
 					inputProps={{

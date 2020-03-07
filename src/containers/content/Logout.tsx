@@ -20,8 +20,7 @@ import Center from "react-center";
 import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
-import HomeIcon from "@material-ui/icons/HomeOutlined";
-import {CircularProgress, makeStyles, Theme, Typography} from "@material-ui/core";
+import {CircularProgress, makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
 import {APP_NAME} from "../../constants";
 import {oauthLogout} from "../../store/actions/auth/AuthLogout";
 import {TState} from "../../store/reducers";
@@ -29,6 +28,8 @@ import {AuthState} from "../../store/reducers/auth";
 import {clone} from "../../util";
 import {oauth2Logout} from "../../store/actions/auth/OAuth2Logout";
 import {useHistory} from "react-router";
+import Icon from "@mdi/react";
+import {mdiHomeOutline} from "@mdi/js";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	overlay: {
@@ -59,6 +60,7 @@ const Logout: React.FC = () => {
 	const dispatch = useDispatch();
 	const classes = useStyles();
 	const history = useHistory();
+	const theme = useTheme();
 
 	const {isLoggedIn, headers, request, source} = useSelector<TState, AuthState>(state => state.auth);
 
@@ -95,7 +97,7 @@ const Logout: React.FC = () => {
 				<Center>
 					<IconButton component={Link} to="/" color="primary" centerRipple={false}
 					            aria-label="Return to home">
-						<HomeIcon/>
+						<Icon path={mdiHomeOutline} color={theme.palette.text.secondary} size={1}/>
 					</IconButton>
 				</Center>
 			</div>

@@ -17,9 +17,8 @@
 import getAvatarScheme from "../../../style/getAvatarScheme";
 import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
 import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
-import {useTheme} from "@material-ui/styles";
+import {Avatar, Theme, useTheme} from "@material-ui/core";
 import Icon from "@mdi/react";
-import {Avatar, Theme} from "@material-ui/core";
 import {Skeleton} from "@material-ui/lab";
 import React from "react";
 import Img from "react-image";
