@@ -15,6 +15,10 @@
  *
  */
 
-export const request = (action: string): string => `${action}_REQUEST`;
-export const success = (action: string): string => `${action}_SUCCESS`;
-export const failure = (action: string): string => `${action}_FAILURE`;
+import {GetInfoSystemActionType} from "./GetInfoSystem";
+import {GetInfoHealthActionType} from "./GetInfoHealth";
+
+
+export type InfoActionType =
+	GetInfoHealthActionType
+	| GetInfoSystemActionType;

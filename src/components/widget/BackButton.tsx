@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
-		color: theme.palette.grey.A700
+		color: theme.palette.text.secondary
 	}
 }));
 
@@ -41,10 +41,13 @@ export const BackButton: React.FC<BackButtonProps> = ({to, label}: BackButtonPro
 	return (
 		<div>
 			<IconButton component={Link} to={to} centerRipple={false}>
-				<Icon path={mdiArrowLeft} size={1}
-				      color={theme.palette.getContrastText(theme.palette.background.default)}/>
+				<Icon
+					path={mdiArrowLeft}
+					size={1}
+					color={theme.palette.secondary.main}
+				/>
 			</IconButton>
-			<span className={classes.title}>{label != null ? label : "Back"}</span>
+			<span className={classes.title}>{label ?? "Back"}</span>
 		</div>
 	);
 };

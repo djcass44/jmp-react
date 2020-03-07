@@ -25,7 +25,7 @@ const AdminPanel: React.FC = () => {
 	const {isAdmin} = useSelector<TState, AuthState>(state => state.auth);
 	const classes = useStyles();
 
-	if (!isAdmin) return <div/>;
+	if (!isAdmin) return null;
 	return (
 		<div className={classes.root}>
 			<Card className={classes.card}>

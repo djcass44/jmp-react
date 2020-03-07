@@ -4,7 +4,6 @@ import Nav from "./Nav";
 import AdminPanel from "../components/AdminPanel";
 import {LinearProgress, makeStyles, Theme, Zoom} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {withRouter} from "react-router-dom";
 import {OAUTH_VERIFY, oauthVerify} from "../store/actions/auth/AuthVerify";
 import {TState} from "../store/reducers";
 import {AuthState} from "../store/reducers/auth";
@@ -89,4 +88,4 @@ export const Body: React.FC = () => {
 		</div>
 	);
 };
-export default withRouter(Body);
+export default Body;

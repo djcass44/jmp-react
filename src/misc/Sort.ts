@@ -24,15 +24,3 @@ export function sortItems(items: Array<any>, sort: string) {
 			});
 	}
 }
-
-export interface Sort {
-	id: string,
-	value: string
-}
-
-export const defaultSorts = new Array<Sort>(
-	{id: 'name', value: "Name"},
-	{id: '-name', value: "Name Desc"},
-	{id: 'creation', value: "Creation"},
-	{id: 'updated', value: "Last edited"}
-);

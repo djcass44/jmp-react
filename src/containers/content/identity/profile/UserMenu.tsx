@@ -24,7 +24,7 @@ import {AuthState} from "../../../../store/reducers/auth";
 import {Button, Divider, MenuItem, Theme, Typography, useTheme} from "@material-ui/core";
 import Center from "react-center";
 import {makeStyles} from "@material-ui/styles";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline} from "@mdi/js";
 
@@ -64,9 +64,18 @@ interface UserMenuProps {
 }
 
 const UserMenu: React.FC<UserMenuProps> = ({user, loginUrl, onClose}) => {
+	// hooks
 	const classes = useStyles();
 	const theme = useTheme();
+	const history = useHistory();
+
+	// global state
 	const {isLoggedIn, isAdmin} = useSelector<TState, AuthState>(state => state.auth);
+
+	const onPrivacyClicked = (): void => {
+		onClose();
+		history.push("/help");
+	};
 
 	return (
 		<div>
@@ -115,7 +124,8 @@ const UserMenu: React.FC<UserMenuProps> = ({user, loginUrl, onClose}) => {
 			<Typography
 				className={classes.info}
 				color="textSecondary"
-				align="center">
+				align="center"
+				onClick={() => onPrivacyClicked()}>
 				Privacy info&nbsp;&bull;&nbsp;Help
 			</Typography>
 		</div>

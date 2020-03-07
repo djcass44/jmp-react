@@ -7,6 +7,8 @@ import {SOCKET_UPDATE_USERS} from "../store/actions/users";
 import {getUsers} from "../store/actions/users/GetUsers";
 import {SOCKET_UPDATE_GROUPS} from "../store/actions/groups";
 import {getGroups} from "../store/actions/groups/GetGroups";
+import {Dispatch} from "redux";
+import {Action} from "../types";
 
 export const WS_OPEN = "WS_OPEN";
 export const WS_RECONNECT = "WS_RECONNECT";
@@ -14,10 +16,10 @@ export const WS_CLOSE = "WS_CLOSE";
 export const WS_CLOSE_USER = "WS_CLOSE_USER"; // user requested
 export const WS_BAD_TICK = "WS_BAD_TICK";
 
-let socket = null;
+let socket: WebSocket | null = null;
 let badTicks = 0;
 
-export const connectWebSocket = (dispatch) => {
+export const connectWebSocket = (dispatch: Dispatch) => {
 	socket = new WebSocket(SOCKET_URL);
 	socket.addEventListener('open', () => {
 		badTicks = 0;
@@ -45,14 +47,13 @@ export const connectWebSocket = (dispatch) => {
 		}, 500);
 	});
 	socket.addEventListener('message', ev => {
-		const data = JSON.parse(ev.data);
-		const {type} = data;
-		const {payload} = data;
-		checkType(dispatch, type, payload);
+		const data = JSON.parse(ev.data) as Action;
+		checkType(dispatch, data);
 	});
 };
 
-const checkType = (dispatch, type, payload) => {
+const checkType = (dispatch: Dispatch, action: Action) => {
+	const {type, payload} = action;
 	// get values we need from the state
 	const state = store.getState();
 	const {headers} = state.auth;
@@ -75,7 +76,7 @@ const checkType = (dispatch, type, payload) => {
 	}
 };
 
-export const closeWebSocket = dispatch => {
-	socket.close();
+export const closeWebSocket = (dispatch: Dispatch) => {
+	socket?.close();
 	dispatch({type: WS_CLOSE_USER});
 };

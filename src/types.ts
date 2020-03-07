@@ -97,3 +97,8 @@ export interface Pair<K, V> {
 	first: K;
 	second: V;
 }
+
+export interface Action {
+	type: string;
+	payload?: any | null;
+}

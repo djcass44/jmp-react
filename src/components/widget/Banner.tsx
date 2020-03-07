@@ -24,11 +24,11 @@ interface BannerProps {
 }
 
 const Banner: React.FC<BannerProps> = ({open, label}: BannerProps) => {
-	return open ?
-		<Alert intent={"danger"} title={(label?.toString()) || "No information could be provided"}
-		       style={{marginBottom: 32, borderRadius: 8}}/>
-		:
-		<div/>
+	return (open && <Alert
+		intent="danger"
+		title={(label?.toString()) || "No information could be provided"}
+		style={{marginBottom: 32, borderRadius: 8}}
+	/>) || null;
 };
 
 export default Banner;
