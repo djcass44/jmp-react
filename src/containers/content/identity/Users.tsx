@@ -16,8 +16,8 @@
  */
 
 import {useDispatch, useSelector} from "react-redux";
-import {Grid, LinearProgress, makeStyles, Typography, Zoom} from "@material-ui/core";
-import React, {useEffect, useState} from "react";
+import {Grid, LinearProgress, makeStyles, Theme, Typography, Zoom} from "@material-ui/core";
+import React, {ReactNode, useEffect, useState} from "react";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import GroupModDialog from "../../modal/GroupModDialog";
@@ -28,8 +28,12 @@ import {PATCH_USER_ROLE} from "../../../store/actions/users/PatchUserRole";
 import {setUserOffset} from "../../../store/actions/users";
 import Button from "@material-ui/core/Button";
 import {MODAL_GROUP_NEW, setDialog} from "../../../actions/Modal";
+import {TState} from "../../../store/reducers";
+import {UsersState} from "../../../store/reducers/users";
+import {AuthState} from "../../../store/reducers/auth";
+import {User} from "../../../types";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	root: {
 		marginTop: theme.spacing(4)
 	},
@@ -59,18 +63,17 @@ export default () => {
 	const dispatch = useDispatch();
 	const classes = useStyles();
 
-	const {users} = useSelector(state => state.users);
-	const {headers} = useSelector(state => state.auth);
-	const {offset, search} = useSelector(state => state.users);
-	const loading = useSelector(state => state.loading.get(USER_LOAD));
-	const loadingPatch = useSelector(state => state.loading.get(PATCH_USER_ROLE));
+	const {users, offset, search} = useSelector<TState, UsersState>(state => state.users);
+	const {headers} = useSelector<TState, AuthState>(state => state.auth);
+	const loading = useSelector<TState, boolean>(state => state.loading.get(USER_LOAD) ?? false);
+	const loadingPatch = useSelector<TState, boolean>(state => state.loading.get(PATCH_USER_ROLE) ?? false);
 
-	const [items, setItems] = useState([]);
-	const [expanded, setExpanded] = useState(false);
-	const [user, setUser] = useState(null);
-	const [anchorEl, setAnchorEl] = useState(null);
+	const [items, setItems] = useState<Array<ReactNode>>([]);
+	const [expanded, setExpanded] = useState<boolean>(false);
+	const [user, setUser] = useState<User | null>(null);
+	const [anchorEl, setAnchorEl] = useState<EventTarget & HTMLButtonElement | null>(null);
 
-	const onSearch = (o = offset) => {
+	const onSearch = (o: number = offset) => {
 		getUsers(dispatch, headers, search, Number(o / 8) || 0, 8);
 	};
 
@@ -87,13 +90,13 @@ export default () => {
 		</Grid>));
 	}, [users, offset, expanded]);
 
-	const toggleExpansion = (e, u) => {
+	const toggleExpansion = (e: EventTarget & HTMLButtonElement, u: User | null) => {
 		setExpanded(u != null);
-		setUser(expanded === u ? null : u);
-		setAnchorEl(expanded === u ? null : e.currentTarget);
+		setUser(user === u ? null : u);
+		setAnchorEl(user === u ? null : e);
 	};
 
-	const onPageChange = (off) => {
+	const onPageChange = (off: number) => {
 		setUserOffset(dispatch, off);
 		onSearch(off);
 
@@ -115,7 +118,7 @@ export default () => {
 
 	return (
 		<div className={classes.root}>
-			<Zoom in={loading === true || loadingPatch === true}>
+			<Zoom in={loading || loadingPatch}>
 				<LinearProgress/>
 			</Zoom>
 			{items.length === 0 ? <Center>{createButton}</Center> : <div>{createButton}</div>}

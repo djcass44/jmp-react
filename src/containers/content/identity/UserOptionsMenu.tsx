@@ -27,7 +27,7 @@ import {patchUserRole} from "../../../store/actions/users/PatchUserRole";
 interface UserOptionsMenuProps {
 	user: User | null;
 	expanded: boolean;
-	anchorEl: HTMLAnchorElement;
+	anchorEl: EventTarget & HTMLButtonElement | null;
 	close: () => void;
 }
 

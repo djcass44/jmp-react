@@ -41,7 +41,7 @@ interface GetUsersFailureAction {
 	payload: Error;
 }
 
-export const getUsers = (dispatch: Dispatch, headers: Headers, query = "", page = 0, size = 8): void => {
+export const getUsers = (dispatch: Dispatch, headers: any, query = "", page = 0, size = 8): void => {
 	let queryString = `page=${page}&size=${size}`;
 	if (query.length > 0) {
 		queryString += `&query=${query}`;

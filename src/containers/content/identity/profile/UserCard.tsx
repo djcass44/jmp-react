@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface UserCardProps {
 	user: User;
-	setAnchorEl?: (e: any) => void;
+	setAnchorEl?: (e: EventTarget & HTMLButtonElement) => void;
 }
 
 const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}) => {
@@ -90,7 +90,7 @@ const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}) => {
 	</>);
 
 	const actions = (<>
-		<IconButton centerRipple={false} onClick={(e) => setAnchorEl?.(e)}>
+		<IconButton centerRipple={false} onClick={(e) => setAnchorEl?.(e.currentTarget)}>
 			<Icon path={mdiDotsVertical} size={1} color={getIconColour(theme)}/>
 		</IconButton>
 	</>);
