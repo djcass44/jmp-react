@@ -19,21 +19,13 @@ import React, {ReactNode, useEffect, useState} from "react";
 import {List, ListItem, ListItemAvatar, ListItemText, ListSubheader, makeStyles, Theme} from "@material-ui/core";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import Icon from "@mdi/react";
-import {
-	mdiAccountBadgeOutline,
-	mdiAccountOutline,
-	mdiDatabase,
-	mdiFolderAccountOutline,
-	mdiGithubCircle,
-	mdiGoogle,
-	mdiShieldAccount
-} from "@mdi/js";
+import {mdiAccountOutline, mdiFolderAccountOutline} from "@mdi/js";
 import {useTheme} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {TState} from "../../../store/reducers";
 import {AuthState} from "../../../store/reducers/auth";
 import {getProviders} from "../../../store/actions/auth/GetProviders";
-import {plural} from "../../../util";
+import {getProviderData, plural} from "../../../util";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -59,38 +51,13 @@ interface Provider {
 const Auth: React.FC = () => {
 	const dispatch = useDispatch();
 	const classes = useStyles();
-	const {palette} = useTheme();
+	const theme = useTheme();
+	const {palette} = theme;
 
 	const {allProviders, headers} = useSelector<TState, AuthState>(state => state.auth);
 
 	const [data, setData] = useState<ReactNode | null>(null);
-	const [providers] = useState<any>({
-		ldap: {
-			name: "LDAP",
-			icon: mdiAccountBadgeOutline,
-			colour: palette.success.main
-		},
-		local: {
-			name: "Internal Database",
-			icon: mdiDatabase,
-			colour: palette.primary.main
-		},
-		"oauth2/github": {
-			name: "GitHub (OAuth2)",
-			icon: mdiGithubCircle,
-			colour: palette.text.secondary
-		},
-		"oauth2/google": {
-			name: "Google (OAuth2)",
-			icon: mdiGoogle,
-			colour: palette.primary.main
-		},
-		"oauth2/keycloak": {
-			name: "Keycloak (OIDC)",
-			icon: mdiShieldAccount,
-			colour: "#568bf4"
-		}
-	});
+	const [providers] = useState<any>(getProviderData(theme));
 
 	useEffect(() => {
 		getProviders(dispatch, headers);

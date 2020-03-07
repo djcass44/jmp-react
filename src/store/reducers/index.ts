@@ -21,11 +21,11 @@ import auth, {AuthState} from "./auth";
 import loading from "./loading";
 import errors from "./errors";
 import generic from "../../reducers/Generic";
-import users from "../../reducers/Users";
 import groups from "../../reducers/Groups";
 import info from "../../reducers/Info";
 import modal from "../../reducers/Modal";
 import snackbar from "../../reducers/Snackbar";
+import users from "./users";
 
 export interface TState {
 	jumps: JumpsState;

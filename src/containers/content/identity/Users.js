@@ -15,42 +15,23 @@
  *
  */
 
-import {getUsers, PATCH_USER_ROLE, patchUserRole, USER_LOAD} from "../../../actions/Users";
 import {useDispatch, useSelector} from "react-redux";
-import {
-	Avatar,
-	CircularProgress,
-	LinearProgress,
-	List,
-	ListItem,
-	ListItemSecondaryAction,
-	ListItemText,
-	makeStyles,
-	Menu,
-	MenuItem,
-	Paper
-} from "@material-ui/core";
+import {Grid, makeStyles, Zoom} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
-import AccountCircleIcon from "@material-ui/icons/AccountCircleOutlined";
-import AdminCircleIcon from "@material-ui/icons/SupervisedUserCircleOutlined";
-import Img from "react-image";
-import EmptyCard from "../../../components/widget/EmptyCard";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
-import {pageSize} from "../../../constants";
-import {defaultSorts, sortItems} from "../../../misc/Sort";
-import IconButton from "@material-ui/core/IconButton";
-import Icon from "@mdi/react";
-import {mdiDotsVertical} from "@mdi/js";
-import {Badge} from "evergreen-ui";
 import GroupModDialog from "../../modal/GroupModDialog";
-import getAvatarScheme from "../../../style/getAvatarScheme";
-import getIconColour from "../../../style/getIconColour";
-import useTheme from "@material-ui/core/styles/useTheme";
-import {MODAL_USER_GROUPS, setDialog} from "../../../actions/Modal";
-import SortedSubheader from "../../../components/content/SortedSubheader";
+import UserCard from "./profile/UserCard";
+import UserOptionsMenu from "./UserOptionsMenu";
+import {getUsers, USER_LOAD} from "../../../store/actions/users/GetUsers";
+import {PATCH_USER_ROLE} from "../../../store/actions/users/PatchUserRole";
+import {setUserOffset} from "../../../store/actions/users";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
+	root: {
+		marginTop: theme.spacing(4),
+		marginBottom: theme.spacing(4)
+	},
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
@@ -68,123 +49,65 @@ export default () => {
 	// hooks
 	const dispatch = useDispatch();
 	const classes = useStyles();
-	const theme = useTheme();
 
 	const {users} = useSelector(state => state.users);
-	const {headers, isAdmin} = useSelector(state => state.auth);
-	const {searchFilter, sort} = useSelector(state => state.generic);
+	const {headers} = useSelector(state => state.auth);
+	const {offset, search} = useSelector(state => state.users);
 	const loading = useSelector(state => state.loading.get(USER_LOAD));
 	const loadingPatch = useSelector(state => state.loading.get(PATCH_USER_ROLE));
 
-	const sorts = defaultSorts;
 	const [items, setItems] = useState([]);
-	const [expanded, setExpanded] = useState(-1);
+	const [expanded, setExpanded] = useState(false);
+	const [user, setUser] = useState(null);
 	const [anchorEl, setAnchorEl] = useState(null);
-	const [offset, setOffset] = useState(0);
 
-
-	useEffect(() => {
-		getUsers(dispatch, headers)
-	}, [dispatch, headers]);
-
-	const handlePatchUser = (user, admin) => {
-		patchUserRole(dispatch, headers, user.id, admin);
+	const onSearch = (o = offset) => {
+		getUsers(dispatch, headers, search, Number(o / 8) || 0, 8);
 	};
 
 	useEffect(() => {
-		const tempItems = [];
-		// Tell the loop what our pagination limits are
-		let max = (offset + pageSize);
-		if (max > users.length) max = users.length;
+		onSearch();
+	}, [headers, search]);
 
-		const sortedUsers = users.filter(filterUser);
-		sortItems(sortedUsers, sort);
-		sortedUsers.forEach((i, index) => {
-			if (index < offset || index > max) return;
-			const userIsAdmin = i.admin === true;
-			const avatar = {
-				icon: userIsAdmin ? <AdminCircleIcon/> : <AccountCircleIcon/>,
-				bg: userIsAdmin ? schemeAdmin[0] : scheme[0],
-				fg: userIsAdmin ? schemeAdmin[1] : scheme[1],
-				banner: userIsAdmin ? <Badge color="red">Admin</Badge> : ""
-			};
-			const secondary = (<span>{capitalise(i.source)}&nbsp;{avatar.banner}</span>);
-			tempItems.push((
-				<ListItem className={classes.item} button disableRipple key={i.id}>
-					<Avatar component='div' style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
-						<Img
-							src={i.avatarUrl}
-							loader={<CircularProgress size={20}/>}
-							unloader={avatar.icon}
-						/>
-					</Avatar>
-					<ListItemText primary={<span className={classes.title}>{i.username}</span>} secondary={secondary}/>
-					<ListItemSecondaryAction>
-						<IconButton centerRipple={false} onClick={(e) => toggleExpansion(e, i.id)}>
-							<Icon path={mdiDotsVertical} size={1} color={getIconColour(theme)}/>
-							<Menu id={"user-menu"} open={i.id === expanded} anchorEl={anchorEl}
-							      anchorOrigin={{horizontal: "left", vertical: "top"}} onExit={() => {
-								i.expanded = false
-							}}>
-								{(isAdmin && i.admin !== true && i.username !== "system") &&
-								<MenuItem button component='li' onClick={() => handlePatchUser(i, true)}>
-									Promote to admin
-								</MenuItem>}
-								{(isAdmin && i.admin === true && i.username !== "admin") &&
-								<MenuItem button component='li' onClick={() => handlePatchUser(i, false)}>
-									Demote to user
-								</MenuItem>
-								}
-								<MenuItem button component='li'
-								          onClick={() => setDialog(dispatch, MODAL_USER_GROUPS, true, {user: i})}>Modify
-									groups</MenuItem>
-							</Menu>
-						</IconButton>
-					</ListItemSecondaryAction>
-				</ListItem>
-			));
-		});
-		setItems(tempItems);
-	}, [users, expanded, sort, searchFilter]);
+	useEffect(() => {
+		const {content} = users;
+		setUserOffset(dispatch, users.number * 8);
+		// Loop-d-loop
+		setItems(content.map(u => <Grid key={u.id} item md={12} lg={6}>
+			<UserCard user={u} selected={u === expanded} setAnchorEl={e => toggleExpansion(e, u)}/>
+		</Grid>));
+	}, [users, offset, expanded]);
 
-	const toggleExpansion = (e, id) => {
-		setExpanded(expanded === id ? -1 : id);
-		setAnchorEl(expanded === id ? null : e.currentTarget);
+	const toggleExpansion = (e, u) => {
+		setExpanded(u != null);
+		setUser(expanded === u ? null : u);
+		setAnchorEl(expanded === u ? null : e.currentTarget);
 	};
 
-	const filterUser = user => {
-		return user.username.toLowerCase().includes(searchFilter) ||
-			user.source.toLowerCase() === searchFilter.toLowerCase();
-	};
+	const onPageChange = (off) => {
+		setUserOffset(dispatch, off);
+		onSearch(off);
 
-	const capitalise = (text) => {
-		if (text == null || text.length === 0) return text;
-		if (text.toLowerCase() === "ldap") return "LDAP"; // hmm
-		return text.substring(0, 1).toUpperCase() + text.substring(1, text.length).toLowerCase();
+		// reset ui values
+		setUser(null);
+		setAnchorEl(null);
+		setExpanded(false);
 	};
-	// get the colour scheme
-	const scheme = getAvatarScheme(theme, 0);
-	const schemeAdmin = getAvatarScheme(theme, 3);
 
 
 	return (
-		<div>
-			<SortedSubheader title="Users" size={items.length} sorts={sorts}/>
-			{(loading === true || loadingPatch === true) &&
-			<LinearProgress className={classes.progress} color="primary"/>
-			}
-			<Paper key="root" style={{borderRadius: 12, marginBottom: 8}}>
-				<List>
-					{items.length > 0 ? items : <EmptyCard key="null"/>}
-				</List>
-				<GroupModDialog/>
-			</Paper>
-			{items.length > pageSize &&
-			<Center>
-				<Pagination limit={pageSize} offset={offset} total={users.length}
-				            nextPageLabel="▶" previousPageLabel="◀" onClick={(e, off) => setOffset(off)}/>
-			</Center>
-			}
+		<div className={classes.root}>
+			<Grid container spacing={3}>
+				{items}
+			</Grid>
+			<Zoom in={users.totalElements > users.size}>
+				<Center>
+					<Pagination limit={users.size} offset={offset} total={users.totalElements}
+					            nextPageLabel="▶" previousPageLabel="◀" onClick={(e, off) => onPageChange(off)}/>
+				</Center>
+			</Zoom>
+			<UserOptionsMenu user={user} expanded={expanded} anchorEl={anchorEl} close={() => setExpanded(false)}/>
+			<GroupModDialog/>
 		</div>
 	);
 };

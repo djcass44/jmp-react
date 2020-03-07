@@ -15,16 +15,14 @@
  *
  */
 
-import React, {useEffect, useState} from "react";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
 import {fade} from "@material-ui/core/styles/colorManipulator";
-import InputBase from "@material-ui/core/InputBase";
 import {IconButton, LinearProgress, makeStyles, Popover, Theme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
-import {setFilter} from "../actions/Generic";
 import Icon from "@mdi/react";
 import {mdiHelpCircleOutline} from "@mdi/js";
 import {Avatar} from "evergreen-ui";
@@ -36,6 +34,8 @@ import UserMenu from "./content/identity/profile/UserMenu";
 import {TState} from "../store/reducers";
 import {AuthState} from "../store/reducers/auth";
 import {useLocation} from "react-router";
+import {setUserSearch} from "../store/actions/users";
+import DwellInputBase from "../components/widget/DwellInputBase";
 
 const bgTransition = (time: number | string): string => `background-color ${time}ms linear`;
 
@@ -153,12 +153,13 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 	// global state
 	const {userProfile} = useSelector<TState, AuthState>(state => state.auth);
 	// @ts-ignore
-	const {searchFilter} = useSelector(state => state.generic);
+	const {search} = useSelector(state => state.users);
 
 	// component state
 	const [showSearch, setShowSearch] = useState<boolean>(true);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [loginUrl, setLoginUrl] = useState("/login");
+	const [localSearch, setLocalSearch] = useState<string>(search);
 
 	useEffect(() => {
 		setShowSearch(searchRoutes.includes(location.pathname));
@@ -171,9 +172,9 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 		setAnchorEl(null);
 	};
 
-	const handleSearchChange = (e: any) => {
-		let s = e.target.value.toLowerCase();
-		setFilter(dispatch, s);
+	const handleSearchChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+		const s = e.target.value.toLowerCase();
+		setLocalSearch(s);
 	};
 
 	return (
@@ -191,11 +192,14 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 						<div className={classes.searchIcon}>
 							<SearchIcon/>
 						</div>
-						<InputBase
-							placeholder={"Search..."}
-							classes={{root: classes.inputRoot, input: classes.inputInput}}
-							onChange={(e) => handleSearchChange(e)}
-							value={searchFilter}
+						<DwellInputBase
+							inputProps={{
+								placeholder: "Search...",
+								classes: {root: classes.inputRoot, input: classes.inputInput},
+								onChange: (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => handleSearchChange(e),
+								value: localSearch,
+							}}
+							onDwell={() => setUserSearch(dispatch, localSearch)}
 						/>
 					</div>}
 					<div className={classes.grow}/>

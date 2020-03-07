@@ -36,16 +36,12 @@ import {pageSize} from "../../../constants";
 import {getGroups, GROUP_LOAD} from "../../../actions/Groups";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline, mdiPencilOutline} from "@mdi/js";
-import {defaultSorts, sortItems} from "../../../misc/Sort";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
-import {MODAL_GROUP_EDIT, MODAL_GROUP_NEW, setDialog} from "../../../actions/Modal";
+import {MODAL_GROUP_EDIT, setDialog} from "../../../actions/Modal";
 import getAvatarScheme from "../../../style/getAvatarScheme";
 import {useTheme} from "@material-ui/core/styles";
-import SortedSubheader from "../../../components/content/SortedSubheader";
 import GroupEditDialog from "../../modal/GroupEditDialog";
 import getIconColour from "../../../style/getIconColour";
-import {createIndex} from "../../../misc/Search";
-import {clone} from "../../../util";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -61,17 +57,6 @@ const useStyles = makeStyles(() => ({
 	}
 }));
 
-const searchFields = [
-	{
-		name: "name",
-		weight: 0.7
-	},
-	{
-		name: "from",
-		weight: 0.3
-	},
-];
-
 export default () => {
 	// hooks
 	const dispatch = useDispatch();
@@ -84,10 +69,8 @@ export default () => {
 	const {headers, isAdmin} = useSelector(state => state.auth);
 	const {sort, searchFilter} = useSelector(state => state.generic);
 
-	const sorts = defaultSorts;
 	const [items, setItems] = useState([]);
 	const [offset, setOffset] = useState(0);
-	const [idx, setIdx] = useState(null);
 
 	useEffect(() => {
 		getGroups(dispatch, headers);
@@ -95,16 +78,16 @@ export default () => {
 
 	// hook to rebuild the index when jumps change
 	useEffect(() => {
-		setIdx(createIndex(searchFields, groups));
-		const g2 = clone(groups);
-		sortItems(g2, sort);
 		const tempItems = [];
 
 		// Tell the loop what our pagination limits are
 		let max = (offset + pageSize);
 		if (max > groups.length) max = groups.length;
 
-		filterGroup(g2).forEach((i, index) => {
+		if (groups.content == null)
+			return;
+
+		groups.content.forEach((i, index) => {
 			if (index < offset || index > max) return;
 			const primary = (<span className={classes.title}>{i.name}</span>);
 			const secondary = (<span>
@@ -132,12 +115,6 @@ export default () => {
 		setItems(tempItems);
 	}, [offset, sort, groups, searchFilter]);
 
-	const filterGroup = collection => {
-		if (searchFilter == null || searchFilter === "")
-			return collection;
-		return idx.search(searchFilter);
-	};
-
 	const capitalise = text => {
 		if (text == null || text.length === 0) return text;
 		if (text.toLowerCase() === "ldap") return "LDAP";
@@ -148,8 +125,6 @@ export default () => {
 
 	return (
 		<div>
-			<SortedSubheader title="Groups" size={items.length} sorts={sorts}
-			                 onAdd={() => setDialog(dispatch, MODAL_GROUP_NEW, true)}/>
 			{loading === true ? <LinearProgress className={classes.progress} color="primary"/> : ""}
 			<Paper key="root" style={{borderRadius: 12, marginBottom: 8}}>
 				<List component='ul'>

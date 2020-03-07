@@ -1,10 +1,11 @@
 import {SOCKET_URL} from "../constants";
 import {SOCKET_UPDATE_JUMP} from "./Jumps";
 import {getGroups, SOCKET_UPDATE_GROUPS} from "./Groups";
-import {getUsers, SOCKET_UPDATE_USERS} from "./Users";
 import {addSnackbar, closeSnackbar, removeSnackbar} from "./Snackbar";
 import {getJumps} from "../store/actions/jumps/GetJumps";
 import store from "../store";
+import {SOCKET_UPDATE_USERS} from "../store/actions/users";
+import {getUsers} from "../store/actions/users/GetUsers";
 
 export const WS_OPEN = "WS_OPEN";
 export const WS_RECONNECT = "WS_RECONNECT";
