@@ -20,12 +20,14 @@ import {Avatar, Theme, Tooltip, Typography, useTheme} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
 import {Group} from "../../../../types";
 import Icon from "@mdi/react";
-import {mdiAccountGroupOutline, mdiAccountOutline, mdiDotsVertical, mdiGlobeModel} from "@mdi/js";
+import {mdiAccountGroupOutline, mdiEarth, mdiEyeOff, mdiPencilOutline, mdiWidgets} from "@mdi/js";
 import getIconColour from "../../../../style/getIconColour";
 import IconButton from "@material-ui/core/IconButton";
 import {getProviderData} from "../../../../util";
 import IdentityCard from "./IdentityCard";
 import getAvatarScheme from "../../../../style/getAvatarScheme";
+import {MODAL_GROUP_EDIT, setDialog} from "../../../../actions/Modal";
+import {useDispatch} from "react-redux";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	avatar: {
@@ -49,13 +51,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface GroupCardProps {
 	group: Group;
-	setAnchorEl?: (e: any) => void;
+	isAdmin?: boolean;
 }
 
-const GroupCard: React.FC<GroupCardProps> = ({group, setAnchorEl}) => {
+const GroupCard: React.FC<GroupCardProps> = ({group, isAdmin = false}) => {
 	// hooks
 	const classes = useStyles();
 	const theme = useTheme();
+	const dispatch = useDispatch();
 
 	// local state
 	const [providers] = useState<any>(getProviderData(theme));
@@ -76,6 +79,14 @@ const GroupCard: React.FC<GroupCardProps> = ({group, setAnchorEl}) => {
 		</Avatar>
 	);
 
+	const provider = providers[group.defaultFor || group.source];
+
+	const secondary = (group.public || group.defaultFor != null) ?
+		(group.public
+			? ["Public", mdiEarth, theme.palette.primary.main]
+			: [`Default for ${provider?.name || group.defaultFor} users`, mdiWidgets, theme.palette.info.main])
+		: ["Private", mdiEyeOff, theme.palette.secondary.main];
+
 	const content = (<>
 		<Typography
 			className={classes.displayName}
@@ -85,23 +96,24 @@ const GroupCard: React.FC<GroupCardProps> = ({group, setAnchorEl}) => {
 		<Typography
 			className={classes.username}
 			color="textSecondary">
-			{providers[group.name]?.name}
+			{provider?.name || group.source}
 		</Typography>
 		<div className={classes.icons}>
-			<Tooltip className={classes.icon} title={providers[group.source]?.name || group.source}>
-				<Icon path={providers[group.source]?.icon || mdiAccountOutline} size={1}
-				      color={providers[group.source]?.colour || theme.palette.primary.main}/>
-			</Tooltip>
-			{group.public && <Tooltip className={classes.icon} title="This group is public">
-				<Icon path={mdiGlobeModel} color={theme.palette.primary.main} size={1}/>
+			{<Tooltip className={classes.icon} title={secondary[0]}>
+				<Icon path={secondary[1]} color={secondary[2]} size={1}/>
 			</Tooltip>}
 		</div>
 	</>);
 
 	const actions = (<>
-		<IconButton centerRipple={false} onClick={(e) => setAnchorEl?.(e)}>
-			<Icon path={mdiDotsVertical} size={1} color={getIconColour(theme)}/>
-		</IconButton>
+		{isAdmin && !group.name.startsWith("_") &&
+		<Tooltip title="Edit group">
+			<IconButton
+				centerRipple={false}
+				onClick={() => setDialog(dispatch, MODAL_GROUP_EDIT, true, {group})}>
+				<Icon path={mdiPencilOutline} size={0.85} color={getIconColour(theme)}/>
+			</IconButton>
+		</Tooltip>}
 	</>);
 
 	return (<IdentityCard avatar={avatar} content={content} actions={actions}/>);

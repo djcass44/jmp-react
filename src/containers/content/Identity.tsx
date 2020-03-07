@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 		borderRadius: 100,
 		margin: 24,
 		padding: 6
-	},
+	}
 }));
 
 const Identity: React.FC = () => {

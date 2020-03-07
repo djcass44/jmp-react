@@ -26,6 +26,8 @@ import UserOptionsMenu from "./UserOptionsMenu";
 import {getUsers, USER_LOAD} from "../../../store/actions/users/GetUsers";
 import {PATCH_USER_ROLE} from "../../../store/actions/users/PatchUserRole";
 import {setUserOffset} from "../../../store/actions/users";
+import Button from "@material-ui/core/Button";
+import {MODAL_GROUP_NEW, setDialog} from "../../../actions/Modal";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -45,6 +47,10 @@ const useStyles = makeStyles((theme) => ({
 	nothing: {
 		textAlign: "center",
 		padding: theme.spacing(2)
+	},
+	addButton: {
+		margin: theme.spacing(2),
+		color: theme.palette.success.main
 	}
 }));
 
@@ -97,12 +103,22 @@ export default () => {
 		setExpanded(false);
 	};
 
+	const createButton = (
+		<Button
+			className={classes.addButton}
+			disabled
+			onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, true)}
+			variant="outlined">
+			Create
+		</Button>
+	);
 
 	return (
 		<div className={classes.root}>
 			<Zoom in={loading === true || loadingPatch === true}>
 				<LinearProgress/>
 			</Zoom>
+			{items.length === 0 ? <Center>{createButton}</Center> : <div>{createButton}</div>}
 			<Grid container spacing={3}>
 				{items}
 			</Grid>

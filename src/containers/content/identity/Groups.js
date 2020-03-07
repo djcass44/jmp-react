@@ -58,7 +58,7 @@ export default () => {
 
 
 	const {groups} = useSelector(state => state.groups);
-	const {headers} = useSelector(state => state.auth);
+	const {headers, isAdmin} = useSelector(state => state.auth);
 	const {offset, search} = useSelector(state => state.users);
 
 	const loading = useSelector(state => state.loading.get(GROUP_LOAD));
@@ -79,7 +79,7 @@ export default () => {
 		setGroupOffset(dispatch, groups.number * 8);
 		// Loop-d-loop
 		setItems(content.map(g => <Grid key={g.id} item md={12} lg={6}>
-			<GroupCard group={g}/>
+			<GroupCard group={g} isAdmin={isAdmin}/>
 		</Grid>));
 	}, [offset, groups]);
 
