@@ -20,11 +20,25 @@ import {GetUserGroupsActionType} from "./GetUserGroups";
 import {PatchGroupActionType} from "./PatchGroup";
 import {PutGroupActionType} from "./PutGroup";
 import {SetUserGroupsActionType} from "./SetUserGroups";
+import {Dispatch} from "redux";
+
+export const SET_GROUP_OFFSET = "SET_GROUP_OFFSET";
 
 export const SOCKET_UPDATE_GROUPS = "EVENT_UPDATE_GROUP";
 
+interface SetGroupOffsetActionType {
+	type: typeof SET_GROUP_OFFSET;
+	payload: number;
+}
+
+export const setGroupOffset = (dispatch: Dispatch, offset: number) => dispatch({
+	type: SET_GROUP_OFFSET,
+	payload: offset
+});
+
 export type GroupsActionType =
 	GetGroupsActionType
+	| SetGroupOffsetActionType
 	| GetUserGroupsActionType
 	| PatchGroupActionType
 	| PutGroupActionType

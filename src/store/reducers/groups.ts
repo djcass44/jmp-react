@@ -18,11 +18,12 @@
 import {Group, Page} from "../../types";
 import {GROUP_LOAD_SUCCESS} from "../actions/groups/GetGroups";
 import {GET_USER_GROUPS_SUCCESS} from "../actions/groups/GetUserGroups";
-import {GroupsActionType} from "../actions/groups";
+import {GroupsActionType, SET_GROUP_OFFSET} from "../actions/groups";
 
 export interface GroupsState {
 	groups: Page<Group>;
 	userGroups: Array<Group>;
+	offset: number;
 }
 
 const initialState: GroupsState = {
@@ -33,7 +34,8 @@ const initialState: GroupsState = {
 		numberOfElements: 0,
 		number: 0
 	},
-	userGroups: []
+	userGroups: [],
+	offset: 0
 };
 
 export default (state = initialState, action: GroupsActionType) => {
@@ -42,6 +44,8 @@ export default (state = initialState, action: GroupsActionType) => {
 			return {...state, groups: action.payload};
 		case GET_USER_GROUPS_SUCCESS:
 			return {...state, userGroups: action.payload};
+		case SET_GROUP_OFFSET:
+			return {...state, offset: action.payload};
 		default:
 			return state;
 	}

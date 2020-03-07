@@ -29,8 +29,7 @@ import {setUserOffset} from "../../../store/actions/users";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		marginTop: theme.spacing(4),
-		marginBottom: theme.spacing(4)
+		marginTop: theme.spacing(4)
 	},
 	title: {
 		fontFamily: "Manrope",
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 	nothing: {
 		textAlign: "center",
 		padding: theme.spacing(2)
-	},
+	}
 }));
 
 export default () => {
@@ -78,7 +77,7 @@ export default () => {
 		setUserOffset(dispatch, users.number * 8);
 		// Loop-d-loop
 		setItems(content.map(u => <Grid key={u.id} item md={12} lg={6}>
-			<UserCard user={u} selected={u === expanded} setAnchorEl={e => toggleExpansion(e, u)}/>
+			<UserCard user={u} setAnchorEl={e => toggleExpansion(e, u)}/>
 		</Grid>));
 	}, [users, offset, expanded]);
 

@@ -16,16 +16,16 @@
  */
 
 import React, {useState} from "react";
-import {Theme, Tooltip, Typography, useTheme} from "@material-ui/core";
+import {Avatar, Theme, Tooltip, Typography, useTheme} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
-import {User} from "../../../../types";
-import {Avatar} from "evergreen-ui";
+import {Group} from "../../../../types";
 import Icon from "@mdi/react";
-import {mdiAccountOutline, mdiAccountSupervisor, mdiDotsVertical} from "@mdi/js";
+import {mdiAccountGroupOutline, mdiAccountOutline, mdiDotsVertical, mdiGlobeModel} from "@mdi/js";
 import getIconColour from "../../../../style/getIconColour";
 import IconButton from "@material-ui/core/IconButton";
 import {getProviderData} from "../../../../util";
 import IdentityCard from "./IdentityCard";
+import getAvatarScheme from "../../../../style/getAvatarScheme";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	avatar: {
@@ -47,12 +47,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-interface UserCardProps {
-	user: User;
+interface GroupCardProps {
+	group: Group;
 	setAnchorEl?: (e: any) => void;
 }
 
-const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}) => {
+const GroupCard: React.FC<GroupCardProps> = ({group, setAnchorEl}) => {
 	// hooks
 	const classes = useStyles();
 	const theme = useTheme();
@@ -60,31 +60,40 @@ const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}) => {
 	// local state
 	const [providers] = useState<any>(getProviderData(theme));
 
-	const avatar = (<Avatar
-		className={classes.avatar}
-		name={user?.displayName || user?.username || "Anonymous"}
-		src={user?.avatarUrl || undefined}
-		size={72}>
-	</Avatar>);
+	// get the colour scheme
+	const scheme = getAvatarScheme(theme, 2);
+
+
+	const avatar = (
+		<Avatar
+			className={classes.avatar}
+			style={{backgroundColor: scheme[0], color: scheme[1]}}>
+			<Icon
+				path={mdiAccountGroupOutline}
+				size={1}
+				color={scheme[1]}
+			/>
+		</Avatar>
+	);
 
 	const content = (<>
 		<Typography
 			className={classes.displayName}
 			color="textPrimary">
-			{user.displayName || user.username}
+			{group.name}
 		</Typography>
 		<Typography
 			className={classes.username}
 			color="textSecondary">
-			@{user.username}
+			{providers[group.name]?.name}
 		</Typography>
 		<div className={classes.icons}>
-			<Tooltip className={classes.icon} title={providers[user.source]?.name || user.source}>
-				<Icon path={providers[user.source]?.icon || mdiAccountOutline} size={1}
-				      color={providers[user.source]?.colour || theme.palette.primary.main}/>
+			<Tooltip className={classes.icon} title={providers[group.source]?.name || group.source}>
+				<Icon path={providers[group.source]?.icon || mdiAccountOutline} size={1}
+				      color={providers[group.source]?.colour || theme.palette.primary.main}/>
 			</Tooltip>
-			{user.admin && <Tooltip className={classes.icon} title="This user is an administrator">
-				<Icon path={mdiAccountSupervisor} color={theme.palette.error.main} size={1}/>
+			{group.public && <Tooltip className={classes.icon} title="This group is public">
+				<Icon path={mdiGlobeModel} color={theme.palette.primary.main} size={1}/>
 			</Tooltip>}
 		</div>
 	</>);
@@ -97,4 +106,4 @@ const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}) => {
 
 	return (<IdentityCard avatar={avatar} content={content} actions={actions}/>);
 };
-export default UserCard;
+export default GroupCard;
