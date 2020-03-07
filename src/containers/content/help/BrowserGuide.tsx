@@ -23,6 +23,9 @@ import {APP_KEY, APP_NAME, BASE_URL} from "../../../constants";
 import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles((theme: Theme) => ({
+	browserBar: {
+		marginBottom: theme.spacing(1)
+	},
 	name: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
@@ -47,7 +50,7 @@ interface Browser {
 
 const BrowserGuide: React.FC = () => {
 	const classes = useStyles();
-	const [selected, setSelected] = useState<number>(-1);
+	const [selected, setSelected] = useState<Browser | null>(null);
 	const [open, setOpen] = useState<boolean>(false);
 
 	const [data, setData] = useState<Array<ReactNode>>([]);
@@ -87,59 +90,59 @@ const BrowserGuide: React.FC = () => {
 		{
 			icon: mdiEdge,
 			colour: '#3277bc',
-			name: 'Microsoft Edge (pre-Chromium)',
+			name: 'Microsoft Edge',
 			content: <span>
-				1. Open {APP_NAME}<br/>
-				2. Open Settings -> Advanced -> Change search provider<br/>
-				3. Set {APP_NAME} as default
+				1. Open settings (<code>chrome://settings</code>)<br/>
+				2. Click <b>Manage search engines</b><br/>
+				3. Add new with the following information<br/>
+				&emsp;Search engine = <kbd>{APP_NAME}</kbd><br/>
+				&emsp;Keyword = <kbd>{APP_KEY}</kbd><br/>
+				&emsp;URL = <kbd>{BASE_URL}/jmp?query=%s</kbd>
 			</span>,
-			info: 'This applies to EdgeHTML and not Edge-Chromium. Edge-Chromium is the same as Google Chrome',
 			supported: 2
 		},
 		{
 			icon: mdiAppleSafari,
 			colour: '#006cff',
 			name: 'Safari',
-			content: <span>
-				Safari 10+ may be supported, however due to Apple locking down the search engine choices you will need to install an extension in order to use {APP_NAME}
-			</span>,
+			content: "Safari is not supported.",
 			info: 'Safari is only available for macOS',
-			supported: 1
+			supported: 0
 		},
 		{
 			icon: mdiInternetExplorer,
 			name: 'Internet Explorer',
 			colour: '#1EBBEE',
-			content: 'Only IE11 and above are supported likely with compatibility issues. We recommend that you use a more modern browser such as Firefox, Chrome or Edge',
+			content: 'IE is not supported.',
 			supported: 0
 		}
 	]);
 
 	useEffect(() => {
-		setData(browserData.map((i, index) => (
-			<IconButton centerRipple={false} style={{color: i.colour}} key={index} onClick={() => {
-				if (selected === index && open) {
+		setData(browserData.map(i => (
+			<IconButton centerRipple={false} style={{color: i.colour}} key={i.icon} onClick={() => {
+				if (selected === i && open) {
 					setOpen(false);
 					return;
 				}
-				setSelected(index);
+				setSelected(i);
 				setOpen(true);
 			}}>
 				<Icon path={i.icon} size={1} color={i.colour}/>
 			</IconButton>)))
-	}, [browserData]);
+	}, [selected, open, browserData]);
 
 	return (
 		<div>
-			<div>
+			<div className={classes.browserBar}>
 				{data}
 			</div>
 			<Collapse in={open}>
-				{selected >= 0 && <div className={classes.content}>
-					<Typography variant="h6" className={classes.name} style={{color: browserData[selected].colour}}>
-						{browserData[selected].name}
+				{selected != null && <div className={classes.content}>
+					<Typography variant="h6" className={classes.name} style={{color: selected.colour}}>
+						{selected.name}
 					</Typography>
-					{browserData[selected].content}
+					{selected.content}
 				</div>}
 			</Collapse>
 		</div>

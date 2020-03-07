@@ -62,7 +62,7 @@ export default () => {
 
 
 	const {groups} = useSelector<TState, GroupsState>(state => state.groups);
-	const {headers, isAdmin} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers, isAdmin, isLoggedIn} = useSelector<TState, AuthState>(state => state.auth);
 	const {offset, search} = useSelector<TState, UsersState>(state => state.users);
 
 	const loading = useSelector<TState, boolean>(state => state.loading.get(GROUP_LOAD) ?? false);
@@ -95,6 +95,7 @@ export default () => {
 	const createButton = (
 		<Button
 			className={classes.addButton}
+			disabled={!isLoggedIn}
 			onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, true)}
 			variant="outlined">
 			Create

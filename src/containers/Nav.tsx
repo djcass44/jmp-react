@@ -20,7 +20,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
 import {fade} from "@material-ui/core/styles/colorManipulator";
-import {IconButton, LinearProgress, makeStyles, Popover, Theme} from "@material-ui/core";
+import {IconButton, makeStyles, Popover, Theme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import Icon from "@mdi/react";
@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 			paddingRight: 0
 		},
 		fontFamily: "Manrope",
+		fontWeight: 600,
 		pointerEvents: 'none'
 	},
 	title: {
@@ -203,8 +204,7 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 						/>
 					</div>}
 					<div className={classes.grow}/>
-					{loading === false &&
-					<>
+					{loading === false && <>
 						<div className={classes.sectionDesktop}>
 							{location.pathname !== "/help" &&
 							<IconButton style={{margin: 8}} component={Link} centerRipple={false} color={"inherit"}
@@ -221,10 +221,8 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 							aria-haspopup="true"
 							aria-owns={anchorEl != null ? 'material-appbar' : undefined}
 						/>
-					</>
-					}
+					</>}
 				</Toolbar>
-				{loading === true && <LinearProgress className={classes.progress}/>}
 			</>
 			<Popover
 				anchorEl={anchorEl}

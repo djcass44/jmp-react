@@ -14,19 +14,7 @@
  *    limitations under the License.
  */
 
-import {
-	Avatar,
-	Button,
-	Fade,
-	LinearProgress,
-	makeStyles,
-	Paper,
-	Theme,
-	Tooltip,
-	Typography,
-	useTheme,
-	Zoom
-} from "@material-ui/core";
+import {Avatar, Button, makeStyles, Paper, Theme, Tooltip, Typography, useTheme, Zoom} from "@material-ui/core";
 import React, {ReactNode, useEffect, useState} from "react";
 import {APP_NAME, APP_NOUN} from "../../constants";
 import {useDispatch, useSelector} from "react-redux";
@@ -37,7 +25,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import {fade} from "@material-ui/core/styles";
 import JumpItem from "./jmp/JumpItem";
 import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
-import {GET_JUMP, getJumps} from "../../store/actions/jumps/GetJumps";
+import {getJumps} from "../../store/actions/jumps/GetJumps";
 import {setJumpExpand, setJumpOffset, setJumpSearch} from "../../store/actions/jumps";
 import DwellInputBase from "../../components/widget/DwellInputBase";
 import Icon from "@mdi/react";
@@ -52,16 +40,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
-	},
-	progress: {
-		position: "fixed",
-		width: "100%",
-		top: 0,
-		left: 0,
-		right: 0,
-		bottom: 0,
-		backgroundColor: "transparent",
-		pointerEvents: "none"
 	},
 	name: {
 		fontFamily: "Manrope",
@@ -130,7 +108,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 	addButton: {
 		borderRadius: theme.spacing(3),
 		margin: theme.spacing(2),
-		textTransform: "none"
+		textTransform: "none",
+		color: theme.palette.success.main
 	}
 }));
 
@@ -144,7 +123,6 @@ export default () => {
 	const pagedJumps = useSelector<TState, Page<Jump>>(state => state.jumps.jumps);
 	const {offset, search} = useSelector<TState, JumpsState>(state => state.jumps);
 	const {headers, isLoggedIn} = useSelector<TState, AuthState>(state => state.auth);
-	const loading = useSelector<TState, boolean>(state => state.loading.get(GET_JUMP) ?? false);
 
 	// local state
 	const [data, setData] = useState<Array<ReactNode>>([]);
@@ -182,7 +160,7 @@ export default () => {
 				<Typography variant="h4" className={classes.name}>Where to?</Typography>
 			</Center>
 			<Center>
-				<Button className={classes.addButton} disabled={!isLoggedIn} color={"primary"} variant={"outlined"}
+				<Button className={classes.addButton} disabled={!isLoggedIn} variant="outlined"
 				        aria-label="Add" onClick={
 					() => setDialog(dispatch,
 						MODAL_JUMP_NEW,
@@ -209,9 +187,6 @@ export default () => {
 				/>
 			</div>
 			<div>
-				<Fade in={loading}>
-					<LinearProgress className={classes.progress} color="primary"/>
-				</Fade>
 				<div key="root" style={{borderRadius: 12, marginBottom: 8}}>
 					<List component="ul">
 						{data}
