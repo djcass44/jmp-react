@@ -15,13 +15,15 @@ import {
 	makeStyles,
 	Typography
 } from "@material-ui/core";
-import {GET_USER_GROUPS, getUserGroups, GROUP_LOAD, SET_USER_GROUPS, setUserGroups} from "../../actions/Groups";
 import {useDispatch, useSelector} from "react-redux";
 import {sortItems} from "../../misc/Sort";
 import Center from "react-center";
 import {MODAL_USER_GROUPS, setDialog} from "../../actions/Modal";
 import {defaultState} from "../../reducers/Modal";
 import {clone} from "../../util";
+import {GROUP_LOAD} from "../../store/actions/groups/GetGroups";
+import {GET_USER_GROUPS, getUserGroups} from "../../store/actions/groups/GetUserGroups";
+import {SET_USER_GROUPS, setUserGroups} from "../../store/actions/groups/SetUserGroups";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -61,7 +63,7 @@ export default () => {
 	const updateGroupMappings = () => {
 		let mapping = [];
 		// Check whether the user is in each group and build a mapping array
-		groups.forEach(g => {
+		groups.content.forEach(g => {
 			const g2 = clone(g);
 			g2.checked = userGroups.some(e => e.name === g.name);
 			mapping.push(g2);
@@ -129,16 +131,16 @@ export default () => {
 			</DialogTitle>
 			<DialogContent>
 				<Typography variant="body1">
-					Here you can modify the groups that {user != null ? user.username || 'the user' : 'the user'} is in.
+					Here you can modify the groups that {user?.displayName || user?.username || 'the user'} is in.
 				</Typography>
 				<div style={{margin: 12}}>
-				{loading === true && usermap.length === 0 ?
-					<Center><CircularProgress/></Center>
-					:
-					<List component='ul'>
-						{items.length > 0 ? items : <Center>There are no groups</Center>}
-					</List>
-				}
+					{loading === true && usermap.length === 0 ?
+						<Center><CircularProgress/></Center>
+						:
+						<List component='ul'>
+							{items.length > 0 ? items : <Center>There are no groups</Center>}
+						</List>
+					}
 				</div>
 			</DialogContent>
 			<DialogActions>

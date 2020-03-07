@@ -11,10 +11,10 @@ import {
 } from "@material-ui/core";
 import {MODAL_GROUP_NEW, setDialog} from "../../actions/Modal";
 import {useDispatch, useSelector} from "react-redux";
-import {PUT_GROUP, putGroup} from "../../actions/Groups";
 import ValidatedTextField from "../../components/field/ValidatedTextField";
 import {defaultState} from "../../reducers/Modal";
 import {resetError} from "../../actions/Generic";
+import {PUT_GROUP, putGroup} from "../../store/actions/groups/PutGroup";
 
 const useStyles = makeStyles(() => ({
 	title: {

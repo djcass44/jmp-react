@@ -1,5 +1,5 @@
 /*
- *    Copyright 2019 Django Cass
+ *    Copyright 2020 Django Cass
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,19 +15,37 @@
  *
  */
 
-import {USER_LOAD} from "../actions/Users";
+import {Page, User} from "../../types";
+import {USER_LOAD_SUCCESS} from "../actions/users/GetUsers";
+import {SET_USER_OFFSET, SET_USER_SEARCH, UsersActionType} from "../actions/users";
 
-const initialState = {
-	users: []
+export interface UsersState {
+	users: Page<User>;
+	offset: number;
+	search: string;
+}
+
+const initialState: UsersState = {
+	users: {
+		content: [],
+		size: 0,
+		totalElements: 0,
+		numberOfElements: 0,
+		number: 0
+	},
+	offset: 0,
+	search: ""
 };
 
-export default (state = initialState, action) => {
+export default (state = initialState, action: UsersActionType) => {
 	switch (action.type) {
-		case `${USER_LOAD}_SUCCESS`: {
+		case USER_LOAD_SUCCESS:
 			return {...state, users: action.payload};
-		}
+		case SET_USER_OFFSET:
+			return {...state, offset: action.payload};
+		case SET_USER_SEARCH:
+			return {...state, search: action.payload};
 		default:
 			return state;
-
 	}
-};
+}

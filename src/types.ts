@@ -42,10 +42,12 @@ export interface Alias {
 }
 
 export interface User {
+	id: string;
 	username: string;
 	displayName?: string;
 	avatarUrl?: string;
 	admin: boolean;
+	source: string;
 }
 
 export interface Group {

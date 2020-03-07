@@ -16,6 +16,8 @@
  */
 
 import {Token} from "../types";
+import {mdiAccountBadgeOutline, mdiDatabase, mdiGithubCircle, mdiGoogle, mdiShieldAccount} from "@mdi/js";
+import {Theme} from "@material-ui/core";
 
 export const clone = (obj: any): any => JSON.parse(JSON.stringify(obj));
 
@@ -30,5 +32,35 @@ export const getHeaders = (token: Token) => {
 	return {
 		"Authorization": `Bearer ${token.request}`,
 		"X-Auth-Source": token.source
+	}
+};
+
+export const getProviderData = (theme: Theme) => {
+	return {
+		ldap: {
+			name: "LDAP",
+			icon: mdiAccountBadgeOutline,
+			colour: theme.palette.success.main
+		},
+		local: {
+			name: "Internal Database",
+			icon: mdiDatabase,
+			colour: theme.palette.primary.main
+		},
+		"oauth2/github": {
+			name: "GitHub (OAuth2)",
+			icon: mdiGithubCircle,
+			colour: theme.palette.text.secondary
+		},
+		"oauth2/google": {
+			name: "Google (OAuth2)",
+			icon: mdiGoogle,
+			colour: theme.palette.primary.main
+		},
+		"oauth2/keycloak": {
+			name: "Keycloak (OIDC)",
+			icon: mdiShieldAccount,
+			colour: "#568bf4"
+		}
 	}
 };
