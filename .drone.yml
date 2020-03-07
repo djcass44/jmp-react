@@ -2,16 +2,19 @@ kind: pipeline
 name: frontend
 
 steps:
-  - name: build
-    image: plugins/docker
+  # BUILD OCI IMAGE
+  - name: publish
+    image: harbor.v2.dcas.dev/library/drone-kaniko
+    pull: always
     settings:
-      repo: djcass44/jmp-ui
+      registry: index.docker.io/djcass44
+      repo: jmp-ui
+      cache: true
+      cache_repo: harbor.v2.dcas.dev/dcas.dev
       tags:
-        - ${DRONE_BRANCH}
-      username:
-        from_secret: DOCKER_USERNAME
-      password:
-        from_secret: DOCKER_PASSWORD
+        - ${DRONE_BRANCH/\//-}
+      authjson_docker:
+        from_secret: DOCKER_AUTH
 trigger:
   when:
     event:
