@@ -32,30 +32,36 @@ const Status: React.FC<StatusProps> = ({showReload = false}) => {
 				<StatusIcon
 					active={components?.ping?.status}
 					title="Core"
+					loading={loading}
 					icon={mdiHexagon}
 				/>
 				<StatusIcon
 					active={components?.db?.status}
 					title="Database"
+					loading={loading}
 					icon={mdiDatabase}
 				/>
 				<StatusIcon
 					active={components?.ping?.status}
 					title="Identity Provider"
+					loading={loading}
 					icon={mdiAccountNetworkOutline}
 				/>
 				<StatusIcon
 					active={components?.metadata?.status}
 					title="Metadata"
+					loading={loading}
 					icon={mdiImageSearchOutline}
 				/>
+				{showReload && <Button
+					style={{float: "right"}}
+					disabled={loading}
+					variant="outlined"
+					color="primary"
+					onClick={() => handleReload()}>
+					Reload
+				</Button>}
 			</div>
-			{showReload && <Button
-				disabled={loading}
-				color="primary"
-				onClick={() => handleReload()}>
-				Reload
-			</Button>}
 		</>
 	);
 };

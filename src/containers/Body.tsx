@@ -39,7 +39,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 		right: 0,
 		bottom: 0,
 		backgroundColor: "transparent",
-		pointerEvents: "none"
+		pointerEvents: "none",
+		zIndex: theme.zIndex.drawer + 2
 	},
 	progressShade: {
 		position: "fixed",
@@ -51,7 +52,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 		bottom: 0,
 		backgroundColor: theme.palette.background.default,
 		opacity: 0.6,
-		pointerEvents: "initial"
+		pointerEvents: "initial",
+		zIndex: theme.zIndex.drawer + 1
 	}
 }));
 
@@ -75,13 +77,13 @@ export const Body: React.FC = () => {
 			<div className={classes.root}>
 				<div className={classes.hero}>
 					<div className={classes.hero2}>
-						<Zoom in={loading}>
-							<LinearProgress className={classes.progress}/>
-						</Zoom>
 						<Nav loading={loading}/>
 						<Content/>
 						<AdminPanel/>
 						{loading && <div className={classes.progressShade}/>}
+						<Zoom in={loading}>
+							<LinearProgress className={classes.progress}/>
+						</Zoom>
 					</div>
 				</div>
 			</div>

@@ -16,12 +16,14 @@
  */
 
 import React, {useEffect, useState} from "react";
-import {Badge, Button, FormControlLabel, ListSubheader, makeStyles, Switch, Typography} from "@material-ui/core";
+import {Button, FormControlLabel, ListSubheader, makeStyles, Switch} from "@material-ui/core";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import {LS_DARK} from "../../../constants";
 import Icon from "@mdi/react";
 import {mdiSettingsOutline} from "@mdi/js";
 import {useTheme} from "@material-ui/core/styles";
+import {Alert} from "@material-ui/lab";
+import {IS_DARK_THEME} from "../../../style/theme";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -29,14 +31,14 @@ const useStyles = makeStyles(theme => ({
 		fontWeight: 500
 	},
 	content: {
-		fontSize: 14,
-		flex: 1
-	},
-	warningText: {
-		color: theme.palette.error.main
+		margin: theme.spacing(1)
 	},
 	icon: {
 		paddingRight: 8
+	},
+	button: {
+		margin: theme.spacing(1),
+		float: "right"
 	}
 }));
 
@@ -44,7 +46,7 @@ const General: React.FC = () => {
 	const [dark, setDark] = useState<boolean>(false);
 
 	useEffect(() => {
-		setDark(localStorage.getItem(LS_DARK) === "true");
+		setDark(IS_DARK_THEME);
 	}, []);
 
 	const onSetDark = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,19 +62,42 @@ const General: React.FC = () => {
 	const theme = useTheme();
 	const visual = (
 		<div>
-			<Typography className={classes.warningText} variant="body1">This feature is in active development and may contain graphical issues.</Typography>
-			<FormControlLabel control={
-				<Switch checked={dark} onChange={(e) => onSetDark(e)}/>
-			} label="Dark theme"/>
-			<Button variant="contained" color="primary" onClick={() => onSave()}>Save</Button>
+			<Alert severity="error">
+				This feature is in active development and may cause graphical issues
+			</Alert>
+			<FormControlLabel
+				className={classes.content}
+				control={
+					<Switch checked={dark} onChange={(e) => onSetDark(e)}/>
+				}
+				label="Dark theme"
+			/>
+			<Button
+				className={classes.button}
+				variant="outlined"
+				color="primary"
+				onClick={() => onSave()}>
+				Save
+			</Button>
 		</div>
 	);
 	return (
 		<div>
-			<ListSubheader className={classes.title} inset component="div">General</ListSubheader>
-			<InfoItem title={<Badge color="primary" badgeContent="BETA">Visuals & theme</Badge>} content={visual} icon={
-				<Icon className={classes.icon} path={mdiSettingsOutline} size={1} color={theme.palette.primary.main}/>
-			} error={null} open={false}/>
+			<ListSubheader
+				className={classes.title}
+				inset>
+				General
+			</ListSubheader>
+			<InfoItem
+				title={<span>Visuals & theme</span>}
+				content={visual}
+				icon={
+					<Icon className={classes.icon} path={mdiSettingsOutline} size={1}
+					      color={theme.palette.primary.main}/>
+				}
+				error={null}
+				open={false}
+			/>
 		</div>
 	)
 };

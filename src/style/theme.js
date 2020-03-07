@@ -26,8 +26,10 @@ const themeType = localStorage.getItem(LS_DARK) === 'true' ? 'dark' : wantedThem
 // inform the css about which theme we're using
 document.documentElement.setAttribute("data-theme", themeType);
 
+export const IS_DARK_THEME = themeType === "dark";
+
 export default createMuiTheme({
-	palette: themeType === "dark" ? dark : light,
+	palette: IS_DARK_THEME ? dark : light,
 	overrides: {
 		MuiTooltip: {
 			tooltip: {
