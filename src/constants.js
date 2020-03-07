@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export const LS_REQUEST = "jmpr-request";
 export const LS_REFRESH = "jmpr-refresh";
 export const LS_SOURCE = "jmp-source";
@@ -20,10 +18,3 @@ const secure = (window._env_.JMP_API_SECURE || "true") === "true";
 
 export const BASE_URL = `http${secure ? "s" : ""}://${API_URL}`;
 export const SOCKET_URL = `ws${secure ? "s" : ""}://${API_URL}/api/ws2`;
-
-export const client = axios.create({
-	baseURL: BASE_URL,
-	headers: {
-		'Content-Type': 'application/json'
-	}
-});

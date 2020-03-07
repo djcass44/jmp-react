@@ -8,13 +8,13 @@ import {CircularProgress, InputLabel, LinearProgress, makeStyles, Select, Typogr
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useDispatch, useSelector} from "react-redux";
-import {PUT_JUMP, putJumpDispatch} from "../../actions/Jumps";
 import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
 import {APP_NOUN} from "../../constants";
 import {defaultState} from "../../reducers/Modal";
 import {resetError} from "../../actions/Generic";
 import ValidatedTextField from "../../components/field/ValidatedTextField";
 import {GET_USER_GROUPS, getUserGroups} from "../../store/actions/groups/GetUserGroups";
+import {PUT_JUMP, putJump} from "../../store/actions/jumps/PutJump";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -83,7 +83,7 @@ const JumpDialog = () => {
 	const onSubmit = () => {
 		// ignore the type error below, it's fine
 		const gid = type === 2 ? `?gid=${groupId}` : '';
-		putJumpDispatch(dispatch, headers, JSON.stringify({
+		putJump(dispatch, headers, JSON.stringify({
 			name: name.value,
 			location: url.value,
 			personal: type,

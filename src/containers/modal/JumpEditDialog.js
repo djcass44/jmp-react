@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles, Typography} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {PATCH_JUMP, patchJumpDispatch} from "../../actions/Jumps";
 import {APP_NOUN} from "../../constants";
 import {MODAL_JUMP_EDIT, setDialog} from "../../actions/Modal";
 import {defaultState} from "../../reducers/Modal";
 import {resetError} from "../../actions/Generic";
 import ValidatedTextField from "../../components/field/ValidatedTextField";
+import {PATCH_JUMP, patchJump} from "../../store/actions/jumps/PatchJump";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -94,8 +94,7 @@ export default () => {
 						id: jump.alias[i].id,
 						name: jump.alias[i].name
 					});
-				}
-				else {
+				} else {
 					aliases.push({
 						id: 0,
 						name: item
@@ -103,7 +102,7 @@ export default () => {
 				}
 			});
 		}
-		patchJumpDispatch(dispatch, headers, JSON.stringify({
+		patchJump(dispatch, headers, JSON.stringify({
 			id: jump.id,
 			name: name.value,
 			location: url.value,

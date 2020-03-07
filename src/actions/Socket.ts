@@ -1,5 +1,4 @@
 import {SOCKET_URL} from "../constants";
-import {SOCKET_UPDATE_JUMP} from "./Jumps";
 import {addSnackbar, closeSnackbar, removeSnackbar} from "./Snackbar";
 import {getJumps} from "../store/actions/jumps/GetJumps";
 import store from "../store";
@@ -9,6 +8,7 @@ import {SOCKET_UPDATE_GROUPS} from "../store/actions/groups";
 import {getGroups} from "../store/actions/groups/GetGroups";
 import {Dispatch} from "redux";
 import {Action} from "../types";
+import {SOCKET_UPDATE_JUMP} from "../store/actions/jumps";
 
 export const WS_OPEN = "WS_OPEN";
 export const WS_RECONNECT = "WS_RECONNECT";

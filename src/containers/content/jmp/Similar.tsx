@@ -18,7 +18,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import {Avatar, Chip, CircularProgress, Grid, makeStyles, Theme, Tooltip, Typography} from "@material-ui/core";
 import React, {ReactNode, useEffect, useState} from "react";
-import {getSimilarFail} from "../../../actions/Jumps";
 import Center from "react-center";
 import Icon from "@mdi/react";
 import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
@@ -34,6 +33,7 @@ import {AuthState} from "../../../store/reducers/auth";
 import {JumpsState} from "../../../store/reducers/jumps";
 import {Jump} from "../../../types";
 import {Skeleton} from "@material-ui/lab";
+import {getSimilarFail} from "../../../store/actions/jumps";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
