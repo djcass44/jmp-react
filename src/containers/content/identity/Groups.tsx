@@ -16,8 +16,8 @@
  */
 
 import {useDispatch, useSelector} from "react-redux";
-import {LinearProgress, makeStyles, Typography, Zoom} from "@material-ui/core";
-import React, {useEffect, useState} from "react";
+import {LinearProgress, makeStyles, Theme, Typography, Zoom} from "@material-ui/core";
+import React, {ReactNode, useEffect, useState} from "react";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
@@ -28,8 +28,12 @@ import {setGroupOffset} from "../../../store/actions/groups";
 import GroupCard from "./profile/GroupCard";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import {TState} from "../../../store/reducers";
+import {GroupsState} from "../../../store/reducers/groups";
+import {AuthState} from "../../../store/reducers/auth";
+import {UsersState} from "../../../store/reducers/users";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
@@ -57,15 +61,15 @@ export default () => {
 	const classes = useStyles();
 
 
-	const {groups} = useSelector(state => state.groups);
-	const {headers, isAdmin} = useSelector(state => state.auth);
-	const {offset, search} = useSelector(state => state.users);
+	const {groups} = useSelector<TState, GroupsState>(state => state.groups);
+	const {headers, isAdmin} = useSelector<TState, AuthState>(state => state.auth);
+	const {offset, search} = useSelector<TState, UsersState>(state => state.users);
 
-	const loading = useSelector(state => state.loading.get(GROUP_LOAD));
+	const loading = useSelector<TState, boolean>(state => state.loading.get(GROUP_LOAD) ?? false);
 
-	const [items, setItems] = useState([]);
+	const [items, setItems] = useState<Array<ReactNode>>([]);
 
-	const onSearch = (o = offset) => {
+	const onSearch = (o: number = offset) => {
 		getGroups(dispatch, headers, search, Number(o / 8) || 0, 8);
 	};
 
@@ -83,7 +87,7 @@ export default () => {
 		</Grid>));
 	}, [offset, groups]);
 
-	const onPageChange = (off) => {
+	const onPageChange = (off: number) => {
 		setGroupOffset(dispatch, off);
 		onSearch(off);
 	};
@@ -99,7 +103,7 @@ export default () => {
 
 	return (
 		<div>
-			<Zoom in={loading === true}>
+			<Zoom in={loading}>
 				<LinearProgress className={classes.progress}/>
 			</Zoom>
 			{items.length === 0 ? <Center>{createButton}</Center> : <div>{createButton}</div>}
