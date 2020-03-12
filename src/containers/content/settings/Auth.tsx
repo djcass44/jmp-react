@@ -43,11 +43,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
-interface Provider {
-	icon: string;
-	colour: string;
-}
-
 const Auth: React.FC = () => {
 	const dispatch = useDispatch();
 	const classes = useStyles();

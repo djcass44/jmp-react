@@ -31,7 +31,7 @@ const Info: React.FC = () => {
 	const {headers} = useSelector<TState, AuthState>(state => state.auth);
 	// @ts-ignore
 	const {systemInfo} = useSelector<TState, object>(state => state.info);
-	const systemInfoError = useSelector<TState, any | null>(state => state.errors.get(GET_INFO_SYS));
+	const systemInfoError = useSelector<TState, any | null>(state => state.errors[GET_INFO_SYS]);
 
 	useEffect(() => {
 		getInfoSystem(dispatch, headers);

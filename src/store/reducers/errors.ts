@@ -16,8 +16,9 @@
  */
 
 import processHTTPCode from "../../misc/Codes";
+import {SimpleMap} from "../../types";
 
-const initialState = new Map<string, any | null>();
+const initialState: SimpleMap<string | any | null> = {};
 
 interface Action {
 	type: string;
@@ -35,6 +36,8 @@ export default (state = initialState, action: Action) => {
 	if (!matches) return state;
 	const [, requestName, requestState] = matches;
 	const data = processHTTPCode(payload);
-	state.set(`${requestName}${payload?.tag ? `_${payload.tag}` : ""}`, requestState === "FAILURE" ? data : null);
-	return state;
+	return {
+		...state,
+		[`${requestName}${payload?.tag ? `_${payload.tag}` : ""}`]: requestState === "FAILURE" ? data : null
+	};
 }

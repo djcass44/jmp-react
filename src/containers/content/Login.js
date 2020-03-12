@@ -82,8 +82,8 @@ export default ({history}) => {
 	const theme = useTheme();
 
 	const {isLoggedIn, providers} = useSelector(state => state.auth);
-	const loading = useSelector(state => state.loading.get(OAUTH_REQUEST));
-	const error = useSelector(state => state.errors.get(OAUTH_REQUEST));
+	const loading = useSelector(state => state.loading[OAUTH_REQUEST]);
+	const error = useSelector(state => state.errors[OAUTH_REQUEST]);
 
 	// state hooks
 	const [username, setUsername] = useState(initialUser);

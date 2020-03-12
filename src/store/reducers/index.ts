@@ -26,6 +26,7 @@ import snackbar from "../../reducers/Snackbar";
 import users, {UsersState} from "./users";
 import groups, {GroupsState} from "./groups";
 import info, {InfoState} from "./info";
+import {SimpleMap} from "../../types";
 
 export interface TState {
 	jumps: JumpsState;
@@ -33,8 +34,8 @@ export interface TState {
 	users: UsersState;
 	groups: GroupsState;
 	info: InfoState;
-	loading: Map<string, boolean>;
-	errors: Map<string, any | null>;
+	loading: SimpleMap<boolean>;
+	errors: SimpleMap<string | any | null>;
 }
 
 export default combineReducers({

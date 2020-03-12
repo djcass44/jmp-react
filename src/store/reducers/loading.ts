@@ -15,7 +15,10 @@
  *
  */
 
-const initialState = new Map<string, boolean>();
+
+import {SimpleMap} from "../../types";
+
+const initialState: SimpleMap<boolean> = {};
 
 export default (state = initialState, action: { type: string; }) => {
 	const {type} = action;
@@ -25,6 +28,5 @@ export default (state = initialState, action: { type: string; }) => {
 	if (!matches) return state;
 
 	const [, requestName, requestState] = matches;
-	state.set(requestName, requestState === "REQUEST");
-	return state;
+	return {...state, [requestName]: requestState === "REQUEST"};
 }

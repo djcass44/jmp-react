@@ -61,8 +61,8 @@ export default () => {
 
 	// global state
 	const {headers} = useSelector<TState, AuthState>(state => state.auth);
-	const loading = useSelector<TState, boolean>(state => state.loading.get(GET_SIMILAR) ?? false);
-	const error = useSelector<TState, any | null>(state => state.errors.get(GET_SIMILAR));
+	const loading = useSelector<TState, boolean>(state => state.loading[GET_SIMILAR] ?? false);
+	const error = useSelector<TState, any | null>(state => state.errors[GET_SIMILAR]);
 	const {similar} = useSelector<TState, JumpsState>(state => state.jumps);
 
 	// local state

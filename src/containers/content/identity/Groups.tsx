@@ -65,7 +65,7 @@ export default () => {
 	const {headers, isAdmin, isLoggedIn} = useSelector<TState, AuthState>(state => state.auth);
 	const {offset, search} = useSelector<TState, UsersState>(state => state.users);
 
-	const loading = useSelector<TState, boolean>(state => state.loading.get(GROUP_LOAD) ?? false);
+	const loading = useSelector<TState, boolean>(state => state.loading[GROUP_LOAD] ?? false);
 
 	const [items, setItems] = useState<Array<ReactNode>>([]);
 

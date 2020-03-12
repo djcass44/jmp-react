@@ -16,7 +16,7 @@ const Status: React.FC<StatusProps> = ({showReload = false}) => {
 	const dispatch = useDispatch();
 
 	// global state
-	const loading = useSelector<TState, boolean>(state => state.loading.get(GET_INFO_STAT) ?? false);
+	const loading = useSelector<TState, boolean>(state => state.loading[GET_INFO_STAT] ?? false);
 	const {components} = useSelector<TState, any>(state => state.info.status);
 	const {headers} = useSelector<TState, AuthState>(state => state.auth);
 

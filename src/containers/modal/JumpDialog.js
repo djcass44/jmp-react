@@ -46,16 +46,17 @@ const JumpDialog = () => {
 	// hooks
 	const dispatch = useDispatch();
 
-	// seletors
-	const loadingGroups = useSelector(state => state.loading.get(GET_USER_GROUPS));
-	const loading = useSelector(state => state.loading.get(PUT_JUMP));
-	const error = useSelector(state => state.errors.get(PUT_JUMP));
+	// global state
+	const loadingGroups = useSelector(state => state.loading[GET_USER_GROUPS]);
+	const loading = useSelector(state => state.loading[PUT_JUMP]);
+	const error = useSelector(state => state.errors[PUT_JUMP]);
 	const {headers, isAdmin, isLoggedIn, userProfile} = useSelector(state => state.auth);
 	const {userGroups} = useSelector(state => state.groups);
 	const {open} = useSelector(state => state.modal[MODAL_JUMP_NEW] || defaultState);
 
 	const uid = userProfile && userProfile.id;
 
+	// local state
 	const [name, setName] = useState(initialName);
 	const [url, setUrl] = useState(initialUrl);
 	const [type, setType] = useState('');

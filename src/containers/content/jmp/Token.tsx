@@ -57,8 +57,8 @@ const Token: React.FC = () => {
 
 	// global state
 	const {headers} = useSelector<TState, AuthState>(state => state.auth);
-	const loading = useSelector<TState, boolean>(state => state.loading.get(GET_TARGET) ?? false);
-	const error = useSelector<TState, Error | null>(state => state.errors.get(GET_TARGET));
+	const loading = useSelector<TState, boolean>(state => state.loading[GET_TARGET] ?? false);
+	const error = useSelector<TState, Error | null>(state => state.errors[GET_TARGET]);
 
 	// component state
 	const [failure, setFailure] = useState<Error | string | null>(error);

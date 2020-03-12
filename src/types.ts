@@ -102,3 +102,7 @@ export interface Action {
 	type: string;
 	payload?: any | null;
 }
+
+export interface SimpleMap<V> {
+	[key: string]: V;
+}

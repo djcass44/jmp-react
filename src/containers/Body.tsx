@@ -63,7 +63,7 @@ export const Body: React.FC = () => {
 	const location = useLocation();
 	// @ts-ignore
 	const loading = useSelector<TState, boolean>(state => {
-		return (state.loading.get(OAUTH_VERIFY) || state.loading.get(GET_JUMP)) ?? false;
+		return (state.loading[OAUTH_VERIFY] || state.loading[GET_JUMP]) ?? false;
 	});
 	const {headers, refresh} = useSelector<TState, AuthState>(state => state.auth);
 

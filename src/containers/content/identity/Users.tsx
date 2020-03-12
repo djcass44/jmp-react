@@ -65,8 +65,8 @@ export default () => {
 
 	const {users, offset, search} = useSelector<TState, UsersState>(state => state.users);
 	const {headers} = useSelector<TState, AuthState>(state => state.auth);
-	const loading = useSelector<TState, boolean>(state => state.loading.get(USER_LOAD) ?? false);
-	const loadingPatch = useSelector<TState, boolean>(state => state.loading.get(PATCH_USER_ROLE) ?? false);
+	const loading = useSelector<TState, boolean>(state => state.loading[USER_LOAD] ?? false);
+	const loadingPatch = useSelector<TState, boolean>(state => state.loading[PATCH_USER_ROLE] ?? false);
 
 	const [items, setItems] = useState<Array<ReactNode>>([]);
 	const [expanded, setExpanded] = useState<boolean>(false);
