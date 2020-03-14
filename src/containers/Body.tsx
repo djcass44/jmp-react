@@ -2,7 +2,7 @@ import React, {useLayoutEffect} from 'react';
 import Content from "./Content";
 import Nav from "./Nav";
 import AdminPanel from "../components/AdminPanel";
-import {LinearProgress, makeStyles, Theme, Zoom} from "@material-ui/core";
+import {Fade, LinearProgress, makeStyles, Theme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {OAUTH_VERIFY, oauthVerify} from "../store/actions/auth/AuthVerify";
 import {TState} from "../store/reducers";
@@ -80,10 +80,12 @@ export const Body: React.FC = () => {
 						<Nav loading={loading}/>
 						<Content/>
 						<AdminPanel/>
-						{loading && <div className={classes.progressShade}/>}
-						<Zoom in={loading}>
+						<Fade in={loading}>
+							<div className={classes.progressShade}/>
+						</Fade>
+						<Fade in={loading}>
 							<LinearProgress className={classes.progress}/>
-						</Zoom>
+						</Fade>
 					</div>
 				</div>
 			</div>

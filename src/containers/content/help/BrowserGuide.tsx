@@ -60,7 +60,7 @@ const BrowserGuide: React.FC = () => {
 			colour: '#1da462',
 			name: "Google Chrome",
 			content: <span>
-				1. Open settings (<code>chrome://settings</code>)<br/>
+				1. Open settings (<code>chrome://settings/searchEngines</code>)<br/>
 				2. Click <b>Manage search engines</b><br/>
 				3. Add new with the following information<br/>
 				&emsp;Search engine = <kbd>{APP_NAME}</kbd><br/>
@@ -79,6 +79,8 @@ const BrowserGuide: React.FC = () => {
 					<Link target="_blank" rel="noopener noreferrer"
 					      href="https://addons.mozilla.org/en-US/firefox/addon/jmp-webext/">Firefox addon!</Link>
 				</Typography>
+				Make sure to go to extension settings and enter {BASE_URL}
+				<br/>
 				<br/>
 				Add a new bookmark with the following values<br/>
 				&emsp;Name = <kbd>{APP_NAME}</kbd><br/>
@@ -92,7 +94,7 @@ const BrowserGuide: React.FC = () => {
 			colour: '#3277bc',
 			name: 'Microsoft Edge',
 			content: <span>
-				1. Open settings (<code>chrome://settings</code>)<br/>
+				1. Open settings (<code>edge://settings/searchEngines</code>)<br/>
 				2. Click <b>Manage search engines</b><br/>
 				3. Add new with the following information<br/>
 				&emsp;Search engine = <kbd>{APP_NAME}</kbd><br/>
