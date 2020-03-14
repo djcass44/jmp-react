@@ -18,9 +18,10 @@
 import React, {ReactNode, useEffect, useState} from "react";
 import {mdiAppleSafari, mdiEdge, mdiFirefox, mdiGoogleChrome, mdiInternetExplorer} from "@mdi/js";
 import Icon from "@mdi/react";
-import {Collapse, IconButton, makeStyles, Theme, Typography} from "@material-ui/core";
+import {Collapse, IconButton, makeStyles, Theme, Tooltip, Typography} from "@material-ui/core";
 import {APP_KEY, APP_NAME, BASE_URL} from "../../../constants";
 import Link from "@material-ui/core/Link";
+import {Alert} from "@material-ui/lab";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	browserBar: {
@@ -36,6 +37,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 		borderRadius: 12,
 		padding: 12,
 		backgroundColor: theme.palette.background.paper
+	},
+	alert: {
+		marginTop: theme.spacing(2),
+		marginBottom: theme.spacing(2)
 	}
 }));
 
@@ -45,7 +50,7 @@ interface Browser {
 	name: string;
 	content: ReactNode;
 	info?: string | null;
-	supported: number;
+	severity: "info" | "error" | "success" | "warning" | undefined;
 }
 
 const BrowserGuide: React.FC = () => {
@@ -67,8 +72,8 @@ const BrowserGuide: React.FC = () => {
 				&emsp;Keyword = <kbd>{APP_KEY}</kbd><br/>
 				&emsp;URL = <kbd>{BASE_URL}/jmp?query=%s</kbd>
 			</span>,
-			info: 'This has only been tested in Google Chrome and Chromium. Its usability in other Chromium-based browsers is unknown.',
-			supported: 2
+			info: `${APP_NAME} has only been tested in Google Chrome, Chromium and Edge Chromium. Its usability in other Chromium-based browsers is unknown.`,
+			severity: "info"
 		},
 		{
 			icon: mdiFirefox,
@@ -87,7 +92,7 @@ const BrowserGuide: React.FC = () => {
 				&emsp;Keyword = <kbd>{APP_KEY}</kbd><br/>
 				&emsp;Location = <kbd>{BASE_URL}/jmp?query=%s</kbd>
 			</div>,
-			supported: 2
+			severity: "info"
 		},
 		{
 			icon: mdiEdge,
@@ -101,37 +106,40 @@ const BrowserGuide: React.FC = () => {
 				&emsp;Keyword = <kbd>{APP_KEY}</kbd><br/>
 				&emsp;URL = <kbd>{BASE_URL}/jmp?query=%s</kbd>
 			</span>,
-			supported: 2
+			severity: "info"
 		},
 		{
 			icon: mdiAppleSafari,
 			colour: '#006cff',
 			name: 'Safari',
-			content: "Safari is not supported.",
-			info: 'Safari is only available for macOS',
-			supported: 0
+			content: <React.Fragment/>,
+			info: "Safari is not supported.",
+			severity: "error"
 		},
 		{
 			icon: mdiInternetExplorer,
 			name: 'Internet Explorer',
 			colour: '#1EBBEE',
-			content: 'IE is not supported.',
-			supported: 0
+			content: <React.Fragment/>,
+			info: 'Internet Explorer is not supported.',
+			severity: "error"
 		}
 	]);
 
 	useEffect(() => {
 		setData(browserData.map(i => (
-			<IconButton centerRipple={false} style={{color: i.colour}} key={i.icon} onClick={() => {
-				if (selected === i && open) {
-					setOpen(false);
-					return;
-				}
-				setSelected(i);
-				setOpen(true);
-			}}>
-				<Icon path={i.icon} size={1} color={i.colour}/>
-			</IconButton>)))
+			<Tooltip title={i.name} key={i.icon}>
+				<IconButton centerRipple={false} style={{color: i.colour}} onClick={() => {
+					if (selected === i && open) {
+						setOpen(false);
+						return;
+					}
+					setSelected(i);
+					setOpen(true);
+				}}>
+					<Icon path={i.icon} size={1} color={i.colour}/>
+				</IconButton>
+			</Tooltip>)))
 	}, [selected, open, browserData]);
 
 	return (
@@ -144,6 +152,8 @@ const BrowserGuide: React.FC = () => {
 					<Typography variant="h6" className={classes.name} style={{color: selected.colour}}>
 						{selected.name}
 					</Typography>
+					{selected.info &&
+					<Alert className={classes.alert} severity={selected.severity}>{selected.info}</Alert>}
 					{selected.content}
 				</div>}
 			</Collapse>
