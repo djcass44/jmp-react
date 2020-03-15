@@ -64,8 +64,15 @@ export interface ValidatedData {
 	regex: RegExp;
 }
 
+export interface Pageable {
+	pageNumber: number;
+	pageSize: number;
+	offset: number;
+}
+
 export interface Page<T> {
 	content: Array<T>;
+	pageable?: Pageable | null;
 	size: number; // page size
 	number: number; // page count
 	totalElements: number; // total items

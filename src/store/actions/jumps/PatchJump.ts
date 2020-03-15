@@ -43,7 +43,7 @@ export const patchJump = (dispatch: Dispatch, headers: any, jump: string): void 
 	dispatch({
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/jump`,
-			method: "PUT",
+			method: "PATCH",
 			headers,
 			body: jump,
 			types: [PATCH_JUMP_REQUEST, PATCH_JUMP_SUCCESS, PATCH_JUMP_FAILURE]

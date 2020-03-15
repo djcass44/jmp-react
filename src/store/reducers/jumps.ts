@@ -38,6 +38,7 @@ export interface JumpsState {
 const initialState: JumpsState = {
 	jumps: {
 		content: [],
+		pageable: null,
 		size: 0,
 		totalElements: 0,
 		numberOfElements: 0,
@@ -60,7 +61,7 @@ export default (state = initialState, action: JumpsActionType) => {
 		case SET_JUMP_SEARCH:
 			return {...state, search: action.payload};
 		case GET_JUMP_SUCCESS:
-			return {...state, jumps: action.payload};
+			return {...state, jumps: action.payload, offset: (action.payload as Page<Jump>).pageable?.offset};
 		case GET_SIMILAR_SUCCESS:
 			return {...state, similar: action.payload};
 		case SOCKET_UPDATE_TITLE: {

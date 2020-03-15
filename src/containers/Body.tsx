@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import Content from "./Content";
 import Nav from "./Nav";
 import AdminPanel from "../components/AdminPanel";
@@ -67,6 +67,21 @@ export const Body: React.FC = () => {
 	});
 	const {headers, refresh} = useSelector<TState, AuthState>(state => state.auth);
 
+
+	const [timer, setTimer] = useState<any | null>(null);
+	const [shade, setShade] = useState<boolean>(false);
+
+	/**
+	 * Delay the visibility of the loading shade until we've been loading for >= 150 milliseconds
+	 */
+	useEffect(() => {
+		if (!loading) {
+			setShade(false);
+			clearTimeout(timer);
+		} else
+			setTimer(setTimeout(() => setShade(true), 150));
+	}, [loading]);
+
 	useLayoutEffect(() => {
 		oauthVerify(dispatch, refresh || "", headers);
 	}, [location.key]);
@@ -80,7 +95,7 @@ export const Body: React.FC = () => {
 						<Nav loading={loading}/>
 						<Content/>
 						<AdminPanel/>
-						<Fade in={loading}>
+						<Fade in={shade}>
 							<div className={classes.progressShade}/>
 						</Fade>
 						<Fade in={loading}>
