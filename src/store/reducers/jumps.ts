@@ -67,7 +67,7 @@ export default (state = initialState, action: JumpsActionType) => {
 		case SOCKET_UPDATE_TITLE: {
 			const payload = action.payload as FaviconPayload;
 			const idx = idxFromId(state.jumps.content, payload.id);
-			if (idx > 0) {
+			if (idx < 0) {
 				return state;
 			}
 			const {jumps} = state;

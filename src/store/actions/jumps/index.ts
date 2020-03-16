@@ -29,7 +29,7 @@ export const SET_JUMP_OFFSET = "SET_JUMP_OFFSET";
 export const SET_JUMP_SEARCH = "SET_JUMP_SEARCH";
 
 export const SOCKET_UPDATE_JUMP = "EVENT_UPDATE";
-export const SOCKET_UPDATE_TITLE = "SOCKET_UPDATE_TITLE";
+export const SOCKET_UPDATE_TITLE = "EVENT_UPDATE_TITLE";
 export const SOCKET_UPDATE_FAVICON = "SOCKET_UPDATE_FAVICON";
 
 interface SetJumpExpandActionType {
