@@ -20,7 +20,7 @@ import {Button, Card, CardContent, CircularProgress, Grid, makeStyles, Typograph
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import SocialButton from "../../components/widget/SocialButton";
-import {mdiGithubCircle, mdiGoogle, mdiShieldAccount} from "@mdi/js";
+import {mdiGithub, mdiGoogle, mdiShieldAccount} from "@mdi/js";
 import {APP_NAME} from "../../constants";
 import {useTheme} from "@material-ui/core/styles";
 import ValidatedTextField from "../../components/field/ValidatedTextField";
@@ -203,11 +203,11 @@ export default ({history}) => {
 							<>
 								<p className={classes.oauthMessage}>Alternatively, login with</p>
 								<Center>
-									{providers.get('github') != null &&
-									<SocialButton url={providers.get('github')} name={"GitHub"} colour={"#171516"}
-									              icon={mdiGithubCircle}/>}
-									{providers.get('google') != null &&
-									<SocialButton url={providers.get('google')} name={"Google"} colour={"#4285F4"}
+									{providers.get("github") != null &&
+									<SocialButton url={providers.get("github")} name={"GitHub"} colour={"#171516"}
+									              icon={mdiGithub}/>}
+									{providers.get("google") != null &&
+									<SocialButton url={providers.get("google")} name={"Google"} colour={"#4285F4"}
 									              icon={mdiGoogle}/>}
 									{providers.get('keycloak') != null &&
 									<SocialButton url={providers.get('keycloak')} name={"Keycloak"}

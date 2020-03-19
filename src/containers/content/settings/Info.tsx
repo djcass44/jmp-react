@@ -1,23 +1,26 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {ListSubheader, makeStyles, Theme} from "@material-ui/core";
-import {useTheme} from "@material-ui/core/styles";
-import InfoItem from "../../../components/content/settings/InfoItem";
-import JSONPretty from "react-json-pretty";
-import {mdiBugCheckOutline, mdiMemory} from "@mdi/js";
-import Icon from "@mdi/react";
+import {
+	Avatar,
+	Card,
+	Divider,
+	ListItem,
+	ListItemAvatar,
+	ListItemText,
+	ListSubheader,
+	makeStyles,
+	Theme,
+	Typography
+} from "@material-ui/core";
 import Status from "./Status";
 import {TState} from "../../../store/reducers";
 import {AuthState} from "../../../store/reducers/auth";
-import {GET_INFO_SYS, getInfoSystem} from "../../../store/actions/info/GetInfoSystem";
+import {getInfoSystem} from "../../../store/actions/info/GetInfoSystem";
+import {APP_NAME} from "../../../constants";
 
 const useStyles = makeStyles((theme: Theme) => ({
-	title: {
-		fontFamily: "Manrope",
-		fontWeight: 500
-	},
-	icon: {
-		paddingRight: theme.spacing(1)
+	versionInfo: {
+		padding: theme.spacing(1)
 	}
 }));
 
@@ -25,13 +28,11 @@ const Info: React.FC = () => {
 	// hooks
 	const dispatch = useDispatch();
 	const classes = useStyles();
-	const {palette} = useTheme();
 
 	// global state
 	const {headers} = useSelector<TState, AuthState>(state => state.auth);
 	// @ts-ignore
 	const {systemInfo} = useSelector<TState, object>(state => state.info);
-	const systemInfoError = useSelector<TState, any | null>(state => state.errors[GET_INFO_SYS]);
 
 	useEffect(() => {
 		getInfoSystem(dispatch, headers);
@@ -39,26 +40,43 @@ const Info: React.FC = () => {
 
 	return (
 		<div>
-			<ListSubheader
-				className={classes.title}
-				inset>
-				Information &amp; status
-			</ListSubheader>
-			<InfoItem
-				title={<span>Application health</span>}
-				content={<Status showReload/>}
-				open
-				icon={
-					<Icon className={classes.icon} path={mdiBugCheckOutline} size={1} color={palette.error.main}/>
-				}/>
-			<InfoItem
-				title={<span>System information</span>}
-				content={
-					<JSONPretty data={JSON.stringify(systemInfo)}/>
-				}
-				error={systemInfoError} icon={
-				<Icon className={classes.icon} path={mdiMemory} size={1} color={palette.secondary.main}/>
-			}/>
+			<ListSubheader>Application health</ListSubheader>
+			<Card>
+				<ListItem>
+					<ListItemText secondary={<Status showReload/>}/>
+				</ListItem>
+			</Card>
+			<ListSubheader>About {APP_NAME}</ListSubheader>
+			<Card>
+				<ListItem className={classes.versionInfo}>
+					<ListItemAvatar>
+						<Avatar alt="App icon" src="/jmp.png"/>
+					</ListItemAvatar>
+					<ListItemText primary={
+						<Typography color="textPrimary" variant="h5">{APP_NAME}</Typography>
+					}/>
+				</ListItem>
+				<Divider/>
+				<ListItem>
+					<ListItemText
+						className={classes.versionInfo}
+						secondary={systemInfo?.version || "No version information found."}
+					/>
+				</ListItem>
+			</Card>
+			<ListSubheader>Open source</ListSubheader>
+			<Card>
+				<ListItem>
+					<ListItemText
+						className={classes.versionInfo}
+						secondary={<div>
+							<span>{APP_NAME}</span><br/>
+							<span>Copyright 2020 Django Cass. All rights reserved.</span><br/><br/>
+							<span>{APP_NAME} is based on the <a href="https://github.com/djcass44/jmp">JMP</a> open source project.</span>
+						</div>}
+					/>
+				</ListItem>
+			</Card>
 		</div>
 	);
 };

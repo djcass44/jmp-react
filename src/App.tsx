@@ -15,20 +15,40 @@
  *
  */
 
-import React, {useEffect} from "react";
-import {MuiThemeProvider} from "@material-ui/core/styles";
-import Theme from "./style/theme";
-import {useDispatch} from "react-redux";
+import React, {useEffect, useMemo} from "react";
+import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
+import {useDispatch, useSelector} from "react-redux";
 import {Helmet} from "react-helmet";
 import {closeWebSocket, connectWebSocket} from "./actions/Socket";
 import Body from "./containers/Body";
 import {SnackbarProvider} from "notistack";
 import Snackbar from "./containers/Snackbar";
 import useTheme from "@material-ui/core/styles/useTheme";
+import {dark, light} from "./style/palette";
+import {TState} from "./store/reducers";
+import {GenericState} from "./store/reducers/generic";
 
 const App: React.FC = () => {
 	const dispatch = useDispatch();
 	const {palette} = useTheme();
+
+	const {themeMode} = useSelector<TState, GenericState>(state => state.generic);
+
+	// update the theme dynamically
+	const theme = useMemo(() => {
+		document.documentElement.setAttribute("data-theme", themeMode);
+		return createMuiTheme({
+			// @ts-ignore
+			palette: themeMode === "dark" ? dark : light,
+			overrides: {
+				MuiTooltip: {
+					tooltip: {
+						fontSize: "0.9rem"
+					}
+				}
+			}
+		});
+	}, [themeMode]);
 
 	useEffect(() => {
 		connectWebSocket(dispatch);
@@ -39,7 +59,7 @@ const App: React.FC = () => {
 
 	return (
 		<div>
-			<MuiThemeProvider theme={Theme}>
+			<MuiThemeProvider theme={theme}>
 				<SnackbarProvider maxSnack={3} autoHideDuration={3500} preventDuplicate>
 					<Helmet>
 						<meta name={"theme-color"} content={palette.primary.main}/>

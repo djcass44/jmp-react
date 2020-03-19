@@ -20,13 +20,13 @@ import {combineReducers} from "redux";
 import auth, {AuthState} from "./auth";
 import loading from "./loading";
 import errors from "./errors";
-import generic from "../../reducers/Generic";
 import modal from "../../reducers/Modal";
 import snackbar from "../../reducers/Snackbar";
 import users, {UsersState} from "./users";
 import groups, {GroupsState} from "./groups";
 import info, {InfoState} from "./info";
 import {SimpleMap} from "../../types";
+import generic, {GenericState} from "./generic";
 
 export interface TState {
 	jumps: JumpsState;
@@ -36,6 +36,7 @@ export interface TState {
 	info: InfoState;
 	loading: SimpleMap<boolean>;
 	errors: SimpleMap<string | any | null>;
+	generic: GenericState;
 }
 
 export default combineReducers({

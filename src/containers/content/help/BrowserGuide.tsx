@@ -16,7 +16,7 @@
  */
 
 import React, {ReactNode, useEffect, useState} from "react";
-import {mdiAppleSafari, mdiEdge, mdiFirefox, mdiGoogleChrome, mdiInternetExplorer} from "@mdi/js";
+import {mdiAppleSafari, mdiFirefox, mdiGoogleChrome, mdiMicrosoftEdge, mdiMicrosoftInternetExplorer} from "@mdi/js";
 import Icon from "@mdi/react";
 import {Collapse, IconButton, makeStyles, Theme, Tooltip, Typography} from "@material-ui/core";
 import {APP_KEY, APP_NAME, BASE_URL} from "../../../constants";
@@ -95,9 +95,9 @@ const BrowserGuide: React.FC = () => {
 			severity: "info"
 		},
 		{
-			icon: mdiEdge,
-			colour: '#3277bc',
-			name: 'Microsoft Edge',
+			icon: mdiMicrosoftEdge,
+			colour: "#3277bc",
+			name: "Microsoft Edge",
 			content: <span>
 				1. Open settings (<code>edge://settings/searchEngines</code>)<br/>
 				2. Click <b>Manage search engines</b><br/>
@@ -117,11 +117,11 @@ const BrowserGuide: React.FC = () => {
 			severity: "error"
 		},
 		{
-			icon: mdiInternetExplorer,
-			name: 'Internet Explorer',
-			colour: '#1EBBEE',
+			icon: mdiMicrosoftInternetExplorer,
+			name: "Internet Explorer",
+			colour: "#1EBBEE",
 			content: <React.Fragment/>,
-			info: 'Internet Explorer is not supported.',
+			info: "Internet Explorer is not supported.",
 			severity: "error"
 		}
 	]);

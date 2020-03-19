@@ -15,89 +15,44 @@
  *
  */
 
-import React, {useEffect, useState} from "react";
-import {Button, FormControlLabel, ListSubheader, makeStyles, Switch} from "@material-ui/core";
-import InfoItem from "../../../components/content/settings/InfoItem";
+import React, {useState} from "react";
+import {Card, ListItem, ListItemText, ListSubheader, Switch} from "@material-ui/core";
 import {LS_DARK} from "../../../constants";
-import Icon from "@mdi/react";
-import {mdiSettingsOutline} from "@mdi/js";
-import {useTheme} from "@material-ui/core/styles";
-import {Alert} from "@material-ui/lab";
-import {IS_DARK_THEME} from "../../../style/theme";
-
-const useStyles = makeStyles(theme => ({
-	title: {
-		fontFamily: "Manrope",
-		fontWeight: 500
-	},
-	content: {
-		margin: theme.spacing(1)
-	},
-	icon: {
-		paddingRight: 8
-	},
-	button: {
-		margin: theme.spacing(1),
-		float: "right"
-	}
-}));
+import {setThemeMode} from "../../../store/actions/Generic";
+import {useDispatch, useSelector} from "react-redux";
+import {TState} from "../../../store/reducers";
+import {GenericState} from "../../../store/reducers/generic";
 
 const General: React.FC = () => {
-	const [dark, setDark] = useState<boolean>(false);
+	// hooks
+	const dispatch = useDispatch();
 
-	useEffect(() => {
-		setDark(IS_DARK_THEME);
-	}, []);
+	//global state
+	const {themeMode} = useSelector<TState, GenericState>(state => state.generic);
+
+	// local state
+	const [dark, setDark] = useState<boolean>(themeMode === "dark");
 
 	const onSetDark = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const {checked} = e.target;
 		setDark(checked);
-	};
-	const onSave = () => {
-		localStorage.setItem(LS_DARK, dark.toString());
-		window.location.reload(); // Chad refresh
+
+		const theme = checked ? "dark" : "light";
+		localStorage.setItem(LS_DARK, theme);
+		setThemeMode(dispatch, theme);
 	};
 
-	const classes = useStyles();
-	const theme = useTheme();
-	const visual = (
-		<div>
-			<Alert severity="error">
-				This feature is in active development and may cause graphical issues
-			</Alert>
-			<FormControlLabel
-				className={classes.content}
-				control={
-					<Switch checked={dark} onChange={(e) => onSetDark(e)}/>
-				}
-				label="Dark theme"
-			/>
-			<Button
-				className={classes.button}
-				variant="outlined"
-				color="primary"
-				onClick={() => onSave()}>
-				Save
-			</Button>
-		</div>
-	);
 	return (
 		<div>
-			<ListSubheader
-				className={classes.title}
-				inset>
-				General
+			<ListSubheader>
+				Appearance
 			</ListSubheader>
-			<InfoItem
-				title={<span>Visuals & theme</span>}
-				content={visual}
-				icon={
-					<Icon className={classes.icon} path={mdiSettingsOutline} size={1}
-					      color={theme.palette.primary.main}/>
-				}
-				error={null}
-				open={false}
-			/>
+			<Card>
+				<ListItem>
+					<ListItemText primary="Theme" secondary={`${dark ? "Dark" : "Light"} theme`}/>
+					<Switch checked={dark} onChange={e => onSetDark(e)}/>
+				</ListItem>
+			</Card>
 		</div>
 	)
 };

@@ -16,7 +16,7 @@
  */
 
 import {Token} from "../types";
-import {mdiAccountBadgeOutline, mdiDatabase, mdiGithubCircle, mdiGoogle, mdiShieldAccount} from "@mdi/js";
+import {mdiAccountOutline, mdiDatabase, mdiGithub, mdiGoogle, mdiShieldAccount} from "@mdi/js";
 import {Theme} from "@material-ui/core";
 
 export const clone = (obj: any): any => JSON.parse(JSON.stringify(obj));
@@ -39,7 +39,7 @@ export const getProviderData = (theme: Theme) => {
 	return {
 		ldap: {
 			name: "LDAP",
-			icon: mdiAccountBadgeOutline,
+			icon: mdiAccountOutline,
 			colour: theme.palette.success.main
 		},
 		local: {
@@ -49,7 +49,7 @@ export const getProviderData = (theme: Theme) => {
 		},
 		"oauth2/github": {
 			name: "GitHub (OAuth2)",
-			icon: mdiGithubCircle,
+			icon: mdiGithub,
 			colour: theme.palette.text.secondary
 		},
 		"oauth2/google": {

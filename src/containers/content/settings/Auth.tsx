@@ -19,7 +19,7 @@ import React, {ReactNode, useEffect, useState} from "react";
 import {List, ListItem, ListItemAvatar, ListItemText, ListSubheader, makeStyles, Theme} from "@material-ui/core";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import Icon from "@mdi/react";
-import {mdiAccountOutline, mdiFolderAccountOutline} from "@mdi/js";
+import {mdiAccountDetailsOutline, mdiAccountOutline} from "@mdi/js";
 import {useTheme} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {TState} from "../../../store/reducers";
@@ -73,11 +73,11 @@ const Auth: React.FC = () => {
 
 	return (
 		<div>
-			<ListSubheader className={classes.title} inset component={"div"}>Authentication</ListSubheader>
+			<ListSubheader>Authentication</ListSubheader>
 			<InfoItem title={<span>Identity Provider</span>} content={<List component="ul">
 				{data}
 			</List>} icon={
-				<Icon style={{paddingRight: 8}} path={mdiFolderAccountOutline} size={1}
+				<Icon style={{paddingRight: 8}} path={mdiAccountDetailsOutline} size={1}
 				      color={palette.success.dark}/>
 			}/>
 		</div>

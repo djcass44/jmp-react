@@ -54,7 +54,7 @@ const Status: React.FC<StatusProps> = ({showReload = false}) => {
 					icon={mdiImageSearchOutline}
 				/>
 				{showReload && <Button
-					style={{float: "right"}}
+					style={{float: "right", textTransform: "none"}}
 					disabled={loading}
 					variant="outlined"
 					color="primary"
