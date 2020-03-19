@@ -30,7 +30,7 @@ const Info: React.FC = () => {
 	const classes = useStyles();
 
 	// global state
-	const {headers} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers, isAdmin} = useSelector<TState, AuthState>(state => state.auth);
 	// @ts-ignore
 	const {systemInfo} = useSelector<TState, object>(state => state.info);
 
@@ -40,12 +40,14 @@ const Info: React.FC = () => {
 
 	return (
 		<div>
-			<ListSubheader>Application health</ListSubheader>
-			<Card>
-				<ListItem>
-					<ListItemText secondary={<Status showReload/>}/>
-				</ListItem>
-			</Card>
+			{isAdmin && <>
+				<ListSubheader>Application health</ListSubheader>
+				<Card>
+					<ListItem>
+						<ListItemText secondary={<Status showReload/>}/>
+					</ListItem>
+				</Card>
+			</>}
 			<ListSubheader>About {APP_NAME}</ListSubheader>
 			<Card>
 				<ListItem className={classes.versionInfo}>

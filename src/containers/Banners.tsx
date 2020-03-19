@@ -32,6 +32,9 @@ const useStyles = makeStyles(() => ({
 	}
 }));
 
+/**
+ * This component is still in incubation
+ */
 const Banners: React.FC = () => {
 	const classes = useStyles();
 

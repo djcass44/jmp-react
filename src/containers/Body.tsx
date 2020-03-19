@@ -9,7 +9,6 @@ import {TState} from "../store/reducers";
 import {AuthState} from "../store/reducers/auth";
 import {useLocation} from "react-router";
 import {GET_JUMP} from "../store/actions/jumps/GetJumps";
-import Banners from "./Banners";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	main: {
@@ -95,7 +94,7 @@ export const Body: React.FC = () => {
 					<div className={classes.hero2}>
 						<Nav loading={loading}/>
 						<Content/>
-						<Banners/>
+						{/*<Banners/>*/}
 						<AdminPanel/>
 						<Fade in={shade}>
 							<div className={classes.progressShade}/>

@@ -49,10 +49,8 @@ const Settings: React.FC = () => {
 				<Typography variant={"h4"} className={classes.name}>Settings</Typography>
 			</Center>
 			<General/>
-			{isAdmin && <div>
-				<Auth/>
-				<Info/>
-			</div>}
+			{isAdmin && <Auth/>}
+			<Info/>
 		</div>
 	);
 };
