@@ -16,7 +16,7 @@
  */
 
 import React, {useEffect} from "react";
-import {IconButton, makeStyles, Theme, Typography} from "@material-ui/core";
+import {IconButton, makeStyles, Theme, Tooltip, Typography} from "@material-ui/core";
 import {useTheme} from "@material-ui/core/styles";
 import Center from "react-center";
 import {Link} from "react-router-dom";
@@ -26,16 +26,12 @@ import {APP_NAME} from "../../constants";
 import {useHistory} from "react-router";
 
 const useStyles = makeStyles((theme: Theme) => ({
-	title: {
-		fontSize: 148,
-		fontWeight: 200,
-		color: theme.palette.text.primary
-	},
 	subtitle: {
 		textAlign: "center",
 		fontFamily: "Manrope",
 		fontWeight: 500,
-		color: theme.palette.text.secondary
+		color: theme.palette.text.primary,
+		marginTop: theme.spacing(2)
 	},
 	overlay: {
 		position: "fixed",
@@ -61,7 +57,7 @@ const NotFound: React.FC = () => {
 		<Center className={classes.overlay}>
 			<div style={{pointerEvents: "initial"}}>
 				<Center>
-					<Typography className={classes.title} variant={"h1"}>404</Typography>
+					<img height={256} src={"/draw/undraw_lost_bqr2.svg"} alt={""}/>
 				</Center>
 				<Center>
 					<Typography className={classes.subtitle} variant={"subtitle1"}>
@@ -69,14 +65,25 @@ const NotFound: React.FC = () => {
 					</Typography>
 				</Center>
 				<Center>
-					<IconButton color={"secondary"} centerRipple={false} aria-label={"Go back"}
-					            onClick={() => history.goBack()}>
-						<Icon path={mdiArrowLeft} size={1} color={theme.palette.secondary.main}/>
-					</IconButton>
-					<IconButton component={Link} to={"/"} color={"primary"} centerRipple={false}
-					            aria-label={"Return to home"}>
-						<Icon path={mdiHomeOutline} size={1} color={theme.palette.primary.main}/>
-					</IconButton>
+					<Tooltip title="Go back">
+						<IconButton
+							color="secondary"
+							centerRipple={false}
+							aria-label="Go back"
+							onClick={() => history.goBack()}>
+							<Icon path={mdiArrowLeft} size={1} color={theme.palette.secondary.main}/>
+						</IconButton>
+					</Tooltip>
+					<Tooltip title="Return to home">
+						<IconButton
+							component={Link}
+							to="/"
+							color="primary"
+							centerRipple={false}
+							aria-label="Return to home">
+							<Icon path={mdiHomeOutline} size={1} color={theme.palette.primary.main}/>
+						</IconButton>
+					</Tooltip>
 				</Center>
 			</div>
 		</Center>

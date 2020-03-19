@@ -31,7 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 	name: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
-		color: theme.palette.secondary.main
+		color: theme.palette.secondary.main,
+		marginTop: theme.spacing(2)
 	},
 	avatar: {
 		width: 56,
@@ -56,6 +57,9 @@ const Identity: React.FC = () => {
 				        component={Paper}>
 					<Icon path={mdiAccountGroupOutline} size={2} color={theme.palette.primary.main}/>
 				</Avatar>
+			</Center>
+			<Center>
+				<img height={192} src={"/draw/undraw_Group_chat_unwm.svg"} alt={""}/>
 			</Center>
 			<Center>
 				<Typography variant={"h4"} className={classes.name}>Users &amp; Groups</Typography>

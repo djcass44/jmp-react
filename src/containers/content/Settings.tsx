@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 	name: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
-		color: theme.palette.secondary.main
+		color: theme.palette.secondary.main,
+		margin: theme.spacing(2)
 	},
 	avatar: {
 		width: 56,
@@ -44,6 +45,9 @@ const Settings: React.FC = () => {
 				<Avatar className={classes.avatar} component={Paper}>
 					<Icon path={mdiCogOutline} size={2} color={theme.palette.primary.main}/>
 				</Avatar>
+			</Center>
+			<Center>
+				<img height={192} src={"/draw/undraw_preferences_uuo2.svg"} alt={""}/>
 			</Center>
 			<Center>
 				<Typography variant={"h4"} className={classes.name}>Settings</Typography>

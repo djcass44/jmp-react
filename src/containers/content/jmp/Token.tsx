@@ -18,7 +18,7 @@
 import React, {useEffect, useState} from "react";
 import {APP_NAME, BASE_URL} from "../../../constants";
 import {useDispatch, useSelector} from "react-redux";
-import {CircularProgress, makeStyles, Theme} from "@material-ui/core";
+import {CircularProgress, makeStyles, Theme, Typography} from "@material-ui/core";
 import Center from "react-center";
 import {GET_TARGET} from "../../../actions/Jumps";
 import {useHistory} from "react-router";
@@ -29,7 +29,7 @@ import {Dispatch} from "redux";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	text: {
-		color: theme.palette.text.primary
+		margin: theme.spacing(2)
 	},
 	overlay: {
 		position: "fixed",
@@ -49,6 +49,12 @@ interface DoJumpDTO {
 	location: string;
 }
 
+const jumpImages = [
+	"undraw_balloons_vxx5.svg",
+	"undraw_i_can_fly_7egl.svg",
+	"undraw_instant_support_elxh.svg"
+];
+
 const Token: React.FC = () => {
 	// hooks
 	const classes = useStyles();
@@ -62,6 +68,7 @@ const Token: React.FC = () => {
 
 	// component state
 	const [failure, setFailure] = useState<Error | string | null>(error);
+	const [image] = useState<string>(jumpImages[Math.floor(Math.random() * jumpImages.length)]);
 
 	/**
 	 * Handle the api response and move us to where we need to go
@@ -114,7 +121,7 @@ const Token: React.FC = () => {
 	// initial hook run on start (componentdidmount)
 	useEffect(() => {
 		window.document.title = `${APP_NAME}`;
-		jumpUser();
+		setTimeout(() => jumpUser(), 100);
 	}, []);
 
 	const message = (error != null || failure != null) ? (error?.toString() || failure) : "Jumping... You can close this window if it stays open";
@@ -123,7 +130,18 @@ const Token: React.FC = () => {
 			{loading ?
 				<CircularProgress/>
 				:
-				<span className={classes.text}>{message}</span>
+				<div>
+					<Center>
+						<img height={256} src={`/draw/${(error || failure) ? "undraw_warning_cyit.svg" : image}`}
+						     alt=""/>
+					</Center>
+					<Typography
+						className={classes.text}
+						color="textPrimary"
+						align="center">
+						{message}
+					</Typography>
+				</div>
 			}
 		</Center>
 	);

@@ -38,7 +38,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 	name: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
-		color: theme.palette.primary.main
+		color: theme.palette.primary.main,
+		margin: theme.spacing(2)
 	},
 	avatar: {
 		width: 56,
@@ -175,8 +176,15 @@ const Help: React.FC = () => {
 	return (
 		<>
 			<Center>
-				<Avatar className={classes.avatar} component={Paper} src={`${process.env.PUBLIC_URL}/jmp.png`}
-				        alt={APP_NAME}/>
+				<Avatar
+					className={classes.avatar}
+					component={Paper}
+					src={`${process.env.PUBLIC_URL}/jmp.png`}
+					alt={APP_NAME}
+				/>
+			</Center>
+			<Center>
+				<img height={192} src={"/draw/undraw_circles_y7s2.svg"} alt={""}/>
 			</Center>
 			<Center>
 				<Typography variant="h4" className={classes.name}>Need a hand?</Typography>
