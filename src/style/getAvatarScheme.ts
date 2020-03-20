@@ -1,4 +1,4 @@
-import {Theme} from "./palette";
+import {Theme} from "@material-ui/core";
 
 export default (theme: Theme, type: number) => {
 	const {palette} = theme;
@@ -17,13 +17,13 @@ export default (theme: Theme, type: number) => {
 	else {
 		switch (type) {
 			case 1:
-				return [palette.success.light, palette.success.dark];
+				return [palette.success.light, palette.success.main];
 			case 2:
-				return [palette.info.light, palette.info.dark];
+				return [palette.info.light, palette.info.main];
 			case 3: // 3 is for admins in /identity
-				return [palette.error.light, palette.error.dark];
+				return [palette.error.light, palette.error.main];
 			default:
-				return [palette.primary.light, palette.primary.dark];
+				return [palette.primary.light, palette.primary.main];
 		}
 	}
 }

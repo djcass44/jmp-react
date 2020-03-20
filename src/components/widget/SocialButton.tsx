@@ -16,11 +16,11 @@
  */
 
 import * as React from "react";
-import {Button, makeStyles} from "@material-ui/core";
+import {Button, makeStyles, Theme} from "@material-ui/core";
 import Icon from "@mdi/react";
 import {useTheme} from "@material-ui/core/styles";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	button: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
@@ -39,13 +39,20 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const SocialButton = ({url, colour, name, icon}: { url: string, colour: string, name: string, icon: string }) => {
-	const theme = useTheme();
+interface SocialButtonProps {
+	url: string;
+	colour: string;
+	name: string;
+	icon: string;
+}
+
+const SocialButton: React.FC<SocialButtonProps> = ({url, colour, name, icon}: SocialButtonProps) => {
+	const {palette} = useTheme();
 	const classes = useStyles();
-	const variant = theme.palette.type === "dark" ? "contained" : "text";
+	const variant = palette.type === "dark" ? "contained" : "text";
 	return (
 		<Button href={url} className={classes.button} variant={variant}>
-			<Icon className={classes.icon} path={icon} size={'1.5rem'} color={colour}/>
+			<Icon className={classes.icon} path={icon} size={"1.5rem"} color={colour}/>
 			{name}
 		</Button>
 	);

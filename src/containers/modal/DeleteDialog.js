@@ -14,7 +14,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {DELETABLE_JUMP, MODAL_DELETE, setDialog} from "../../actions/Modal";
 import {defaultState} from "../../reducers/Modal";
-import {deleteJumpDispatch} from "../../actions/Jumps";
+import {deleteJump} from "../../store/actions/jumps/DeleteJump";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -60,7 +60,7 @@ export default () => {
 	const onSubmit = () => {
 		// convert to a switch when there's more cases
 		if (deletable === DELETABLE_JUMP) {
-			deleteJumpDispatch(dispatch, headers, other.item);
+			deleteJump(dispatch, headers, other.item.id);
 		}
 		close();
 	};

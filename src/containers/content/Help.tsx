@@ -15,9 +15,8 @@
  *
  */
 
-import React, {useState} from "react";
-import {Collapse, ListItemSecondaryAction, makeStyles, Paper, Typography} from "@material-ui/core";
-// @ts-ignore
+import React, {ReactNode, useEffect, useState} from "react";
+import {Collapse, ListItemSecondaryAction, makeStyles, Paper, Theme, Typography} from "@material-ui/core";
 import Center from "react-center";
 import Avatar from "@material-ui/core/Avatar";
 import List from "@material-ui/core/List";
@@ -29,8 +28,9 @@ import BrowserGuide from "./help/BrowserGuide";
 import getHelpCardColour from "../../selectors/getHelpCardColour";
 import useTheme from "@material-ui/core/styles/useTheme";
 import {APP_NAME, APP_NOUN} from "../../constants";
+import {useHistory, useLocation} from "react-router";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500
@@ -38,7 +38,8 @@ const useStyles = makeStyles(theme => ({
 	name: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
-		color: theme.palette.primary.main
+		color: theme.palette.primary.main,
+		margin: theme.spacing(2)
 	},
 	avatar: {
 		width: 56,
@@ -61,95 +62,135 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Help = () => {
-	const [expand, setExpand] = useState<number>(-1);
-	const qna = [
+interface QnA {
+	id: string;
+	q: string;
+	a: string | ReactNode;
+}
+
+const Help: React.FC = () => {
+	// hooks
+	const classes = useStyles();
+	const theme = useTheme<Theme>();
+	const history = useHistory();
+	const location = useLocation();
+
+	// local state
+	const [expand, setExpand] = useState<string | null>(null);
+	const [data, setData] = useState<Array<ReactNode>>([]);
+	const [qna] = useState<Array<QnA>>([
 		{
+			id: "browser-setup",
 			q: "Browser setup guides",
 			a: <BrowserGuide/>
 		},
 		{
+			id: "data-collection",
 			q: "What data is collected?",
 			a: <span>
-				When you log in with a federated identity provider (e.g. GitHub, Google) we ask for your username, name and avatar which is used for personalisation of the application.
+				When you log in with a federated identity provider (e.g. GitHub, Google, Keycloak) we ask for your username, name and avatar which is used for personalisation of the application.
 				This data is never sold to any 3rd parties, nor is it used for marketing.
 			</span>
 		},
 		{
+			id: "http-urls",
 			q: "Why are some URLs red?",
 			a: <span>HTTP URLs are marked as red to communicate their lack of security. HTTP websites are being phased out all across the internet and your browser probably already shows warnings.<br/><br/>The red highlight is only a warning and doesn't interfere with your ability to access them, however the site wont be indexed and will likely be missing metadata (e.g. title and favicon).</span>
 		},
 		{
+			id: "login-expiration",
 			q: `Why can't I access my personal ${APP_NOUN}s sometimes?`,
 			a: <span>Your login only persists for a set period of time, once it expires you won't be able to access your personal/group {APP_NOUN}s until you login again.</span>
 		},
 		{
+			id: "global-jumps",
 			q: `Why can't I create global ${APP_NOUN}s?`,
 			a: <span>Creating global {APP_NOUN}s is a privilege given only to Admins. Contact your local SysAdmin if you need your account upgraded.</span>
 		},
 		{
+			id: "group-jumps",
 			q: `How do I share a ${APP_NOUN} with select users?`,
 			a: <span>Create a Group! When you next create a {APP_NOUN}, set the type to <code>Group</code> and select the Group containing your users.<br/>The only people who will be able to use this {APP_NOUN} will be the users in the group.</span>
 		},
 		{
-			q: "Why am I already logged in sometimes?",
-			a: <span>
-				Your admin has probably set {APP_NAME} to use <b>Atlassian Crowd</b> as an identity provider.
-				Crowd enables Single-Sign-On (SSO) which allows you to log into multiple apps using the same credentials.
-				<br/><br/>For more information, contact your admin or have a look at Atlassian's documentation <a href={"https://confluence.atlassian.com/crowd/overview-of-sso-179445277.html"}>here</a>
-			</span>
-		},
-		{
+			id: "reporting-issues",
 			q: "I found a bug",
-			a: <span>Awesome! Create an <a target="_blank" rel="noopener noreferrer" href="https://github.com/djcass44/jmp/issues">issue</a> and it will be looked at.</span>
+			a: <span>Awesome! Create an <a target="_blank" rel="noopener noreferrer"
+			                               href="https://github.com/djcass44/jmp/issues">issue</a> and it will be looked at.</span>
 		},
 		{
+			id: "password-security",
 			q: "What happens to my password?",
 			a: <span>
 				Security is a very important issue and it's certainly not ignored here.
 				<br/>If using <b>local authentication</b>, your password is hashed &amp; salted then stored in the database. It is only used to verify your login and generated tokens for you to use the app. It is never decrypted again and cannot be seen by anyone.
 				<br/><br/>If using <b>LDAP</b>, your password is never stored and is only used to be verified against the LDAP server.
-				<br/><br/>If using <b>Atlassian Crowd</b>, your password is used in a similar method to LDAP. Your credentials are exchanged for a token which {APP_NAME} uses on your behalf. It also allows Crowd to log you into any other apps which your environment uses.
-				See <a href={"https://confluence.atlassian.com/crowd/overview-of-sso-179445277.html"}>here</a> for more information.
 				<br/><br/>If using <b>OAuth2</b>, you are redirected to the provider (e.g. Google) which returns an authentication token. {APP_NAME} uses this token to verify your identity when you make requests.
 			</span>
 		}
-	];
-	const toggleExpansion = (index: number) => setExpand(index !== expand ? index : -1);
-	
-	const theme = useTheme();
-	// set the appropriate colours for the card-content
-	const card = {
-		backgroundColor: getHelpCardColour(theme)
+	]);
+
+	useEffect(() => {
+		const {hash} = location;
+		if (!hash) {
+			setExpand(null);
+			return;
+		}
+		setExpand(hash.substring(1, hash.length));
+	}, [location]);
+
+	useEffect(() => {
+		// set the appropriate colours for the card-content
+		const card = {
+			backgroundColor: getHelpCardColour(theme)
+		};
+		setData(qna.map(i => {
+			return (
+				<div key={i.id}>
+					<ListItem button className={classes.item} value={i.id} onClick={() => toggleExpansion(i.id)}
+					          component={"li"}>
+						<ListItemText
+							primary={<span className={classes.title}
+							               style={{color: theme.palette.text.primary}}>{i.q}</span>}/>
+						<ListItemSecondaryAction className={classes.itemAction}>
+							<Icon path={i.id === expand ? mdiChevronUp : mdiChevronDown} size={1}
+							      color={theme.palette.primary.main}/>
+						</ListItemSecondaryAction>
+					</ListItem>
+					<Collapse in={i.id === expand} unmountOnExit timeout={"auto"}>
+						<Typography component={"div"} className={classes.content} style={card}
+						            variant={"body1"}>{i.a}</Typography>
+					</Collapse>
+				</div>
+			);
+		}));
+	}, [qna, expand]);
+
+	const toggleExpansion = (id: string): void => {
+		if (id === expand)
+			history.push("#");
+		else
+			history.push(`#${id}`);
 	};
-	const textColour = theme.palette.getContrastText(theme.palette.background.default);
-	const classes = useStyles();
-	const items = new Array<object>();
-	qna.forEach((i, index) => {
-		items.push(
-			<div key={index}>
-				<ListItem button className={classes.item} value={index} onClick={() => toggleExpansion(index)} component={'li'}>
-					<ListItemText primary={<span className={classes.title} style={{color: textColour}}>{i.q}</span>}/>
-					<ListItemSecondaryAction className={classes.itemAction}>
-						<Icon path={index === expand ? mdiChevronUp : mdiChevronDown} size={1} color={theme.palette.primary.main}/>
-					</ListItemSecondaryAction>
-				</ListItem>
-				<Collapse in={index === expand} unmountOnExit timeout={"auto"}>
-					<Typography component={'div'} className={classes.content} style={card} variant={"body1"}>{i.a}</Typography>
-				</Collapse>
-			</div>
-		)
-	});
+
 	return (
 		<>
 			<Center>
-				<Avatar className={classes.avatar} component={Paper} src={`${process.env.PUBLIC_URL}/jmp.png`} alt={process.env.REACT_APP_APP_NAME}/>
+				<Avatar
+					className={classes.avatar}
+					component={Paper}
+					src={`${process.env.PUBLIC_URL}/jmp.png`}
+					alt={APP_NAME}
+				/>
 			</Center>
 			<Center>
-				<Typography variant="h4" className={classes.name}>How can we help you?</Typography>
+				<img height={192} src={"/draw/undraw_circles_y7s2.svg"} alt={""}/>
+			</Center>
+			<Center>
+				<Typography variant="h4" className={classes.name}>Need a hand?</Typography>
 			</Center>
 			<List component='ul'>
-				{items}
+				{data}
 			</List>
 		</>
 	);

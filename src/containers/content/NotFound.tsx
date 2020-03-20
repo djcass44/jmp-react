@@ -16,58 +16,77 @@
  */
 
 import React, {useEffect} from "react";
-import {Typography, makeStyles} from "@material-ui/core";
+import {IconButton, makeStyles, Theme, Tooltip, Typography} from "@material-ui/core";
 import {useTheme} from "@material-ui/core/styles";
-// @ts-ignore
 import Center from "react-center";
-import {IconButton} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHomeOutline} from "@mdi/js";
 import {APP_NAME} from "../../constants";
+import {useHistory} from "react-router";
 
-const useStyles = makeStyles(theme => ({
-	title: {
-		fontSize: 148,
-		fontWeight: 200,
-		color: theme.palette.text.primary
-	},
+const useStyles = makeStyles((theme: Theme) => ({
 	subtitle: {
-		textAlign: 'center',
+		textAlign: "center",
 		fontFamily: "Manrope",
 		fontWeight: 500,
-		color: theme.palette.text.secondary
+		color: theme.palette.text.primary,
+		marginTop: theme.spacing(2)
 	},
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		height: '80vh'
+	overlay: {
+		position: "fixed",
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		backgroundColor: "transparent",
+		pointerEvents: "none"
 	}
 }));
 
-const NotFound = () => {
+const NotFound: React.FC = () => {
+	const classes = useStyles();
+	const theme = useTheme<Theme>();
+	const history = useHistory();
+
 	useEffect(() => {
 		window.document.title = `404 - ${APP_NAME}`;
 	}, []);
 
-	const classes = useStyles();
-	const theme = useTheme();
 	return (
-		<div className={classes.container}>
-			<div style={{justifyContent: 'center', alignItems: 'center'}}>
-				<Center><Typography className={classes.title} variant={"h1"}>404</Typography></Center>
-				<Center><Typography className={classes.subtitle} variant={"subtitle1"}>The page you're looking for doesn't exist or the server refused to disclose it.</Typography></Center>
+		<Center className={classes.overlay}>
+			<div style={{pointerEvents: "initial"}}>
 				<Center>
-					<IconButton color={"secondary"} href={"javascript:window.history.back()"} centerRipple={false} aria-label={"Go back"}>
-						<Icon path={mdiArrowLeft} size={1} color={theme.palette.secondary.main}/>
-					</IconButton>
-					<IconButton component={Link} to={"/"} color={"primary"} centerRipple={false} aria-label={"Return to home"}>
-						<Icon path={mdiHomeOutline} size={1} color={theme.palette.primary.main}/>
-					</IconButton>
+					<img height={256} src={"/draw/undraw_lost_bqr2.svg"} alt={""}/>
+				</Center>
+				<Center>
+					<Typography className={classes.subtitle} variant={"subtitle1"}>
+						The page you're looking for doesn't exist or the server refused to disclose it.
+					</Typography>
+				</Center>
+				<Center>
+					<Tooltip title="Go back">
+						<IconButton
+							color="secondary"
+							centerRipple={false}
+							aria-label="Go back"
+							onClick={() => history.goBack()}>
+							<Icon path={mdiArrowLeft} size={1} color={theme.palette.secondary.main}/>
+						</IconButton>
+					</Tooltip>
+					<Tooltip title="Return to home">
+						<IconButton
+							component={Link}
+							to="/"
+							color="primary"
+							centerRipple={false}
+							aria-label="Return to home">
+							<Icon path={mdiHomeOutline} size={1} color={theme.palette.primary.main}/>
+						</IconButton>
+					</Tooltip>
 				</Center>
 			</div>
-		</div>
+		</Center>
 	);
 };
 export default NotFound;

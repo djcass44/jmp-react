@@ -8,7 +8,7 @@ ENV DISABLE_OPENCOLLECTIVE=true
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --quiet > /dev/null
+RUN npm ci
 
 COPY ./public ./public
 COPY ./src ./src

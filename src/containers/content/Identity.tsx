@@ -18,21 +18,21 @@
 import React, {useEffect} from "react";
 import Users from "./identity/Users";
 import Groups from "./identity/Groups";
-// @ts-ignore
 import Center from "react-center";
 import Avatar from "@material-ui/core/Avatar";
-import {makeStyles, Paper} from "@material-ui/core";
+import {makeStyles, Paper, Theme} from "@material-ui/core";
 import {useTheme} from "@material-ui/core/styles";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline} from "@mdi/js";
 import Typography from "@material-ui/core/Typography";
 import {APP_NAME} from "../../constants";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	name: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
-		color: theme.palette.secondary.main
+		color: theme.palette.secondary.main,
+		marginTop: theme.spacing(2)
 	},
 	avatar: {
 		width: 56,
@@ -40,22 +40,26 @@ const useStyles = makeStyles(theme => ({
 		borderRadius: 100,
 		margin: 24,
 		padding: 6
-	},
+	}
 }));
 
-export const Identity = () => {
+const Identity: React.FC = () => {
 	useEffect(() => {
 		window.document.title = `Identity - ${APP_NAME}`;
 	}, []);
 
 	const classes = useStyles();
-	const theme = useTheme();
+	const theme = useTheme<Theme>();
 	return (
 		<div>
 			<Center>
-				<Avatar className={classes.avatar} style={{backgroundColor: theme.palette.background.paper}} component={Paper}>
+				<Avatar className={classes.avatar} style={{backgroundColor: theme.palette.background.paper}}
+				        component={Paper}>
 					<Icon path={mdiAccountGroupOutline} size={2} color={theme.palette.primary.main}/>
 				</Avatar>
+			</Center>
+			<Center>
+				<img height={192} src={"/draw/undraw_Group_chat_unwm.svg"} alt={""}/>
 			</Center>
 			<Center>
 				<Typography variant={"h4"} className={classes.name}>Users &amp; Groups</Typography>

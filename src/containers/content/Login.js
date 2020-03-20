@@ -17,18 +17,17 @@
 
 import React, {useEffect, useState} from "react";
 import {Button, Card, CardContent, CircularProgress, Grid, makeStyles, Typography} from "@material-ui/core";
-import {OAUTH_REQUEST, oauthRequest} from "../../actions/Auth";
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import SocialButton from "../../components/widget/SocialButton";
-import {mdiGithubCircle, mdiGoogle} from "@mdi/js";
-import {oauth2Discover} from "../../actions/Oauth";
+import {mdiGithub, mdiGoogle, mdiShieldAccount} from "@mdi/js";
 import {APP_NAME} from "../../constants";
 import {useTheme} from "@material-ui/core/styles";
 import ValidatedTextField from "../../components/field/ValidatedTextField";
 import getIconColour from "../../style/getIconColour";
 import {resetError} from "../../actions/Generic";
-import getProviderCount from "../../selectors/getProviderCount";
+import {OAUTH_REQUEST, oauthRequest} from "../../store/actions/auth/AuthRequest";
+import {discoverOAuth} from "../../store/actions/auth/DiscoverOAuth";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -94,9 +93,9 @@ export default ({history}) => {
 	// lifecycle hooks
 	useEffect(() => {
 		window.document.title = `Login - ${APP_NAME}`;
-		resetError(dispatch, OAUTH_REQUEST);
-		oauth2Discover(dispatch, "github");
-		oauth2Discover(dispatch, "google");
+		discoverOAuth(dispatch, "github");
+		discoverOAuth(dispatch, "google");
+		discoverOAuth(dispatch, "keycloak");
 	}, [dispatch]);
 
 	useEffect(() => {
@@ -131,104 +130,97 @@ export default ({history}) => {
 		resetError(dispatch, OAUTH_REQUEST);
 	};
 
-	let errorMessage = null;
-	if (error != null) {
-		errorMessage = (
-			<Center>
-				<span style={{color: theme.palette.error.main}}>
-					{(error.toString().startsWith("Unauthorized") || error.toString().includes("status code 404")) ? "Incorrect username or password" : error.toString()}
-				</span>
-			</Center>
-		);
-	}
 	return (
 		<Center className={classes.overlay}>
-			{loading || isLoggedIn === true ?
-				<CircularProgress/>
-				:
-				<>
-					<Grid style={{height: "100vh"}} container spacing={4} alignContent="center" justify="center">
-						<Grid item lg={2} md={false}/>
-						<Grid item lg={8} md={12}>
-							<CardContent style={{margin: 12, pointerEvents: "initial"}}>
-								<Grid container spacing={4} alignContent="center" justify="center">
-									<Grid item xs={12}>
-										<Center>
-											<img src={`${process.env.PUBLIC_URL}/jmp.png`} alt="App icon" height={72}/>
-										</Center>
-										<Typography className={classes.banner} variant="h2"
-										            align="center">{APP_NAME}</Typography>
-									</Grid>
-									<Grid item xs={12} sm={9} md={6} lg={4}>
-										<Card style={{padding: 16, borderRadius: 12}}>
-											{page === 0 && <ValidatedTextField
-												data={username}
-												setData={setUsername}
-												invalidLabel="Username must be a minimum of 3 characters"
-												fieldProps={{
-													required: true,
-													autoFocus: true,
-													autoComplete: "username",
-													margin: "dense",
-													id: "username",
-													label: "Username",
-													variant: "outlined",
-													fullWidth: true
-												}}
-											/>}
-											{page === 1 && <ValidatedTextField
-												data={password}
-												setData={setPassword}
-												invalidLabel="Password must be a minimum of 8 characters"
-												fieldProps={{
-													required: true,
-													type: "password",
-													autoComplete: "current-password",
-													margin: "dense",
-													id: "password",
-													label: "Password",
-													variant: "outlined",
-													fullWidth: true
-												}}
-											/>}
-											<Button style={{
-												marginTop: 8,
-												textTransform: "none",
-												color: getIconColour(theme)
-											}} className={classes.title} onClick={() => onNext()} variant="contained"
-											        color="primary"
-											        fullWidth size="large" type="submit"
-											        disabled={!valid || page >= 2}>
-												Continue
-											</Button>
-											{(page > 0 || error != null) &&
-											<Button className={classes.resetButton} color="primary"
-											        onClick={() => onReset()}>Reset</Button>}
-										</Card>
-									</Grid>
+			<>
+				<Grid style={{height: "100vh"}} container spacing={4} alignContent="center" justify="center">
+					<Grid item lg={2} md={false}/>
+					<Grid item lg={8} md={12}>
+						<CardContent style={{margin: 12, pointerEvents: "initial"}}>
+							<Grid container spacing={4} alignContent="center" justify="center">
+								<Grid item xs={12}>
+									<Center>
+										<img src={`${process.env.PUBLIC_URL}/jmp.png`} alt="App icon" height={72}/>
+									</Center>
+									<Typography className={classes.banner} variant="h2"
+									            align="center">{APP_NAME}</Typography>
 								</Grid>
-								<Typography style={{padding: 8}}>
-									{errorMessage}
-								</Typography>
-								{getProviderCount(providers) > 0 &&
-									<>
-										<p className={classes.oauthMessage}>Alternatively, login with</p>
-										<Center>
-											{providers['github'] != null &&
-											<SocialButton url={providers['github']} name={"GitHub"} colour={"#171516"}
-												              icon={mdiGithubCircle}/>}
-											{providers['google'] != null &&
-											<SocialButton url={providers['google']} name={"Google"} colour={"#4285F4"}
-												              icon={mdiGoogle}/>}
-										</Center>
-									</>
-								}
-							</CardContent>
-						</Grid>
-						<Grid item lg={2} md={false}/>
+								<Grid item xs={12} sm={9} md={6} lg={4}>
+									<Card style={{padding: 16, borderRadius: 12}}>
+										{page === 0 && <ValidatedTextField
+											data={username}
+											setData={setUsername}
+											invalidLabel="Username must be a minimum of 3 characters"
+											fieldProps={{
+												required: true,
+												autoFocus: true,
+												autoComplete: "username",
+												margin: "dense",
+												id: "username",
+												label: "Username",
+												variant: "outlined",
+												fullWidth: true
+											}}
+										/>}
+										{page === 1 && <ValidatedTextField
+											data={password}
+											setData={setPassword}
+											invalidLabel="Password must be a minimum of 8 characters"
+											fieldProps={{
+												required: true,
+												type: "password",
+												autoComplete: "current-password",
+												margin: "dense",
+												id: "password",
+												label: "Password",
+												variant: "outlined",
+												fullWidth: true
+											}}
+										/>}
+										<Button style={{
+											marginTop: 8,
+											textTransform: "none",
+											color: getIconColour(theme)
+										}} className={classes.title} onClick={() => onNext()} variant="contained"
+										        color="primary"
+										        fullWidth size="large" type="submit"
+										        disabled={!valid || page >= 2 || loading === true || isLoggedIn === true}>
+											Continue
+											{(loading === true || isLoggedIn === true) &&
+											<CircularProgress style={{padding: 4}} size={15} thickness={7}/>}
+										</Button>
+										{error && <Typography style={{padding: 8}} color="error" align="center">
+											{error.toString().startsWith("ApiError: 401") ? "Incorrect username or password" : "Something went wrong"}
+										</Typography>}
+										{(page > 0 || error != null) &&
+										<Button className={classes.resetButton} color="primary"
+										        disabled={loading === true || isLoggedIn === true}
+										        onClick={() => onReset()}>Reset</Button>}
+									</Card>
+								</Grid>
+							</Grid>
+							{providers.size > 0 &&
+							<>
+								<p className={classes.oauthMessage}>Alternatively, login with</p>
+								<Center>
+									{providers.get("github") != null &&
+									<SocialButton url={providers.get("github")} name={"GitHub"} colour={"#171516"}
+									              icon={mdiGithub}/>}
+									{providers.get("google") != null &&
+									<SocialButton url={providers.get("google")} name={"Google"} colour={"#4285F4"}
+									              icon={mdiGoogle}/>}
+									{providers.get('keycloak') != null &&
+									<SocialButton url={providers.get('keycloak')} name={"Keycloak"}
+									              colour={"#568bf4"}
+									              icon={mdiShieldAccount}/>}
+								</Center>
+							</>
+							}
+						</CardContent>
 					</Grid>
-				</>
-			}
+					<Grid item lg={2} md={false}/>
+				</Grid>
+			</>
 		</Center>
 	);
 };

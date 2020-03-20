@@ -15,64 +15,44 @@
  *
  */
 
-import React, {useEffect, useState} from "react";
-import {FormControlLabel, ListSubheader, makeStyles, Switch, Typography, Badge, Button} from "@material-ui/core";
-import InfoItem from "../../../components/content/settings/InfoItem";
+import React, {useState} from "react";
+import {Card, ListItem, ListItemText, ListSubheader, Switch} from "@material-ui/core";
 import {LS_DARK} from "../../../constants";
-import Icon from "@mdi/react";
-import {mdiSettingsOutline} from "@mdi/js";
-import {useTheme} from "@material-ui/core/styles";
+import {setThemeMode} from "../../../store/actions/Generic";
+import {useDispatch, useSelector} from "react-redux";
+import {TState} from "../../../store/reducers";
+import {GenericState} from "../../../store/reducers/generic";
 
-const useStyles = makeStyles(theme => ({
-	title: {
-		fontFamily: "Manrope",
-		fontWeight: 500
-	},
-	content: {
-		fontSize: 14,
-		flex: 1
-	},
-	warningText: {
-		color: theme.palette.error.main
-	},
-	icon: {
-		paddingRight: 8
-	}
-}));
+const General: React.FC = () => {
+	// hooks
+	const dispatch = useDispatch();
 
-const General = () => {
-	const [dark, setDark] = useState(false);
+	//global state
+	const {themeMode} = useSelector<TState, GenericState>(state => state.generic);
 
-	useEffect(() => {
-		setDark(localStorage.getItem(LS_DARK) === 'true');
-	}, []);
+	// local state
+	const [dark, setDark] = useState<boolean>(themeMode === "dark");
 
 	const onSetDark = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const {checked} = e.target;
 		setDark(checked);
-	};
-	const onSave = () => {
-		localStorage.setItem(LS_DARK, dark.toString());
-		window.location.reload(); // Chad refresh
+
+		const theme = checked ? "dark" : "light";
+		localStorage.setItem(LS_DARK, theme);
+		setThemeMode(dispatch, theme);
 	};
 
-	const classes = useStyles();
-	const theme = useTheme();
-	const visual = (
-		<div>
-			<Typography className={classes.warningText} variant="body1">This feature is in active development and may contain graphical issues.</Typography>
-			<FormControlLabel control={
-				<Switch checked={dark} onChange={(e) => onSetDark(e)}/>
-			} label="Dark theme"/>
-			<Button variant="contained" color="primary" onClick={() => onSave()}>Save</Button>
-		</div>
-	);
 	return (
 		<div>
-			<ListSubheader className={classes.title} inset component="div">General</ListSubheader>
-			<InfoItem title={<Badge color="primary" badgeContent="BETA">Visuals & theme</Badge>} content={visual} icon={
-				<Icon className={classes.icon} path={mdiSettingsOutline} size={1} color={theme.palette.primary.main}/>
-			} error={null} open={false}/>
+			<ListSubheader>
+				Appearance
+			</ListSubheader>
+			<Card>
+				<ListItem>
+					<ListItemText primary="Theme" secondary={`${dark ? "Dark" : "Light"} theme`}/>
+					<Switch checked={dark} onChange={e => onSetDark(e)}/>
+				</ListItem>
+			</Card>
 		</div>
 	)
 };

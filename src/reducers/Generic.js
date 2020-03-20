@@ -15,12 +15,7 @@
  *
  */
 
-import {
-	GENERIC_FILTER_SET,
-	GENERIC_GET_VERSION,
-	GENERIC_SET_SORT,
-	SOCKET_APP_INIT
-} from "../actions/Generic";
+import {GENERIC_FILTER_SET, GENERIC_GET_VERSION, GENERIC_SET_SORT, SOCKET_APP_INIT} from "../actions/Generic";
 import {LS_APPID, LS_SORT} from "../constants";
 
 const initialState = {
@@ -38,8 +33,8 @@ export default (state = initialState, action) => {
 		case `${GENERIC_GET_VERSION}_SUCCESS`:
 			return {...state, version: action.payload};
 		case `${SOCKET_APP_INIT}`: {
-			let id = localStorage.getItem(LS_APPID);
-			if(id !== action.payload) {
+			const id = localStorage.getItem(LS_APPID);
+			if (id !== action.payload) {
 				localStorage.setItem(LS_APPID, action.payload);
 				window.location.reload();
 			}

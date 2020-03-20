@@ -8,13 +8,13 @@ import {CircularProgress, InputLabel, LinearProgress, makeStyles, Select, Typogr
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useDispatch, useSelector} from "react-redux";
-import {GET_USER_GROUPS, getUserGroups} from "../../actions/Groups";
-import {PUT_JUMP, putJumpDispatch} from "../../actions/Jumps";
 import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
 import {APP_NOUN} from "../../constants";
 import {defaultState} from "../../reducers/Modal";
 import {resetError} from "../../actions/Generic";
 import ValidatedTextField from "../../components/field/ValidatedTextField";
+import {GET_USER_GROUPS, getUserGroups} from "../../store/actions/groups/GetUserGroups";
+import {PUT_JUMP, putJump} from "../../store/actions/jumps/PutJump";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -46,7 +46,7 @@ const JumpDialog = () => {
 	// hooks
 	const dispatch = useDispatch();
 
-	// seletors
+	// global state
 	const loadingGroups = useSelector(state => state.loading[GET_USER_GROUPS]);
 	const loading = useSelector(state => state.loading[PUT_JUMP]);
 	const error = useSelector(state => state.errors[PUT_JUMP]);
@@ -56,6 +56,7 @@ const JumpDialog = () => {
 
 	const uid = userProfile && userProfile.id;
 
+	// local state
 	const [name, setName] = useState(initialName);
 	const [url, setUrl] = useState(initialUrl);
 	const [type, setType] = useState('');
@@ -83,7 +84,7 @@ const JumpDialog = () => {
 	const onSubmit = () => {
 		// ignore the type error below, it's fine
 		const gid = type === 2 ? `?gid=${groupId}` : '';
-		putJumpDispatch(dispatch, headers, JSON.stringify({
+		putJump(dispatch, headers, JSON.stringify({
 			name: name.value,
 			location: url.value,
 			personal: type,
