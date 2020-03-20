@@ -7,12 +7,13 @@ steps:
     image: harbor.v2.dcas.dev/library/drone-kaniko
     pull: always
     settings:
-      registry: index.docker.io/djcass44
-      repo: jmp-ui
+      registry: harbor.v2.dcas.dev
+      repo: dcas.dev/jmp-ui
       cache: true
-      cache_repo: harbor.v2.dcas.dev/dcas.dev
       tags:
+        - latest
         - ${DRONE_BRANCH/\//-}
+        - ${DRONE_COMMIT_SHA}
       authjson_docker:
         from_secret: DOCKER_AUTH
 trigger:
