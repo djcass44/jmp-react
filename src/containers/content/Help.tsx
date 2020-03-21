@@ -187,7 +187,7 @@ const Help: React.FC = () => {
 				<Avatar
 					className={classes.avatar}
 					component={Paper}
-					src={`${process.env.PUBLIC_URL}/jmp.png`}
+					src={`${process.env.PUBLIC_URL}/jmp2.png`}
 					alt={APP_NAME}
 				/>
 			</Center>

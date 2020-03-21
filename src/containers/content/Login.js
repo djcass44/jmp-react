@@ -140,7 +140,7 @@ export default ({history}) => {
 							<Grid container spacing={4} alignContent="center" justify="center">
 								<Grid item xs={12}>
 									<Center>
-										<img src={`${process.env.PUBLIC_URL}/jmp.png`} alt="App icon" height={72}/>
+										<img src={`${process.env.PUBLIC_URL}/jmp2.png`} alt="App icon" height={72}/>
 									</Center>
 									<Typography className={classes.banner} variant="h2"
 									            align="center">{APP_NAME}</Typography>

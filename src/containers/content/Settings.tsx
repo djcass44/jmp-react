@@ -1,16 +1,13 @@
 import React, {useEffect} from "react";
 import Center from "react-center";
 import {Avatar, makeStyles, Paper, Theme, Typography} from "@material-ui/core";
-import Info from "./settings/Info";
-import General from "./settings/General";
-import Auth from "./settings/Auth";
 import {useSelector} from "react-redux";
-import Icon from "@mdi/react";
-import {mdiCogOutline} from "@mdi/js";
 import {APP_NAME} from "../../constants";
-import {useTheme} from "@material-ui/core/styles";
 import {TState} from "../../store/reducers";
 import {AuthState} from "../../store/reducers/auth";
+import Auth from "./settings/Auth";
+import General from "./settings/General";
+import Info from "./settings/Info";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	name: {
@@ -31,7 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Settings: React.FC = () => {
 	const classes = useStyles();
-	const theme = useTheme();
 
 	useEffect(() => {
 		window.document.title = `Settings - ${APP_NAME}`;
@@ -42,15 +38,18 @@ const Settings: React.FC = () => {
 	return (
 		<div>
 			<Center>
-				<Avatar className={classes.avatar} component={Paper}>
-					<Icon path={mdiCogOutline} size={2} color={theme.palette.primary.main}/>
-				</Avatar>
+				<Avatar
+					className={classes.avatar}
+					component={Paper}
+					src={`${process.env.PUBLIC_URL}/jmp2.png`}
+					alt={APP_NAME}
+				/>
 			</Center>
 			<Center>
-				<img height={192} src={"/draw/undraw_preferences_uuo2.svg"} alt={""}/>
+				<img height={192} src="/draw/undraw_preferences_uuo2.svg" alt=""/>
 			</Center>
 			<Center>
-				<Typography variant={"h4"} className={classes.name}>Settings</Typography>
+				<Typography variant="h4" className={classes.name}>Settings</Typography>
 			</Center>
 			<General/>
 			{isAdmin && <Auth/>}

@@ -25,16 +25,16 @@ import {Link} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiHelpCircleOutline, mdiMagnify} from "@mdi/js";
 import {Avatar} from "evergreen-ui";
+import {useTheme} from "@material-ui/core/styles";
+import {useLocation} from "react-router";
 import BackButton from "../components/widget/BackButton";
 import getIconColour from "../style/getIconColour";
 import {APP_MSG, APP_NAME} from "../constants";
-import {useTheme} from "@material-ui/core/styles";
-import UserMenu from "./content/identity/profile/UserMenu";
 import {TState} from "../store/reducers";
 import {AuthState} from "../store/reducers/auth";
-import {useLocation} from "react-router";
 import {setUserSearch} from "../store/actions/users";
 import DwellInputBase from "../components/widget/DwellInputBase";
+import UserMenu from "./content/identity/profile/UserMenu";
 
 const bgTransition = (time: number | string): string => `background-color ${time}ms linear`;
 
@@ -164,9 +164,9 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 	useEffect(() => {
 		setShowSearch(searchRoutes.includes(location.pathname));
 		const url = location.pathname + location.search;
-		if (url !== '')
+		if (url !== "")
 			setLoginUrl(`/login?target=${url}`);
-	}, [location.key, searchRoutes]);
+	}, [location.key, location.pathname, location.search, searchRoutes]);
 
 	const handleMenuClose = () => {
 		setAnchorEl(null);
@@ -181,11 +181,11 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 		<div className={classes.root}>
 			<>
 				<Toolbar className={classes.main}>
-					{location.pathname !== "/" && loading === false ? <BackButton label={""} to={"/"}/> : ""}
-					<Typography className={classes.brand} variant={"h6"} color={"primary"}>
+					{location.pathname !== "/" && loading === false ? <BackButton label="" to="/"/> : ""}
+					<Typography className={classes.brand} variant="h6" color="primary">
 						{APP_NAME}
 					</Typography>
-					<Typography className={classes.title} style={{fontWeight: 300}} variant={"h6"} color={"secondary"}>
+					<Typography className={classes.title} style={{fontWeight: 300}} variant="h6" color="secondary">
 						{APP_MSG}
 					</Typography>
 					{(showSearch && loading !== true) && <div className={classes.search}>
@@ -206,8 +206,8 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 					{loading === false && <>
 						<div className={classes.sectionDesktop}>
 							{location.pathname !== "/help" &&
-							<IconButton style={{margin: 8}} component={Link} centerRipple={false} color={"inherit"}
-							            to={"/help"}>
+							<IconButton style={{margin: 8}} component={Link} centerRipple={false} color="inherit"
+							            to="/help">
 								<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
 							</IconButton>}
 						</div>

@@ -21,9 +21,6 @@ import Groups from "./identity/Groups";
 import Center from "react-center";
 import Avatar from "@material-ui/core/Avatar";
 import {makeStyles, Paper, Theme} from "@material-ui/core";
-import {useTheme} from "@material-ui/core/styles";
-import Icon from "@mdi/react";
-import {mdiAccountGroupOutline} from "@mdi/js";
 import Typography from "@material-ui/core/Typography";
 import {APP_NAME} from "../../constants";
 
@@ -49,14 +46,15 @@ const Identity: React.FC = () => {
 	}, []);
 
 	const classes = useStyles();
-	const theme = useTheme<Theme>();
 	return (
 		<div>
 			<Center>
-				<Avatar className={classes.avatar} style={{backgroundColor: theme.palette.background.paper}}
-				        component={Paper}>
-					<Icon path={mdiAccountGroupOutline} size={2} color={theme.palette.primary.main}/>
-				</Avatar>
+				<Avatar
+					className={classes.avatar}
+					component={Paper}
+					src={`${process.env.PUBLIC_URL}/jmp2.png`}
+					alt={APP_NAME}
+				/>
 			</Center>
 			<Center>
 				<img height={192} src={"/draw/undraw_Group_chat_unwm.svg"} alt={""}/>
