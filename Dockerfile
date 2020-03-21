@@ -22,7 +22,7 @@ LABEL maintainer="Django Cass <django@dcas.dev>"
 
 # update system packages
 RUN apk upgrade --no-cache && \
-    add --no-cache bash
+    apk add --no-cache bash
 
 RUN mkdir -p /var/log/nginx && mkdir -p /var/www/html
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
