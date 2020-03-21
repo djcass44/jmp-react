@@ -24,7 +24,7 @@ import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import {fade} from "@material-ui/core/styles";
 import JumpItem from "./jmp/JumpItem";
 import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
-import {getJumps} from "../../store/actions/jumps/GetJumps";
+import {GET_JUMP, getJumps} from "../../store/actions/jumps/GetJumps";
 import {setJumpExpand, setJumpOffset, setJumpSearch} from "../../store/actions/jumps";
 import DwellInputBase from "../../components/widget/DwellInputBase";
 import Icon from "@mdi/react";
@@ -113,6 +113,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
+const emptyImages = [
+	"undraw_no_data_qbuo.svg",
+	"undraw_lost_bqr2.svg",
+	"undraw_empty_xct9.svg"
+];
+
 export default () => {
 	// hooks
 	const classes = useStyles();
@@ -123,9 +129,11 @@ export default () => {
 	const pagedJumps = useSelector<TState, Page<Jump>>(state => state.jumps.jumps);
 	const {offset, search} = useSelector<TState, JumpsState>(state => state.jumps);
 	const {headers, isLoggedIn} = useSelector<TState, AuthState>(state => state.auth);
+	const loading = useSelector<TState, boolean>(state => state.loading[GET_JUMP]);
 
 	// local state
 	const [data, setData] = useState<Array<ReactNode>>([]);
+	const [image, setImage] = useState<string>(emptyImages[Math.floor(Math.random() * emptyImages.length)]);
 
 	const onSearch = (o = offset) => {
 		getJumps(dispatch, headers, search, Number(o / 8) || 0, 8);
@@ -141,6 +149,7 @@ export default () => {
 		setJumpOffset(dispatch, pagedJumps.number * 8);
 		// Loop-d-loop
 		setData(content.map(i => (<JumpItem jump={i} key={i.id}/>)));
+		setImage(emptyImages[Math.floor(Math.random() * emptyImages.length)]);
 	}, [pagedJumps, offset]);
 
 	const onPageChange = (off: number) => {
@@ -188,13 +197,22 @@ export default () => {
 			</div>
 			<div>
 				<div key="root" style={{borderRadius: 12, marginBottom: 8}}>
-					<List component="ul">
+					<List>
 						{data}
-						<Zoom in={data.length === 0}>
-							<Typography className={`${classes.title} ${classes.nothing}`} color="primary">
-								Nothing could be found
-							</Typography>
-						</Zoom>
+						{data.length === 0 && !loading && <Center>
+							<div>
+								<Center>
+									<img
+										width={128}
+										src={`/draw/${image}`}
+										alt=""
+									/>
+								</Center>
+								<Typography className={`${classes.title} ${classes.nothing}`} color="textPrimary">
+									Nothing could be found
+								</Typography>
+							</div>
+						</Center>}
 					</List>
 				</div>
 				<Zoom in={pagedJumps.totalElements > pagedJumps.size}>

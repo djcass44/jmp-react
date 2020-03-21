@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	content: {
 		padding: 16,
 		borderRadius: 12,
-		color: theme.palette.text.secondary
+		color: theme.palette.text.primary
 	},
 	item: {
 		borderRadius: 12
@@ -150,16 +150,24 @@ const Help: React.FC = () => {
 					<ListItem button className={classes.item} value={i.id} onClick={() => toggleExpansion(i.id)}
 					          component={"li"}>
 						<ListItemText
-							primary={<span className={classes.title}
-							               style={{color: theme.palette.text.primary}}>{i.q}</span>}/>
+							primary={<span
+								className={classes.title}
+								style={{color: theme.palette.text.primary}}>
+								{i.q}
+							</span>}
+						/>
 						<ListItemSecondaryAction className={classes.itemAction}>
 							<Icon path={i.id === expand ? mdiChevronUp : mdiChevronDown} size={1}
-							      color={theme.palette.primary.main}/>
+							      color={theme.palette.text.hint}/>
 						</ListItemSecondaryAction>
 					</ListItem>
-					<Collapse in={i.id === expand} unmountOnExit timeout={"auto"}>
-						<Typography component={"div"} className={classes.content} style={card}
-						            variant={"body1"}>{i.a}</Typography>
+					<Collapse in={i.id === expand} unmountOnExit timeout="auto">
+						<Typography
+							className={classes.content}
+							style={card}
+							variant="body1">
+							{i.a}
+						</Typography>
 					</Collapse>
 				</div>
 			);

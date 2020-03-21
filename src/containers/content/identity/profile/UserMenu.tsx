@@ -73,7 +73,7 @@ const UserMenu: React.FC<UserMenuProps> = ({user, loginUrl, onClose}) => {
 
 	const onPrivacyClicked = (): void => {
 		onClose();
-		history.push("/help");
+		history.push("/help#data-collection");
 	};
 
 	return (
