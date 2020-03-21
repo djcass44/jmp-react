@@ -1,15 +1,16 @@
 import {InfoActionType} from "../actions/info";
 import {GET_INFO_SYS_SUCCESS} from "../actions/info/GetInfoSystem";
 import {GET_INFO_STAT_FAILURE, GET_INFO_STAT_SUCCESS} from "../actions/info/GetInfoHealth";
+import {SystemInfo} from "../../config/types/SystemInfo";
 
 export interface InfoState {
-	systemInfo: object,
+	systemInfo: SystemInfo | null,
 	status: object,
 	statusCheck: null
 }
 
 const initialState: InfoState = {
-	systemInfo: {},
+	systemInfo: null,
 	status: {},
 	statusCheck: null
 };

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
 	Avatar,
@@ -17,6 +17,7 @@ import {TState} from "../../../store/reducers";
 import {AuthState} from "../../../store/reducers/auth";
 import {getInfoSystem} from "../../../store/actions/info/GetInfoSystem";
 import {APP_NAME} from "../../../constants";
+import {InfoState} from "../../../store/reducers/info";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	versionInfo: {
@@ -31,8 +32,18 @@ const Info: React.FC = () => {
 
 	// global state
 	const {headers, isAdmin} = useSelector<TState, AuthState>(state => state.auth);
-	// @ts-ignore
-	const {systemInfo} = useSelector<TState, object>(state => state.info);
+	const {systemInfo} = useSelector<TState, InfoState>(state => state.info);
+
+	// local state
+	const [buildTime, setBuildTime] = useState(new Date(0));
+
+	useEffect(() => {
+		if (systemInfo == null)
+			return;
+		const date = new Date(0);
+		date.setUTCSeconds(systemInfo.build.time);
+		setBuildTime(date);
+	}, [systemInfo]);
 
 	useEffect(() => {
 		getInfoSystem(dispatch, headers);
@@ -62,7 +73,12 @@ const Info: React.FC = () => {
 				<ListItem>
 					<ListItemText
 						className={classes.versionInfo}
-						secondary={systemInfo?.version || "No version information found."}
+						secondary={systemInfo == null ? "No version information found." : <div>
+							<p>OS {`${systemInfo.build.os.name} ${systemInfo.build.os.version} (${systemInfo.build.os.arch})`}</p>
+							<p>Java {`${systemInfo.build.java.version} (${systemInfo.build.java.vendor})`}</p>
+							<p>Built
+								from {`${systemInfo.build.git.commit || "unknown commit"} on ${buildTime.toDateString()}`}</p>
+						</div>}
 					/>
 				</ListItem>
 			</Card>

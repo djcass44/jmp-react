@@ -18,6 +18,7 @@
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
 import {BASE_URL} from "../../../constants";
+import {SystemInfo} from "../../../config/types/SystemInfo";
 
 export const GET_INFO_SYS = "GET_INFO_SYS";
 export const GET_INFO_SYS_REQUEST = "GET_INFO_SYS_REQUEST";
@@ -31,7 +32,7 @@ interface GetInfoSystemRequestAction {
 
 interface GetInfoSystemSuccessAction {
 	type: typeof GET_INFO_SYS_SUCCESS;
-	payload: any;
+	payload: SystemInfo;
 }
 
 interface GetInfoSystemFailureAction {

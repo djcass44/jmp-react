@@ -22,6 +22,7 @@ import {Collapse, IconButton, makeStyles, Theme, Tooltip, Typography} from "@mat
 import {APP_KEY, APP_NAME, BASE_URL} from "../../../constants";
 import Link from "@material-ui/core/Link";
 import {Alert} from "@material-ui/lab";
+import {Code} from "evergreen-ui";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	browserBar: {
@@ -65,12 +66,19 @@ const BrowserGuide: React.FC = () => {
 			colour: '#1da462',
 			name: "Google Chrome",
 			content: <span>
-				1. Open settings (<code>chrome://settings/searchEngines</code>)<br/>
+				<Typography variant="subtitle2">Skip setup using the&nbsp;
+					<Link target="_blank" rel="noopener noreferrer"
+					      href="https://chrome.google.com/webstore/detail/jmp/nkhlenilbcdnmekcknikcjoiappodhgm">Chrome addon!</Link>
+				</Typography>
+				Make sure to go to extension settings and enter <Code>{BASE_URL}</Code>
+				<br/>
+				<br/>
+				1. Open settings (<Code>chrome://settings/searchEngines</Code>)<br/>
 				2. Click <b>Manage search engines</b><br/>
 				3. Add new with the following information<br/>
-				&emsp;Search engine = <kbd>{APP_NAME}</kbd><br/>
-				&emsp;Keyword = <kbd>{APP_KEY}</kbd><br/>
-				&emsp;URL = <kbd>{BASE_URL}/jmp?query=%s</kbd>
+				&emsp;Search engine = <Code>{APP_NAME}</Code><br/>
+				&emsp;Keyword = <Code>{APP_KEY}</Code><br/>
+				&emsp;URL = <Code>{BASE_URL}/jmp?query=%s</Code>
 			</span>,
 			info: `${APP_NAME} has only been tested in Google Chrome, Chromium and Edge Chromium. Its usability in other Chromium-based browsers is unknown.`,
 			severity: "info"
@@ -84,13 +92,13 @@ const BrowserGuide: React.FC = () => {
 					<Link target="_blank" rel="noopener noreferrer"
 					      href="https://addons.mozilla.org/en-US/firefox/addon/jmp-webext/">Firefox addon!</Link>
 				</Typography>
-				Make sure to go to extension settings and enter {BASE_URL}
+				Make sure to go to extension settings and enter <Code>{BASE_URL}</Code>
 				<br/>
 				<br/>
 				Add a new bookmark with the following values<br/>
-				&emsp;Name = <kbd>{APP_NAME}</kbd><br/>
-				&emsp;Keyword = <kbd>{APP_KEY}</kbd><br/>
-				&emsp;Location = <kbd>{BASE_URL}/jmp?query=%s</kbd>
+				&emsp;Name = <Code>{APP_NAME}</Code><br/>
+				&emsp;Keyword = <Code>{APP_KEY}</Code><br/>
+				&emsp;Location = <Code>{BASE_URL}/jmp?query=%s</Code>
 			</div>,
 			severity: "info"
 		},
@@ -99,12 +107,19 @@ const BrowserGuide: React.FC = () => {
 			colour: "#3277bc",
 			name: "Microsoft Edge",
 			content: <span>
-				1. Open settings (<code>edge://settings/searchEngines</code>)<br/>
+				<Typography variant="subtitle2">Skip setup using the&nbsp;
+					<Link target="_blank" rel="noopener noreferrer"
+					      href="https://chrome.google.com/webstore/detail/jmp/nkhlenilbcdnmekcknikcjoiappodhgm">Chrome addon!</Link>
+				</Typography>
+				Make sure to go to extension settings and enter <Code>{BASE_URL}</Code>
+				<br/>
+				<br/>
+				1. Open settings (<Code>edge://settings/searchEngines</Code>)<br/>
 				2. Click <b>Manage search engines</b><br/>
 				3. Add new with the following information<br/>
-				&emsp;Search engine = <kbd>{APP_NAME}</kbd><br/>
-				&emsp;Keyword = <kbd>{APP_KEY}</kbd><br/>
-				&emsp;URL = <kbd>{BASE_URL}/jmp?query=%s</kbd>
+				&emsp;Search engine = <Code>{APP_NAME}</Code><br/>
+				&emsp;Keyword = <Code>{APP_KEY}</Code><br/>
+				&emsp;URL = <Code>{BASE_URL}/jmp?query=%s</Code>
 			</span>,
 			severity: "info"
 		},
