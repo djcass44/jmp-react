@@ -15,32 +15,12 @@
  *
  */
 
-export interface SystemInfo {
-	build?: BuildInfo;
-}
+import {Theme, Tooltip, withStyles} from "@material-ui/core";
 
-interface BuildInfo {
-	os: OsInfo;
-	artifact: string;
-	git: GitInfo;
-	group: string;
-	java: JavaInfo;
-	version: string;
-	name: string;
-	time: number;
-}
-
-interface GitInfo {
-	commit: string;
-}
-
-interface JavaInfo {
-	version: string;
-	vendor: string;
-}
-
-interface OsInfo {
-	version: string;
-	name: string;
-	arch: string;
-}
+export default withStyles((theme: Theme) => ({
+	tooltip: {
+		backgroundColor: theme.palette.background.paper,
+		color: theme.palette.text.primary,
+		boxShadow: theme.shadows[1]
+	}
+}))(Tooltip);

@@ -22,48 +22,54 @@ import Icon from "@mdi/react";
 import {Skeleton} from "@material-ui/lab";
 import React from "react";
 import Img from "react-image";
-import getLegacyJumpType from "../../../selectors/getLegacyJumpType";
 import {Jump} from "../../../types";
+import getHelpCardColour from "../../../selectors/getHelpCardColour";
+import getColourFromHex from "../../../style/getColourFromHex";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme: Theme) => ({
+	avatar: {
+		margin: theme.spacing(1)
+	},
+	image: {
+		margin: theme.spacing(0.5)
+	}
+}));
 
 interface JumpAvatarProps {
 	jump: Jump;
-	background?: boolean;
 	palette: any;
 	loading: boolean;
 	error: Error | null;
 }
 
-const JumpAvatar: React.FC<JumpAvatarProps> = ({jump, background = true, palette, loading, error}: JumpAvatarProps) => {
+const JumpAvatar: React.FC<JumpAvatarProps> = ({jump, palette, loading, error}: JumpAvatarProps) => {
 	// hooks
 	const theme = useTheme<Theme>();
+	const classes = useStyles();
 
-	const personal = getLegacyJumpType(jump);
-	const scheme = getAvatarScheme(theme, personal);
-	let icon;
-	switch (personal) {
-		default:
-			icon = mdiEarth;
-			break;
-		case 1:
-			icon = mdiAccountCircleOutline;
-			break;
-		case 2:
-			icon = mdiAccountGroupOutline;
-			break;
+	const personal = jump.public ? 0 : jump.owner != null ? 1 : 2;
+	// set the appropriate colours for the card-content
+	const avatarPalette = getAvatarFromPalette(theme, "", palette);
+	let bg: string | null = getHelpCardColour(theme);
+	if (!loading && error == null) {
+		try {
+			bg = getColourFromHex(avatarPalette.bg, 0.2);
+		} catch (e) {
+			console.error(e);
+		} // this will probably only be thrown by firefox, so just swallow it
 	}
-	const avatarPalette = error == null ? getAvatarFromPalette(theme, icon, palette) : null;
-	const avatar = !loading && error == null ? {
-		icon: icon,
-		bg: background ? avatarPalette?.bg : "transparent",
-		fg: avatarPalette?.fg
-	} : {
-		icon: icon,
-		bg: background ? scheme[0] : "transparent",
+	const scheme = getAvatarScheme(theme, personal);
+	const avatar = {
+		icon: personal === 0 ? mdiEarth : personal === 1 ? mdiAccountCircleOutline : mdiAccountGroupOutline,
+		bg: scheme[0],
 		fg: scheme[1]
 	};
 	return (
-		<Avatar component={"div"} style={{backgroundColor: avatar.bg, color: avatar.fg, marginRight: 12}}>
+		<Avatar className={classes.avatar}
+		        style={{backgroundColor: bg || avatar.bg, color: avatarPalette.fg || avatar.fg}}>
 			<Img
+				className={classes.image}
 				src={jump.image}
 				loader={
 					<Skeleton animation="wave" variant="circle" width={32} height={32}/>

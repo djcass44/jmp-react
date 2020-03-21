@@ -38,7 +38,7 @@ const Info: React.FC = () => {
 	const [buildTime, setBuildTime] = useState(new Date(0));
 
 	useEffect(() => {
-		if (systemInfo == null)
+		if (systemInfo == null || systemInfo.build == null)
 			return;
 		const date = new Date(0);
 		date.setUTCSeconds(systemInfo.build.time);
@@ -73,12 +73,13 @@ const Info: React.FC = () => {
 				<ListItem>
 					<ListItemText
 						className={classes.versionInfo}
-						secondary={systemInfo == null ? "No version information found." : <div>
-							<p>OS {`${systemInfo.build.os.name} ${systemInfo.build.os.version} (${systemInfo.build.os.arch})`}</p>
-							<p>Java {`${systemInfo.build.java.version} (${systemInfo.build.java.vendor})`}</p>
-							<p>Built
-								from {`${systemInfo.build.git.commit || "unknown commit"} on ${buildTime.toDateString()}`}</p>
-						</div>}
+						secondary={systemInfo == null || systemInfo.build == null ? "No version information found." :
+							<div>
+								<p>OS {`${systemInfo.build.os.name} ${systemInfo.build.os.version} (${systemInfo.build.os.arch})`}</p>
+								<p>Java {`${systemInfo.build.java.version} (${systemInfo.build.java.vendor})`}</p>
+								<p>Built
+									from {`${systemInfo.build.git.commit || "unknown commit"} on ${buildTime.toDateString()}`}</p>
+							</div>}
 					/>
 				</ListItem>
 			</Card>

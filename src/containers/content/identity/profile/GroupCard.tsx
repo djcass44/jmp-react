@@ -16,7 +16,7 @@
  */
 
 import React, {useState} from "react";
-import {Avatar, makeStyles, Theme, Tooltip, Typography, useTheme} from "@material-ui/core";
+import {Avatar, makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
 import {Group} from "../../../../types";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline, mdiEarth, mdiEyeOff, mdiPencilOutline, mdiWidgets} from "@mdi/js";
@@ -27,6 +27,7 @@ import IdentityCard from "./IdentityCard";
 import getAvatarScheme from "../../../../style/getAvatarScheme";
 import {MODAL_GROUP_EDIT, setDialog} from "../../../../actions/Modal";
 import {useDispatch} from "react-redux";
+import ThemedTooltip from "../../../../components/content/ThemedTooltip";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	avatar: {
@@ -98,21 +99,21 @@ const GroupCard: React.FC<GroupCardProps> = ({group, isAdmin = false}) => {
 			{provider?.name || group.source}
 		</Typography>
 		<div className={classes.icons}>
-			{<Tooltip className={classes.icon} title={secondary[0]}>
+			{<ThemedTooltip className={classes.icon} title={secondary[0]}>
 				<Icon path={secondary[1]} color={secondary[2]} size={1}/>
-			</Tooltip>}
+			</ThemedTooltip>}
 		</div>
 	</>);
 
 	const actions = (<>
 		{isAdmin && !group.name.startsWith("_") &&
-		<Tooltip title="Edit group">
+		<ThemedTooltip title="Edit group">
 			<IconButton
 				centerRipple={false}
 				onClick={() => setDialog(dispatch, MODAL_GROUP_EDIT, true, {group})}>
 				<Icon path={mdiPencilOutline} size={0.85} color={getIconColour(theme)}/>
 			</IconButton>
-		</Tooltip>}
+		</ThemedTooltip>}
 	</>);
 
 	return (<IdentityCard avatar={avatar} content={content} actions={actions}/>);

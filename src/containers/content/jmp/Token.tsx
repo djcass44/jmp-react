@@ -127,22 +127,24 @@ const Token: React.FC = () => {
 	const message = (error != null || failure != null) ? (error?.toString() || failure) : "Jumping... You can close this window if it stays open";
 	return (
 		<Center className={classes.overlay}>
-			{loading ?
-				<CircularProgress/>
-				:
-				<div>
-					<Center>
-						<img height={256} src={`/draw/${(error || failure) ? "undraw_warning_cyit.svg" : image}`}
-						     alt=""/>
-					</Center>
-					<Typography
-						className={classes.text}
-						color="textPrimary"
-						align="center">
-						{message}
-					</Typography>
-				</div>
-			}
+			<div>
+				<Center>
+					<img height={256} src={`/draw/${(error || failure) ? "undraw_warning_cyit.svg" : image}`}
+					     alt=""/>
+				</Center>
+				{loading ?
+					<CircularProgress/>
+					:
+					<div>
+						<Typography
+							className={classes.text}
+							color="textPrimary"
+							align="center">
+							{message}
+						</Typography>
+					</div>
+				}
+			</div>
 		</Center>
 	);
 };

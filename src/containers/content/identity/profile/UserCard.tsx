@@ -16,7 +16,7 @@
  */
 
 import React, {useState} from "react";
-import {makeStyles, Theme, Tooltip, Typography, useTheme} from "@material-ui/core";
+import {makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
 import {User} from "../../../../types";
 import {Avatar} from "evergreen-ui";
 import Icon from "@mdi/react";
@@ -25,6 +25,7 @@ import getIconColour from "../../../../style/getIconColour";
 import IconButton from "@material-ui/core/IconButton";
 import {getProviderData} from "../../../../util";
 import IdentityCard from "./IdentityCard";
+import ThemedTooltip from "../../../../components/content/ThemedTooltip";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	avatar: {
@@ -78,13 +79,13 @@ const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}) => {
 			@{user.username}
 		</Typography>
 		<div className={classes.icons}>
-			<Tooltip className={classes.icon} title={providers[user.source]?.name || user.source}>
+			<ThemedTooltip className={classes.icon} title={providers[user.source]?.name || user.source}>
 				<Icon path={providers[user.source]?.icon || mdiAccountOutline} size={1}
 				      color={providers[user.source]?.colour || theme.palette.primary.main}/>
-			</Tooltip>
-			{user.admin && <Tooltip className={classes.icon} title="This user is an administrator">
+			</ThemedTooltip>
+			{user.admin && <ThemedTooltip className={classes.icon} title="This user is an administrator">
 				<Icon path={mdiAccountSupervisor} color={theme.palette.error.main} size={1}/>
-			</Tooltip>}
+			</ThemedTooltip>}
 		</div>
 	</>);
 

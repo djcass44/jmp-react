@@ -14,10 +14,11 @@
  *    limitations under the License.
  */
 
-import {IconButton, Theme, Tooltip, useTheme} from "@material-ui/core";
+import {IconButton, Theme, useTheme} from "@material-ui/core";
 import Icon from "@mdi/react";
 import React from "react";
 import {mdiCircleSmall} from "@mdi/js";
+import ThemedTooltip from "../ThemedTooltip";
 
 interface JumpButtonProps {
 	title: string;
@@ -32,7 +33,7 @@ const JumpButton: React.FC<JumpButtonProps> = ({title, focus = false, mouse = tr
 	const theme = useTheme<Theme>();
 	return (
 		<div>
-			<Tooltip title={title}>
+			<ThemedTooltip title={title}>
 				<IconButton
 					centerRipple={false}
 					{...focusProps}
@@ -43,7 +44,7 @@ const JumpButton: React.FC<JumpButtonProps> = ({title, focus = false, mouse = tr
 						<Icon path={mdiCircleSmall} size={0.85} color={theme.palette.text.secondary}/>
 					}
 				</IconButton>
-			</Tooltip>
+			</ThemedTooltip>
 		</div>
 	);
 };

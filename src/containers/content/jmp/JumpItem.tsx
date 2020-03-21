@@ -125,7 +125,7 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 			          onClick={() => setJumpExpand(dispatch, jump.id)}
 			          onMouseEnter={() => onMouse(true)}
 			          onMouseLeave={() => onMouse(false)}>
-				<JumpAvatar jump={jump} background={false} palette={data} loading={loading} error={error}/>
+				<JumpAvatar jump={jump} palette={data} loading={loading} error={error}/>
 				<ListItemText primary={primary} secondary={secondary}/>
 				<ListItemSecondaryAction>
 					<div className={classes.action} key="expand">

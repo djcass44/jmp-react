@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-import {Avatar, Button, makeStyles, Paper, Theme, Tooltip, Typography, useTheme, Zoom} from "@material-ui/core";
+import {Avatar, Button, makeStyles, Paper, Theme, Typography, useTheme, Zoom} from "@material-ui/core";
 import React, {ReactNode, useEffect, useState} from "react";
 import {APP_NAME, APP_NOUN} from "../../constants";
 import {useDispatch, useSelector} from "react-redux";
@@ -33,6 +33,7 @@ import {TState} from "../../store/reducers";
 import {Jump, Page} from "../../types";
 import {JumpsState} from "../../store/reducers/jumps";
 import {AuthState} from "../../store/reducers/auth";
+import ThemedTooltip from "../../components/content/ThemedTooltip";
 
 const bgTransition = (time: string | number) => `background-color ${time}ms linear`;
 const useStyles = makeStyles((theme: Theme) => ({
@@ -166,9 +167,9 @@ export default () => {
 						true
 					)
 				}>Add</Button>
-				{!isLoggedIn && <Tooltip title={`You must be logged in to create ${APP_NOUN}s`}>
+				{!isLoggedIn && <ThemedTooltip title={`You must be logged in to create ${APP_NOUN}s`}>
 					<Icon path={mdiAccountAlertOutline} color={palette.error.dark} size={1}/>
-				</Tooltip>}
+				</ThemedTooltip>}
 			</Center>
 			<div className={classes.search}>
 				<div className={classes.searchIcon}>

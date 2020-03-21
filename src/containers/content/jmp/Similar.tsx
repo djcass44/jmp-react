@@ -16,15 +16,9 @@
  */
 
 import {useDispatch, useSelector} from "react-redux";
-import {Avatar, Chip, CircularProgress, Grid, makeStyles, Theme, Tooltip, Typography} from "@material-ui/core";
+import {CircularProgress, makeStyles, Typography} from "@material-ui/core";
 import React, {ReactNode, useEffect, useState} from "react";
 import Center from "react-center";
-import Icon from "@mdi/react";
-import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
-import {Link} from "react-router-dom";
-import Img from "react-image";
-import getAvatarScheme from "../../../style/getAvatarScheme";
-import useTheme from "@material-ui/core/styles/useTheme";
 import getErrorMessage from "../../../selectors/getErrorMessage";
 import {APP_NAME} from "../../../constants";
 import {GET_SIMILAR, getSimilar} from "../../../store/actions/jumps/GetSimilar";
@@ -32,31 +26,33 @@ import {TState} from "../../../store/reducers";
 import {AuthState} from "../../../store/reducers/auth";
 import {JumpsState} from "../../../store/reducers/jumps";
 import {Jump} from "../../../types";
-import {Skeleton} from "@material-ui/lab";
 import {getSimilarFail} from "../../../store/actions/jumps";
+import JumpChip from "../../../components/content/jmp/JumpChip";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
 	title: {
-		fontFamily: "Manrope",
-		fontWeight: 500,
-	},
-	chip: {
-		margin: theme.spacing(0.5),
 		fontFamily: "Manrope",
 		fontWeight: 500
 	},
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		height: '80vh'
+	overlay: {
+		position: "fixed",
+		width: "100%",
+		height: "100%",
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		backgroundColor: "transparent",
+		pointerEvents: "none"
+	},
+	content: {
+		pointerEvents: "initial"
 	}
 }));
 
 export default () => {
 	// hooks
 	const classes = useStyles();
-	const theme = useTheme();
 	const dispatch = useDispatch();
 
 	// global state
@@ -82,36 +78,7 @@ export default () => {
 	}, []);
 
 	useEffect(() => {
-		setItems(similar.map((jump: Jump) => {
-			const personal = jump.public ? 0 : jump.owner != null ? 1 : 2;
-			const scheme = getAvatarScheme(theme, personal);
-			const textColour = theme.palette.getContrastText(scheme[0]);
-			const avatar = {
-				icon: personal === 0 ? mdiEarth : personal === 1 ? mdiAccountCircleOutline : mdiAccountGroupOutline,
-				bg: scheme[0],
-				fg: scheme[1]
-			};
-			return (
-				<Tooltip disableFocusListener title={jump.location} placement="bottom" interactive
-				         key={`${jump.id}${jump.name}`}>
-					<Chip
-						avatar={<Avatar style={{backgroundColor: avatar.bg, color: avatar.fg}}>
-							{/* Website icon or MDI icon fallback */}
-							<Img
-								src={jump.image}
-								loader={<Skeleton animation="wave" variant="circle" width={32} height={32}/>}
-								unloader={<Icon path={avatar.icon} color={avatar.fg} size={1}/>}
-							/>
-						</Avatar>}
-						label={<span style={{color: textColour}}>{jump.name}</span>}
-						clickable
-						component={Link}
-						to={`/jmp?query=${jump.name}&id=${jump.id}`}
-						style={{backgroundColor: avatar.bg, color: avatar.fg}}
-						className={classes.chip}/>
-				</Tooltip>
-			)
-		}));
+		setItems(similar.map((jump: Jump) => <JumpChip jump={jump}/>));
 	}, [similar]);
 
 	let status;
@@ -126,28 +93,20 @@ export default () => {
 			status = `We found ${similar.length} matches`;
 			break;
 	}
-	return (<Grid container spacing={5} className={classes.container}>
-		<Grid item sm={3}/>
-		<Grid item sm={6}>
+	return (<Center className={classes.overlay}>
+		<div className={classes.content}>
+			{!loading && <Center>
+				<img
+					height={256}
+					src={`/draw/undraw_${similar.length === 0 ? "empty_xct9.svg" : similar.length > 0 ? "road_sign_mfpo.svg" : "warning_cyit.svg"}`}
+					alt=""
+				/>
+			</Center>}
 			{!loading && <Center>
 				<Typography
 					className={classes.title}
 					color="textPrimary"
-					variant={"h1"}>
-					{similar.length > 0 ? "Woah" : "Oh no"}
-				</Typography>
-			</Center>}
-			{error == null && similar.length > 0 && <Center>
-				<Typography
-					color="textSecondary"
-					variant="subtitle1">Before you go&nbsp;
-					<span role={"img"} aria-label={"Rocket"}/>
-				</Typography>
-			</Center>}
-			{!loading && <Center>
-				<Typography
-					variant="subtitle1"
-					className={classes.title}>
+					variant="subtitle1">
 					{error == null ? status : getErrorMessage(error)}
 				</Typography>
 			</Center>}
@@ -157,7 +116,6 @@ export default () => {
 			<Center style={{padding: 16}}>
 				{items}
 			</Center>
-		</Grid>
-		<Grid item sm={3}/>
-	</Grid>);
+		</div>
+	</Center>);
 };

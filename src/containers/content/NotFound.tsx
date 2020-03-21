@@ -16,7 +16,7 @@
  */
 
 import React, {useEffect} from "react";
-import {IconButton, makeStyles, Theme, Tooltip, Typography} from "@material-ui/core";
+import {IconButton, makeStyles, Theme, Typography} from "@material-ui/core";
 import {useTheme} from "@material-ui/core/styles";
 import Center from "react-center";
 import {Link} from "react-router-dom";
@@ -24,6 +24,7 @@ import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHomeOutline} from "@mdi/js";
 import {APP_NAME} from "../../constants";
 import {useHistory} from "react-router";
+import ThemedTooltip from "../../components/content/ThemedTooltip";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	subtitle: {
@@ -65,7 +66,7 @@ const NotFound: React.FC = () => {
 					</Typography>
 				</Center>
 				<Center>
-					<Tooltip title="Go back">
+					<ThemedTooltip title="Go back">
 						<IconButton
 							color="secondary"
 							centerRipple={false}
@@ -73,8 +74,8 @@ const NotFound: React.FC = () => {
 							onClick={() => history.goBack()}>
 							<Icon path={mdiArrowLeft} size={1} color={theme.palette.secondary.main}/>
 						</IconButton>
-					</Tooltip>
-					<Tooltip title="Return to home">
+					</ThemedTooltip>
+					<ThemedTooltip title="Return to home">
 						<IconButton
 							component={Link}
 							to="/"
@@ -83,7 +84,7 @@ const NotFound: React.FC = () => {
 							aria-label="Return to home">
 							<Icon path={mdiHomeOutline} size={1} color={theme.palette.primary.main}/>
 						</IconButton>
-					</Tooltip>
+					</ThemedTooltip>
 				</Center>
 			</div>
 		</Center>
