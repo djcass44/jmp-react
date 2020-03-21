@@ -1,6 +1,6 @@
 # STAGE 1 - BUILD
 FROM node:lts-alpine as BUILDER
-LABEL maintainer="Django Cass <dj.cass44@gmail.com>"
+LABEL maintainer="Django Cass <django@dcas.dev>"
 
 # disable spammy donation messages
 ENV DISABLE_OPENCOLLECTIVE=true
@@ -14,11 +14,15 @@ COPY ./public ./public
 COPY ./src ./src
 COPY ./tsconfig.json .
 
-RUN npm run build > /dev/null
+RUN npm run build
 
 # STAGE 2 - RUN
 FROM nginx:stable-alpine
-LABEL maintainer="Django Cass <dj.cass44@gmail.com>"
+LABEL maintainer="Django Cass <django@dcas.dev>"
+
+# update system packages
+RUN apk upgrade --no-cache && \
+    add --no-cache bash
 
 RUN mkdir -p /var/log/nginx && mkdir -p /var/www/html
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
@@ -36,7 +40,6 @@ RUN touch /tmp/nginx.pid && \
   chown -R nginx:nginx /var/cache/nginx && \
   chown -R nginx:nginx /var/www/html
 
-RUN apk add --no-cache bash > /dev/null
 RUN chmod +x /var/www/html/env.sh
 
 USER nginx
