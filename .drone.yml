@@ -3,6 +3,11 @@ name: default
 type: kubernetes
 
 steps:
+  - name: audit
+    image: harbor.v2.dcas.dev/library/drone-npm-audit
+    pull: always
+    settings:
+      fix: false
   # BUILD OCI IMAGE
   - name: publish
     image: harbor.v2.dcas.dev/library/drone-kaniko
