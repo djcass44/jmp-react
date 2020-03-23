@@ -7,7 +7,7 @@ steps:
     image: harbor.v2.dcas.dev/library/drone-npm-audit
     pull: always
     settings:
-      fix: false
+      fix: true
   # BUILD OCI IMAGE
   - name: publish
     image: harbor.v2.dcas.dev/library/drone-kaniko
