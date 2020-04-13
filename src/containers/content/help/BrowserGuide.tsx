@@ -19,11 +19,11 @@ import React, {ReactNode, useEffect, useState} from "react";
 import {mdiAppleSafari, mdiFirefox, mdiGoogleChrome, mdiMicrosoftEdge, mdiMicrosoftInternetExplorer} from "@mdi/js";
 import Icon from "@mdi/react";
 import {Collapse, IconButton, makeStyles, Theme, Typography} from "@material-ui/core";
-import {APP_KEY, APP_NAME, BASE_URL} from "../../../constants";
 import Link from "@material-ui/core/Link";
 import {Alert} from "@material-ui/lab";
 import {Code} from "evergreen-ui";
-import ThemedTooltip from "../../../components/content/ThemedTooltip";
+import {ThemedTooltip} from "jmp-coreui";
+import {APP_KEY, APP_NAME, BASE_URL} from "../../../constants";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	browserBar: {
@@ -144,7 +144,7 @@ const BrowserGuide: React.FC = () => {
 
 	useEffect(() => {
 		setData(browserData.map(i => (
-			<ThemedTooltip title={i.name} key={i.icon}>
+			<ThemedTooltip translate title={i.name} key={i.icon}>
 				<IconButton centerRipple={false} style={{color: i.colour}} onClick={() => {
 					if (selected === i && open) {
 						setOpen(false);

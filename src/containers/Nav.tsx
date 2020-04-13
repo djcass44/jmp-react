@@ -33,7 +33,7 @@ import {APP_MSG, APP_NAME} from "../constants";
 import {TState} from "../store/reducers";
 import {AuthState} from "../store/reducers/auth";
 import {setUserSearch} from "../store/actions/users";
-import DwellInputBase from "../components/widget/DwellInputBase";
+import {DwellInputBase} from "jmp-coreui";
 import UserMenu from "./content/identity/profile/UserMenu";
 
 const bgTransition = (time: number | string): string => `background-color ${time}ms linear`;

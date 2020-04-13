@@ -21,15 +21,15 @@ import Img from "react-image";
 import {Skeleton} from "@material-ui/lab";
 import Icon from "@mdi/react";
 import {Link} from "react-router-dom";
-import {Jump} from "../../../types";
 import {usePalette} from "react-palette";
+import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
+import {ThemedTooltip} from "jmp-coreui";
+import {Jump} from "../../../types";
 import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import getHelpCardColour from "../../../selectors/getHelpCardColour";
 import getColourFromHex from "../../../style/getColourFromHex";
 import getSafeTextColour from "../../../selectors/getSafeTextColour";
 import getAvatarScheme from "../../../style/getAvatarScheme";
-import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
-import ThemedTooltip from "../ThemedTooltip";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -75,8 +75,13 @@ const JumpChip: React.FC<JumpChipProps> = ({jump}) => {
 	};
 
 	return (
-		<ThemedTooltip disableFocusListener title={jump.location} placement="bottom" interactive
-		               key={`${jump.id}${jump.name}`}>
+		<ThemedTooltip
+			translate
+			disableFocusListener
+			title={jump.location}
+			placement="bottom"
+			interactive
+			key={`${jump.id}${jump.name}`}>
 			<Chip
 				avatar={<Avatar style={{backgroundColor: bg || avatar.bg, color: avatarPalette.fg || avatar.fg}}>
 					{/* Website icon or MDI icon fallback */}

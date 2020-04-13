@@ -5,7 +5,7 @@ import {APP_NOUN} from "../../constants";
 import {MODAL_JUMP_EDIT, setDialog} from "../../actions/Modal";
 import {defaultState} from "../../reducers/Modal";
 import {resetError} from "../../actions/Generic";
-import ValidatedTextField from "../../components/field/ValidatedTextField";
+import {ValidatedTextField} from "jmp-coreui";
 import {PATCH_JUMP, patchJump} from "../../store/actions/jumps/PatchJump";
 
 const useStyles = makeStyles(() => ({

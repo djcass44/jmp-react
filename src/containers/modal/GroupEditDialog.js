@@ -17,7 +17,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {MODAL_GROUP_EDIT, setDialog} from "../../actions/Modal";
 import {defaultState} from "../../reducers/Modal";
-import ValidatedTextField from "../../components/field/ValidatedTextField";
+import {ValidatedTextField} from "jmp-coreui";
 import FormControl from "@material-ui/core/FormControl";
 import {resetError} from "../../actions/Generic";
 import {GET_PROVIDERS, getProviders} from "../../store/actions/auth/GetProviders";

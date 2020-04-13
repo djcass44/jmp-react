@@ -12,7 +12,7 @@ import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
 import {APP_NOUN} from "../../constants";
 import {defaultState} from "../../reducers/Modal";
 import {resetError} from "../../actions/Generic";
-import ValidatedTextField from "../../components/field/ValidatedTextField";
+import {ValidatedTextField} from "jmp-coreui";
 import {GET_USER_GROUPS, getUserGroups} from "../../store/actions/groups/GetUserGroups";
 import {PUT_JUMP, putJump} from "../../store/actions/jumps/PutJump";
 

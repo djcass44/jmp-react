@@ -16,24 +16,23 @@
 
 import {Avatar, Button, makeStyles, Paper, Theme, Typography, useTheme, Zoom} from "@material-ui/core";
 import React, {ReactNode, useEffect, useState} from "react";
-import {APP_NAME, APP_NOUN} from "../../constants";
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import List from "@material-ui/core/List";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import {fade} from "@material-ui/core/styles";
-import JumpItem from "./jmp/JumpItem";
+import Icon from "@mdi/react";
+import {mdiAccountAlertOutline, mdiMagnify} from "@mdi/js";
+import {DwellInputBase, ThemedTooltip} from "jmp-coreui";
 import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
 import {GET_JUMP, getJumps} from "../../store/actions/jumps/GetJumps";
 import {setJumpExpand, setJumpOffset, setJumpSearch} from "../../store/actions/jumps";
-import DwellInputBase from "../../components/widget/DwellInputBase";
-import Icon from "@mdi/react";
-import {mdiAccountAlertOutline, mdiMagnify} from "@mdi/js";
 import {TState} from "../../store/reducers";
 import {Jump, Page} from "../../types";
 import {JumpsState} from "../../store/reducers/jumps";
 import {AuthState} from "../../store/reducers/auth";
-import ThemedTooltip from "../../components/content/ThemedTooltip";
+import {APP_NAME, APP_NOUN} from "../../constants";
+import JumpItem from "./jmp/JumpItem";
 
 const bgTransition = (time: string | number) => `background-color ${time}ms linear`;
 const useStyles = makeStyles((theme: Theme) => ({
@@ -176,7 +175,7 @@ export default () => {
 						true
 					)
 				}>Add</Button>
-				{!isLoggedIn && <ThemedTooltip title={`You must be logged in to create ${APP_NOUN}s`}>
+				{!isLoggedIn && <ThemedTooltip translate title={`You must be logged in to create ${APP_NOUN}s`}>
 					<Icon path={mdiAccountAlertOutline} color={palette.error.dark} size={1}/>
 				</ThemedTooltip>}
 			</Center>
@@ -218,7 +217,7 @@ export default () => {
 				<Zoom in={pagedJumps.totalElements > pagedJumps.size}>
 					<Center>
 						<Pagination limit={pagedJumps.size} offset={offset} total={pagedJumps.totalElements}
-						            nextPageLabel={"▶"} previousPageLabel={"◀"}
+						            nextPageLabel="▶" previousPageLabel="◀"
 						            onClick={(e, off) => onPageChange(off)}/>
 					</Center>
 				</Zoom>

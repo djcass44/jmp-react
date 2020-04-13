@@ -17,17 +17,17 @@
 
 import React, {useState} from "react";
 import {Avatar, makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
-import {Group} from "../../../../types";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline, mdiEarth, mdiEyeOff, mdiPencilOutline, mdiWidgets} from "@mdi/js";
-import getIconColour from "../../../../style/getIconColour";
 import IconButton from "@material-ui/core/IconButton";
-import {getProviderData} from "../../../../util";
-import IdentityCard from "./IdentityCard";
+import {useDispatch} from "react-redux";
+import {ThemedTooltip} from "jmp-coreui";
 import getAvatarScheme from "../../../../style/getAvatarScheme";
 import {MODAL_GROUP_EDIT, setDialog} from "../../../../actions/Modal";
-import {useDispatch} from "react-redux";
-import ThemedTooltip from "../../../../components/content/ThemedTooltip";
+import {getProviderData} from "../../../../util";
+import getIconColour from "../../../../style/getIconColour";
+import {Group} from "../../../../types";
+import IdentityCard from "./IdentityCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	avatar: {
@@ -99,15 +99,15 @@ const GroupCard: React.FC<GroupCardProps> = ({group, isAdmin = false}) => {
 			{provider?.name || group.source}
 		</Typography>
 		<div className={classes.icons}>
-			{<ThemedTooltip className={classes.icon} title={secondary[0]}>
+			<ThemedTooltip translate className={classes.icon} title={secondary[0]}>
 				<Icon path={secondary[1]} color={secondary[2]} size={1}/>
-			</ThemedTooltip>}
+			</ThemedTooltip>
 		</div>
 	</>);
 
 	const actions = (<>
 		{isAdmin && !group.name.startsWith("_") &&
-		<ThemedTooltip title="Edit group">
+		<ThemedTooltip translate title="Edit group">
 			<IconButton
 				centerRipple={false}
 				onClick={() => setDialog(dispatch, MODAL_GROUP_EDIT, true, {group})}>

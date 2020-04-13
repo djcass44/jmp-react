@@ -25,7 +25,7 @@ import getIconColour from "../../../../style/getIconColour";
 import IconButton from "@material-ui/core/IconButton";
 import {getProviderData} from "../../../../util";
 import IdentityCard from "./IdentityCard";
-import ThemedTooltip from "../../../../components/content/ThemedTooltip";
+import {ThemedTooltip} from "jmp-coreui";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	avatar: {
@@ -79,11 +79,11 @@ const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}) => {
 			@{user.username}
 		</Typography>
 		<div className={classes.icons}>
-			<ThemedTooltip className={classes.icon} title={providers[user.source]?.name || user.source}>
+			<ThemedTooltip translate className={classes.icon} title={providers[user.source]?.name || user.source}>
 				<Icon path={providers[user.source]?.icon || mdiAccountOutline} size={1}
 				      color={providers[user.source]?.colour || theme.palette.primary.main}/>
 			</ThemedTooltip>
-			{user.admin && <ThemedTooltip className={classes.icon} title="This user is an administrator">
+			{user.admin && <ThemedTooltip translate className={classes.icon} title="This user is an administrator">
 				<Icon path={mdiAccountSupervisor} color={theme.palette.error.main} size={1}/>
 			</ThemedTooltip>}
 		</div>

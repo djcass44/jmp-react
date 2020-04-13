@@ -23,7 +23,7 @@ import SocialButton from "../../components/widget/SocialButton";
 import {mdiGithub, mdiGoogle, mdiShieldAccount} from "@mdi/js";
 import {APP_NAME} from "../../constants";
 import {useTheme} from "@material-ui/core/styles";
-import ValidatedTextField from "../../components/field/ValidatedTextField";
+import {ValidatedTextField} from "jmp-coreui";
 import getIconColour from "../../style/getIconColour";
 import {resetError} from "../../actions/Generic";
 import {OAUTH_REQUEST, oauthRequest} from "../../store/actions/auth/AuthRequest";
