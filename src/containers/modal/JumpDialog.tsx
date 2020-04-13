@@ -4,7 +4,20 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import {CircularProgress, InputLabel, LinearProgress, makeStyles, Select, Typography} from "@material-ui/core";
+import {
+	CircularProgress,
+	InputLabel,
+	LinearProgress,
+	List,
+	ListItem,
+	ListItemSecondaryAction,
+	ListItemText,
+	makeStyles,
+	Select,
+	TextField,
+	Theme,
+	Typography
+} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useDispatch, useSelector} from "react-redux";
@@ -19,19 +32,27 @@ import {TState} from "../../store/reducers";
 import {AuthState} from "../../store/reducers/auth";
 import {GroupsState} from "../../store/reducers/groups";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
-		fontSize: 20
+		fontSize: 16
 	},
 	button: {
 		fontFamily: "Manrope",
-		fontWeight: "bold"
+		fontWeight: "bold",
+		textTransform: "none"
 	},
 	progress: {
 		backgroundColor: "transparent"
 	},
+	li: {
+		paddingLeft: 0,
+		paddingRight: 0
+	},
+	actions: {
+		marginRight: theme.spacing(1.5)
+	}
 }));
 
 const initialName = {
@@ -63,7 +84,7 @@ const JumpDialog = () => {
 	// local state
 	const [name, setName] = useState(initialName);
 	const [url, setUrl] = useState(initialUrl);
-	const [type, setType] = useState<number | null>(null);
+	const [type, setType] = useState<number>(1); // default to personal
 	const [groupId, setGroupId] = useState("");
 	const [submit, setSubmit] = useState(false);
 	const [groups, setGroups] = useState<Array<ReactNode>>([]);
@@ -75,7 +96,7 @@ const JumpDialog = () => {
 		resetError(dispatch, GET_USER_GROUPS);
 		setName(initialName);
 		setUrl(initialUrl);
-		setType(null);
+		setType(1);
 		setSubmit(false);
 	}, [open]);
 
@@ -100,11 +121,13 @@ const JumpDialog = () => {
 			id: 0,
 			name: name.value,
 			location: url.value,
-			personal: type || 1, // default to personal
+			personal: type,
 			alias: []
 		}, gid);
 		setSubmit(true);
 	};
+
+	const disabled = (type === 2 && groupId === "") || name.error !== "" || url.error !== "" || loadingGroups || loading || name.value.length === 0 || url.value.length === 0;
 
 	return (
 		<Dialog
@@ -124,7 +147,9 @@ const JumpDialog = () => {
 						margin: "dense",
 						id: "name",
 						label: "Name",
-						fullWidth: true
+						fullWidth: true,
+						variant: "filled",
+						size: "small"
 					}}
 				/>
 				<ValidatedTextField
@@ -137,21 +162,34 @@ const JumpDialog = () => {
 						id: "url",
 						label: "URL",
 						fullWidth: true,
-						autoComplete: "url"
+						autoComplete: "url",
+						variant: "filled",
+						size: "small"
 					}}
 				/>
-				<FormControl fullWidth>
-					<InputLabel htmlFor="type">Type</InputLabel>
-					<Select
-						value={type?.toString() || ""}
-						inputProps={{name: "type", id: "type"}}
-						onChange={(e: ChangeEvent<{value: unknown}>) => setType(Number(e.target.value))}>
-						<MenuItem value={0} disabled={!isAdmin}>Global</MenuItem>
-						<MenuItem value={1}>Personal</MenuItem>
-						<MenuItem value={2} disabled={userGroups.length === 0}>Group</MenuItem>
-					</Select>
-				</FormControl>
-				{loadingGroups ? <LinearProgress className={classes.progress}/> : ""}
+				<List>
+					<ListItem className={classes.li}>
+						<ListItemText
+							primary="Choose a type"
+							primaryTypographyProps={{color: "textSecondary"}}
+							secondary={type != null && (type === 0 ? "Visible to all" : type === 1 ? "Visible to me" : "Visible to some")}
+							secondaryTypographyProps={{color: "textSecondary"}}
+						/>
+						<ListItemSecondaryAction style={{right: 0}}>
+							<TextField
+								style={{minWidth: 100}}
+								select
+								size="small"
+								onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setType(Number(e.target.value))}
+								value={type.toString()}>
+								<MenuItem value={0} disabled={!isAdmin}>Global</MenuItem>
+								<MenuItem value={1}>Personal</MenuItem>
+								<MenuItem value={2} disabled={userGroups.length === 0}>Group</MenuItem>
+							</TextField>
+						</ListItemSecondaryAction>
+					</ListItem>
+				</List>
+				{loadingGroups && <LinearProgress className={classes.progress}/>}
 				{type === 2 && userGroups.length > 0 &&
 				<FormControl fullWidth>
 					<InputLabel htmlFor="group">Group</InputLabel>
@@ -164,14 +202,23 @@ const JumpDialog = () => {
 				{error && <Typography style={{fontWeight: "bold"}} variant="caption"
 				                      color="error">{error && error.toString()}</Typography>}
 			</DialogContent>
-			<DialogActions>
+			<DialogActions className={classes.actions}>
 				{loading && <CircularProgress className={classes.progress} size={15} thickness={8}/>}
-				<Button className={classes.button} color="secondary" disabled={loading}
-				        onClick={() => close()}>Cancel</Button>
-				<Button className={classes.button} color="primary" onClick={() => onSubmit()}
-				        disabled={(type === 2 && groupId === "") || name.error !== "" ||
-				        url.error !== "" || loadingGroups || loading || name.value.length === 0 || url.value.length === 0}>
-					Create
+				<Button
+					className={classes.button}
+					color="secondary"
+					disabled={loading}
+					onClick={() => close()}>
+					Cancel
+				</Button>
+				<Button
+					className={classes.button}
+					color="primary"
+					variant={disabled ? "text" : "contained"}
+					disableElevation
+					onClick={() => onSubmit()}
+					disabled={disabled}>
+					Create {APP_NOUN.toLocaleLowerCase()}
 				</Button>
 			</DialogActions>
 		</Dialog>
