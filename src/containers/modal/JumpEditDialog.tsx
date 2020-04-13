@@ -1,7 +1,18 @@
 import React, {useEffect, useState} from "react";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles, Typography} from "@material-ui/core";
+import {
+	Button,
+	CircularProgress,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogTitle,
+	makeStyles,
+	Theme,
+	Typography
+} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {ValidatedTextField} from "jmp-coreui";
+import ChipInput from "material-ui-chip-input";
 import {APP_NOUN} from "../../constants";
 import {MODAL_JUMP_EDIT, setDialog} from "../../store/actions/Modal";
 import {defaultState, Modal} from "../../store/reducers/modal";
@@ -11,7 +22,7 @@ import {TState} from "../../store/reducers";
 import {AuthState} from "../../store/reducers/auth";
 import {Alias} from "../../types";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
@@ -19,31 +30,33 @@ const useStyles = makeStyles(() => ({
 	},
 	button: {
 		fontFamily: "Manrope",
-		fontWeight: "bold"
+		fontWeight: "bold",
+		textTransform: "none"
 	},
 	field: {
 		color: "red"
+	},
+	actions: {
+		marginRight: theme.spacing(1.5)
 	}
 }));
 
 const initialName = {
-	value: '',
-	error: '',
-	regex: new RegExp('^[a-zA-Z0-9_.-]+$')
+	value: "",
+	error: "",
+	regex: new RegExp("^[a-zA-Z0-9_.-]+$")
 };
 const initialUrl = {
-	value: '',
-	error: '',
-	regex: new RegExp('https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)')
+	value: "",
+	error: "",
+	regex: new RegExp("https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)")
 };
-const initialAlias = {
-	value: '',
-	error: '',
-	regex: new RegExp('(^([0-9a-zA-Z]+,)*[0-9a-zA-Z]+$|^$)')
-};
+
+const chipRegex = new RegExp("(^[0-9a-zA-Z]+$)");
 
 export default () => {
 	// hooks
+	const classes = useStyles();
 	const dispatch = useDispatch();
 
 	// global state
@@ -57,7 +70,7 @@ export default () => {
 
 	const [name, setName] = useState(initialName);
 	const [url, setUrl] = useState(initialUrl);
-	const [alias, setAlias] = useState(initialAlias);
+	const [alias, setAlias] = useState<Array<string>>([]);
 	const [submit, setSubmit] = useState(false);
 
 	const close = (final: boolean = false) => setDialog(dispatch, MODAL_JUMP_EDIT, false, final ? null : other);
@@ -76,45 +89,44 @@ export default () => {
 		jump.alias.forEach((i: Alias) => {
 			aliases.push(i.name);
 		});
-
-		setAlias({...initialAlias, value: aliases.join(",")});
+		setAlias(aliases);
 	};
 
 	const onSubmit = () => {
 		const aliases: Array<Alias> = [];
-		if (alias.value.length > 0) {
-			let a = alias.value.split(",");
-			a.forEach(item => {
-				let i = -1;
-				for (let j = 0; j < jump.alias.length; j++) {
-					if (jump.alias[j].name === item) {
-						i = j;
-						break;
-					}
+		alias.forEach(item => {
+			let i = -1;
+			for (let j = 0; j < jump.alias.length; j++) {
+				if (jump.alias[j].name === item) {
+					i = j;
+					break;
 				}
-				if(i >= 0) {
-					aliases.push({
-						id: jump.alias[i].id,
-						name: jump.alias[i].name
-					});
-				} else {
-					aliases.push({
-						id: 0,
-						name: item
-					});
-				}
-			});
-		}
-		patchJump(dispatch, headers, JSON.stringify({
+			}
+			if (i >= 0) {
+				// keep an existing alias
+				aliases.push({
+					id: jump.alias[i].id,
+					name: jump.alias[i].name
+				});
+			} else {
+				// create a new alias
+				aliases.push({
+					id: 0,
+					name: item
+				});
+			}
+		});
+		patchJump(dispatch, headers, {
 			id: jump.id,
 			name: name.value,
 			location: url.value,
+			personal: jump.public ? 0 : jump.ownerGroup == null ? 1 : 2,
 			alias: aliases
-		}));
+		});
 		setSubmit(true);
 	};
 
-	const classes = useStyles();
+	const disabled = name.error !== "" || url.error !== "" || loading || name.value.length === 0 || url.value.length === 0;
 	return (
 		<Dialog
 			open={open}
@@ -126,7 +138,7 @@ export default () => {
 					Edit {APP_NOUN}
 				</Typography>
 			</DialogTitle>
-			<DialogContent>
+			<DialogContent style={{overflowY: "initial"}}>
 				<ValidatedTextField
 					data={name}
 					setData={setName}
@@ -137,7 +149,9 @@ export default () => {
 						margin: "dense",
 						id: "name",
 						label: "Name",
-						fullWidth: true
+						fullWidth: true,
+						variant: "filled",
+						size: "small"
 					}}
 				/>
 				<ValidatedTextField
@@ -150,24 +164,26 @@ export default () => {
 						id: "url",
 						label: "URL",
 						fullWidth: true,
-						autoComplete: "url"
+						autoComplete: "url",
+						variant: "filled",
+						size: "small"
 					}}
 				/>
-				<ValidatedTextField
-					data={alias}
-					setData={setAlias}
-					invalidLabel="Aliases must be letters or digits separated by commas."
-					fieldProps={{
-						required: true,
-						margin: "dense",
-						id: "alias",
-						label: "Aliases",
-						fullWidth: true
-					}}
+				<ChipInput
+					label="Aliases"
+					fullWidth
+					defaultValue={alias}
+					onChange={(c) => setAlias(c)}
+					onBeforeAdd={(c) => chipRegex.test(c)}
+					helperText="An alias must be letters and digits only."
 				/>
-				{error && <Typography variant="caption" color="error">{error.toString()}</Typography>}
 			</DialogContent>
-			<DialogActions>
+			<DialogActions className={classes.actions}>
+				{error && <Typography
+					color="error">
+					Something went wrong.
+				</Typography>}
+				{loading && <CircularProgress size={15} thickness={8}/>}
 				<Button
 					className={classes.button}
 					color="secondary"
@@ -178,9 +194,11 @@ export default () => {
 				<Button
 					className={classes.button}
 					color="primary"
+					variant={disabled ? "text" : "contained"}
+					disableElevation
 					onClick={() => onSubmit()}
-					disabled={name.error !== "" || url.error !== "" || alias.error !== "" || loading || name.value.length === 0 || url.value.length === 0}>
-					Update
+					disabled={disabled}>
+					Edit {APP_NOUN.toLocaleLowerCase()}
 				</Button>
 			</DialogActions>
 		</Dialog>

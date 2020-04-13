@@ -190,19 +190,19 @@ const JumpDialog = () => {
 					</ListItem>
 				</List>
 				{loadingGroups && <LinearProgress className={classes.progress}/>}
-				{type === 2 && userGroups.length > 0 &&
-				<FormControl fullWidth>
+				{type === 2 && userGroups.length > 0 && <FormControl fullWidth>
 					<InputLabel htmlFor="group">Group</InputLabel>
 					<Select value={groupId} inputProps={{name: "group", id: "group"}}
 					        onChange={(e: ChangeEvent<{value: unknown}>) => setGroupId(e.target.value as string)}>
 						{groups}
 					</Select>
-				</FormControl>
-				}
-				{error && <Typography style={{fontWeight: "bold"}} variant="caption"
-				                      color="error">{error && error.toString()}</Typography>}
+				</FormControl>}
 			</DialogContent>
 			<DialogActions className={classes.actions}>
+				{error && <Typography
+					color="error">
+					Something went wrong.
+				</Typography>}
 				{loading && <CircularProgress className={classes.progress} size={15} thickness={8}/>}
 				<Button
 					className={classes.button}

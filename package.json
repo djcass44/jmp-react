@@ -15,6 +15,7 @@
 		"@types/redux-api-middleware": "^3.0.7",
 		"evergreen-ui": "^4.23.3",
 		"jmp-coreui": "^0.1.1",
+		"material-ui-chip-input": "^2.0.0-beta.2",
 		"material-ui-flat-pagination": "^3.2.1",
 		"moment": "^2.24.0",
 		"notistack": "^0.9.9",

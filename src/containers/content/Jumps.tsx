@@ -160,7 +160,7 @@ export default () => {
 		const l = [];
 		const size = pagedJumps.numberOfElements || 8;
 		for (let i = 0; i < size; i++) {
-			l.push(<JumpItemSkeleton/>);
+			l.push(<JumpItemSkeleton key={i}/>);
 		}
 		setLData(l);
 	}, [loading]);
