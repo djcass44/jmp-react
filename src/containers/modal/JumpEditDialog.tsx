@@ -1,12 +1,15 @@
 import React, {useEffect, useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles, Typography} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
+import {ValidatedTextField} from "jmp-coreui";
 import {APP_NOUN} from "../../constants";
 import {MODAL_JUMP_EDIT, setDialog} from "../../store/actions/Modal";
-import {defaultState} from "../../store/reducers/modal";
+import {defaultState, Modal} from "../../store/reducers/modal";
 import {resetError} from "../../actions/Generic";
-import {ValidatedTextField} from "jmp-coreui";
 import {PATCH_JUMP, patchJump} from "../../store/actions/jumps/PatchJump";
+import {TState} from "../../store/reducers";
+import {AuthState} from "../../store/reducers/auth";
+import {Alias} from "../../types";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -16,7 +19,7 @@ const useStyles = makeStyles(() => ({
 	},
 	button: {
 		fontFamily: "Manrope",
-		fontWeight: 'bold'
+		fontWeight: "bold"
 	},
 	field: {
 		color: "red"
@@ -43,13 +46,13 @@ export default () => {
 	// hooks
 	const dispatch = useDispatch();
 
-	// seletors
-	const loading = useSelector(state => state.loading[PATCH_JUMP]);
-	const error = useSelector(state => state.errors[PATCH_JUMP]);
-	const {headers} = useSelector(state => state.auth);
-	const {other, open} = useSelector(state => state.modal[MODAL_JUMP_EDIT] || defaultState);
+	// global state
+	const loading = useSelector<TState, boolean>(state => state.loading[PATCH_JUMP]);
+	const error = useSelector<TState, any | null>(state => state.errors[PATCH_JUMP]);
+	const {headers} = useSelector<TState, AuthState>(state => state.auth);
+	const {other, open} = useSelector<TState, Modal>(state => state.modal[MODAL_JUMP_EDIT] || defaultState);
 
-	const jump = other?.jump || {};
+	const jump = other?.jump;
 
 
 	const [name, setName] = useState(initialName);
@@ -57,10 +60,10 @@ export default () => {
 	const [alias, setAlias] = useState(initialAlias);
 	const [submit, setSubmit] = useState(false);
 
-	const close = () => setDialog(dispatch, MODAL_JUMP_EDIT, false);
+	const close = (final: boolean = false) => setDialog(dispatch, MODAL_JUMP_EDIT, false, final ? null : other);
 
 	useEffect(() => {
-		if (loading === false && submit === true && error == null)
+		if (!loading && submit && error == null)
 			close();
 	}, [loading, error]);
 
@@ -69,8 +72,8 @@ export default () => {
 		setName({...initialName, value: jump.name});
 		setUrl({...initialUrl, value: jump.location});
 
-		let aliases = [];
-		jump.alias.forEach(i => {
+		const aliases: Array<string> = [];
+		jump.alias.forEach((i: Alias) => {
 			aliases.push(i.name);
 		});
 
@@ -78,13 +81,13 @@ export default () => {
 	};
 
 	const onSubmit = () => {
-		const aliases = [];
-		if(alias.value.length > 0) {
+		const aliases: Array<Alias> = [];
+		if (alias.value.length > 0) {
 			let a = alias.value.split(",");
 			a.forEach(item => {
 				let i = -1;
 				for (let j = 0; j < jump.alias.length; j++) {
-					if(jump.alias[j].name === item) {
+					if (jump.alias[j].name === item) {
 						i = j;
 						break;
 					}
@@ -113,10 +116,15 @@ export default () => {
 
 	const classes = useStyles();
 	return (
-		<Dialog open={open === true} aria-labelledby={"form-dialog-title"} onClose={() => close()}
-		        onEnter={() => onOpen()}>
-			<DialogTitle id={"form-dialog-title"}>
-				<Typography className={classes.title}>Edit {APP_NOUN}</Typography>
+		<Dialog
+			open={open}
+			aria-labelledby="form-dialog-title"
+			onExited={() => close(true)}
+			onEnter={() => onOpen()}>
+			<DialogTitle id="form-dialog-title">
+				<Typography className={classes.title}>
+					Edit {APP_NOUN}
+				</Typography>
 			</DialogTitle>
 			<DialogContent>
 				<ValidatedTextField
@@ -157,14 +165,21 @@ export default () => {
 						fullWidth: true
 					}}
 				/>
-				{error && <Typography variant={"caption"} color={"error"}>{error.toString()}</Typography>}
+				{error && <Typography variant="caption" color="error">{error.toString()}</Typography>}
 			</DialogContent>
 			<DialogActions>
-				<Button className={classes.button} color={"secondary"} onClick={() => close()}
-				        disabled={loading === true}>Cancel</Button>
-				<Button className={classes.button} color={"primary"} onClick={() => onSubmit()}
-				        disabled={name.error !== '' || url.error !== '' || alias.error !== '' ||
-				        loading === true || name.value.length === 0 || url.value.length === 0}>
+				<Button
+					className={classes.button}
+					color="secondary"
+					onClick={() => close()}
+					disabled={loading}>
+					Cancel
+				</Button>
+				<Button
+					className={classes.button}
+					color="primary"
+					onClick={() => onSubmit()}
+					disabled={name.error !== "" || url.error !== "" || alias.error !== "" || loading || name.value.length === 0 || url.value.length === 0}>
 					Update
 				</Button>
 			</DialogActions>
