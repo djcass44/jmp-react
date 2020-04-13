@@ -23,7 +23,7 @@ import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import {fade} from "@material-ui/core/styles";
 import Icon from "@mdi/react";
 import {mdiAccountAlertOutline, mdiMagnify} from "@mdi/js";
-import {DwellInputBase, ThemedTooltip} from "jmp-coreui";
+import {DwellInputBase, ImageMessage, ThemedTooltip} from "jmp-coreui";
 import {MODAL_JUMP_NEW, setDialog} from "../../store/actions/Modal";
 import {GET_JUMP, getJumps} from "../../store/actions/jumps/GetJumps";
 import {setJumpExpand, setJumpOffset, setJumpSearch} from "../../store/actions/jumps";
@@ -32,6 +32,7 @@ import {Jump, Page} from "../../types";
 import {JumpsState} from "../../store/reducers/jumps";
 import {AuthState} from "../../store/reducers/auth";
 import {APP_NAME, APP_NOUN} from "../../constants";
+import JumpItemSkeleton from "../../components/content/jmp/JumpItemSkeleton";
 import JumpItem from "./jmp/JumpItem";
 
 const bgTransition = (time: string | number) => `background-color ${time}ms linear`;
@@ -109,13 +110,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 		margin: theme.spacing(2),
 		textTransform: "none",
 		color: theme.palette.success.main
+	},
+	skeleton: {
+		marginLeft: theme.spacing(2)
 	}
 }));
 
 const emptyImages = [
-	"undraw_no_data_qbuo.svg",
-	"undraw_lost_bqr2.svg",
-	"undraw_empty_xct9.svg"
+	"/draw/undraw_no_data_qbuo.svg",
+	"/draw/undraw_lost_bqr2.svg",
+	"/draw/undraw_empty_xct9.svg"
 ];
 
 export default () => {
@@ -132,7 +136,7 @@ export default () => {
 
 	// local state
 	const [data, setData] = useState<Array<ReactNode>>([]);
-	const [image, setImage] = useState<string>(emptyImages[Math.floor(Math.random() * emptyImages.length)]);
+	const [lData, setLData] = useState<Array<ReactNode>>([]);
 
 	const onSearch = (o = offset) => {
 		getJumps(dispatch, headers, search, Number(o / 8) || 0, 8);
@@ -148,8 +152,18 @@ export default () => {
 		setJumpOffset(dispatch, pagedJumps.number * 8);
 		// Loop-d-loop
 		setData(content.map(i => (<JumpItem jump={i} key={i.id}/>)));
-		setImage(emptyImages[Math.floor(Math.random() * emptyImages.length)]);
 	}, [pagedJumps, offset]);
+
+	useEffect(() => {
+		if (!loading)
+			setLData([]);
+		const l = [];
+		const size = pagedJumps.numberOfElements || 8;
+		for (let i = 0; i < size; i++) {
+			l.push(<JumpItemSkeleton/>);
+		}
+		setLData(l);
+	}, [loading]);
 
 	const onPageChange = (off: number) => {
 		setJumpOffset(dispatch, off);
@@ -204,21 +218,12 @@ export default () => {
 			<div>
 				<div key="root" style={{borderRadius: 12, marginBottom: 8}}>
 					<List>
-						{data}
-						{data.length === 0 && !loading && <Center>
-							<div>
-								<Center>
-									<img
-										width={128}
-										src={`/draw/${image}`}
-										alt=""
-									/>
-								</Center>
-								<Typography className={`${classes.title} ${classes.nothing}`} color="textPrimary">
-									Nothing could be found
-								</Typography>
-							</div>
-						</Center>}
+						{!loading && data}
+						{loading && <>
+							{lData}
+						</>}
+						{data.length === 0 && !loading &&
+						<ImageMessage src={emptyImages} message="Nothing could be found"/>}
 					</List>
 				</div>
 				<Zoom in={pagedJumps.totalElements > pagedJumps.size}>
