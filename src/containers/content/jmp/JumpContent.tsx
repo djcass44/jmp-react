@@ -40,6 +40,7 @@ import getSafeTextColour from "../../../selectors/getSafeTextColour";
 import {Jump} from "../../../types";
 import {TState} from "../../../store/reducers";
 import {AuthState} from "../../../store/reducers/auth";
+import {APP_NOUN} from "../../../constants";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -192,9 +193,16 @@ const JumpContent: React.FC<JumpContentProps> = ({jump, focusProps, palette, loa
 						buttonProps={{
 							onClick: () => setDelete(dispatch,
 								true,
-								true,
-								jump.public,
-								jump
+								{
+									deletable: true,
+									item: jump,
+									requireApproval: jump.public,
+									itemClass: APP_NOUN,
+									effects: [
+										`The ${APP_NOUN.toLocaleLowerCase()} is removed and cannot be restored`,
+										"If it was shared to a group or made public, it is now inaccessible to all users"
+									]
+								}
 							),
 							style: {color: theme.palette.error.main}
 						}}

@@ -49,7 +49,7 @@ export default () => {
 	const {headers} = useSelector(state => state.auth);
 	const {other, open} = useSelector(state => state.modal[MODAL_JUMP_EDIT] || defaultState);
 
-	const jump = other.jump || {};
+	const jump = other?.jump || {};
 
 
 	const [name, setName] = useState(initialName);

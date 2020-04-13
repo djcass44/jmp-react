@@ -15,10 +15,14 @@
  *
  */
 
-import {Token} from "../types";
 import {mdiAccountOutline, mdiDatabase, mdiGithub, mdiGoogle, mdiShieldAccount} from "@mdi/js";
 import {Theme} from "@material-ui/core";
+import {Token} from "../types";
 
+/**
+ * Converts an object to JSON and back
+ * Fastest way to clone an object in JS
+ */
 export const clone = (obj: any): any => JSON.parse(JSON.stringify(obj));
 
 export const plural = (count: number, text: string): string => {

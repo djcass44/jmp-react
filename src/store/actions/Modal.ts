@@ -39,13 +39,21 @@ interface SetDialogActionType {
 	}
 }
 
-export const setDelete = (dispatch: Dispatch, open: boolean, deletable: boolean, requireApproval = false, item: Jump | Group | User | null = null) => {
-	setDialog(dispatch, MODAL_DELETE, open, {requireApproval, item, deletable});
+export interface DeleteItemPayload {
+	requireApproval: boolean;
+	item: Jump | Group | User | null;
+	itemClass: string;
+	effects?: Array<string> | null;
+	deletable: boolean;
+}
+
+export const setDelete = (dispatch: Dispatch, open: boolean, payload: DeleteItemPayload) => {
+	setDialog(dispatch, MODAL_DELETE, open, payload);
 };
 
-export const setDialog = (dispatch: Dispatch, name: string, open: boolean, other: any | null, ...props: any) => dispatch({
+export const setDialog = (dispatch: Dispatch, name: string, open: boolean, other: any | null) => dispatch({
 	type: SET_DIALOG,
-	payload: {name, open, other: other == null ? null : clone(other), ...props}
+	payload: {name, open, other: other == null ? null : clone(other)}
 });
 
 export type ModalActionType = SetDialogActionType;

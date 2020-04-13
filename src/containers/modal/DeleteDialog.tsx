@@ -1,7 +1,6 @@
 import React, {ChangeEvent, useEffect, useState} from "react";
 import {
 	Button,
-	Checkbox,
 	Dialog,
 	DialogActions,
 	DialogContent,
@@ -9,34 +8,60 @@ import {
 	DialogTitle,
 	FormControlLabel,
 	makeStyles,
+	Switch,
 	Theme,
-	Typography
+	Typography,
+	useTheme
 } from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {MODAL_DELETE, setDialog} from "../../store/actions/Modal";
+import Icon from "@mdi/react";
+import {mdiAlert} from "@mdi/js";
+import {DeleteItemPayload, MODAL_DELETE, setDialog} from "../../store/actions/Modal";
 import {defaultState, Modal} from "../../store/reducers/modal";
 import {deleteJump} from "../../store/actions/jumps/DeleteJump";
 import {TState} from "../../store/reducers";
 import {AuthState} from "../../store/reducers/auth";
 
 const useStyles = makeStyles((theme: Theme) => ({
+	dialogTitle: {
+		backgroundColor: theme.palette.error.main
+	},
+	titleIcon: {
+		float: "left",
+		paddingRight: theme.spacing(1),
+		paddingTop: theme.spacing(0.5)
+	},
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
-		fontSize: 20
+		fontSize: 20,
+		color: theme.palette.error.contrastText
 	},
 	button: {
 		fontFamily: "Manrope",
-		fontWeight: "bold"
+		fontWeight: "bold",
+		textTransform: "none"
 	},
 	red: {
 		color: theme.palette.error.main
+	},
+	approval: {
+		fontSize: 14
+	},
+	text: {
+		fontSize: 14,
+		color: theme.palette.text.primary
+	},
+	effectText: {
+		fontSize: 13,
+		color: theme.palette.text.secondary
 	}
 }));
 
 export default () => {
 	// hooks
 	const dispatch = useDispatch();
+	const theme = useTheme();
 
 	// global state
 	const {headers} = useSelector<TState, AuthState>(state => state.auth);
@@ -45,21 +70,19 @@ export default () => {
 	// local state
 	const [ack, setAck] = useState(false);
 
-	const requireApproval = other?.requireApproval || false;
-	const deletable = other?.deletable || null;
-
-	const defaultTitle = "Delete";
-	const defaultBody = `Are you sure? This action is immediate and cannot be undone.` +
-		`${requireApproval && " Since this change will likely impact functionality for users, you will need to confirm your actions."}`;
-
-	const title = other?.title || defaultTitle;
-	const body = other?.body || defaultBody;
+	const payload = other as DeleteItemPayload | null;
+	const requireApproval = payload?.requireApproval || false;
+	const deletable = payload?.deletable || null;
 
 	useEffect(() => {
 		setAck(false);
 	}, [open]);
 
-	const close = () => setDialog(dispatch, MODAL_DELETE, false, null);
+	/**
+	 * Close the dialog and cleanup resources
+	 * @param final: when true, 'other' content is set to null. Only set this to true once the dialog is CLOSED (i.e. not visible to the user)
+	 */
+	const close = (final: boolean = false) => setDialog(dispatch, MODAL_DELETE, false, final ? null : other);
 
 	const onSubmit = () => {
 		// convert to a switch when there's more cases
@@ -73,29 +96,56 @@ export default () => {
 	return (
 		<Dialog
 			open={open}
+			onExited={() => close(true)}
 			aria-labelledby="form-dialog-title">
-			<DialogTitle id="form-dialog-title">
-				<Typography className={classes.title}>{title != null ? title : defaultTitle}</Typography>
+			<DialogTitle
+				className={classes.dialogTitle}
+				id="form-dialog-title">
+				<Icon
+					className={classes.titleIcon}
+					path={mdiAlert}
+					size={1}
+					color={theme.palette.error.contrastText}
+				/>
+				<Typography className={classes.title}>Delete {payload?.itemClass?.toLocaleLowerCase()}</Typography>
 			</DialogTitle>
-			<DialogContent>
-				<DialogContentText>
-					{body != null ? body : defaultBody}
+			{payload != null && <DialogContent>
+				<DialogContentText className={classes.text}>
+					When you delete a {payload.itemClass.toLocaleLowerCase()}, this immediately happens:
 				</DialogContentText>
+				<ul>
+					{payload.effects?.map((i, idx) => <li
+						key={`${idx}-${i}`}
+						className={classes.effectText}>
+						{i}
+					</li>)}
+				</ul>
 				{requireApproval && <FormControlLabel
-					className={classes.red}
+					classes={{label: `${classes.approval} ${classes.red}`}}
 					control={
-						<Checkbox
-							className={classes.red}
+						<Switch
+							color="primary"
 							checked={ack}
 							onChange={(e: ChangeEvent<HTMLInputElement>) => setAck(e.target.checked)}/>
 					}
 					label="Use admin power to override"
 				/>}
-			</DialogContent>
+			</DialogContent>}
 			<DialogActions>
-				<Button className={classes.button} color="secondary" onClick={() => close()}>Cancel</Button>
-				<Button className={`${classes.button} ${classes.red}`} onClick={() => onSubmit()}
-				        disabled={requireApproval && !ack}>Delete</Button>
+				<Button
+					className={classes.button}
+					color="secondary"
+					onClick={() => close()}>
+					Cancel
+				</Button>
+				<Button
+					className={`${classes.button} ${classes.red}`}
+					variant={(requireApproval && !ack) ? "text" : "contained"}
+					disableElevation
+					onClick={() => onSubmit()}
+					disabled={requireApproval && !ack}>
+					Delete {payload?.itemClass?.toLocaleLowerCase()}
+				</Button>
 			</DialogActions>
 		</Dialog>
 	);
