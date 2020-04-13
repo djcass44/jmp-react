@@ -24,7 +24,7 @@ import {fade} from "@material-ui/core/styles";
 import Icon from "@mdi/react";
 import {mdiAccountAlertOutline, mdiMagnify} from "@mdi/js";
 import {DwellInputBase, ThemedTooltip} from "jmp-coreui";
-import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
+import {MODAL_JUMP_NEW, setDialog} from "../../store/actions/Modal";
 import {GET_JUMP, getJumps} from "../../store/actions/jumps/GetJumps";
 import {setJumpExpand, setJumpOffset, setJumpSearch} from "../../store/actions/jumps";
 import {TState} from "../../store/reducers";
@@ -168,13 +168,20 @@ export default () => {
 				<Typography variant="h4" className={classes.name}>Where to?</Typography>
 			</Center>
 			<Center>
-				<Button className={classes.addButton} disabled={!isLoggedIn} variant="outlined"
-				        aria-label="Add" onClick={
-					() => setDialog(dispatch,
-						MODAL_JUMP_NEW,
-						true
-					)
-				}>Add</Button>
+				<Button
+					className={classes.addButton}
+					disabled={!isLoggedIn}
+					variant="outlined"
+					aria-label="Add"
+					onClick={
+						() => setDialog(dispatch,
+							MODAL_JUMP_NEW,
+							true,
+							null
+						)
+					}>
+					Add
+				</Button>
 				{!isLoggedIn && <ThemedTooltip translate title={`You must be logged in to create ${APP_NOUN}s`}>
 					<Icon path={mdiAccountAlertOutline} color={palette.error.dark} size={1}/>
 				</ThemedTooltip>}

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState} from "react";
 import {
 	Button,
 	Checkbox,
@@ -18,8 +18,8 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {sortItems} from "../../misc/Sort";
 import Center from "react-center";
-import {MODAL_USER_GROUPS, setDialog} from "../../actions/Modal";
-import {defaultState} from "../../reducers/Modal";
+import {MODAL_USER_GROUPS, setDialog} from "../../store/actions/Modal";
+import {defaultState} from "../../store/reducers/modal";
 import {clone} from "../../util";
 import {GROUP_LOAD} from "../../store/actions/groups/GetGroups";
 import {GET_USER_GROUPS, getUserGroups} from "../../store/actions/groups/GetUserGroups";

@@ -8,15 +8,15 @@ import {CircularProgress, InputLabel, LinearProgress, makeStyles, Select, Typogr
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useDispatch, useSelector} from "react-redux";
-import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
+import {MODAL_JUMP_NEW, setDialog} from "../../store/actions/Modal";
 import {APP_NOUN} from "../../constants";
-import {defaultState} from "../../reducers/Modal";
+import {defaultState} from "../../store/reducers/modal";
 import {resetError} from "../../actions/Generic";
 import {ValidatedTextField} from "jmp-coreui";
 import {GET_USER_GROUPS, getUserGroups} from "../../store/actions/groups/GetUserGroups";
 import {PUT_JUMP, putJump} from "../../store/actions/jumps/PutJump";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 	},
 	button: {
 		fontFamily: "Manrope",
-		fontWeight: 'bold'
+		fontWeight: "bold"
 	},
 	progress: {
 		backgroundColor: "transparent"

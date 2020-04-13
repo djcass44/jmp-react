@@ -15,8 +15,6 @@
  */
 
 import {useDispatch, useSelector} from "react-redux";
-import JumpButton from "../../../components/content/jmp/JumpButton";
-import {DELETABLE_JUMP, MODAL_JUMP_EDIT, setDelete2, setDialog} from "../../../actions/Modal";
 import {mdiChartDonut, mdiContentCopy, mdiDeleteOutline, mdiDelta, mdiPencilOutline, mdiPlusCircle} from "@mdi/js";
 import React, {ReactNode, useEffect, useState} from "react";
 import {
@@ -30,16 +28,18 @@ import {
 	Typography,
 	useTheme
 } from "@material-ui/core";
-import getHelpCardColour from "../../../selectors/getHelpCardColour";
 import Moment from "react-moment";
+import Icon from "@mdi/react";
+import {PaletteColors} from "react-palette";
+import JumpButton from "../../../components/content/jmp/JumpButton";
+import {MODAL_JUMP_EDIT, setDelete, setDialog} from "../../../store/actions/Modal";
+import getHelpCardColour from "../../../selectors/getHelpCardColour";
 import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import getColourFromHex from "../../../style/getColourFromHex";
 import getSafeTextColour from "../../../selectors/getSafeTextColour";
-import Icon from "@mdi/react";
 import {Jump} from "../../../types";
 import {TState} from "../../../store/reducers";
 import {AuthState} from "../../../store/reducers/auth";
-import {PaletteColors} from "react-palette";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -118,11 +118,10 @@ const JumpContent: React.FC<JumpContentProps> = ({jump, focusProps, palette, loa
 		// add edited only if the jump has actually been edited
 		if (meta.created !== meta.edited) {
 			metaData.push({
-					icon: <Icon path={mdiDelta} size={0.725} color={theme.palette.error.main}/>,
-					key: "Edited",
-					value: <Moment fromNow>{(meta?.edited)}</Moment>
-				}
-			);
+				icon: <Icon path={mdiDelta} size={0.725} color={theme.palette.error.main}/>,
+				key: "Edited",
+				value: <Moment fromNow>{(meta?.edited)}</Moment>
+			});
 		}
 		setData(metaData);
 	}, [jump, jump.meta, jump.usage]);
@@ -191,9 +190,9 @@ const JumpContent: React.FC<JumpContentProps> = ({jump, focusProps, palette, loa
 					<JumpButton
 						title="Delete"
 						buttonProps={{
-							onClick: () => setDelete2(dispatch,
+							onClick: () => setDelete(dispatch,
 								true,
-								DELETABLE_JUMP,
+								true,
 								jump.public,
 								jump
 							),

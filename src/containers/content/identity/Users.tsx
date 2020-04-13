@@ -20,18 +20,18 @@ import {Grid, LinearProgress, makeStyles, Theme, Typography, Zoom} from "@materi
 import React, {ReactNode, useEffect, useState} from "react";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
-import GroupModDialog from "../../modal/GroupModDialog";
-import UserCard from "./profile/UserCard";
-import UserOptionsMenu from "./UserOptionsMenu";
+import Button from "@material-ui/core/Button";
 import {getUsers, USER_LOAD} from "../../../store/actions/users/GetUsers";
 import {PATCH_USER_ROLE} from "../../../store/actions/users/PatchUserRole";
 import {setUserOffset} from "../../../store/actions/users";
-import Button from "@material-ui/core/Button";
-import {MODAL_GROUP_NEW, setDialog} from "../../../actions/Modal";
+import GroupModDialog from "../../modal/GroupModDialog";
+import {MODAL_GROUP_NEW, setDialog} from "../../../store/actions/Modal";
 import {TState} from "../../../store/reducers";
 import {UsersState} from "../../../store/reducers/users";
 import {AuthState} from "../../../store/reducers/auth";
 import {User} from "../../../types";
+import UserOptionsMenu from "./UserOptionsMenu";
+import UserCard from "./profile/UserCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -110,7 +110,7 @@ export default () => {
 		<Button
 			className={classes.addButton}
 			disabled
-			onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, true)}
+			onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, true, null)}
 			variant="outlined">
 			Create
 		</Button>

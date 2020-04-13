@@ -12,8 +12,8 @@ import {
 	Typography
 } from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {DELETABLE_JUMP, MODAL_DELETE, setDialog} from "../../actions/Modal";
-import {defaultState} from "../../reducers/Modal";
+import {DELETABLE_JUMP, MODAL_DELETE, setDialog} from "../../store/actions/Modal";
+import {defaultState} from "../../store/reducers/modal";
 import {deleteJump} from "../../store/actions/jumps/DeleteJump";
 
 const useStyles = makeStyles(theme => ({
@@ -35,21 +35,22 @@ export default () => {
 	// hooks
 	const dispatch = useDispatch();
 
-	// seletors
+	// global state
 	const {headers} = useSelector(state => state.auth);
 	const {other, open} = useSelector(state => state.modal[MODAL_DELETE] || defaultState);
 
+	// local state
 	const [ack, setAck] = useState(false);
 
-	const requireApproval = other.requireApproval || false;
-	const deletable = other.deletable || null;
+	const requireApproval = other?.requireApproval || false;
+	const deletable = other?.deletable || null;
 
 	const defaultTitle = "Delete";
 	const defaultBody = `Are you sure? This action is immediate and cannot be undone.` +
 		`${requireApproval === true ? " Since this change will likely impact functionality for users, you will need to confirm your actions." : ""}`;
 
-	const title = other.title || defaultTitle;
-	const body = other.body || defaultBody;
+	const title = other?.title || defaultTitle;
+	const body = other?.body || defaultBody;
 
 	useEffect(() => {
 		setAck(false);

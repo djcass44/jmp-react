@@ -9,12 +9,12 @@ import {
 	makeStyles,
 	Typography
 } from "@material-ui/core";
-import {MODAL_GROUP_NEW, setDialog} from "../../actions/Modal";
+import {MODAL_GROUP_NEW, setDialog} from "../../store/actions/Modal";
 import {useDispatch, useSelector} from "react-redux";
 import {ValidatedTextField} from "jmp-coreui";
-import {defaultState} from "../../reducers/Modal";
 import {resetError} from "../../actions/Generic";
 import {PUT_GROUP, putGroup} from "../../store/actions/groups/PutGroup";
+import {defaultState} from "../../store/reducers/modal";
 
 const useStyles = makeStyles(() => ({
 	title: {

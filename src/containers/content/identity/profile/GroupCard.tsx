@@ -23,7 +23,7 @@ import IconButton from "@material-ui/core/IconButton";
 import {useDispatch} from "react-redux";
 import {ThemedTooltip} from "jmp-coreui";
 import getAvatarScheme from "../../../../style/getAvatarScheme";
-import {MODAL_GROUP_EDIT, setDialog} from "../../../../actions/Modal";
+import {MODAL_GROUP_EDIT, setDialog} from "../../../../store/actions/Modal";
 import {getProviderData} from "../../../../util";
 import getIconColour from "../../../../style/getIconColour";
 import {Group} from "../../../../types";

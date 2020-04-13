@@ -15,8 +15,8 @@ import {
 	Typography
 } from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {MODAL_GROUP_EDIT, setDialog} from "../../actions/Modal";
-import {defaultState} from "../../reducers/Modal";
+import {MODAL_GROUP_EDIT, setDialog} from "../../store/actions/Modal";
+import {defaultState} from "../../store/reducers/modal";
 import {ValidatedTextField} from "jmp-coreui";
 import FormControl from "@material-ui/core/FormControl";
 import {resetError} from "../../actions/Generic";

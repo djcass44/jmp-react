@@ -15,18 +15,18 @@
  *
  */
 
-import jumps, {JumpsState} from "./jumps";
 import {combineReducers} from "redux";
+import {SimpleMap} from "../../types";
+import snackbar from "../../reducers/Snackbar";
+import jumps, {JumpsState} from "./jumps";
 import auth, {AuthState} from "./auth";
 import loading from "./loading";
 import errors from "./errors";
-import modal from "../../reducers/Modal";
-import snackbar from "../../reducers/Snackbar";
 import users, {UsersState} from "./users";
 import groups, {GroupsState} from "./groups";
 import info, {InfoState} from "./info";
-import {SimpleMap} from "../../types";
 import generic, {GenericState} from "./generic";
+import modal, {Modal} from "./modal";
 
 export interface TState {
 	jumps: JumpsState;
@@ -37,6 +37,7 @@ export interface TState {
 	loading: SimpleMap<boolean>;
 	errors: SimpleMap<string | any | null>;
 	generic: GenericState;
+	modal: SimpleMap<Modal>;
 }
 
 export default combineReducers({
