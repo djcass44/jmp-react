@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import {
 	Button,
 	Checkbox,
@@ -9,14 +9,17 @@ import {
 	DialogTitle,
 	FormControlLabel,
 	makeStyles,
+	Theme,
 	Typography
 } from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {DELETABLE_JUMP, MODAL_DELETE, setDialog} from "../../store/actions/Modal";
-import {defaultState} from "../../store/reducers/modal";
+import {MODAL_DELETE, setDialog} from "../../store/actions/Modal";
+import {defaultState, Modal} from "../../store/reducers/modal";
 import {deleteJump} from "../../store/actions/jumps/DeleteJump";
+import {TState} from "../../store/reducers";
+import {AuthState} from "../../store/reducers/auth";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	title: {
 		fontFamily: "Manrope",
 		fontWeight: 500,
@@ -36,8 +39,8 @@ export default () => {
 	const dispatch = useDispatch();
 
 	// global state
-	const {headers} = useSelector(state => state.auth);
-	const {other, open} = useSelector(state => state.modal[MODAL_DELETE] || defaultState);
+	const {headers} = useSelector<TState, AuthState>(state => state.auth);
+	const {open, other} = useSelector<TState, Modal>(state => state.modal[MODAL_DELETE] || defaultState);
 
 	// local state
 	const [ack, setAck] = useState(false);
@@ -47,7 +50,7 @@ export default () => {
 
 	const defaultTitle = "Delete";
 	const defaultBody = `Are you sure? This action is immediate and cannot be undone.` +
-		`${requireApproval === true ? " Since this change will likely impact functionality for users, you will need to confirm your actions." : ""}`;
+		`${requireApproval && " Since this change will likely impact functionality for users, you will need to confirm your actions."}`;
 
 	const title = other?.title || defaultTitle;
 	const body = other?.body || defaultBody;
@@ -56,11 +59,11 @@ export default () => {
 		setAck(false);
 	}, [open]);
 
-	const close = () => setDialog(dispatch, MODAL_DELETE, false);
+	const close = () => setDialog(dispatch, MODAL_DELETE, false, null);
 
 	const onSubmit = () => {
 		// convert to a switch when there's more cases
-		if (deletable === DELETABLE_JUMP) {
+		if (deletable === true) {
 			deleteJump(dispatch, headers, other.item.id);
 		}
 		close();
@@ -68,29 +71,31 @@ export default () => {
 
 	const classes = useStyles();
 	return (
-		<Dialog open={open === true} aria-labelledby={"form-dialog-title"}>
-			<DialogTitle id={"form-dialog-title"}>
+		<Dialog
+			open={open}
+			aria-labelledby="form-dialog-title">
+			<DialogTitle id="form-dialog-title">
 				<Typography className={classes.title}>{title != null ? title : defaultTitle}</Typography>
 			</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
 					{body != null ? body : defaultBody}
 				</DialogContentText>
-				{requireApproval === true && <FormControlLabel
+				{requireApproval && <FormControlLabel
 					className={classes.red}
 					control={
 						<Checkbox
 							className={classes.red}
 							checked={ack}
-							onChange={(e) => setAck(e.target.checked)}/>
+							onChange={(e: ChangeEvent<HTMLInputElement>) => setAck(e.target.checked)}/>
 					}
-					label={"Use admin power to override"}
+					label="Use admin power to override"
 				/>}
 			</DialogContent>
 			<DialogActions>
-				<Button className={classes.button} color={"secondary"} onClick={() => close()}>Cancel</Button>
+				<Button className={classes.button} color="secondary" onClick={() => close()}>Cancel</Button>
 				<Button className={`${classes.button} ${classes.red}`} onClick={() => onSubmit()}
-				        disabled={requireApproval === true && ack === false}>Delete</Button>
+				        disabled={requireApproval && !ack}>Delete</Button>
 			</DialogActions>
 		</Dialog>
 	);

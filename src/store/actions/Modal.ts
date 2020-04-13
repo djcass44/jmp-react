@@ -30,8 +30,6 @@ export const MODAL_USER_GROUPS = "MODAL_USER_GROUPS";
 
 export const SET_DIALOG = "SET_DIALOG";
 
-export const DELETABLE_JUMP = "DELETABLE_JUMP";
-
 interface SetDialogActionType {
 	type: typeof SET_DIALOG;
 	payload: {

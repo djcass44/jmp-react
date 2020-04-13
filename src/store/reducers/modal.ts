@@ -2,12 +2,12 @@ import {ModalActionType, SET_DIALOG} from "../actions/Modal";
 import {SimpleMap} from "../../types";
 
 export interface Modal {
-	visible: boolean;
+	open: boolean;
 	other: any | null;
 }
 
 export const defaultState: Modal = {
-	visible: false,
+	open: false,
 	other: {}
 };
 
