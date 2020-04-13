@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {ChangeEvent, ReactNode, useEffect, useState} from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -8,13 +8,16 @@ import {CircularProgress, InputLabel, LinearProgress, makeStyles, Select, Typogr
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useDispatch, useSelector} from "react-redux";
+import {ValidatedTextField} from "jmp-coreui";
 import {MODAL_JUMP_NEW, setDialog} from "../../store/actions/Modal";
 import {APP_NOUN} from "../../constants";
-import {defaultState} from "../../store/reducers/modal";
+import {defaultState, Modal} from "../../store/reducers/modal";
 import {resetError} from "../../actions/Generic";
-import {ValidatedTextField} from "jmp-coreui";
 import {GET_USER_GROUPS, getUserGroups} from "../../store/actions/groups/GetUserGroups";
 import {PUT_JUMP, putJump} from "../../store/actions/jumps/PutJump";
+import {TState} from "../../store/reducers";
+import {AuthState} from "../../store/reducers/auth";
+import {GroupsState} from "../../store/reducers/groups";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -45,62 +48,69 @@ const initialUrl = {
 const JumpDialog = () => {
 	// hooks
 	const dispatch = useDispatch();
+	const classes = useStyles();
 
 	// global state
-	const loadingGroups = useSelector(state => state.loading[GET_USER_GROUPS]);
-	const loading = useSelector(state => state.loading[PUT_JUMP]);
-	const error = useSelector(state => state.errors[PUT_JUMP]);
-	const {headers, isAdmin, isLoggedIn, userProfile} = useSelector(state => state.auth);
-	const {userGroups} = useSelector(state => state.groups);
-	const {open} = useSelector(state => state.modal[MODAL_JUMP_NEW] || defaultState);
+	const loadingGroups = useSelector<TState, boolean>(state => state.loading[GET_USER_GROUPS]);
+	const loading = useSelector<TState, boolean>(state => state.loading[PUT_JUMP]);
+	const error = useSelector<TState, any | null>(state => state.errors[PUT_JUMP]);
+	const {headers, isAdmin, isLoggedIn, userProfile} = useSelector<TState, AuthState>(state => state.auth);
+	const {userGroups} = useSelector<TState, GroupsState>(state => state.groups);
+	const {open} = useSelector<TState, Modal>(state => state.modal[MODAL_JUMP_NEW] || defaultState);
 
-	const uid = userProfile && userProfile.id;
+	const uid = userProfile?.id;
 
 	// local state
 	const [name, setName] = useState(initialName);
 	const [url, setUrl] = useState(initialUrl);
-	const [type, setType] = useState('');
-	const [groupId, setGroupId] = useState('');
+	const [type, setType] = useState<number | null>(null);
+	const [groupId, setGroupId] = useState("");
 	const [submit, setSubmit] = useState(false);
+	const [groups, setGroups] = useState<Array<ReactNode>>([]);
 
-	const close = () => setDialog(dispatch, MODAL_JUMP_NEW, false);
+	const close = () => setDialog(dispatch, MODAL_JUMP_NEW, false, null);
 
 	useEffect(() => {
 		resetError(dispatch, PUT_JUMP);
 		resetError(dispatch, GET_USER_GROUPS);
-		if (open === true && isLoggedIn === true)
-			getUserGroups(dispatch, headers, uid);
 		setName(initialName);
 		setUrl(initialUrl);
-		setType("");
+		setType(null);
 		setSubmit(false);
 	}, [open]);
 
 	useEffect(() => {
-		if (loading === false && submit === true && error == null)
+		if (open && isLoggedIn && uid)
+			getUserGroups(dispatch, headers, uid);
+	}, [uid, open, isLoggedIn]);
+
+	useEffect(() => {
+		if (!loading && submit && error == null)
 			close();
 	}, [loading, error]);
 
+	useEffect(() => {
+		setGroups(userGroups.map(g => <MenuItem value={g.id} key={g.id}>{g.name}</MenuItem>));
+	}, [userGroups]);
+
 	const onSubmit = () => {
 		// ignore the type error below, it's fine
-		const gid = type === 2 ? `?gid=${groupId}` : '';
-		putJump(dispatch, headers, JSON.stringify({
+		const gid = type === 2 ? `?gid=${groupId}` : "";
+		putJump(dispatch, headers, {
+			id: 0,
 			name: name.value,
 			location: url.value,
-			personal: type,
+			personal: type || 1, // default to personal
 			alias: []
-		}), gid);
+		}, gid);
 		setSubmit(true);
 	};
 
-	const classes = useStyles();
-	const groups = [];
-	userGroups.forEach(g => {
-		groups.push(<MenuItem value={g.id} key={g.id}>{g.name}</MenuItem>);
-	});
 	return (
-		<Dialog open={open === true} aria-labelledby={"form-dialog-title"}>
-			<DialogTitle id={"form-dialog-title"} className={classes.title}>
+		<Dialog
+			open={open}
+			aria-labelledby="form-dialog-title">
+			<DialogTitle id="form-dialog-title" className={classes.title}>
 				<Typography className={classes.title}>New {APP_NOUN}</Typography>
 			</DialogTitle>
 			<DialogContent>
@@ -131,36 +141,36 @@ const JumpDialog = () => {
 					}}
 				/>
 				<FormControl fullWidth>
-					<InputLabel htmlFor={"type"}>Type</InputLabel>
-					<Select value={type} inputProps={{name: 'type', id: 'type'}} onChange={(e) => setType(e.target.value)}>
-						<MenuItem value={0} disabled={isAdmin !== true}>Global</MenuItem>
+					<InputLabel htmlFor="type">Type</InputLabel>
+					<Select
+						value={type?.toString() || ""}
+						inputProps={{name: "type", id: "type"}}
+						onChange={(e: ChangeEvent<{value: unknown}>) => setType(Number(e.target.value))}>
+						<MenuItem value={0} disabled={!isAdmin}>Global</MenuItem>
 						<MenuItem value={1}>Personal</MenuItem>
 						<MenuItem value={2} disabled={userGroups.length === 0}>Group</MenuItem>
 					</Select>
 				</FormControl>
-				{loadingGroups === true ? <LinearProgress className={classes.progress}/> : ""}
-				{type === 2 && userGroups.length > 0 ?
-					<FormControl fullWidth>
-						<InputLabel htmlFor={"group"}>Group</InputLabel>
-						<Select value={groupId} inputProps={{name: "group", id: "group"}}
-						        onChange={(e) => setGroupId(e.target.value)}>
-							{groups}
-						</Select>
-					</FormControl>
-					:
-					""
+				{loadingGroups ? <LinearProgress className={classes.progress}/> : ""}
+				{type === 2 && userGroups.length > 0 &&
+				<FormControl fullWidth>
+					<InputLabel htmlFor="group">Group</InputLabel>
+					<Select value={groupId} inputProps={{name: "group", id: "group"}}
+					        onChange={(e: ChangeEvent<{value: unknown}>) => setGroupId(e.target.value as string)}>
+						{groups}
+					</Select>
+				</FormControl>
 				}
-				{error && <Typography style={{fontWeight: "bold"}} variant={"caption"}
-				                      color={"error"}>{error && error.toString()}</Typography>}
+				{error && <Typography style={{fontWeight: "bold"}} variant="caption"
+				                      color="error">{error && error.toString()}</Typography>}
 			</DialogContent>
 			<DialogActions>
-				{loading === true && <CircularProgress className={classes.progress} size={15} thickness={8}/>}
-				<Button className={classes.button} color={"secondary"} disabled={loading === true}
+				{loading && <CircularProgress className={classes.progress} size={15} thickness={8}/>}
+				<Button className={classes.button} color="secondary" disabled={loading}
 				        onClick={() => close()}>Cancel</Button>
-				<Button className={classes.button} color={"primary"} onClick={() => onSubmit()}
+				<Button className={classes.button} color="primary" onClick={() => onSubmit()}
 				        disabled={(type === 2 && groupId === "") || name.error !== "" ||
-				        url.error !== "" || loadingGroups === true || loading === true ||
-				        name.value.length === 0 || url.value.length === 0}>
+				        url.error !== "" || loadingGroups || loading || name.value.length === 0 || url.value.length === 0}>
 					Create
 				</Button>
 			</DialogActions>
