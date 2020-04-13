@@ -54,7 +54,7 @@ export default () => {
 	const loading = useSelector(state => state.loading[GROUP_LOAD] || state.loading[GET_USER_GROUPS] || state.loading[SET_USER_GROUPS]);
 	const {other, open} = useSelector(state => state.modal[MODAL_USER_GROUPS] || defaultState);
 
-	const user = other.user || {};
+	const user = other?.user || {};
 
 
 	const [usermap, setUsermap] = useState([]);

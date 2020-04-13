@@ -16,24 +16,21 @@
  */
 
 import React, {ChangeEvent, useEffect, useState} from "react";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import {fade} from "@material-ui/core/styles/colorManipulator";
-import {IconButton, makeStyles, Popover, Theme} from "@material-ui/core";
+import {Avatar as MuiAvatar, IconButton, makeStyles, Popover, Theme, Toolbar, Typography} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiHelpCircleOutline, mdiMagnify} from "@mdi/js";
 import {Avatar} from "evergreen-ui";
 import {useTheme} from "@material-ui/core/styles";
 import {useLocation} from "react-router";
-import BackButton from "../components/widget/BackButton";
+import {DwellInputBase} from "jmp-coreui";
 import getIconColour from "../style/getIconColour";
 import {APP_MSG, APP_NAME} from "../constants";
 import {TState} from "../store/reducers";
 import {AuthState} from "../store/reducers/auth";
 import {setUserSearch} from "../store/actions/users";
-import {DwellInputBase} from "jmp-coreui";
 import UserMenu from "./content/identity/profile/UserMenu";
 
 const bgTransition = (time: number | string): string => `background-color ${time}ms linear`;
@@ -123,16 +120,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 		},
 	},
 	sectionDesktop: {
-		display: 'none',
-		[theme.breakpoints.up('md')]: {
-			display: 'flex',
-		},
+		display: "none",
+		[theme.breakpoints.up("md")]: {
+			display: "flex"
+		}
 	},
 	progress: {
-		backgroundColor: 'transparent'
+		backgroundColor: "transparent"
 	},
 	menuIcon: {
 		paddingRight: theme.spacing(1)
+	},
+	avatar: {
+		cursor: "pointer",
+		width: 24,
+		height: 24,
+		borderRadius: 100,
+		margin: 12,
+		padding: 6,
+		backgroundColor: theme.palette.background.default
 	}
 }));
 
@@ -145,6 +151,7 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 		"/identity"
 	];
 	// hooks
+	const history = useHistory();
 	const location = useLocation();
 	const dispatch = useDispatch();
 	const classes = useStyles();
@@ -181,7 +188,12 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 		<div className={classes.root}>
 			<>
 				<Toolbar className={classes.main}>
-					{location.pathname !== "/" && loading === false ? <BackButton label="" to="/"/> : ""}
+					<MuiAvatar
+						className={classes.avatar}
+						src={`${process.env.PUBLIC_URL}/favicon.png`}
+						alt={`${APP_NAME} logo`}
+						onClick={() => history.push("/")}
+					/>
 					<Typography className={classes.brand} variant="h6" color="primary">
 						{APP_NAME}
 					</Typography>

@@ -57,7 +57,7 @@ export default () => {
 	const {headers, allProviders} = useSelector(state => state.auth);
 	const {other, open} = useSelector(state => state.modal[MODAL_GROUP_EDIT] || defaultState);
 
-	const group = other.group || {};
+	const group = other?.group || {};
 
 
 	const [name, setName] = useState(initialName);
