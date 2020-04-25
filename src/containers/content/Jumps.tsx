@@ -30,10 +30,10 @@ import {setJumpExpand, setJumpOffset, setJumpSearch} from "../../store/actions/j
 import {TState} from "../../store/reducers";
 import {Jump, Page} from "../../types";
 import {JumpsState} from "../../store/reducers/jumps";
-import {APP_NAME, APP_NOUN} from "../../constants";
+import {APP_NAME, APP_NOUN, pageSize} from "../../constants";
 import JumpItemSkeleton from "../../components/content/jmp/JumpItemSkeleton";
-import JumpItem from "./jmp/JumpItem";
 import useAuth from "../../hooks/useAuth";
+import JumpItem from "./jmp/JumpItem";
 
 const bgTransition = (time: string | number) => `background-color ${time}ms linear`;
 const useStyles = makeStyles((theme: Theme) => ({
@@ -137,7 +137,7 @@ export default () => {
 	const [lData, setLData] = useState<Array<ReactNode>>([]);
 
 	const onSearch = (o = offset) => {
-		getJumps(dispatch, headers, search, Number(o / 8) || 0, 8);
+		getJumps(dispatch, headers, search, Number(o / pageSize) || 0, pageSize);
 	};
 
 	useEffect(() => {
@@ -147,7 +147,7 @@ export default () => {
 
 	useEffect(() => {
 		const {content} = pagedJumps;
-		setJumpOffset(dispatch, pagedJumps.number * 8);
+		setJumpOffset(dispatch, pagedJumps.number * pageSize);
 		// Loop-d-loop
 		setData(content.map(i => (<JumpItem jump={i} key={i.id}/>)));
 	}, [pagedJumps, offset]);
@@ -156,7 +156,7 @@ export default () => {
 		if (!loading)
 			setLData([]);
 		const l = [];
-		const size = pagedJumps.numberOfElements || 8;
+		const size = pagedJumps.numberOfElements || pageSize;
 		for (let i = 0; i < size; i++) {
 			l.push(<JumpItemSkeleton key={i}/>);
 		}

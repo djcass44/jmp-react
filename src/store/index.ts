@@ -32,7 +32,7 @@ declare global {
 const persistConfig: PersistConfig<TState> = {
 	key: "root",
 	storage,
-	whitelist: []
+	whitelist: ["generic"]
 };
 const persistedReducers = persistReducer(persistConfig, reducers);
 
