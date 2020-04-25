@@ -17,19 +17,18 @@
 
 import React, {useEffect} from "react";
 import Center from "react-center";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {Link} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import {CircularProgress, makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
 import {APP_NAME} from "../../constants";
 import {oauthLogout} from "../../store/actions/auth/AuthLogout";
-import {TState} from "../../store/reducers";
-import {AuthState} from "../../store/reducers/auth";
 import {clone} from "../../util";
 import {oauth2Logout} from "../../store/actions/auth/OAuth2Logout";
 import {useHistory} from "react-router";
 import Icon from "@mdi/react";
 import {mdiHomeOutline} from "@mdi/js";
+import useAuth from "../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	overlay: {
@@ -62,7 +61,7 @@ const Logout: React.FC = () => {
 	const history = useHistory();
 	const theme = useTheme();
 
-	const {isLoggedIn, headers, request, source} = useSelector<TState, AuthState>(state => state.auth);
+	const {isLoggedIn, headers, request, source} = useAuth();
 
 	useEffect(() => {
 		window.document.title = `Logout - ${APP_NAME}`;

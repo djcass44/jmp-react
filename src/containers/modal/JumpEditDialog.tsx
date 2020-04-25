@@ -19,8 +19,8 @@ import {defaultState, Modal} from "../../store/reducers/modal";
 import {resetError} from "../../actions/Generic";
 import {PATCH_JUMP, patchJump} from "../../store/actions/jumps/PatchJump";
 import {TState} from "../../store/reducers";
-import {AuthState} from "../../store/reducers/auth";
 import {Alias} from "../../types";
+import useAuth from "../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -62,7 +62,7 @@ export default () => {
 	// global state
 	const loading = useSelector<TState, boolean>(state => state.loading[PATCH_JUMP]);
 	const error = useSelector<TState, any | null>(state => state.errors[PATCH_JUMP]);
-	const {headers} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers} = useAuth();
 	const {other, open} = useSelector<TState, Modal>(state => state.modal[MODAL_JUMP_EDIT] || defaultState);
 
 	const jump = other?.jump;

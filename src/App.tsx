@@ -19,11 +19,11 @@ import React, {useEffect, useMemo} from "react";
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {Helmet} from "react-helmet";
+import {SnackbarProvider} from "notistack";
+import useTheme from "@material-ui/core/styles/useTheme";
 import {closeWebSocket, connectWebSocket} from "./actions/Socket";
 import Body from "./containers/Body";
-import {SnackbarProvider} from "notistack";
 import Snackbar from "./containers/Snackbar";
-import useTheme from "@material-ui/core/styles/useTheme";
 import {dark, light} from "./style/palette";
 import {TState} from "./store/reducers";
 import {GenericState} from "./store/reducers/generic";
@@ -38,7 +38,6 @@ const App: React.FC = () => {
 	const theme = useMemo(() => {
 		document.documentElement.setAttribute("data-theme", themeMode);
 		return createMuiTheme({
-			// @ts-ignore
 			palette: themeMode === "dark" ? dark : light,
 			overrides: {
 				MuiTooltip: {
@@ -62,7 +61,7 @@ const App: React.FC = () => {
 			<MuiThemeProvider theme={theme}>
 				<SnackbarProvider maxSnack={3} autoHideDuration={3500} preventDuplicate>
 					<Helmet>
-						<meta name={"theme-color"} content={palette.primary.main}/>
+						<meta name="theme-color" content={palette.primary.main}/>
 					</Helmet>
 					<Body/>
 					<Snackbar/>

@@ -1,14 +1,15 @@
-import {SOCKET_URL} from "../constants";
-import {addSnackbar, closeSnackbar, removeSnackbar} from "./Snackbar";
+import {Dispatch} from "redux";
 import {getJumps} from "../store/actions/jumps/GetJumps";
-import store from "../store";
+import {store} from "../store";
 import {SOCKET_UPDATE_USERS} from "../store/actions/users";
 import {getUsers} from "../store/actions/users/GetUsers";
 import {SOCKET_UPDATE_GROUPS} from "../store/actions/groups";
 import {getGroups} from "../store/actions/groups/GetGroups";
-import {Dispatch} from "redux";
+import {SOCKET_URL} from "../constants";
 import {Action} from "../types";
 import {SOCKET_UPDATE_JUMP} from "../store/actions/jumps";
+import {getHeadersFromRaw} from "../util";
+import {addSnackbar, closeSnackbar, removeSnackbar} from "./Snackbar";
 
 export const WS_OPEN = "WS_OPEN";
 export const WS_RECONNECT = "WS_RECONNECT";
@@ -56,7 +57,7 @@ const checkType = (dispatch: Dispatch, action: Action) => {
 	const {type, payload} = action;
 	// get values we need from the state
 	const state = store.getState();
-	const {headers} = state.auth;
+	const headers = getHeadersFromRaw(state.auth.request, state.auth.source);
 	switch (type) {
 		case SOCKET_UPDATE_JUMP: {
 			const {offset, search} = state.jumps;

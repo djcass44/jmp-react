@@ -55,12 +55,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 	brand: {
 		paddingRight: 8,
-		[theme.breakpoints.up('sm')]: {
+		[theme.breakpoints.up("sm")]: {
 			paddingRight: 0
 		},
 		fontFamily: "Manrope",
-		fontWeight: 600,
-		pointerEvents: 'none'
+		fontWeight: 500,
+		pointerEvents: "none"
 	},
 	title: {
 		display: 'none',
@@ -71,17 +71,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 		pointerEvents: 'none'
 	},
 	search: {
-		position: 'relative',
+		position: "relative",
 		borderRadius: theme.shape.borderRadius,
 		color: theme.palette.text.primary,
-		// @ts-ignore
-		backgroundColor: fade(theme.palette.search, 0.15),
-		'&:hover': {
-			// @ts-ignore
-			backgroundColor: fade(theme.palette.search, 0.35),
+		backgroundColor: fade(theme.palette.action.hover, 0.15),
+		"&:hover": {
+			backgroundColor: fade(theme.palette.action.hover, 0.35),
 			transition: bgTransition(250),
 			webkitTransition: bgTransition(250),
-			msTransition: bgTransition(250),
+			msTransition: bgTransition(250)
 		},
 		transition: bgTransition(150),
 		webkitTransition: bgTransition(150),
@@ -194,7 +192,7 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 						alt={`${APP_NAME} logo`}
 						onClick={() => history.push("/")}
 					/>
-					<Typography className={classes.brand} variant="h6" color="primary">
+					<Typography className={classes.brand} variant="h6" color="textPrimary">
 						{APP_NAME}
 					</Typography>
 					<Typography className={classes.title} style={{fontWeight: 300}} variant="h6" color="secondary">

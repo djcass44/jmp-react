@@ -14,10 +14,9 @@
  *    limitations under the License.
  */
 
-import {makeStyles} from "@material-ui/core";
+import {makeStyles, Theme} from "@material-ui/core";
 import * as React from "react";
 import {useTheme} from "@material-ui/core/styles";
-import {Theme} from "../../style/palette";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	https: {
@@ -40,14 +39,14 @@ const Domain: React.FC<DomainProps> = ({text}: DomainProps) => {
 	const theme = useTheme<Theme>();
 	const classes = useStyles(theme);
 
-	const highlighted = (url: string, classes: any) => {
+	const highlighted = (url: string) => {
 		const split = url.split("://");
 		const scheme = split[0];
 		const domain = split[1];
-		return (<span className={classes[scheme]}>{scheme}://<span
+		return (<span className={(classes as any)[scheme]}>{scheme}://<span
 			className={classes.secondaryText}>{domain}</span></span>);
 	};
-	return (<span>{highlighted(text, classes)}</span>);
+	return (<span>{highlighted(text)}</span>);
 };
 
 export default Domain;

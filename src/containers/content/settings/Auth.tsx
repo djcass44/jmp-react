@@ -16,7 +16,7 @@
  */
 
 import React, {ReactNode, useEffect, useState} from "react";
-import {List, ListItem, ListItemAvatar, ListItemText, ListSubheader, makeStyles, Theme} from "@material-ui/core";
+import {List, ListItem, ListItemAvatar, ListItemText, ListSubheader} from "@material-ui/core";
 import InfoItem from "../../../components/content/settings/InfoItem";
 import Icon from "@mdi/react";
 import {mdiAccountDetailsOutline, mdiAccountOutline} from "@mdi/js";
@@ -26,30 +26,15 @@ import {TState} from "../../../store/reducers";
 import {AuthState} from "../../../store/reducers/auth";
 import {getProviders} from "../../../store/actions/auth/GetProviders";
 import {getProviderData, plural} from "../../../util";
-
-const useStyles = makeStyles((theme: Theme) => ({
-	title: {
-		fontFamily: "Manrope", fontWeight: 500
-	},
-	content: {
-		fontSize: 14,
-		flex: 1
-	},
-	statusOK: {
-		color: theme.palette.success.main
-	},
-	statusFail: {
-		color: theme.palette.error.main
-	},
-}));
+import useAuth from "../../../hooks/useAuth";
 
 const Auth: React.FC = () => {
 	const dispatch = useDispatch();
-	const classes = useStyles();
 	const theme = useTheme();
 	const {palette} = theme;
 
-	const {allProviders, headers} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers} = useAuth();
+	const {allProviders} = useSelector<TState, AuthState>(state => state.auth);
 
 	const [data, setData] = useState<ReactNode | null>(null);
 	const [providers] = useState<any>(getProviderData(theme));

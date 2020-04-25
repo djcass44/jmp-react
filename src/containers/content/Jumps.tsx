@@ -30,10 +30,10 @@ import {setJumpExpand, setJumpOffset, setJumpSearch} from "../../store/actions/j
 import {TState} from "../../store/reducers";
 import {Jump, Page} from "../../types";
 import {JumpsState} from "../../store/reducers/jumps";
-import {AuthState} from "../../store/reducers/auth";
 import {APP_NAME, APP_NOUN} from "../../constants";
 import JumpItemSkeleton from "../../components/content/jmp/JumpItemSkeleton";
 import JumpItem from "./jmp/JumpItem";
+import useAuth from "../../hooks/useAuth";
 
 const bgTransition = (time: string | number) => `background-color ${time}ms linear`;
 const useStyles = makeStyles((theme: Theme) => ({
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 	name: {
 		fontFamily: "Manrope",
-		fontWeight: 500,
+		fontWeight: 400,
 		textAlign: "center",
 		color: theme.palette.primary.main
 	},
@@ -59,11 +59,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 		position: "relative",
 		borderRadius: 24,
 		color: theme.palette.text.primary,
-		// @ts-ignore
-		backgroundColor: fade(theme.palette.search, 0.35),
+		backgroundColor: fade(theme.palette.action.hover, 0.05),
 		"&:hover": {
-			// @ts-ignore
-			backgroundColor: fade(theme.palette.search, 0.65),
+			backgroundColor: fade(theme.palette.action.hover, 0.15),
 			transition: bgTransition(250),
 			webkitTransition: bgTransition(250),
 			msTransition: bgTransition(250)
@@ -131,7 +129,7 @@ export default () => {
 	// global state
 	const pagedJumps = useSelector<TState, Page<Jump>>(state => state.jumps.jumps);
 	const {offset, search} = useSelector<TState, JumpsState>(state => state.jumps);
-	const {headers, isLoggedIn} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers, isLoggedIn} = useAuth();
 	const loading = useSelector<TState, boolean>(state => state.loading[GET_JUMP]);
 
 	// local state
@@ -145,7 +143,7 @@ export default () => {
 	useEffect(() => {
 		window.document.title = APP_NAME;
 		onSearch();
-	}, [headers]);
+	}, [headers.Authorization]);
 
 	useEffect(() => {
 		const {content} = pagedJumps;
@@ -175,11 +173,19 @@ export default () => {
 	return (
 		<React.Fragment>
 			<Center>
-				<Avatar className={classes.avatar} component={Paper} src={`${process.env.PUBLIC_URL}/jmp2.png`}
-				        alt={APP_NAME}/>
+				<Avatar
+					className={classes.avatar}
+					component={Paper}
+					src={`${process.env.PUBLIC_URL}/jmp2.png`}
+					alt={APP_NAME}
+				/>
 			</Center>
 			<Center>
-				<Typography variant="h4" className={classes.name}>Where to?</Typography>
+				<Typography
+					className={classes.name}
+					variant="h4">
+					Where to?
+				</Typography>
 			</Center>
 			<Center>
 				<Button

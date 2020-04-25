@@ -28,10 +28,10 @@ import GroupModDialog from "../../modal/GroupModDialog";
 import {MODAL_GROUP_NEW, setDialog} from "../../../store/actions/Modal";
 import {TState} from "../../../store/reducers";
 import {UsersState} from "../../../store/reducers/users";
-import {AuthState} from "../../../store/reducers/auth";
 import {User} from "../../../types";
 import UserOptionsMenu from "./UserOptionsMenu";
 import UserCard from "./profile/UserCard";
+import useAuth from "../../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -64,7 +64,7 @@ export default () => {
 	const classes = useStyles();
 
 	const {users, offset, search} = useSelector<TState, UsersState>(state => state.users);
-	const {headers} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers} = useAuth();
 	const loading = useSelector<TState, boolean>(state => state.loading[USER_LOAD] ?? false);
 	const loadingPatch = useSelector<TState, boolean>(state => state.loading[PATCH_USER_ROLE] ?? false);
 
@@ -79,7 +79,7 @@ export default () => {
 
 	useEffect(() => {
 		onSearch();
-	}, [headers, search]);
+	}, [headers.Authorization, search]);
 
 	useEffect(() => {
 		const {content} = users;

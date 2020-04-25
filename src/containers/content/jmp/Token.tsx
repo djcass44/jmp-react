@@ -23,9 +23,9 @@ import Center from "react-center";
 import {GET_TARGET} from "../../../actions/Jumps";
 import {useHistory} from "react-router";
 import {TState} from "../../../store/reducers";
-import {AuthState} from "../../../store/reducers/auth";
 import {RSAA} from "redux-api-middleware";
 import {Dispatch} from "redux";
+import useAuth from "../../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	text: {
@@ -62,7 +62,7 @@ const Token: React.FC = () => {
 	const history = useHistory();
 
 	// global state
-	const {headers} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers} = useAuth();
 	const loading = useSelector<TState, boolean>(state => state.loading[GET_TARGET] ?? false);
 	const error = useSelector<TState, Error | null>(state => state.errors[GET_TARGET]);
 

@@ -29,9 +29,9 @@ import {getGroups, GROUP_LOAD} from "../../../store/actions/groups/GetGroups";
 import {setGroupOffset} from "../../../store/actions/groups";
 import {TState} from "../../../store/reducers";
 import {GroupsState} from "../../../store/reducers/groups";
-import {AuthState} from "../../../store/reducers/auth";
 import {UsersState} from "../../../store/reducers/users";
 import GroupCard from "./profile/GroupCard";
+import useAuth from "../../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -62,7 +62,7 @@ export default () => {
 
 
 	const {groups} = useSelector<TState, GroupsState>(state => state.groups);
-	const {headers, isAdmin, isLoggedIn} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers, isAdmin, isLoggedIn} = useAuth();
 	const {offset, search} = useSelector<TState, UsersState>(state => state.users);
 
 	const loading = useSelector<TState, boolean>(state => state.loading[GROUP_LOAD] ?? false);
@@ -75,7 +75,7 @@ export default () => {
 
 	useEffect(() => {
 		onSearch();
-	}, [headers, search]);
+	}, [headers.Authorization, search]);
 
 	// hook to rebuild the index when jumps change
 	useEffect(() => {

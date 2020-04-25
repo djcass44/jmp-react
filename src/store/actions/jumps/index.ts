@@ -17,7 +17,7 @@
 
 import {GetJumpsActionType} from "./GetJumps";
 import {Dispatch} from "redux";
-import {GetSimilarActionType} from "./GetSimilar";
+import {GetSimilarActionType, GetSimilarFailureAction} from "./GetSimilar";
 import {FaviconPayload} from "../../../types";
 import {DeleteJumpActionType} from "./DeleteJump";
 import {PutJumpActionType} from "./PutJump";
@@ -32,17 +32,17 @@ export const SOCKET_UPDATE_JUMP = "EVENT_UPDATE";
 export const SOCKET_UPDATE_TITLE = "EVENT_UPDATE_TITLE";
 export const SOCKET_UPDATE_FAVICON = "SOCKET_UPDATE_FAVICON";
 
-interface SetJumpExpandActionType {
+export interface SetJumpExpandActionType {
 	type: typeof SET_JUMP_EXPAND;
 	payload: number | null;
 }
 
-interface SetJumpOffsetActionType {
+export interface SetJumpOffsetActionType {
 	type: typeof SET_JUMP_OFFSET;
 	payload: number;
 }
 
-interface SetJumpSearchActionType {
+export interface SetJumpSearchActionType {
 	type: typeof SET_JUMP_SEARCH;
 	payload: string;
 }
@@ -52,17 +52,26 @@ interface SocketUpdateActionType {
 	payload: FaviconPayload;
 }
 
-export const getSimilarFail = (dispatch: Dispatch, error: any) => dispatch({
+export const getSimilarFail = (dispatch: Dispatch, error: any): GetSimilarFailureAction => dispatch({
 	type: `${GET_SIMILAR}_FAILURE`,
 	payload: error,
 	error: true
 });
 
-export const setJumpExpand = (dispatch: Dispatch, id: number | null) => dispatch({type: SET_JUMP_EXPAND, payload: id});
+export const setJumpExpand = (dispatch: Dispatch, id: number | null): SetJumpExpandActionType => dispatch({
+	type: SET_JUMP_EXPAND,
+	payload: id
+});
 
-export const setJumpOffset = (dispatch: Dispatch, offset: number) => dispatch({type: SET_JUMP_OFFSET, payload: offset});
+export const setJumpOffset = (dispatch: Dispatch, offset: number): SetJumpOffsetActionType => dispatch({
+	type: SET_JUMP_OFFSET,
+	payload: offset
+});
 
-export const setJumpSearch = (dispatch: Dispatch, search: string) => dispatch({type: SET_JUMP_SEARCH, payload: search});
+export const setJumpSearch = (dispatch: Dispatch, search: string): SetJumpSearchActionType => dispatch({
+	type: SET_JUMP_SEARCH,
+	payload: search
+});
 
 export type JumpsActionType =
 	GetJumpsActionType

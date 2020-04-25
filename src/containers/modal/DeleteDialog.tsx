@@ -20,7 +20,7 @@ import {DeleteItemPayload, MODAL_DELETE, setDialog} from "../../store/actions/Mo
 import {defaultState, Modal} from "../../store/reducers/modal";
 import {deleteJump} from "../../store/actions/jumps/DeleteJump";
 import {TState} from "../../store/reducers";
-import {AuthState} from "../../store/reducers/auth";
+import useAuth from "../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	dialogTitle: {
@@ -64,7 +64,7 @@ export default () => {
 	const theme = useTheme();
 
 	// global state
-	const {headers} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers} = useAuth();
 	const {open, other} = useSelector<TState, Modal>(state => state.modal[MODAL_DELETE] || defaultState);
 
 	// local state

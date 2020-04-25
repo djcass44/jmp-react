@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {mdiChartDonut, mdiContentCopy, mdiDeleteOutline, mdiDelta, mdiPencilOutline, mdiPlusCircle} from "@mdi/js";
 import React, {ReactNode, useEffect, useState} from "react";
 import {
@@ -38,9 +38,8 @@ import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import getColourFromHex from "../../../style/getColourFromHex";
 import getSafeTextColour from "../../../selectors/getSafeTextColour";
 import {Jump} from "../../../types";
-import {TState} from "../../../store/reducers";
-import {AuthState} from "../../../store/reducers/auth";
 import {APP_NOUN} from "../../../constants";
+import useAuth from "../../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -82,7 +81,7 @@ const JumpContent: React.FC<JumpContentProps> = ({jump, focusProps, palette, loa
 	const classes = useStyles();
 	const theme = useTheme<Theme>();
 
-	const {isLoggedIn, isAdmin} = useSelector<TState, AuthState>(state => state.auth);
+	const {isLoggedIn, isAdmin} = useAuth();
 
 	// state
 	const [data, setData] = useState<Array<JumpData>>([]);

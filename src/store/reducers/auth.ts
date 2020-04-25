@@ -15,8 +15,9 @@
  *
  */
 
-import {AuthHeaders, Pair, User} from "../../types";
-import {LS_REFRESH, LS_REQUEST, LS_SOURCE} from "../../constants";
+import {PersistConfig, persistReducer} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import {Pair, User} from "../../types";
 import {AuthActionType} from "../actions/auth";
 import {OAUTH_LOGOUT_REQUEST, OAUTH_LOGOUT_SUCCESS} from "../actions/auth/AuthLogout";
 import {OAUTH_VERIFY_SUCCESS} from "../actions/auth/AuthVerify";
@@ -25,14 +26,12 @@ import {OAUTH_REFRESH_SUCCESS} from "../actions/auth/AuthRefresh";
 import {GET_PROVIDERS_SUCCESS} from "../actions/auth/GetProviders";
 import {DISCOVER_OAUTH_SUCCESS} from "../actions/auth/DiscoverOAuth";
 import {OAUTH2_CALLBACK_SUCCESS} from "../actions/auth/OAuth2Callback";
-import {getHeaders} from "../../util";
 import {OAUTH2_LOGOUT_REQUEST, OAUTH2_LOGOUT_SUCCESS} from "../actions/auth/OAuth2Logout";
 
 export interface AuthState {
 	request: string | null;
 	refresh: string | null;
 	source: string | null;
-	headers: AuthHeaders;
 	userProfile: User | null;
 	isLoggedIn: boolean;
 	isAdmin: boolean;
@@ -41,13 +40,9 @@ export interface AuthState {
 }
 
 const initialState: AuthState = {
-	request: localStorage.getItem(LS_REQUEST) || null,
-	refresh: localStorage.getItem(LS_REFRESH) || null,
-	source: localStorage.getItem(LS_SOURCE) || null,
-	headers: {
-		Authorization: `Bearer ${localStorage.getItem(LS_REQUEST) || ""}`,
-		'X-Auth-Source': localStorage.getItem(LS_SOURCE) || ""
-	},
+	request: null,
+	refresh: null,
+	source: null,
 	userProfile: null,
 	isLoggedIn: false,
 	isAdmin: false,
@@ -55,7 +50,7 @@ const initialState: AuthState = {
 	allProviders: []
 };
 
-export default (state = initialState, action: AuthActionType) => {
+const auth = (state = initialState, action: AuthActionType): AuthState => {
 	switch (action.type) {
 		case GET_PROVIDERS_SUCCESS:
 			return {...state, allProviders: action.payload};
@@ -63,7 +58,7 @@ export default (state = initialState, action: AuthActionType) => {
 			const {first, second} = action.payload;
 			const {providers} = state;
 			providers.set(first, second);
-			return {...state, providers}
+			return {...state, providers};
 		}
 		case OAUTH_VERIFY_SUCCESS: {
 			// if there's not request token there's no point saving the userProfile
@@ -81,16 +76,11 @@ export default (state = initialState, action: AuthActionType) => {
 		case OAUTH_REFRESH_SUCCESS:
 		case OAUTH_REQUEST_SUCCESS: {
 			const {request, refresh, source = null} = action.payload;
-			const headers = getHeaders(action.payload);
-			localStorage.setItem(LS_REQUEST, request);
-			localStorage.setItem(LS_REFRESH, refresh);
-			localStorage.setItem(LS_SOURCE, source ?? "");
 			return {
 				...state,
 				request,
 				refresh,
 				source,
-				headers,
 				isLoggedIn: true,
 			}
 		}
@@ -98,22 +88,23 @@ export default (state = initialState, action: AuthActionType) => {
 		case OAUTH2_LOGOUT_SUCCESS:
 		case OAUTH_LOGOUT_REQUEST:
 		case OAUTH_LOGOUT_SUCCESS: {
-			// drop values from localStorage
-			localStorage.removeItem(LS_REQUEST);
-			localStorage.removeItem(LS_REFRESH);
-			localStorage.removeItem(LS_SOURCE);
 			return {
 				...state,
 				request: null,
 				refresh: null,
 				source: null,
-				headers: {},
 				userProfile: null,
 				isLoggedIn: false,
-				isAdmin: false,
+				isAdmin: false
 			}
 		}
 		default:
 			return state;
 	}
 }
+const authPersistConfig: PersistConfig<AuthState> = {
+	key: "auth",
+	storage,
+	whitelist: ["request", "refresh", "source"]
+};
+export default persistReducer(authPersistConfig, auth);

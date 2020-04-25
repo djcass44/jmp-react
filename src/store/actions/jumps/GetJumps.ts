@@ -15,9 +15,9 @@
  *
  */
 
-import {Jump, Page} from "../../../types";
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
+import {Jump, Page} from "../../../types";
 import {BASE_URL} from "../../../constants";
 
 export const GET_JUMP = "GET_JUMP";
@@ -30,7 +30,7 @@ interface GetJumpsRequestAction {
 	payload: string;
 }
 
-interface GetJumpsSuccessAction {
+export interface GetJumpsSuccessAction {
 	type: typeof GET_JUMP_SUCCESS;
 	payload: Page<Jump>;
 }

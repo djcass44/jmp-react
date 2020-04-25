@@ -6,7 +6,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import {
 	CircularProgress,
-	InputLabel,
 	LinearProgress,
 	List,
 	ListItem,
@@ -18,7 +17,6 @@ import {
 	Theme,
 	Typography
 } from "@material-ui/core";
-import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useDispatch, useSelector} from "react-redux";
 import {ValidatedTextField} from "jmp-coreui";
@@ -31,6 +29,7 @@ import {PUT_JUMP, putJump} from "../../store/actions/jumps/PutJump";
 import {TState} from "../../store/reducers";
 import {AuthState} from "../../store/reducers/auth";
 import {GroupsState} from "../../store/reducers/groups";
+import useAuth from "../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -52,6 +51,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 	actions: {
 		marginRight: theme.spacing(1.5)
+	},
+	textField: {
+		paddingTop: 27,
+		paddingLeft: 12,
+		paddingRight: 12,
+		paddingBottom: 10
 	}
 }));
 
@@ -75,7 +80,8 @@ const JumpDialog = () => {
 	const loadingGroups = useSelector<TState, boolean>(state => state.loading[GET_USER_GROUPS]);
 	const loading = useSelector<TState, boolean>(state => state.loading[PUT_JUMP]);
 	const error = useSelector<TState, any | null>(state => state.errors[PUT_JUMP]);
-	const {headers, isAdmin, isLoggedIn, userProfile} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers, isAdmin, isLoggedIn} = useAuth();
+	const {userProfile} = useSelector<TState, AuthState>(state => state.auth);
 	const {userGroups} = useSelector<TState, GroupsState>(state => state.groups);
 	const {open} = useSelector<TState, Modal>(state => state.modal[MODAL_JUMP_NEW] || defaultState);
 
@@ -98,6 +104,7 @@ const JumpDialog = () => {
 		setUrl(initialUrl);
 		setType(1);
 		setSubmit(false);
+		setGroupId("");
 	}, [open]);
 
 	useEffect(() => {
@@ -132,6 +139,8 @@ const JumpDialog = () => {
 	return (
 		<Dialog
 			open={open}
+			maxWidth="xs"
+			fullWidth
 			aria-labelledby="form-dialog-title">
 			<DialogTitle id="form-dialog-title" className={classes.title}>
 				<Typography className={classes.title}>New {APP_NOUN}</Typography>
@@ -148,7 +157,7 @@ const JumpDialog = () => {
 						id: "name",
 						label: "Name",
 						fullWidth: true,
-						variant: "filled",
+						variant: "outlined",
 						size: "small"
 					}}
 				/>
@@ -163,7 +172,7 @@ const JumpDialog = () => {
 						label: "URL",
 						fullWidth: true,
 						autoComplete: "url",
-						variant: "filled",
+						variant: "outlined",
 						size: "small"
 					}}
 				/>
@@ -172,13 +181,14 @@ const JumpDialog = () => {
 						<ListItemText
 							primary="Choose a type"
 							primaryTypographyProps={{color: "textSecondary"}}
-							secondary={type != null && (type === 0 ? "Visible to all" : type === 1 ? "Visible to me" : "Visible to some")}
+							secondary={type === 0 ? "Visible to all" : type === 1 ? "Visible to me" : "Visible to some"}
 							secondaryTypographyProps={{color: "textSecondary"}}
 						/>
 						<ListItemSecondaryAction style={{right: 0}}>
 							<TextField
 								style={{minWidth: 100}}
 								select
+								variant={"outlined"}
 								size="small"
 								onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setType(Number(e.target.value))}
 								value={type.toString()}>
@@ -190,13 +200,15 @@ const JumpDialog = () => {
 					</ListItem>
 				</List>
 				{loadingGroups && <LinearProgress className={classes.progress}/>}
-				{type === 2 && userGroups.length > 0 && <FormControl fullWidth>
-					<InputLabel htmlFor="group">Group</InputLabel>
-					<Select value={groupId} inputProps={{name: "group", id: "group"}}
-					        onChange={(e: ChangeEvent<{value: unknown}>) => setGroupId(e.target.value as string)}>
-						{groups}
-					</Select>
-				</FormControl>}
+				{type === 2 && userGroups.length > 0 &&
+				<Select
+					fullWidth
+					variant={"outlined"}
+					value={groupId}
+					inputProps={{name: "group", id: "group"}}
+					onChange={(e: ChangeEvent<{value: unknown}>) => setGroupId(e.target.value as string)}>
+					{groups}
+				</Select>}
 			</DialogContent>
 			<DialogActions className={classes.actions}>
 				{error && <Typography

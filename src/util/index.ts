@@ -17,7 +17,7 @@
 
 import {mdiAccountOutline, mdiDatabase, mdiGithub, mdiGoogle, mdiShieldAccount} from "@mdi/js";
 import {Theme} from "@material-ui/core";
-import {Token} from "../types";
+import {AuthHeaders, Token} from "../types";
 
 /**
  * Converts an object to JSON and back
@@ -29,14 +29,16 @@ export const plural = (count: number, text: string): string => {
 	if (count === 1)
 		return text;
 	else
-		return `${text}s`
+		return `${text}s`;
 };
 
-export const getHeaders = (token: Token) => {
+export const getHeaders = (token: Token): AuthHeaders => getHeadersFromRaw(token.request, token.source || null);
+
+export const getHeadersFromRaw = (request: string | null, source: string | null): AuthHeaders => {
 	return {
-		"Authorization": `Bearer ${token.request}`,
-		"X-Auth-Source": token.source
-	}
+		"Authorization": request ? `Bearer ${request}` : "",
+		"X-Auth-Source": source || ""
+	};
 };
 
 export const getProviderData = (theme: Theme) => {
