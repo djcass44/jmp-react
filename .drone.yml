@@ -55,6 +55,9 @@ steps:
       values:
         - ingress.host=jmp.castive.dev
         - images.tag=${DRONE_COMMIT_SHA}
+    when:
+      branch:
+        - master
 trigger:
   when:
     event:
