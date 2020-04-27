@@ -64,14 +64,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const initialName = {
-	value: '',
-	error: '',
-	regex: new RegExp('^[a-zA-Z0-9_.-]+$')
+	value: "",
+	error: "",
+	regex: new RegExp("^[a-zA-Z0-9_.-]+$")
 };
 const initialUrl = {
-	value: '',
-	error: '',
-	regex: new RegExp('https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)')
+	value: "",
+	error: "",
+	regex: new RegExp("https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)")
 };
 
 const JumpDialog = () => {

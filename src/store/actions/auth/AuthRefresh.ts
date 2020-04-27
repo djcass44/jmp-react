@@ -15,9 +15,9 @@
  *
  */
 
-import {Token} from "../../../types";
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
+import {Token} from "../../../types";
 import {BASE_URL} from "../../../constants";
 import {oauthVerify} from "./AuthVerify";
 
@@ -54,7 +54,7 @@ export const oauthRefresh = (dispatch: Dispatch, refresh: string, headers: any):
 	}).then((r) => {
 		// retry verification for user information
 		const payload = r.payload as Token;
-		oauthVerify(dispatch, payload.refresh, {'Authorization': `Bearer ${payload.request}`});
+		oauthVerify(dispatch, payload.refresh, {"Authorization": `Bearer ${payload.request}`});
 	});
 };
 

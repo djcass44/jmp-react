@@ -123,9 +123,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 			display: "flex"
 		}
 	},
-	progress: {
-		backgroundColor: "transparent"
-	},
 	menuIcon: {
 		paddingRight: theme.spacing(1)
 	},

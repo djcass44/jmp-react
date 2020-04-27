@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
-import {closeSnackbar, removeSnackbar} from "../actions/Snackbar";
 import {withSnackbar} from "notistack";
 import {useDispatch, useSelector} from "react-redux";
 import PropTypes from "prop-types";
+import {closeSnackbar, removeSnackbar} from "../actions/Snackbar";
 
 const Snackbar = (props) => {
 
@@ -26,7 +26,7 @@ const Snackbar = (props) => {
 				dispatch(closeSnackbar(newSnack.key));
 				dispatch(removeSnackbar(newSnack.key));
 			}
-			notExists = notExists || !notify.filter(({ key }) => newSnack.key === key).length;
+			notExists = notExists || !notify.filter(({key}) => newSnack.key === key).length;
 		}
 		return notExists;
 	};
@@ -50,7 +50,7 @@ const Snackbar = (props) => {
 		});
 	}, [dispatch, displayed, notify, props, shouldComponentUpdate, storeDisplayed]);
 	// we don't actually render anything, so just return null
-	return null;
+	return React.Fragment;
 };
 Snackbar.propTypes = {
 	notify: PropTypes.array

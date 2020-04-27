@@ -16,10 +16,10 @@
  */
 
 import React from "react";
-import {User} from "../../../../types";
 import {Avatar} from "evergreen-ui";
 import {Button, makeStyles, Theme, Typography} from "@material-ui/core";
 import Center from "react-center";
+import {User} from "../../../../types";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	avatar: {

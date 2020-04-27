@@ -67,7 +67,7 @@ export default () => {
 	const getMatches = () => {
 		const url = new URL(window.location.href);
 		const query = url.searchParams.get("query");
-		if (query != null && query !== '')
+		if (query != null && query !== "")
 			getSimilar(dispatch, headers, query);
 		else
 			getSimilarFail(dispatch, "You must specify a query!");
@@ -78,7 +78,7 @@ export default () => {
 	}, []);
 
 	useEffect(() => {
-		setItems(similar.map((jump: Jump) => <JumpChip jump={jump}/>));
+		setItems(similar.map((jump: Jump) => <JumpChip key={jump.id} jump={jump}/>));
 	}, [similar]);
 
 	let status;

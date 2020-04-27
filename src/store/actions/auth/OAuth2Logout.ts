@@ -15,9 +15,9 @@
  *
  */
 
-import {Token} from "../../../types";
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
+import {Token} from "../../../types";
 import {BASE_URL} from "../../../constants";
 
 export const OAUTH2_LOGOUT = "OAUTH2_LOGOUT";

@@ -15,9 +15,9 @@
  *
  */
 
-import {User} from "../../../types";
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
+import {User} from "../../../types";
 import {BASE_URL} from "../../../constants";
 import {oauthRefresh} from "./AuthRefresh";
 

@@ -41,9 +41,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const initialName = {
-	value: '',
-	error: '',
-	regex: new RegExp('^[a-zA-Z0-9_.-]{4,}$')
+	value: "",
+	error: "",
+	regex: new RegExp("^[a-zA-Z0-9_.-]{4,}$")
 };
 
 export default () => {

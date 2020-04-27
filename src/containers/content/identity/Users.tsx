@@ -31,9 +31,9 @@ import {UsersState} from "../../../store/reducers/users";
 import {User} from "../../../types";
 import useAuth from "../../../hooks/useAuth";
 import {pageSize} from "../../../constants";
+import JumpItemSkeleton from "../../../components/content/jmp/JumpItemSkeleton";
 import UserOptionsMenu from "./UserOptionsMenu";
 import UserCard from "./profile/UserCard";
-import JumpItemSkeleton from "../../../components/content/jmp/JumpItemSkeleton";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 		width: "100%"
 	},
 	progress: {
-		backgroundColor: 'transparent',
+		backgroundColor: "transparent",
 		flexGrow: 1
 	},
 	item: {

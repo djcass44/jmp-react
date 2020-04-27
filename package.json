@@ -44,7 +44,7 @@
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"pretest": "./node_modules/.bin/eslint --ignore-path .gitignore . --fix"
+		"pretest": "./node_modules/.bin/eslint --ignore-path .gitignore . --fix --ext .ts,.tsx"
 	},
 	"husky": {
 		"hooks": {
@@ -52,68 +52,8 @@
 		}
 	},
 	"lint-staged": {
-		".ts,.tsx": ["./node_modules/.bin/eslint — fix"]
-	},
-	"eslintConfig": {
-		"extends": "react-app",
-		"plugins": [
-			"jsx-a11y",
-			"import"
-		],
-		"overrides": [
-			{
-				"files": [
-					"**/*.ts?(x)"
-				],
-				"rules": {
-					"no-var": "error",
-					"template-curly-spacing": [
-						"warn",
-						"never"
-					],
-					"react-hooks/exhaustive-deps": [
-						"off"
-					],
-					"indent": [
-						"warn",
-						"tab",
-						{
-							"SwitchCase": 1
-						}
-					],
-					"react/jsx-curly-brace-presence": [
-						"warn",
-						{
-							"props": "never",
-							"children": "never"
-						}
-					],
-					"react/jsx-curly-spacing": [
-						"warn",
-						{
-							"when": "never"
-						}
-					],
-					"object-curly-spacing": [
-						"warn",
-						"never"
-					],
-					"array-bracket-spacing": [
-						"warn",
-						"never"
-					],
-					"react/jsx-key": [
-						"error"
-					],
-					"import/order": [
-						"warn"
-					],
-					"quotes": [
-						"warn",
-						"double"
-					]
-				}
-			}
+		".ts,.tsx": [
+			"./node_modules/.bin/eslint — fix"
 		]
 	},
 	"browserslist": {
@@ -129,6 +69,8 @@
 		]
 	},
 	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^2.29.0",
+		"@typescript-eslint/parser": "^2.29.0",
 		"eslint": "^6.8.0",
 		"husky": "^4.2.5",
 		"lint-staged": "^10.1.7"

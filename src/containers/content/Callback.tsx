@@ -20,14 +20,14 @@ import Center from "react-center";
 import {makeStyles, Theme, Typography} from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {useDispatch, useSelector} from "react-redux";
-import {APP_NAME} from "../../constants";
 import {useHistory, useLocation} from "react-router";
+import {APP_NAME} from "../../constants";
 import {TState} from "../../store/reducers";
 import {OAUTH2_CALLBACK, oauth2Callback} from "../../store/actions/auth/OAuth2Callback";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	subtitle: {
-		textAlign: 'center',
+		textAlign: "center",
 		fontFamily: "Manrope",
 		fontWeight: 500,
 		color: theme.palette.text.primary,
@@ -62,7 +62,7 @@ const Callback: React.FC = () => {
 
 	useEffect(() => {
 		if (!loading && error == null)
-			history.push('/');
+			history.push("/");
 	}, [loading, error]);
 
 	return (
@@ -73,7 +73,7 @@ const Callback: React.FC = () => {
 						<CircularProgress style={{margin: 24}}/>
 					</Center>
 					<Center>
-						<Typography className={classes.subtitle} variant={"subtitle1"}>
+						<Typography className={classes.subtitle} variant="subtitle1">
 							We're just doing some setup...
 						</Typography>
 					</Center>
@@ -81,7 +81,7 @@ const Callback: React.FC = () => {
 				:
 				<div>
 					<Center>
-						<Typography className={classes.subtitle} variant={"subtitle1"}>{error.toString()}</Typography>
+						<Typography className={classes.subtitle} variant="subtitle1">{error.toString()}</Typography>
 					</Center>
 				</div>
 			}

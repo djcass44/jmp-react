@@ -16,15 +16,15 @@
  */
 
 import React, {useEffect, useState} from "react";
-import {APP_NAME, BASE_URL} from "../../../constants";
 import {useDispatch, useSelector} from "react-redux";
 import {CircularProgress, makeStyles, Theme, Typography} from "@material-ui/core";
 import Center from "react-center";
-import {GET_TARGET} from "../../../actions/Jumps";
 import {useHistory} from "react-router";
-import {TState} from "../../../store/reducers";
 import {RSAA} from "redux-api-middleware";
 import {Dispatch} from "redux";
+import {TState} from "../../../store/reducers";
+import {GET_TARGET} from "../../../actions/Jumps";
+import {APP_NAME, BASE_URL} from "../../../constants";
 import useAuth from "../../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -109,7 +109,7 @@ const Token: React.FC = () => {
 		const path = url.searchParams.get("query");
 		let query = "";
 		const id = url.searchParams.get("id");
-		if (path != null && path !== '') {
+		if (path != null && path !== "") {
 			if (id != null && id !== "")
 				query = `?id=${id}`;
 			// find out were we are going

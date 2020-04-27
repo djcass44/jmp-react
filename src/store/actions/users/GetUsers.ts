@@ -15,9 +15,9 @@
  *
  */
 
-import {Page, User} from "../../../types";
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
+import {Page, User} from "../../../types";
 import {BASE_URL} from "../../../constants";
 
 export const USER_LOAD = "USER_LOAD";
