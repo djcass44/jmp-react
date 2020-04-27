@@ -16,12 +16,11 @@
  */
 
 import React, {useState} from "react";
-import {Avatar, makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
+import {Avatar, makeStyles, Typography, useTheme} from "@material-ui/core";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline, mdiEarth, mdiEyeOff, mdiPencilOutline, mdiWidgets} from "@mdi/js";
-import IconButton from "@material-ui/core/IconButton";
 import {useDispatch} from "react-redux";
-import {ThemedTooltip} from "jmp-coreui";
+import {GenericIconButton} from "jmp-coreui";
 import getAvatarScheme from "../../../../style/getAvatarScheme";
 import {MODAL_GROUP_EDIT, setDialog} from "../../../../store/actions/Modal";
 import {getProviderData} from "../../../../util";
@@ -29,23 +28,14 @@ import getIconColour from "../../../../style/getIconColour";
 import {Group} from "../../../../types";
 import IdentityCard from "./IdentityCard";
 
-const useStyles = makeStyles((theme: Theme) => ({
-	avatar: {
-		margin: 16
-	},
+const useStyles = makeStyles(() => ({
+	avatar: {},
 	displayName: {
 		fontFamily: "Manrope",
 		fontWeight: 600
 	},
 	username: {
 		fontSize: 14
-	},
-	icons: {
-		marginTop: theme.spacing(0.5)
-	},
-	icon: {
-		marginTop: theme.spacing(0.5),
-		marginRight: theme.spacing(0.5)
 	}
 }));
 
@@ -87,35 +77,30 @@ const GroupCard: React.FC<GroupCardProps> = ({group, isAdmin = false}) => {
 			: [`Default for ${provider?.name || group.defaultFor} users`, mdiWidgets, theme.palette.info.main])
 		: ["Private", mdiEyeOff, theme.palette.secondary.main];
 
-	const content = (<>
+	const primary = (
 		<Typography
 			className={classes.displayName}
 			color="textPrimary">
 			{group.name}
 		</Typography>
-		<Typography
-			className={classes.username}
-			color="textSecondary">
-			{provider?.name || group.source}
-		</Typography>
-		<div className={classes.icons}>
-			<ThemedTooltip translate className={classes.icon} title={secondary[0]}>
-				<Icon path={secondary[1]} color={secondary[2]} size={1}/>
-			</ThemedTooltip>
-		</div>
-	</>);
+	);
+
+	const content = provider?.name || group.source;
 
 	const actions = (<>
-		{isAdmin && !group.name.startsWith("_") &&
-		<ThemedTooltip translate title="Edit group">
-			<IconButton
-				centerRipple={false}
-				onClick={() => setDialog(dispatch, MODAL_GROUP_EDIT, true, {group})}>
-				<Icon path={mdiPencilOutline} size={0.85} color={getIconColour(theme)}/>
-			</IconButton>
-		</ThemedTooltip>}
+		<GenericIconButton
+			title={secondary[0]}
+			icon={secondary[1]}
+			colour={secondary[2]}
+		/>
+		{isAdmin && !group.name.startsWith("_") && <GenericIconButton
+			title="Edit group"
+			icon={mdiPencilOutline}
+			colour={getIconColour(theme)}
+			onClick={() => setDialog(dispatch, MODAL_GROUP_EDIT, true, {group})}
+		/>}
 	</>);
 
-	return (<IdentityCard avatar={avatar} content={content} actions={actions}/>);
+	return (<IdentityCard avatar={avatar} primary={primary} secondary={content} actions={actions}/>);
 };
 export default GroupCard;

@@ -50,13 +50,23 @@ const UserOptionsMenu: React.FC<UserOptionsMenuProps> = ({user, expanded, anchor
 			id="user-menu"
 			open={expanded}
 			anchorEl={anchorEl}
-			transformOrigin={{horizontal: "center", vertical: "top"}}
+			anchorOrigin={{
+				vertical: "bottom",
+				horizontal: "right"
+			}}
+			transformOrigin={{
+				vertical: "top",
+				horizontal: "right"
+			}}
 			onClose={() => close()}>
-			{(isAdmin && user.admin !== true && user.username !== "system") &&
-			<MenuItem button component='li' onClick={() => handlePatchUser(true)}>
+			{(isAdmin && !user.admin && user.username !== "system") &&
+			<MenuItem
+				button
+				component='li'
+				onClick={() => handlePatchUser(true)}>
 				Promote to admin
 			</MenuItem>}
-			{(isAdmin && user.admin === true && user.username !== "admin") && <MenuItem
+			{(isAdmin && user.admin && user.username !== "admin") && <MenuItem
 				button
 				onClick={() => handlePatchUser(false)}>
 				Demote to user

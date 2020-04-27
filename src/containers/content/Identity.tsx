@@ -16,13 +16,11 @@
  */
 
 import React, {useEffect} from "react";
-import Users from "./identity/Users";
-import Groups from "./identity/Groups";
 import Center from "react-center";
-import Avatar from "@material-ui/core/Avatar";
-import {makeStyles, Paper, Theme} from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
+import {Avatar, makeStyles, Paper, Theme, Typography} from "@material-ui/core";
 import {APP_NAME} from "../../constants";
+import Groups from "./identity/Groups";
+import Users from "./identity/Users";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	name: {
@@ -57,10 +55,10 @@ const Identity: React.FC = () => {
 				/>
 			</Center>
 			<Center>
-				<img height={192} src={"/draw/undraw_Group_chat_unwm.svg"} alt={""}/>
+				<img height={192} src="/draw/undraw_Group_chat_unwm.svg" alt=""/>
 			</Center>
 			<Center>
-				<Typography variant={"h4"} className={classes.name}>Users &amp; Groups</Typography>
+				<Typography variant="h4" className={classes.name}>Users &amp; Groups</Typography>
 			</Center>
 			<Users/>
 			<Groups/>

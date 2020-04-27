@@ -2,26 +2,27 @@ import React, {useEffect, useState} from "react";
 import {
 	Button,
 	Checkbox,
-	CircularProgress,
 	Dialog,
 	DialogActions,
 	DialogContent,
 	DialogTitle,
 	FormControlLabel,
-	InputLabel,
+	LinearProgress,
 	makeStyles,
 	MenuItem,
-	Select,
+	TextField,
 	Typography
 } from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {MODAL_GROUP_EDIT, setDialog} from "../../store/actions/Modal";
-import {defaultState} from "../../store/reducers/modal";
 import {ValidatedTextField} from "jmp-coreui";
-import FormControl from "@material-ui/core/FormControl";
+import {MODAL_GROUP_EDIT, setDialog} from "../../store/actions/Modal";
+import {defaultState, Modal} from "../../store/reducers/modal";
 import {resetError} from "../../actions/Generic";
 import {GET_PROVIDERS, getProviders} from "../../store/actions/auth/GetProviders";
 import {PATCH_GROUP, patchGroup} from "../../store/actions/groups/PatchGroup";
+import useAuth from "../../hooks/useAuth";
+import {TState} from "../../store/reducers";
+import {AuthState} from "../../store/reducers/auth";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -31,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 	},
 	button: {
 		fontFamily: "Manrope",
-		fontWeight: 'bold'
+		fontWeight: "bold"
 	},
 	formControl: {
 		marginTop: theme.spacing(1),
@@ -49,13 +50,14 @@ export default () => {
 	// hooks
 	const dispatch = useDispatch();
 	const classes = useStyles();
+	const {headers} = useAuth();
 
 	// selectors
-	const loading = useSelector(state => state.loading[PATCH_GROUP]);
-	const loading2 = useSelector(state => state.loading[GET_PROVIDERS]);
-	const error = useSelector(state => state.errors[PATCH_GROUP]);
-	const {headers, allProviders} = useSelector(state => state.auth);
-	const {other, open} = useSelector(state => state.modal[MODAL_GROUP_EDIT] || defaultState);
+	const loading = useSelector<TState, boolean>(state => state.loading[PATCH_GROUP]);
+	const loading2 = useSelector<TState, boolean>(state => state.loading[GET_PROVIDERS]);
+	const error = useSelector<TState, any | null>(state => state.errors[PATCH_GROUP]);
+	const {allProviders} = useSelector<TState, AuthState>(state => state.auth);
+	const {other, open} = useSelector<TState, Modal>(state => state.modal[MODAL_GROUP_EDIT] || defaultState);
 
 	const group = other?.group || {};
 
@@ -65,10 +67,10 @@ export default () => {
 	const [defaultFor, setDefaultFor] = useState(group.defaultFor || "");
 	const [submit, setSubmit] = useState(false);
 
-	const close = () => setDialog(dispatch, MODAL_GROUP_EDIT, false);
+	const close = () => setDialog(dispatch, MODAL_GROUP_EDIT, false, null);
 
 	useEffect(() => {
-		if (loading === false && submit === true && error == null)
+		if (!loading && submit && error == null)
 			close();
 	}, [loading, error]);
 
@@ -91,8 +93,13 @@ export default () => {
 	};
 
 	return (
-		<Dialog open={open === true} aria-labelledby="form-dialog-title" onClose={() => close()}
-		        onEnter={() => onOpen()} maxWidth="sm" fullWidth>
+		<Dialog
+			open={open}
+			aria-labelledby="form-dialog-title"
+			onClose={() => close()}
+			onEnter={() => onOpen()}
+			maxWidth="sm"
+			fullWidth>
 			<DialogTitle id="form-dialog-title">
 				<Typography className={classes.title}>Edit group</Typography>
 			</DialogTitle>
@@ -107,7 +114,8 @@ export default () => {
 						margin: "dense",
 						id: "name",
 						label: "Name",
-						fullWidth: true
+						fullWidth: true,
+						variant: "outlined"
 					}}
 				/>
 				<FormControlLabel
@@ -120,27 +128,36 @@ export default () => {
 					}
 					label="Public"
 				/>
-				{loading2 === true && <CircularProgress size={20}/>}
-				{(loading2 === false && allProviders && allProviders.length > 0) &&
-				<FormControl className={classes.formControl} fullWidth variant={"outlined"}
-				             disabled={isPublic === true}>
-					<InputLabel htmlFor="defaultFor">Default for</InputLabel>
-					<Select
-						value={defaultFor}
-						inputProps={{
-							name: "defaultFor",
-							id: "defaultFor"
-						}}
-						onChange={(e) => setDefaultFor(e.target.value)}>
-						{allProviders.map(i => <MenuItem key={i.first} value={i.first}>{i.first}</MenuItem>)}
-					</Select>
-				</FormControl>}
+				{loading2 && <LinearProgress/>}
+				{(allProviders && allProviders.length > 0) &&
+				<TextField
+					select
+					disabled={isPublic === true || loading2}
+					fullWidth
+					label="Default for"
+					value={defaultFor}
+					variant="outlined"
+					inputProps={{
+						name: "defaultFor",
+						id: "defaultFor"
+					}}
+					onChange={(e) => setDefaultFor(e.target.value)}>
+					{allProviders.map(i => <MenuItem key={i.first} value={i.first}>{i.first}</MenuItem>)}
+				</TextField>}
 				{error && <Typography variant="caption" color="error">{error.toString()}</Typography>}
 			</DialogContent>
 			<DialogActions>
-				<Button className={classes.button} color="secondary" onClick={() => close()}>Cancel</Button>
-				<Button className={classes.button} color="primary" onClick={() => onSubmit()}
-				        disabled={name.error !== '' || loading === true || loading2 === true || name.value.length === 0}>
+				<Button
+					className={classes.button}
+					color="secondary"
+					onClick={() => close()}>
+					Cancel
+				</Button>
+				<Button
+					className={classes.button}
+					color="primary"
+					onClick={() => onSubmit()}
+					disabled={name.error !== "" || loading || loading2 || name.value.length === 0}>
 					Update
 				</Button>
 			</DialogActions>
