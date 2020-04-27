@@ -24,6 +24,7 @@ import {clone} from "../../util";
 import {GROUP_LOAD} from "../../store/actions/groups/GetGroups";
 import {GET_USER_GROUPS, getUserGroups} from "../../store/actions/groups/GetUserGroups";
 import {SET_USER_GROUPS, setUserGroups} from "../../store/actions/groups/SetUserGroups";
+import useAuth from "../../hooks/useAuth";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -49,7 +50,7 @@ export default () => {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 
-	const {headers} = useSelector(state => state.auth);
+	const {headers} = useAuth();
 	const {groups, userGroups} = useSelector(state => state.groups);
 	const loading = useSelector(state => state.loading[GROUP_LOAD] || state.loading[GET_USER_GROUPS] || state.loading[SET_USER_GROUPS]);
 	const {other, open} = useSelector(state => state.modal[MODAL_USER_GROUPS] || defaultState);
@@ -145,7 +146,7 @@ export default () => {
 			</DialogContent>
 			<DialogActions>
 				<Button className={classes.button} color="secondary"
-				        onClick={() => setDialog(dispatch, MODAL_USER_GROUPS, false)}
+				        onClick={() => setDialog(dispatch, MODAL_USER_GROUPS, false, null)}
 				        disabled={loading === true}>Done</Button>
 			</DialogActions>
 		</Dialog>
