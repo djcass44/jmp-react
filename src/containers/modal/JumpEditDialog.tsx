@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 import {
 	Button,
 	CircularProgress,
@@ -33,11 +33,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 		fontWeight: "bold",
 		textTransform: "none"
 	},
-	field: {
-		color: "red"
-	},
 	actions: {
 		marginRight: theme.spacing(1.5)
+	},
+	textLabel: {
+		color: theme.palette.text.secondary
+	},
+	field: {
+		marginTop: theme.spacing(1)
 	}
 }));
 
@@ -126,10 +129,19 @@ export default () => {
 		setSubmit(true);
 	};
 
+	const textLabel = (text: string): ReactNode => {
+		return <span
+			className={classes.textLabel}>
+			{text}
+		</span>;
+	};
+
 	const disabled = name.error !== "" || url.error !== "" || loading || name.value.length === 0 || url.value.length === 0;
 	return (
 		<Dialog
 			open={open}
+			maxWidth="xs"
+			fullWidth
 			aria-labelledby="form-dialog-title"
 			onExited={() => close(true)}
 			onEnter={() => onOpen()}>
@@ -148,9 +160,9 @@ export default () => {
 						autoFocus: true,
 						margin: "dense",
 						id: "name",
-						label: "Name",
+						label: textLabel("Name"),
 						fullWidth: true,
-						variant: "filled",
+						variant: "outlined",
 						size: "small"
 					}}
 				/>
@@ -162,17 +174,19 @@ export default () => {
 						required: true,
 						margin: "dense",
 						id: "url",
-						label: "URL",
+						label: textLabel("URL"),
 						fullWidth: true,
 						autoComplete: "url",
-						variant: "filled",
+						variant: "outlined",
 						size: "small"
 					}}
 				/>
 				<ChipInput
-					label="Aliases"
+					className={classes.field}
+					label={textLabel("Aliases")}
 					fullWidth
 					defaultValue={alias}
+					variant="outlined"
 					onChange={(c) => setAlias(c)}
 					onBeforeAdd={(c) => chipRegex.test(c)}
 					helperText="An alias must be letters and digits only."
