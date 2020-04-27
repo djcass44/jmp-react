@@ -1,46 +1,16 @@
-export interface Theme {
-	palette: PaletteGroup
-}
-export interface PaletteGroup {
-	primary: Palette,
-	secondary: Palette,
-	search: string,
-	warning: Palette,
-	error: Palette,
-	info: Palette,
-	success: Palette,
-	text: {
-		primary: string,
-		secondary: string
-	}
-	background: {
-		default: string,
-		paper: string
-	},
-	action: {
-		selected: string,
-		hover: string
-	}
-	type: string
-}
-export interface Palette {
-	main: string,
-	light: string,
-	dark: string
-}
+import {PaletteOptions} from "@material-ui/core/styles/createPalette";
 
-export const light = {
+export const light: PaletteOptions = {
 	primary: {
-		main: '#4285F4',
-		light: '#DEEBFF',
-		dark: '#0052CC'
+		main: "#4285F4",
+		light: "#DEEBFF",
+		dark: "#0052CC"
 	},
 	secondary: {
-		main: '#172B4d',
-		light: '#455570',
-		dark: '#101e35'
+		main: "#172B4d",
+		light: "#455570",
+		dark: "#101e35"
 	},
-	search: '#DEEBFF',
 	warning: {
 		main: '#F4B400',
 		light: '#FFE380',
@@ -57,29 +27,32 @@ export const light = {
 		dark: '#5243AA'
 	},
 	success: {
-		main: '#0F9D58',
-		light: '#E3FCEF',
-		dark: '#00875A'
+		main: "#0F9D58",
+		light: "#E3FCEF",
+		dark: "#00875A"
 	},
 	background: {
-		paper: '#FFFFFF',
-		default: '#FAFAFA'
+		paper: "#FFFFFF",
+		default: "#FAFAFA"
 	},
-	type: 'light'
+	text: {
+		primary: "#202124",
+		secondary: "#5f6368"
+	},
+	type: "light"
 };
 
-export const dark = {
+export const dark: PaletteOptions = {
 	primary: {
-		main: '#449df4',
-		light: '#52abff',
-		dark: '#222425'
+		main: "#449df4",
+		light: "#52abff",
+		dark: "#222425"
 	},
 	secondary: {
-		main: '#d1cec7',
-		light: '#3F51B5',
-		dark: '#222425'
+		main: "#d1cec7",
+		light: "#3F51B5",
+		dark: "#222425"
 	},
-	search: '#505355',
 	warning: {
 		main: '#cd6700',
 		light: '#e69400',

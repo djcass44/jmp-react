@@ -1,5 +1,5 @@
 # STAGE 1 - BUILD
-FROM node:lts-alpine as BUILDER
+FROM node:lts-alpine
 LABEL maintainer="Django Cass <django@dcas.dev>"
 
 # disable spammy donation messages
@@ -25,11 +25,11 @@ RUN apk upgrade --no-cache && \
     apk add --no-cache bash
 
 RUN mkdir -p /var/log/nginx && mkdir -p /var/www/html
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY .drone/nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /var/www/html
 
-COPY --from=BUILDER /app/build .
+COPY --from=0 /app/build .
 
 # copy .env file and shell script
 COPY ./env.sh .

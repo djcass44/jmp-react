@@ -6,7 +6,7 @@ import {SystemInfo} from "../../config/types/SystemInfo";
 export interface InfoState {
 	systemInfo: SystemInfo | null,
 	status: object,
-	statusCheck: null
+	statusCheck: Date | null
 }
 
 const initialState: InfoState = {
@@ -15,7 +15,7 @@ const initialState: InfoState = {
 	statusCheck: null
 };
 
-export default (state = initialState, action: InfoActionType) => {
+export default (state = initialState, action: InfoActionType): InfoState => {
 	switch (action.type) {
 		case GET_INFO_SYS_SUCCESS:
 			return {...state, systemInfo: action.payload};

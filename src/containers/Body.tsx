@@ -6,9 +6,9 @@ import {Fade, LinearProgress, makeStyles, Theme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {OAUTH_VERIFY, oauthVerify} from "../store/actions/auth/AuthVerify";
 import {TState} from "../store/reducers";
-import {AuthState} from "../store/reducers/auth";
 import {useLocation} from "react-router";
 import {GET_JUMP} from "../store/actions/jumps/GetJumps";
+import useAuth from "../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	main: {
@@ -65,7 +65,7 @@ export const Body: React.FC = () => {
 	const loading = useSelector<TState, boolean>(state => {
 		return (state.loading[OAUTH_VERIFY] || state.loading[GET_JUMP]) ?? false;
 	});
-	const {headers, refresh} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers, refresh} = useAuth();
 
 
 	const [timer, setTimer] = useState<any | null>(null);
@@ -78,8 +78,9 @@ export const Body: React.FC = () => {
 		if (!loading) {
 			setShade(false);
 			clearTimeout(timer);
-		} else
+		} else {
 			setTimer(setTimeout(() => setShade(true), 150));
+		}
 	}, [loading]);
 
 	useLayoutEffect(() => {

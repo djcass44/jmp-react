@@ -15,9 +15,9 @@ import {
 	Typography
 } from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {MODAL_GROUP_EDIT, setDialog} from "../../actions/Modal";
-import {defaultState} from "../../reducers/Modal";
-import ValidatedTextField from "../../components/field/ValidatedTextField";
+import {MODAL_GROUP_EDIT, setDialog} from "../../store/actions/Modal";
+import {defaultState} from "../../store/reducers/modal";
+import {ValidatedTextField} from "jmp-coreui";
 import FormControl from "@material-ui/core/FormControl";
 import {resetError} from "../../actions/Generic";
 import {GET_PROVIDERS, getProviders} from "../../store/actions/auth/GetProviders";
@@ -57,7 +57,7 @@ export default () => {
 	const {headers, allProviders} = useSelector(state => state.auth);
 	const {other, open} = useSelector(state => state.modal[MODAL_GROUP_EDIT] || defaultState);
 
-	const group = other.group || {};
+	const group = other?.group || {};
 
 
 	const [name, setName] = useState(initialName);

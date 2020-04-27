@@ -2,11 +2,28 @@ kind: pipeline
 name: default
 type: kubernetes
 
+helm_deploy: &helm_deploy
+  mode: upgrade
+  release: jmp-ui
+  chart: ./jmp-ui
+  wait_for_upgrade: true
+  atomic: true
+  cleanup_failed_upgrade: true
+  values_files:
+    - .drone/values.yaml
+
 steps:
+  - name: helm_lint
+    image: harbor.v2.dcas.dev/djcass44/drone-helm3
+    settings:
+      mode: lint
+      chart: ./jmp-ui
   # BUILD OCI IMAGE
   - name: publish
-    image: harbor.v2.dcas.dev/library/drone-kaniko
+    image: harbor.v2.dcas.dev/infra/drone-kaniko:dcas-dev
     pull: always
+    depends_on:
+      - helm_lint
     settings:
       registry: harbor.v2.dcas.dev
       repo: dcas.dev/jmp-ui
@@ -15,8 +32,32 @@ steps:
         - latest
         - ${DRONE_BRANCH/\//-}
         - ${DRONE_COMMIT_SHA}
-      authjson_docker:
-        from_secret: DOCKER_AUTH
+    # DEPLOY TO DEV
+  - name: deploy_development
+    image: harbor.v2.dcas.dev/infra/drone-helm3:development
+    depends_on:
+      - helm_lint
+      - publish
+    settings:
+      <<: *helm_deploy
+      namespace: development
+      values:
+        - ingress.host=jmp-dev.v2.dcas.dev
+        - images.tag=${DRONE_COMMIT_SHA}
+    # DEPLOY TO PROD
+  - name: deploy_production
+    image: harbor.v2.dcas.dev/infra/drone-helm3:production
+    depends_on:
+      - deploy_development
+    settings:
+      <<: *helm_deploy
+      namespace: production
+      values:
+        - ingress.host=jmp.castive.dev
+        - images.tag=${DRONE_COMMIT_SHA}
+    when:
+      branch:
+        - master
 trigger:
   when:
     event:

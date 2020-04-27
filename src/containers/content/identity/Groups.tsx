@@ -20,18 +20,18 @@ import {LinearProgress, makeStyles, Theme, Typography, Zoom} from "@material-ui/
 import React, {ReactNode, useEffect, useState} from "react";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
-import {MODAL_GROUP_NEW, setDialog} from "../../../actions/Modal";
+import {MODAL_GROUP_NEW, setDialog} from "../../../store/actions/Modal";
 import GroupEditDialog from "../../modal/GroupEditDialog";
 import {getGroups, GROUP_LOAD} from "../../../store/actions/groups/GetGroups";
 import {setGroupOffset} from "../../../store/actions/groups";
-import GroupCard from "./profile/GroupCard";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
 import {TState} from "../../../store/reducers";
 import {GroupsState} from "../../../store/reducers/groups";
-import {AuthState} from "../../../store/reducers/auth";
 import {UsersState} from "../../../store/reducers/users";
+import GroupCard from "./profile/GroupCard";
+import useAuth from "../../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -62,7 +62,7 @@ export default () => {
 
 
 	const {groups} = useSelector<TState, GroupsState>(state => state.groups);
-	const {headers, isAdmin, isLoggedIn} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers, isAdmin, isLoggedIn} = useAuth();
 	const {offset, search} = useSelector<TState, UsersState>(state => state.users);
 
 	const loading = useSelector<TState, boolean>(state => state.loading[GROUP_LOAD] ?? false);
@@ -75,7 +75,7 @@ export default () => {
 
 	useEffect(() => {
 		onSearch();
-	}, [headers, search]);
+	}, [headers.Authorization, search]);
 
 	// hook to rebuild the index when jumps change
 	useEffect(() => {
@@ -96,7 +96,7 @@ export default () => {
 		<Button
 			className={classes.addButton}
 			disabled={!isLoggedIn}
-			onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, true)}
+			onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, true, null)}
 			variant="outlined">
 			Create
 		</Button>
@@ -122,7 +122,7 @@ export default () => {
 			<Zoom in={groups.totalElements > groups.size}>
 				<Center>
 					<Pagination limit={groups.size} offset={offset} total={groups.totalElements}
-					            nextPageLabel={"▶"} previousPageLabel={"◀"} onClick={(e, off) => onPageChange(off)}/>
+					            nextPageLabel="▶" previousPageLabel="◀" onClick={(e, off) => onPageChange(off)}/>
 				</Center>
 			</Zoom>
 			<CreateGroupDialog/>

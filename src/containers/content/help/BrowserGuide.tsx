@@ -19,11 +19,11 @@ import React, {ReactNode, useEffect, useState} from "react";
 import {mdiAppleSafari, mdiFirefox, mdiGoogleChrome, mdiMicrosoftEdge, mdiMicrosoftInternetExplorer} from "@mdi/js";
 import Icon from "@mdi/react";
 import {Collapse, IconButton, makeStyles, Theme, Typography} from "@material-ui/core";
-import {APP_KEY, APP_NAME, BASE_URL} from "../../../constants";
 import Link from "@material-ui/core/Link";
 import {Alert} from "@material-ui/lab";
 import {Code} from "evergreen-ui";
-import ThemedTooltip from "../../../components/content/ThemedTooltip";
+import {ThemedTooltip} from "jmp-coreui";
+import {APP_KEY, APP_NAME, BASE_URL} from "../../../constants";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	browserBar: {
@@ -51,7 +51,7 @@ interface Browser {
 	colour: string;
 	name: string;
 	content: ReactNode;
-	info?: string | null;
+	info?: ReactNode | string | null;
 	severity: "info" | "error" | "success" | "warning" | undefined;
 }
 
@@ -67,10 +67,6 @@ const BrowserGuide: React.FC = () => {
 			colour: '#1da462',
 			name: "Google Chrome",
 			content: <span>
-				<Typography variant="subtitle2">Skip setup using the&nbsp;
-					<Link target="_blank" rel="noopener noreferrer"
-					      href="https://chrome.google.com/webstore/detail/jmp/nkhlenilbcdnmekcknikcjoiappodhgm">Chrome addon!</Link>
-				</Typography>
 				Make sure to go to extension settings and enter <Code>{BASE_URL}</Code>
 				<br/>
 				<br/>
@@ -81,18 +77,18 @@ const BrowserGuide: React.FC = () => {
 				&emsp;Keyword = <Code>{APP_KEY}</Code><br/>
 				&emsp;URL = <Code>{BASE_URL}/jmp?query=%s</Code>
 			</span>,
-			info: `${APP_NAME} has only been tested in Google Chrome, Chromium and Edge Chromium. Its usability in other Chromium-based browsers is unknown.`,
+			info: <Typography variant="subtitle2">Skip setup using the&nbsp;
+				<Link target="_blank" rel="noopener noreferrer"
+				      href="https://chrome.google.com/webstore/detail/jmp/nkhlenilbcdnmekcknikcjoiappodhgm">Chrome
+					addon!</Link>
+			</Typography>,
 			severity: "info"
 		},
 		{
 			icon: mdiFirefox,
 			colour: '#ff0039',
-			name: 'Mozilla Firefox',
+			name: "Mozilla Firefox",
 			content: <div>
-				<Typography variant="subtitle2">Skip setup using the&nbsp;
-					<Link target="_blank" rel="noopener noreferrer"
-					      href="https://addons.mozilla.org/en-US/firefox/addon/jmp-webext/">Firefox addon!</Link>
-				</Typography>
 				Make sure to go to extension settings and enter <Code>{BASE_URL}</Code>
 				<br/>
 				<br/>
@@ -101,6 +97,10 @@ const BrowserGuide: React.FC = () => {
 				&emsp;Keyword = <Code>{APP_KEY}</Code><br/>
 				&emsp;Location = <Code>{BASE_URL}/jmp?query=%s</Code>
 			</div>,
+			info: <Typography variant="subtitle2">Skip setup using the&nbsp;
+				<Link target="_blank" rel="noopener noreferrer"
+				      href="https://addons.mozilla.org/en-US/firefox/addon/jmp-webext/">Firefox addon!</Link>
+			</Typography>,
 			severity: "info"
 		},
 		{
@@ -108,10 +108,6 @@ const BrowserGuide: React.FC = () => {
 			colour: "#3277bc",
 			name: "Microsoft Edge",
 			content: <span>
-				<Typography variant="subtitle2">Skip setup using the&nbsp;
-					<Link target="_blank" rel="noopener noreferrer"
-					      href="https://chrome.google.com/webstore/detail/jmp/nkhlenilbcdnmekcknikcjoiappodhgm">Chrome addon!</Link>
-				</Typography>
 				Make sure to go to extension settings and enter <Code>{BASE_URL}</Code>
 				<br/>
 				<br/>
@@ -122,6 +118,11 @@ const BrowserGuide: React.FC = () => {
 				&emsp;Keyword = <Code>{APP_KEY}</Code><br/>
 				&emsp;URL = <Code>{BASE_URL}/jmp?query=%s</Code>
 			</span>,
+			info: <Typography variant="subtitle2">Skip setup using the&nbsp;
+				<Link target="_blank" rel="noopener noreferrer"
+				      href="https://chrome.google.com/webstore/detail/jmp/nkhlenilbcdnmekcknikcjoiappodhgm">Edge
+					addon!</Link>
+			</Typography>,
 			severity: "info"
 		},
 		{
@@ -144,7 +145,7 @@ const BrowserGuide: React.FC = () => {
 
 	useEffect(() => {
 		setData(browserData.map(i => (
-			<ThemedTooltip title={i.name} key={i.icon}>
+			<ThemedTooltip translate title={i.name} key={i.icon}>
 				<IconButton centerRipple={false} style={{color: i.colour}} onClick={() => {
 					if (selected === i && open) {
 						setOpen(false);

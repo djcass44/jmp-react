@@ -15,31 +15,19 @@
  *
  */
 
-import jumps, {JumpsState} from "./jumps";
 import {combineReducers} from "redux";
-import auth, {AuthState} from "./auth";
+import snackbar from "../../reducers/Snackbar";
+import jumps from "./jumps";
+import auth from "./auth";
 import loading from "./loading";
 import errors from "./errors";
-import modal from "../../reducers/Modal";
-import snackbar from "../../reducers/Snackbar";
-import users, {UsersState} from "./users";
-import groups, {GroupsState} from "./groups";
-import info, {InfoState} from "./info";
-import {SimpleMap} from "../../types";
-import generic, {GenericState} from "./generic";
+import users from "./users";
+import groups from "./groups";
+import info from "./info";
+import generic from "./generic";
+import modal from "./modal";
 
-export interface TState {
-	jumps: JumpsState;
-	auth: AuthState;
-	users: UsersState;
-	groups: GroupsState;
-	info: InfoState;
-	loading: SimpleMap<boolean>;
-	errors: SimpleMap<string | any | null>;
-	generic: GenericState;
-}
-
-export default combineReducers({
+const rootReducers = combineReducers({
 	jumps,
 	auth,
 	loading,
@@ -51,3 +39,5 @@ export default combineReducers({
 	modal,
 	snackbar
 });
+export type TState = ReturnType<typeof rootReducers>;
+export default rootReducers;

@@ -1,12 +1,19 @@
-export const LS_REQUEST = "jmpr-request";
-export const LS_REFRESH = "jmpr-refresh";
-export const LS_SOURCE = "jmp-source";
-
-export const LS_DARK = "jmpr-dark";
-export const LS_APPID = "jmpr-appid";
-export const LS_SORT = "jmpr-sortBy";
-
 export const pageSize = 8;
+
+interface WindowEnv {
+	JMP_API_URL?: string;
+	JMP_API_SECURE?: string;
+	JMP_BRAND_NAME?: string;
+	JMP_BRAND_MSG?: string;
+	JMP_BRAND_NOUN?: string;
+	JMP_BRAND_KEY?: string;
+}
+
+declare global {
+	interface Window {
+		_env_: WindowEnv;
+	}
+}
 
 export const API_URL = window._env_.JMP_API_URL || "localhost:7000";
 export const APP_NAME = window._env_.JMP_BRAND_NAME || "JMP";

@@ -15,12 +15,19 @@
  *
  */
 
-import {Theme, Tooltip, withStyles} from "@material-ui/core";
+import {Jump} from "../../types";
+import {TState} from "../reducers";
 
-export default withStyles((theme: Theme) => ({
-	tooltip: {
-		backgroundColor: theme.palette.background.paper,
-		color: theme.palette.text.primary,
-		boxShadow: theme.shadows[1]
-	}
-}))(Tooltip);
+export default (jump: Jump, state: TState): number => {
+	const max = Math.max.apply(Math, state.jumps.jumps.content.map(j => j.usage));
+
+	if (jump.usage >= max)
+		return 4;
+	else if (jump.usage >= (max * 0.75))
+		return 3;
+	else if (jump.usage >= (max * 0.5))
+		return 2;
+	else if (jump.usage > 0)
+		return 1;
+	return 0;
+}

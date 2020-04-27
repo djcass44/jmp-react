@@ -17,9 +17,8 @@
 
 import React, {useState} from "react";
 import {Card, ListItem, ListItemText, ListSubheader, Switch} from "@material-ui/core";
-import {LS_DARK} from "../../../constants";
-import {setThemeMode} from "../../../store/actions/Generic";
 import {useDispatch, useSelector} from "react-redux";
+import {setThemeMode} from "../../../store/actions/Generic";
 import {TState} from "../../../store/reducers";
 import {GenericState} from "../../../store/reducers/generic";
 
@@ -38,7 +37,6 @@ const General: React.FC = () => {
 		setDark(checked);
 
 		const theme = checked ? "dark" : "light";
-		localStorage.setItem(LS_DARK, theme);
 		setThemeMode(dispatch, theme);
 	};
 

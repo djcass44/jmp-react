@@ -22,9 +22,9 @@ import Center from "react-center";
 import {Link} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHomeOutline} from "@mdi/js";
-import {APP_NAME} from "../../constants";
 import {useHistory} from "react-router";
-import ThemedTooltip from "../../components/content/ThemedTooltip";
+import {ThemedTooltip} from "jmp-coreui";
+import {APP_NAME} from "../../constants";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	subtitle: {
@@ -58,15 +58,15 @@ const NotFound: React.FC = () => {
 		<Center className={classes.overlay}>
 			<div style={{pointerEvents: "initial"}}>
 				<Center>
-					<img height={256} src={"/draw/undraw_lost_bqr2.svg"} alt={""}/>
+					<img height={256} src="/draw/undraw_lost_bqr2.svg" alt=""/>
 				</Center>
 				<Center>
-					<Typography className={classes.subtitle} variant={"subtitle1"}>
+					<Typography className={classes.subtitle} variant="subtitle1">
 						The page you're looking for doesn't exist or the server refused to disclose it.
 					</Typography>
 				</Center>
 				<Center>
-					<ThemedTooltip title="Go back">
+					<ThemedTooltip translate title="Go back">
 						<IconButton
 							color="secondary"
 							centerRipple={false}
@@ -75,7 +75,7 @@ const NotFound: React.FC = () => {
 							<Icon path={mdiArrowLeft} size={1} color={theme.palette.secondary.main}/>
 						</IconButton>
 					</ThemedTooltip>
-					<ThemedTooltip title="Return to home">
+					<ThemedTooltip translate title="Return to home">
 						<IconButton
 							component={Link}
 							to="/"

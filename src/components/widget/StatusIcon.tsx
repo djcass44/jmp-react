@@ -3,7 +3,7 @@ import {makeStyles, useTheme} from "@material-ui/core/styles";
 import Icon from "@mdi/react";
 import React from "react";
 import {Skeleton} from "@material-ui/lab";
-import ThemedTooltip from "../content/ThemedTooltip";
+import {ThemedTooltip} from "jmp-coreui";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	skeleton: {
@@ -37,7 +37,7 @@ const StatusIcon: React.FC<StatusIconProps> = ({active = null, title, icon, load
 					animation="wave"
 				/>
 				:
-				<ThemedTooltip title={`${title}: ${active || "UNKNOWN"}`}>
+				<ThemedTooltip translate title={`${title}: ${active || "UNKNOWN"}`}>
 					<IconButton color={colourName}>
 						<Icon path={icon} size={1} color={colour}/>
 					</IconButton>

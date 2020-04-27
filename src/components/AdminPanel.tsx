@@ -1,9 +1,7 @@
 import React from "react";
-import Status from "../containers/content/settings/Status";
-import {useSelector} from "react-redux";
 import {Card, makeStyles, Theme} from "@material-ui/core";
-import {TState} from "../store/reducers";
-import {AuthState} from "../store/reducers/auth";
+import Status from "../containers/content/settings/Status";
+import useAuth from "../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -22,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const AdminPanel: React.FC = () => {
-	const {isAdmin} = useSelector<TState, AuthState>(state => state.auth);
+	const {isAdmin} = useAuth();
 	const classes = useStyles();
 
 	if (!isAdmin) return null;

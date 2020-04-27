@@ -1,13 +1,11 @@
 import React, {useEffect} from "react";
 import Center from "react-center";
 import {Avatar, makeStyles, Paper, Theme, Typography} from "@material-ui/core";
-import {useSelector} from "react-redux";
 import {APP_NAME} from "../../constants";
-import {TState} from "../../store/reducers";
-import {AuthState} from "../../store/reducers/auth";
 import Auth from "./settings/Auth";
 import General from "./settings/General";
 import Info from "./settings/Info";
+import useAuth from "../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	name: {
@@ -33,7 +31,7 @@ const Settings: React.FC = () => {
 		window.document.title = `Settings - ${APP_NAME}`;
 	}, []);
 
-	const {isAdmin} = useSelector<TState, AuthState>(state => state.auth);
+	const {isAdmin} = useAuth();
 
 	return (
 		<div>

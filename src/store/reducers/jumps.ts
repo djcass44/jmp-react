@@ -21,11 +21,14 @@ import {
 	SET_JUMP_EXPAND,
 	SET_JUMP_OFFSET,
 	SET_JUMP_SEARCH,
+	SetJumpExpandActionType,
+	SetJumpOffsetActionType,
+	SetJumpSearchActionType,
 	SOCKET_UPDATE_FAVICON,
 	SOCKET_UPDATE_TITLE
 } from "../actions/jumps";
-import {GET_JUMP_SUCCESS} from "../actions/jumps/GetJumps";
-import {GET_SIMILAR_SUCCESS} from "../actions/jumps/GetSimilar";
+import {GET_JUMP_SUCCESS, GetJumpsSuccessAction} from "../actions/jumps/GetJumps";
+import {GET_SIMILAR_SUCCESS, GetSimilarSuccessAction} from "../actions/jumps/GetSimilar";
 
 export interface JumpsState {
 	jumps: Page<Jump>;
@@ -50,20 +53,22 @@ const initialState: JumpsState = {
 	search: ""
 };
 
-export default (state = initialState, action: JumpsActionType) => {
+export default (state = initialState, action: JumpsActionType): JumpsState => {
 	switch (action.type) {
 		case SET_JUMP_EXPAND: {
-			const {payload} = action;
+			const {payload} = (action as SetJumpExpandActionType);
 			return {...state, expanded: state.expanded === payload ? null : payload};
 		}
 		case SET_JUMP_OFFSET:
-			return {...state, offset: action.payload};
+			return {...state, offset: (action as SetJumpOffsetActionType).payload};
 		case SET_JUMP_SEARCH:
-			return {...state, search: action.payload};
-		case GET_JUMP_SUCCESS:
-			return {...state, jumps: action.payload, offset: (action.payload as Page<Jump>).pageable?.offset};
+			return {...state, search: (action as SetJumpSearchActionType).payload};
+		case GET_JUMP_SUCCESS: {
+			const act = (action as GetJumpsSuccessAction);
+			return {...state, jumps: act.payload, offset: act.payload.pageable?.offset || 0};
+		}
 		case GET_SIMILAR_SUCCESS:
-			return {...state, similar: action.payload};
+			return {...state, similar: (action as GetSimilarSuccessAction).payload};
 		case SOCKET_UPDATE_TITLE: {
 			const payload = action.payload as FaviconPayload;
 			const idx = idxFromId(state.jumps.content, payload.id);
@@ -72,7 +77,7 @@ export default (state = initialState, action: JumpsActionType) => {
 			}
 			const {jumps} = state;
 			jumps.content[idx].title = payload.url;
-			return {...state, jumps}
+			return {...state, jumps};
 		}
 		case SOCKET_UPDATE_FAVICON: {
 			const payload = action.payload as FaviconPayload;

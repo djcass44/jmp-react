@@ -18,6 +18,7 @@
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
 import {BASE_URL} from "../../../constants";
+import {EditJumpDTO} from "../../../config/types/Jump";
 
 export const PATCH_JUMP = "PATCH_JUMP";
 export const PATCH_JUMP_REQUEST = "PATCH_JUMP_REQUEST";
@@ -39,13 +40,13 @@ interface PatchJumpFailureAction {
 	payload: Error;
 }
 
-export const patchJump = (dispatch: Dispatch, headers: any, jump: string): void => {
+export const patchJump = (dispatch: Dispatch, headers: any, jump: EditJumpDTO): void => {
 	dispatch({
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/jump`,
 			method: "PATCH",
 			headers,
-			body: jump,
+			body: JSON.stringify(jump),
 			types: [PATCH_JUMP_REQUEST, PATCH_JUMP_SUCCESS, PATCH_JUMP_FAILURE]
 		}
 	});

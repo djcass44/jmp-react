@@ -18,14 +18,14 @@ import {IconButton, Theme, useTheme} from "@material-ui/core";
 import Icon from "@mdi/react";
 import React from "react";
 import {mdiCircleSmall} from "@mdi/js";
-import ThemedTooltip from "../ThemedTooltip";
+import {ThemedTooltip} from "jmp-coreui";
 
 interface JumpButtonProps {
 	title: string;
 	focus?: boolean;
 	mouse?: boolean;
-	focusProps?: any;
-	buttonProps: any;
+	focusProps?: object;
+	buttonProps?: object;
 	iconProps: any;
 }
 
@@ -33,7 +33,9 @@ const JumpButton: React.FC<JumpButtonProps> = ({title, focus = false, mouse = tr
 	const theme = useTheme<Theme>();
 	return (
 		<div>
-			<ThemedTooltip title={title}>
+			<ThemedTooltip
+				translate
+				title={title}>
 				<IconButton
 					centerRipple={false}
 					{...focusProps}

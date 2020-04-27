@@ -16,13 +16,12 @@
  */
 
 import {Menu, MenuItem} from "@material-ui/core";
-import {MODAL_USER_GROUPS, setDialog} from "../../../actions/Modal";
 import React from "react";
+import {useDispatch} from "react-redux";
+import {MODAL_USER_GROUPS, setDialog} from "../../../store/actions/Modal";
 import {User} from "../../../types";
-import {useDispatch, useSelector} from "react-redux";
-import {TState} from "../../../store/reducers";
-import {AuthState} from "../../../store/reducers/auth";
 import {patchUserRole} from "../../../store/actions/users/PatchUserRole";
+import useAuth from "../../../hooks/useAuth";
 
 interface UserOptionsMenuProps {
 	user: User | null;
@@ -36,7 +35,7 @@ const UserOptionsMenu: React.FC<UserOptionsMenuProps> = ({user, expanded, anchor
 	const dispatch = useDispatch();
 
 	// global state
-	const {headers, isAdmin} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers, isAdmin} = useAuth();
 
 	if (user == null)
 		return null;

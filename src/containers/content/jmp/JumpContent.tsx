@@ -14,51 +14,34 @@
  *    limitations under the License.
  */
 
-import {useDispatch, useSelector} from "react-redux";
-import JumpButton from "../../../components/content/jmp/JumpButton";
-import {DELETABLE_JUMP, MODAL_JUMP_EDIT, setDelete2, setDialog} from "../../../actions/Modal";
-import {mdiChartDonut, mdiContentCopy, mdiDeleteOutline, mdiDelta, mdiPencilOutline, mdiPlusCircle} from "@mdi/js";
-import React, {ReactNode, useEffect, useState} from "react";
-import {
-	CardActions,
-	makeStyles,
-	Table,
-	TableBody,
-	TableCell,
-	TableRow,
-	Theme,
-	Typography,
-	useTheme
-} from "@material-ui/core";
-import getHelpCardColour from "../../../selectors/getHelpCardColour";
+import {useDispatch} from "react-redux";
+import React from "react";
+import {Card, CardContent, makeStyles, MenuItem, Theme, Typography, useTheme} from "@material-ui/core";
 import Moment from "react-moment";
-import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
-import getColourFromHex from "../../../style/getColourFromHex";
-import getSafeTextColour from "../../../selectors/getSafeTextColour";
-import Icon from "@mdi/react";
-import {Jump} from "../../../types";
-import {TState} from "../../../store/reducers";
-import {AuthState} from "../../../store/reducers/auth";
 import {PaletteColors} from "react-palette";
+import {MODAL_JUMP_EDIT, setDelete, setDialog} from "../../../store/actions/Modal";
+import {Jump} from "../../../types";
+import {APP_NOUN} from "../../../constants";
+import useAuth from "../../../hooks/useAuth";
+import JumpAvatar from "../../../components/content/jmp/JumpAvatar";
 
 const useStyles = makeStyles((theme: Theme) => ({
+	titleContainer: {
+		display: "flex",
+		alignItems: "center"
+	},
 	title: {
 		fontFamily: "Manrope",
+		fontWeight: 400
+	},
+	subtitle: {
+		fontFamily: "Manrope",
 		fontWeight: 500,
+		fontSize: 12,
+		color: theme.palette.text.primary
 	},
-	collapse: {
-		padding: theme.spacing(2),
-		borderRadius: 12,
-		color: theme.palette.text.secondary,
-		minHeight: 48
-	},
-	action: {},
-	content: {
-		padding: theme.spacing(2)
-	},
-	icon: {
-		width: 24,
-		paddingRight: theme.spacing(1)
+	deleteItem: {
+		color: theme.palette.error.main
 	}
 }));
 
@@ -70,143 +53,75 @@ interface JumpContentProps {
 	error?: any | null;
 }
 
-interface JumpData {
-	icon: ReactNode;
-	key: string;
-	value: any;
-}
-
-const JumpContent: React.FC<JumpContentProps> = ({jump, focusProps, palette, loading = false, error = null}) => {
+const JumpContent: React.FC<JumpContentProps> = ({jump, palette, loading = false, error = null}) => {
+	// hooks
 	const dispatch = useDispatch();
 	const classes = useStyles();
 	const theme = useTheme<Theme>();
 
-	const {isLoggedIn, isAdmin} = useSelector<TState, AuthState>(state => state.auth);
-
-	// state
-	const [data, setData] = useState<Array<JumpData>>([]);
+	const {isLoggedIn, isAdmin} = useAuth();
 
 	const hasOwnership = isAdmin || !jump.public;
-	// set the appropriate colours for the card-content
-	const avatarPalette = getAvatarFromPalette(theme, "", palette);
-	let bg: string | null = getHelpCardColour(theme);
-	if (loading === false && error == null) {
-		try {
-			bg = getColourFromHex(avatarPalette.bg, 0.2);
-		} catch (e) {
-			console.error(e);
-		} // this will probably only be thrown by firefox, so just swallow it
-	}
-	const textStyle = {
-		color: getSafeTextColour(theme, bg)
-	};
-
-	useEffect(() => {
-		const {meta} = jump;
-		const metaData = [
-			{
-				icon: <Icon path={mdiChartDonut} size={0.725} color={theme.palette.success.main}/>,
-				key: "Used",
-				value: jump.usage
-			},
-			{
-				icon: <Icon path={mdiPlusCircle} size={0.725} color={theme.palette.primary.main}/>,
-				key: "Created",
-				value: <Moment fromNow>{(meta?.created)}</Moment>
-			}
-		];
-		// add edited only if the jump has actually been edited
-		if (meta.created !== meta.edited) {
-			metaData.push({
-					icon: <Icon path={mdiDelta} size={0.725} color={theme.palette.error.main}/>,
-					key: "Edited",
-					value: <Moment fromNow>{(meta?.edited)}</Moment>
-				}
-			);
-		}
-		setData(metaData);
-	}, [jump, jump.meta, jump.usage]);
+	const canCopy = document.queryCommandSupported("copy");
 
 	return (
-		<div className={classes.collapse} style={{backgroundColor: bg || ""}}>
-			<div className={classes.content}>
-				<Typography className={classes.title} noWrap variant="subtitle1" style={textStyle}>
-					{jump.title || jump.name}
-				</Typography>
-				<Table>
-					<TableBody>
-						{data.map(row => (
-							<TableRow key={row.key}>
-								<TableCell className={classes.icon}>
-									{row.icon}
-								</TableCell>
-								<TableCell variant="head">
-									{row.key}
-								</TableCell>
-								<TableCell variant="body">
-									{row.value}
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</div>
-			<CardActions>
-				{document.queryCommandSupported("copy") &&
-				<div className={classes.action}>
-					<JumpButton
-						title="Copy"
-						buttonProps={{
-							onClick: () => navigator.clipboard.writeText(jump.location).then(),
-							style: {color: theme.palette.secondary.main}
-						}}
-						iconProps={{
-							path: mdiContentCopy,
-							color: theme.palette.secondary.main
-						}}
-						{...focusProps}
-					/>
-				</div>}
-				{(isLoggedIn && hasOwnership) &&
-				<div className={classes.action}>
-					<JumpButton
-						title="Edit"
-						buttonProps={{
-							onClick: () => setDialog(dispatch,
-								MODAL_JUMP_EDIT,
-								true,
-								{jump}
-							),
-							style: {color: theme.palette.secondary.main}
-						}}
-						iconProps={{
-							path: mdiPencilOutline,
-							color: theme.palette.secondary.main
-						}}
-						{...focusProps}
-					/>
-				</div>}
-				{(isLoggedIn && hasOwnership) &&
-				<div className={classes.action}>
-					<JumpButton
-						title="Delete"
-						buttonProps={{
-							onClick: () => setDelete2(dispatch,
-								true,
-								DELETABLE_JUMP,
-								jump.public,
-								jump
-							),
-							style: {color: theme.palette.error.main}
-						}}
-						iconProps={{
-							path: mdiDeleteOutline,
-							color: theme.palette.error.main
-						}}
-						{...focusProps}
-					/>
-				</div>}
-			</CardActions>
+		<div>
+			<Card
+				variant="outlined">
+				<CardContent>
+					<Typography
+						className={classes.subtitle}>
+						Created <Moment fromNow>{jump.meta.created}</Moment>
+					</Typography>
+					{jump.meta.edited !== jump.meta.created && <Typography
+						className={classes.subtitle}>
+						Last modified <Moment fromNow>{jump.meta.edited}</Moment>
+					</Typography>}
+					<div
+						className={classes.titleContainer}>
+						<JumpAvatar jump={jump} palette={palette} loading={loading} error={error}/>
+						<Typography
+							className={classes.title}
+							style={{color: palette.vibrant || theme.palette.text.primary}}
+							variant="h5"
+							component="h2">
+							{jump.name}
+						</Typography>
+					</div>
+					<Typography color="textSecondary">
+						{jump.title}
+					</Typography>
+				</CardContent>
+			</Card>
+			<MenuItem
+				disabled={!canCopy}
+				onClick={() => navigator.clipboard.writeText(jump.location).then()}>
+				Copy URL{!canCopy && " - Unsupported"}
+			</MenuItem>
+			{(isLoggedIn && hasOwnership) && <MenuItem
+				onClick={() => setDialog(dispatch,
+					MODAL_JUMP_EDIT,
+					true,
+					{jump}
+				)}>
+				Edit
+			</MenuItem>}
+			{(isLoggedIn && hasOwnership) && <MenuItem
+				className={classes.deleteItem}
+				onClick={() => setDelete(dispatch,
+					true,
+					{
+						deletable: true,
+						item: jump,
+						requireApproval: jump.public,
+						itemClass: APP_NOUN,
+						effects: [
+							`The ${APP_NOUN.toLocaleLowerCase()} is removed and cannot be restored`,
+							"If it was shared to a group or made public, it is now inaccessible to all users"
+						]
+					})}>
+				Delete
+			</MenuItem>}
 		</div>
 	);
 };

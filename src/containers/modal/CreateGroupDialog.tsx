@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState} from "react";
 import {
 	Button,
 	Dialog,
@@ -9,12 +9,14 @@ import {
 	makeStyles,
 	Typography
 } from "@material-ui/core";
-import {MODAL_GROUP_NEW, setDialog} from "../../actions/Modal";
 import {useDispatch, useSelector} from "react-redux";
-import ValidatedTextField from "../../components/field/ValidatedTextField";
-import {defaultState} from "../../reducers/Modal";
+import {ValidatedTextField} from "jmp-coreui";
+import {MODAL_GROUP_NEW, setDialog} from "../../store/actions/Modal";
 import {resetError} from "../../actions/Generic";
 import {PUT_GROUP, putGroup} from "../../store/actions/groups/PutGroup";
+import {defaultState, Modal} from "../../store/reducers/modal";
+import useAuth from "../../hooks/useAuth";
+import {TState} from "../../store/reducers";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -24,7 +26,7 @@ const useStyles = makeStyles(() => ({
 	},
 	button: {
 		fontFamily: "Manrope",
-		fontWeight: 'bold'
+		fontWeight: "bold"
 	}
 }));
 
@@ -35,19 +37,22 @@ const initialName = {
 };
 
 export default () => {
+	// hooks
 	const dispatch = useDispatch();
 
-	const {open} = useSelector(state => state.modal[MODAL_GROUP_NEW] || defaultState);
-	const {headers} = useSelector(state => state.auth);
-	const loading = useSelector(state => state.loading[PUT_GROUP]);
-	const error = useSelector(state => state.errors[PUT_GROUP]);
+	// global state
+	const {open} = useSelector<TState, Modal>(state => state.modal[MODAL_GROUP_NEW] || defaultState);
+	const {headers} = useAuth();
+	const loading = useSelector<TState, boolean>(state => state.loading[PUT_GROUP]);
+	const error = useSelector<TState, any | null>(state => state.errors[PUT_GROUP]);
 
+	// local state
 	const [name, setName] = useState(initialName);
 	const [submit, setSubmit] = useState(false);
 
 	useEffect(() => {
-		if (loading === false && error == null && submit === true)
-			setDialog(dispatch, MODAL_GROUP_NEW, false);
+		if (!loading && error == null && submit)
+			setDialog(dispatch, MODAL_GROUP_NEW, false, null);
 	}, [loading, error]);
 
 	const onOpen = () => {
@@ -63,8 +68,11 @@ export default () => {
 
 	const classes = useStyles();
 	return (
-		<Dialog open={open === true} onEnter={() => onOpen()} aria-labelledby={"form-dialog-title"}>
-			<DialogTitle id={"form-dialog-title"}>
+		<Dialog
+			open={open}
+			onEnter={() => onOpen()}
+			aria-labelledby="form-dialog-title">
+			<DialogTitle id="form-dialog-title">
 				<Typography className={classes.title}>Add group</Typography>
 			</DialogTitle>
 			<DialogContent>
@@ -80,17 +88,27 @@ export default () => {
 						margin: "dense",
 						id: "name",
 						label: "Name",
-						fullWidth: true
+						fullWidth: true,
+						variant: "outlined"
 					}}
 				/>
 				{error && <Typography variant="caption" color="error">{error.toString()}</Typography>}
 			</DialogContent>
 			<DialogActions>
-				<Button className={classes.button} color={"secondary"}
-				        onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, false)}
-				        disabled={loading === true}>Cancel</Button>
-				<Button className={classes.button} color={"primary"} onClick={() => handleSubmit()}
-				        disabled={name.error !== "" || !name.value.length || loading === true}>Create</Button>
+				<Button
+					className={classes.button}
+					color="secondary"
+					onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, false, null)}
+					disabled={loading}>
+					Cancel
+				</Button>
+				<Button
+					className={classes.button}
+					color="primary"
+					onClick={() => handleSubmit()}
+					disabled={name.error !== "" || !name.value.length || loading}>
+					Create
+				</Button>
 			</DialogActions>
 		</Dialog>
 	);

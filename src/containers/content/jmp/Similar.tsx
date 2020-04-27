@@ -23,11 +23,11 @@ import getErrorMessage from "../../../selectors/getErrorMessage";
 import {APP_NAME} from "../../../constants";
 import {GET_SIMILAR, getSimilar} from "../../../store/actions/jumps/GetSimilar";
 import {TState} from "../../../store/reducers";
-import {AuthState} from "../../../store/reducers/auth";
 import {JumpsState} from "../../../store/reducers/jumps";
 import {Jump} from "../../../types";
 import {getSimilarFail} from "../../../store/actions/jumps";
 import JumpChip from "../../../components/content/jmp/JumpChip";
+import useAuth from "../../../hooks/useAuth";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -56,7 +56,7 @@ export default () => {
 	const dispatch = useDispatch();
 
 	// global state
-	const {headers} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers} = useAuth();
 	const loading = useSelector<TState, boolean>(state => state.loading[GET_SIMILAR] ?? false);
 	const error = useSelector<TState, any | null>(state => state.errors[GET_SIMILAR]);
 	const {similar} = useSelector<TState, JumpsState>(state => state.jumps);

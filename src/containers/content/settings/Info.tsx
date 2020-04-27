@@ -12,12 +12,12 @@ import {
 	Theme,
 	Typography
 } from "@material-ui/core";
-import Status from "./Status";
 import {TState} from "../../../store/reducers";
-import {AuthState} from "../../../store/reducers/auth";
 import {getInfoSystem} from "../../../store/actions/info/GetInfoSystem";
 import {APP_NAME} from "../../../constants";
 import {InfoState} from "../../../store/reducers/info";
+import useAuth from "../../../hooks/useAuth";
+import Status from "./Status";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	versionInfo: {
@@ -31,7 +31,7 @@ const Info: React.FC = () => {
 	const classes = useStyles();
 
 	// global state
-	const {headers, isAdmin} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers, isAdmin} = useAuth();
 	const {systemInfo} = useSelector<TState, InfoState>(state => state.info);
 
 	// local state
@@ -47,7 +47,7 @@ const Info: React.FC = () => {
 
 	useEffect(() => {
 		getInfoSystem(dispatch, headers);
-	}, [headers]);
+	}, [headers.Authorization]);
 
 	return (
 		<div>

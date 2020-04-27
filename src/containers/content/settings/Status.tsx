@@ -4,8 +4,8 @@ import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import StatusIcon from "../../../components/widget/StatusIcon";
 import {TState} from "../../../store/reducers";
-import {AuthState} from "../../../store/reducers/auth";
 import {GET_INFO_STAT, getInfoHealth} from "../../../store/actions/info/GetInfoHealth";
+import useAuth from "../../../hooks/useAuth";
 
 interface StatusProps {
 	showReload?: boolean;
@@ -18,7 +18,7 @@ const Status: React.FC<StatusProps> = ({showReload = false}) => {
 	// global state
 	const loading = useSelector<TState, boolean>(state => state.loading[GET_INFO_STAT] ?? false);
 	const {components} = useSelector<TState, any>(state => state.info.status);
-	const {headers} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers} = useAuth();
 
 	useEffect(() => {
 		handleReload();

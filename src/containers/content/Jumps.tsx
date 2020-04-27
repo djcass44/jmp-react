@@ -16,24 +16,24 @@
 
 import {Avatar, Button, makeStyles, Paper, Theme, Typography, useTheme, Zoom} from "@material-ui/core";
 import React, {ReactNode, useEffect, useState} from "react";
-import {APP_NAME, APP_NOUN} from "../../constants";
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import List from "@material-ui/core/List";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import {fade} from "@material-ui/core/styles";
-import JumpItem from "./jmp/JumpItem";
-import {MODAL_JUMP_NEW, setDialog} from "../../actions/Modal";
-import {GET_JUMP, getJumps} from "../../store/actions/jumps/GetJumps";
-import {setJumpExpand, setJumpOffset, setJumpSearch} from "../../store/actions/jumps";
-import DwellInputBase from "../../components/widget/DwellInputBase";
 import Icon from "@mdi/react";
 import {mdiAccountAlertOutline, mdiMagnify} from "@mdi/js";
+import {DwellInputBase, ImageMessage, ThemedTooltip} from "jmp-coreui";
+import {MODAL_JUMP_NEW, setDialog} from "../../store/actions/Modal";
+import {GET_JUMP, getJumps} from "../../store/actions/jumps/GetJumps";
+import {setJumpExpand, setJumpOffset, setJumpSearch} from "../../store/actions/jumps";
 import {TState} from "../../store/reducers";
 import {Jump, Page} from "../../types";
 import {JumpsState} from "../../store/reducers/jumps";
-import {AuthState} from "../../store/reducers/auth";
-import ThemedTooltip from "../../components/content/ThemedTooltip";
+import {APP_NAME, APP_NOUN, pageSize} from "../../constants";
+import JumpItemSkeleton from "../../components/content/jmp/JumpItemSkeleton";
+import useAuth from "../../hooks/useAuth";
+import JumpItem from "./jmp/JumpItem";
 
 const bgTransition = (time: string | number) => `background-color ${time}ms linear`;
 const useStyles = makeStyles((theme: Theme) => ({
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 	name: {
 		fontFamily: "Manrope",
-		fontWeight: 500,
+		fontWeight: 400,
 		textAlign: "center",
 		color: theme.palette.primary.main
 	},
@@ -59,11 +59,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 		position: "relative",
 		borderRadius: 24,
 		color: theme.palette.text.primary,
-		// @ts-ignore
-		backgroundColor: fade(theme.palette.search, 0.35),
+		backgroundColor: fade(theme.palette.action.hover, 0.05),
 		"&:hover": {
-			// @ts-ignore
-			backgroundColor: fade(theme.palette.search, 0.65),
+			backgroundColor: fade(theme.palette.action.hover, 0.15),
 			transition: bgTransition(250),
 			webkitTransition: bgTransition(250),
 			msTransition: bgTransition(250)
@@ -110,13 +108,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 		margin: theme.spacing(2),
 		textTransform: "none",
 		color: theme.palette.success.main
+	},
+	skeleton: {
+		marginLeft: theme.spacing(2)
 	}
 }));
 
 const emptyImages = [
-	"undraw_no_data_qbuo.svg",
-	"undraw_lost_bqr2.svg",
-	"undraw_empty_xct9.svg"
+	"/draw/undraw_no_data_qbuo.svg",
+	"/draw/undraw_lost_bqr2.svg",
+	"/draw/undraw_empty_xct9.svg"
 ];
 
 export default () => {
@@ -128,29 +129,39 @@ export default () => {
 	// global state
 	const pagedJumps = useSelector<TState, Page<Jump>>(state => state.jumps.jumps);
 	const {offset, search} = useSelector<TState, JumpsState>(state => state.jumps);
-	const {headers, isLoggedIn} = useSelector<TState, AuthState>(state => state.auth);
+	const {headers, isLoggedIn} = useAuth();
 	const loading = useSelector<TState, boolean>(state => state.loading[GET_JUMP]);
 
 	// local state
 	const [data, setData] = useState<Array<ReactNode>>([]);
-	const [image, setImage] = useState<string>(emptyImages[Math.floor(Math.random() * emptyImages.length)]);
+	const [lData, setLData] = useState<Array<ReactNode>>([]);
 
 	const onSearch = (o = offset) => {
-		getJumps(dispatch, headers, search, Number(o / 8) || 0, 8);
+		getJumps(dispatch, headers, search, Number(o / pageSize) || 0, pageSize);
 	};
 
 	useEffect(() => {
 		window.document.title = APP_NAME;
 		onSearch();
-	}, [headers]);
+	}, [headers.Authorization]);
 
 	useEffect(() => {
 		const {content} = pagedJumps;
-		setJumpOffset(dispatch, pagedJumps.number * 8);
+		setJumpOffset(dispatch, pagedJumps.number * pageSize);
 		// Loop-d-loop
 		setData(content.map(i => (<JumpItem jump={i} key={i.id}/>)));
-		setImage(emptyImages[Math.floor(Math.random() * emptyImages.length)]);
 	}, [pagedJumps, offset]);
+
+	useEffect(() => {
+		if (!loading)
+			setLData([]);
+		const l = [];
+		const size = pagedJumps.numberOfElements || pageSize;
+		for (let i = 0; i < size; i++) {
+			l.push(<JumpItemSkeleton key={i}/>);
+		}
+		setLData(l);
+	}, [loading]);
 
 	const onPageChange = (off: number) => {
 		setJumpOffset(dispatch, off);
@@ -162,21 +173,36 @@ export default () => {
 	return (
 		<React.Fragment>
 			<Center>
-				<Avatar className={classes.avatar} component={Paper} src={`${process.env.PUBLIC_URL}/jmp2.png`}
-				        alt={APP_NAME}/>
+				<Avatar
+					className={classes.avatar}
+					component={Paper}
+					src={`${process.env.PUBLIC_URL}/jmp2.png`}
+					alt={APP_NAME}
+				/>
 			</Center>
 			<Center>
-				<Typography variant="h4" className={classes.name}>Where to?</Typography>
+				<Typography
+					className={classes.name}
+					variant="h4">
+					Where to?
+				</Typography>
 			</Center>
 			<Center>
-				<Button className={classes.addButton} disabled={!isLoggedIn} variant="outlined"
-				        aria-label="Add" onClick={
-					() => setDialog(dispatch,
-						MODAL_JUMP_NEW,
-						true
-					)
-				}>Add</Button>
-				{!isLoggedIn && <ThemedTooltip title={`You must be logged in to create ${APP_NOUN}s`}>
+				<Button
+					className={classes.addButton}
+					disabled={!isLoggedIn}
+					variant="outlined"
+					aria-label="Add"
+					onClick={
+						() => setDialog(dispatch,
+							MODAL_JUMP_NEW,
+							true,
+							null
+						)
+					}>
+					Add
+				</Button>
+				{!isLoggedIn && <ThemedTooltip translate title={`You must be logged in to create ${APP_NOUN}s`}>
 					<Icon path={mdiAccountAlertOutline} color={palette.error.dark} size={1}/>
 				</ThemedTooltip>}
 			</Center>
@@ -198,27 +224,18 @@ export default () => {
 			<div>
 				<div key="root" style={{borderRadius: 12, marginBottom: 8}}>
 					<List>
-						{data}
-						{data.length === 0 && !loading && <Center>
-							<div>
-								<Center>
-									<img
-										width={128}
-										src={`/draw/${image}`}
-										alt=""
-									/>
-								</Center>
-								<Typography className={`${classes.title} ${classes.nothing}`} color="textPrimary">
-									Nothing could be found
-								</Typography>
-							</div>
-						</Center>}
+						{!loading && data}
+						{loading && <>
+							{lData}
+						</>}
+						{data.length === 0 && !loading &&
+						<ImageMessage src={emptyImages} message="Nothing could be found"/>}
 					</List>
 				</div>
 				<Zoom in={pagedJumps.totalElements > pagedJumps.size}>
 					<Center>
 						<Pagination limit={pagedJumps.size} offset={offset} total={pagedJumps.totalElements}
-						            nextPageLabel={"▶"} previousPageLabel={"◀"}
+						            nextPageLabel="▶" previousPageLabel="◀"
 						            onClick={(e, off) => onPageChange(off)}/>
 					</Center>
 				</Zoom>

@@ -15,9 +15,9 @@
  *
  */
 
-import {Jump} from "../../../types";
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
+import {Jump} from "../../../types";
 import {BASE_URL} from "../../../constants";
 
 export const GET_SIMILAR = "GET_SIMILAR";
@@ -27,15 +27,15 @@ export const GET_SIMILAR_FAILURE = `${GET_SIMILAR}_FAILURE`;
 
 interface GetSimilarRequestAction {
 	type: typeof GET_SIMILAR_REQUEST;
-	payload: string;
+	payload: void;
 }
 
-interface GetSimilarSuccessAction {
+export interface GetSimilarSuccessAction {
 	type: typeof GET_SIMILAR_SUCCESS;
 	payload: Array<Jump>;
 }
 
-interface GetSimilarFailureAction {
+export interface GetSimilarFailureAction {
 	type: typeof GET_SIMILAR_FAILURE;
 	payload: Error;
 }

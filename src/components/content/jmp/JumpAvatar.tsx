@@ -14,18 +14,18 @@
  *    limitations under the License.
  */
 
-import getAvatarScheme from "../../../style/getAvatarScheme";
 import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
-import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import {Avatar, Theme, useTheme} from "@material-ui/core";
 import Icon from "@mdi/react";
 import {Skeleton} from "@material-ui/lab";
 import React from "react";
 import Img from "react-image";
+import {makeStyles} from "@material-ui/core/styles";
 import {Jump} from "../../../types";
 import getHelpCardColour from "../../../selectors/getHelpCardColour";
 import getColourFromHex from "../../../style/getColourFromHex";
-import {makeStyles} from "@material-ui/core/styles";
+import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
+import getAvatarScheme from "../../../style/getAvatarScheme";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	avatar: {

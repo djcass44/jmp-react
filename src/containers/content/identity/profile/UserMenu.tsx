@@ -18,14 +18,12 @@
 import React from "react";
 import UserProfile from "./UserProfile";
 import {User} from "../../../../types";
-import {useSelector} from "react-redux";
-import {TState} from "../../../../store/reducers";
-import {AuthState} from "../../../../store/reducers/auth";
 import {Button, Divider, makeStyles, MenuItem, Theme, Typography, useTheme} from "@material-ui/core";
 import Center from "react-center";
 import {Link, useHistory} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline} from "@mdi/js";
+import useAuth from "../../../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	logoutButton: {
@@ -69,7 +67,7 @@ const UserMenu: React.FC<UserMenuProps> = ({user, loginUrl, onClose}) => {
 	const history = useHistory();
 
 	// global state
-	const {isLoggedIn, isAdmin} = useSelector<TState, AuthState>(state => state.auth);
+	const {isLoggedIn, isAdmin} = useAuth();
 
 	const onPrivacyClicked = (): void => {
 		onClose();
