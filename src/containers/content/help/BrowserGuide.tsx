@@ -64,7 +64,7 @@ const BrowserGuide: React.FC = () => {
 	const [browserData] = useState<Array<Browser>>([
 		{
 			icon: mdiGoogleChrome,
-			colour: '#1da462',
+			colour: "#1da462",
 			name: "Google Chrome",
 			content: <span>
 				Make sure to go to extension settings and enter <Code>{BASE_URL}</Code>
@@ -86,7 +86,7 @@ const BrowserGuide: React.FC = () => {
 		},
 		{
 			icon: mdiFirefox,
-			colour: '#ff0039',
+			colour: "#ff0039",
 			name: "Mozilla Firefox",
 			content: <div>
 				Make sure to go to extension settings and enter <Code>{BASE_URL}</Code>
@@ -127,8 +127,8 @@ const BrowserGuide: React.FC = () => {
 		},
 		{
 			icon: mdiAppleSafari,
-			colour: '#006cff',
-			name: 'Safari',
+			colour: "#006cff",
+			name: "Safari",
 			content: <React.Fragment/>,
 			info: "Safari is not supported.",
 			severity: "error"

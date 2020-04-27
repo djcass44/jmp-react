@@ -48,7 +48,7 @@ const Snackbar = (props) => {
 			// Keep track of snackbars that we've displayed
 			storeDisplayed(key);
 		});
-	}, [shouldComponentUpdate]);
+	}, [dispatch, displayed, notify, props, shouldComponentUpdate, storeDisplayed]);
 	// we don't actually render anything, so just return null
 	return null;
 };

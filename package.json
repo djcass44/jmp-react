@@ -43,7 +43,16 @@
 		"start": "./env.sh && mv ./env-config.js ./public/ && react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"pretest": "./node_modules/.bin/eslint --ignore-path .gitignore . --fix"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"**/*.ts?(x)": ["./node_modules/.bin/eslint — fix", "git add"]
 	},
 	"eslintConfig": {
 		"extends": "react-app",
@@ -98,6 +107,10 @@
 					],
 					"import/order": [
 						"warn"
+					],
+					"quotes": [
+						"warn",
+						"double"
 					]
 				}
 			}
@@ -116,6 +129,8 @@
 		]
 	},
 	"devDependencies": {
-		"prettier": "1.19.1"
+		"eslint": "^6.8.0",
+		"husky": "^4.2.5",
+		"lint-staged": "^10.1.7"
 	}
 }

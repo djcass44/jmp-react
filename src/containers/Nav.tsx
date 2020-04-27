@@ -63,12 +63,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 		pointerEvents: "none"
 	},
 	title: {
-		display: 'none',
-		[theme.breakpoints.up('sm')]: {
-			display: 'block'
+		display: "none",
+		[theme.breakpoints.up("sm")]: {
+			display: "block"
 		},
 		fontFamily: "Manrope",
-		pointerEvents: 'none'
+		pointerEvents: "none"
 	},
 	search: {
 		position: "relative",
@@ -87,33 +87,33 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 		marginRight: theme.spacing(2),
 		marginLeft: 0,
-		width: '100%',
-		[theme.breakpoints.up('sm')]: {
+		width: "100%",
+		[theme.breakpoints.up("sm")]: {
 			marginLeft: theme.spacing(3),
-			width: 'auto',
+			width: "auto",
 		},
 	},
 	searchIcon: {
 		width: theme.spacing(9),
-		height: '100%',
-		position: 'absolute',
-		pointerEvents: 'none',
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'center',
+		height: "100%",
+		position: "absolute",
+		pointerEvents: "none",
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
 	},
 	inputRoot: {
-		color: 'inherit',
-		width: '100%',
+		color: "inherit",
+		width: "100%",
 	},
 	inputInput: {
 		paddingTop: theme.spacing(1),
 		paddingRight: theme.spacing(1),
 		paddingBottom: theme.spacing(1),
 		paddingLeft: theme.spacing(10),
-		transition: theme.transitions.create('width'),
-		width: '100%',
-		[theme.breakpoints.up('md')]: {
+		transition: theme.transitions.create("width"),
+		width: "100%",
+		[theme.breakpoints.up("md")]: {
 			width: 200,
 		},
 	},
@@ -213,11 +213,16 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 						/>
 					</div>}
 					<div className={classes.grow}/>
-					{loading === false && <>
+					<>
 						<div className={classes.sectionDesktop}>
 							{location.pathname !== "/help" &&
-							<IconButton style={{margin: 8}} component={Link} centerRipple={false} color="inherit"
-							            to="/help">
+							<IconButton
+								style={{margin: 8}}
+								disabled={loading}
+								component={Link}
+								centerRipple={false}
+								color="inherit"
+								to="/help">
 								<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
 							</IconButton>}
 						</div>
@@ -228,16 +233,16 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 							style={{marginTop: 4}}
 							onClick={(e: any) => setAnchorEl(e.currentTarget)}
 							aria-haspopup="true"
-							aria-owns={anchorEl != null ? 'material-appbar' : undefined}
+							aria-owns={anchorEl != null ? "material-appbar" : undefined}
 						/>
-					</>}
+					</>
 				</Toolbar>
 			</>
 			<Popover
 				anchorEl={anchorEl}
-				anchorOrigin={{vertical: 'top', horizontal: 'right'}}
-				transformOrigin={{vertical: 'top', horizontal: 'right'}}
-				open={anchorEl != null}
+				anchorOrigin={{vertical: "top", horizontal: "right"}}
+				transformOrigin={{vertical: "top", horizontal: "right"}}
+				open={anchorEl != null && !loading}
 				onClose={() => handleMenuClose()}>
 				<UserMenu
 					user={userProfile}

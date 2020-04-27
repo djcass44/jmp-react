@@ -105,7 +105,7 @@ export default ({history}) => {
 			const target = url.searchParams.get("target");
 			history.push(target != null && target !== "" ? target : "/");
 		}
-	}, [isLoggedIn]);
+	}, [history, isLoggedIn]);
 
 	useEffect(() => {
 		if (page === 0)
