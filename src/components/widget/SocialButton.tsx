@@ -52,7 +52,7 @@ const SocialButton: React.FC<SocialButtonProps> = ({url, colour, name, icon}: So
 	const variant = palette.type === "dark" ? "contained" : "text";
 	return (
 		<Button href={url} className={classes.button} variant={variant}>
-			<Icon className={classes.icon} path={icon} size={"1.5rem"} color={colour}/>
+			<Icon className={classes.icon} path={icon} size="1.5rem" color={colour}/>
 			{name}
 		</Button>
 	);

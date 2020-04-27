@@ -59,16 +59,16 @@ const Content: React.FC = () => {
 				<Grid item xs={false} sm={1} md={3} className={classes.padding}/>
 				<Grid item xs={12} sm={10} md={6}>
 					<Switch>
-						<Route exact path="/" component={Jumps} key={"jumps"}/>
-						<Route exact path="/identity" component={Identity} key={"identity"}/>
-						<Route exact path="/jmp" component={Token} key={"token"}/>
-						<Route exact path="/similar" component={Similar} key={"similar"}/>
-						<Route exact path="/login" component={Login} key={"login"}/>
-						<Route exact path="/logout" component={Logout} key={"logout"}/>
-						<Route exact path="/settings" component={Settings} key={"settings"}/>
-						<Route exact path="/help" component={Help} key={"help"}/>
-						<Route exact path="/callback" component={Callback} key={"callback"}/>
-						<Route component={NotFound} key={"notfound"}/>
+						<Route exact path="/" component={Jumps} key="jumps"/>
+						<Route exact path="/identity" component={Identity} key="identity"/>
+						<Route exact path="/jmp" component={Token} key="token"/>
+						<Route exact path="/similar" component={Similar} key="similar"/>
+						<Route exact path="/login" component={Login} key="login"/>
+						<Route exact path="/logout" component={Logout} key="logout"/>
+						<Route exact path="/settings" component={Settings} key="settings"/>
+						<Route exact path="/help" component={Help} key="help"/>
+						<Route exact path="/callback" component={Callback} key="callback"/>
+						<Route component={NotFound} key="notfound"/>
 					</Switch>
 				</Grid>
 				<Grid item xs={false} sm={1} md={3} className={classes.padding}/>

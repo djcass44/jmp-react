@@ -16,14 +16,14 @@
  */
 
 import React from "react";
-import UserProfile from "./UserProfile";
-import {User} from "../../../../types";
 import {Button, Divider, makeStyles, MenuItem, Theme, Typography, useTheme} from "@material-ui/core";
 import Center from "react-center";
 import {Link, useHistory} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiAccountGroupOutline} from "@mdi/js";
+import {User} from "../../../../types";
 import useAuth from "../../../../hooks/useAuth";
+import UserProfile from "./UserProfile";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	logoutButton: {

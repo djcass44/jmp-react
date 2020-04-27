@@ -2,7 +2,7 @@ import {Theme} from "@material-ui/core";
 
 export default (theme: Theme, type: number) => {
 	const {palette} = theme;
-	if(palette.type === 'dark') {
+	if (palette.type === "dark") {
 		switch (type) {
 			case 1:
 				return [palette.success.dark, palette.success.light];

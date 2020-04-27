@@ -16,7 +16,7 @@
  */
 
 import {useDispatch, useSelector} from "react-redux";
-import {Grid, LinearProgress, makeStyles, Theme, Typography, Zoom} from "@material-ui/core";
+import {List, makeStyles, Theme, Typography} from "@material-ui/core";
 import React, {ReactNode, useEffect, useState} from "react";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
@@ -29,20 +29,25 @@ import {MODAL_GROUP_NEW, setDialog} from "../../../store/actions/Modal";
 import {TState} from "../../../store/reducers";
 import {UsersState} from "../../../store/reducers/users";
 import {User} from "../../../types";
+import useAuth from "../../../hooks/useAuth";
+import {pageSize} from "../../../constants";
+import JumpItemSkeleton from "../../../components/content/jmp/JumpItemSkeleton";
 import UserOptionsMenu from "./UserOptionsMenu";
 import UserCard from "./profile/UserCard";
-import useAuth from "../../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
-		marginTop: theme.spacing(4)
+		marginTop: theme.spacing(1)
 	},
 	title: {
 		fontFamily: "Manrope",
-		fontWeight: 500
+		fontWeight: 400,
+		fontSize: 22,
+		color: theme.palette.text.primary,
+		width: "100%"
 	},
 	progress: {
-		backgroundColor: 'transparent',
+		backgroundColor: "transparent",
 		flexGrow: 1
 	},
 	item: {
@@ -53,8 +58,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 		padding: theme.spacing(2)
 	},
 	addButton: {
-		margin: theme.spacing(2),
-		color: theme.palette.success.main
+		fontFamily: "Manrope",
+		fontWeight: 600,
+		minWidth: 128,
+		textTransform: "none"
 	}
 }));
 
@@ -72,10 +79,24 @@ export default () => {
 	const [expanded, setExpanded] = useState<boolean>(false);
 	const [user, setUser] = useState<User | null>(null);
 	const [anchorEl, setAnchorEl] = useState<EventTarget & HTMLButtonElement | null>(null);
+	const [lData, setLData] = useState<Array<ReactNode>>([]);
 
 	const onSearch = (o: number = offset) => {
-		getUsers(dispatch, headers, search, Number(o / 8) || 0, 8);
+		getUsers(dispatch, headers, search, Number(o / pageSize) || 0, pageSize);
 	};
+
+	useEffect(() => {
+		if (!loading && !loadingPatch) {
+			setLData([]);
+			return;
+		}
+		const l = [];
+		const size = users.numberOfElements || 2;
+		for (let i = 0; i < size; i++) {
+			l.push(<JumpItemSkeleton key={i}/>);
+		}
+		setLData(l);
+	}, [loading, loadingPatch]);
 
 	useEffect(() => {
 		onSearch();
@@ -83,17 +104,15 @@ export default () => {
 
 	useEffect(() => {
 		const {content} = users;
-		setUserOffset(dispatch, users.number * 8);
+		setUserOffset(dispatch, users.number * pageSize);
 		// Loop-d-loop
-		setItems(content.map(u => <Grid key={u.id} item md={12} lg={6}>
-			<UserCard user={u} setAnchorEl={e => toggleExpansion(e, u)}/>
-		</Grid>));
+		setItems(content.map(u => <UserCard key={u.id} user={u} setAnchorEl={e => toggleExpansion(e, u)}/>));
 	}, [users, offset, expanded]);
 
-	const toggleExpansion = (e: EventTarget & HTMLButtonElement, u: User | null) => {
+	const toggleExpansion = (e: EventTarget & HTMLButtonElement | null, u: User | null) => {
 		setExpanded(u != null);
 		setUser(user === u ? null : u);
-		setAnchorEl(user === u ? null : e);
+		setAnchorEl(user === u || e == null ? null : e);
 	};
 
 	const onPageChange = (off: number) => {
@@ -106,37 +125,48 @@ export default () => {
 		setExpanded(false);
 	};
 
-	const createButton = (
-		<Button
-			className={classes.addButton}
-			disabled
-			onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, true, null)}
-			variant="outlined">
-			Create
-		</Button>
-	);
-
 	return (
 		<div className={classes.root}>
-			<Zoom in={loading || loadingPatch}>
-				<LinearProgress/>
-			</Zoom>
-			{items.length === 0 ? <Center>{createButton}</Center> : <div>{createButton}</div>}
-			<Grid container spacing={3}>
-				{items}
-			</Grid>
-			<Zoom in={items.length === 0}>
-				<Typography className={`${classes.title} ${classes.nothing}`} color="primary">
-					No users could be found
+			<div style={{display: "flex"}}>
+				<Typography
+					className={classes.title}>
+					Users
 				</Typography>
-			</Zoom>
-			<Zoom in={users.totalElements > users.size}>
-				<Center>
-					<Pagination limit={users.size} offset={offset} total={users.totalElements}
-					            nextPageLabel="▶" previousPageLabel="◀" onClick={(e, off) => onPageChange(off)}/>
-				</Center>
-			</Zoom>
-			<UserOptionsMenu user={user} expanded={expanded} anchorEl={anchorEl} close={() => setExpanded(false)}/>
+				<Button
+					className={classes.addButton}
+					color="primary"
+					disableElevation
+					disabled
+					onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, true, null)}
+					variant="contained">
+					New user
+				</Button>
+			</div>
+			<List>
+				{lData}
+				{items}
+			</List>
+			{items.length === 0 && <Typography className={`${classes.title} ${classes.nothing}`} color="primary">
+				No users could be found
+			</Typography>}
+			{users.totalElements > users.size && <Center>
+				<Pagination
+					limit={users.size}
+					offset={offset}
+					total={users.totalElements}
+					nextPageLabel="▶"
+					previousPageLabel="◀"
+					onClick={(e, off) => onPageChange(off)}
+				/>
+			</Center>}
+			<UserOptionsMenu
+				user={user}
+				expanded={expanded}
+				anchorEl={anchorEl}
+				close={() => {
+					toggleExpansion(null, null);
+				}}
+			/>
 			<GroupModDialog/>
 		</div>
 	);

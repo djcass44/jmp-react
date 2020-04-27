@@ -15,12 +15,12 @@
  *
  */
 
-import {Token} from "../../../types";
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
+import {Token} from "../../../types";
 import {BASE_URL} from "../../../constants";
-import {oauthVerify} from "./AuthVerify";
 import {getHeaders} from "../../../util";
+import {oauthVerify} from "./AuthVerify";
 
 export const OAUTH2_CALLBACK = "OAUTH2_CALLBACK";
 export const OAUTH2_CALLBACK_REQUEST = "OAUTH2_CALLBACK_REQUEST";

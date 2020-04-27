@@ -47,8 +47,8 @@ import {APP_NOUN} from "../../../constants";
 import Domain from "../../../components/widget/Domain";
 import {TState} from "../../../store/reducers";
 import {JumpsState} from "../../../store/reducers/jumps";
-import JumpContent from "./JumpContent";
 import getUsage from "../../../store/selectors/getUsage";
+import JumpContent from "./JumpContent";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	item: {

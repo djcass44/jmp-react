@@ -12,19 +12,19 @@ export const light: PaletteOptions = {
 		dark: "#101e35"
 	},
 	warning: {
-		main: '#F4B400',
-		light: '#FFE380',
-		dark: '#FF8B00'
+		main: "#F4B400",
+		light: "#FFE380",
+		dark: "#FF8B00"
 	},
 	error: {
-		main: '#DB4437',
-		light: '#FFEBE5',
-		dark: '#BF2600'
+		main: "#DB4437",
+		light: "#FFEBE5",
+		dark: "#BF2600"
 	},
 	info: {
-		main: '#6554C0',
-		light: '#EAE6FF',
-		dark: '#5243AA'
+		main: "#6554C0",
+		light: "#EAE6FF",
+		dark: "#5243AA"
 	},
 	success: {
 		main: "#0F9D58",
@@ -54,32 +54,32 @@ export const dark: PaletteOptions = {
 		dark: "#222425"
 	},
 	warning: {
-		main: '#cd6700',
-		light: '#e69400',
-		dark: '#b44400'
+		main: "#cd6700",
+		light: "#e69400",
+		dark: "#b44400"
 	},
 	error: {
-		main: '#e26a5f',
-		light: '#ff7a59',
-		dark: '#430f00'
+		main: "#e26a5f",
+		light: "#ff7a59",
+		dark: "#430f00"
 	},
 	info: {
-		main: '#403294',
-		light: '#9288d0',
-		dark: '#222425'
+		main: "#403294",
+		light: "#9288d0",
+		dark: "#222425"
 	},
 	success: {
-		main: '#78f2b7',
-		light: '#4CAF50',
-		dark: '#1B5E20'
+		main: "#78f2b7",
+		light: "#4CAF50",
+		dark: "#1B5E20"
 	},
 	background: {
-		paper: '#222425',
-		default: '#1a1b1c'
+		paper: "#222425",
+		default: "#1a1b1c"
 	},
 	action: {
 		selected: "#161718",
 		hover: "#161718"
 	},
-	type: 'dark'
+	type: "dark"
 };

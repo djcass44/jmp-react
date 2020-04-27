@@ -17,7 +17,7 @@
 
 import {mdiAccountOutline, mdiDatabase, mdiGithub, mdiGoogle, mdiShieldAccount} from "@mdi/js";
 import {Theme} from "@material-ui/core";
-import {AuthHeaders, Token} from "../types";
+import {AuthHeaders, SimpleMap, Token} from "../types";
 
 /**
  * Converts an object to JSON and back
@@ -41,7 +41,13 @@ export const getHeadersFromRaw = (request: string | null, source: string | null)
 	};
 };
 
-export const getProviderData = (theme: Theme) => {
+export interface Provider {
+	name: string;
+	icon: string;
+	colour: string;
+}
+
+export const getProviderData = (theme: Theme): SimpleMap<Provider> => {
 	return {
 		ldap: {
 			name: "LDAP",

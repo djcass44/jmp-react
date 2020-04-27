@@ -15,7 +15,6 @@
  *
  */
 
-import processHTTPCode from "../../misc/Codes";
 import {SimpleMap} from "../../types";
 
 const initialState: SimpleMap<string | any | null> = {};
@@ -35,9 +34,8 @@ export default (state = initialState, action: Action) => {
 	// not a *_REQUEST or *_FAILURE action, so we ignore them
 	if (!matches) return state;
 	const [, requestName, requestState] = matches;
-	const data = processHTTPCode(payload);
 	return {
 		...state,
-		[`${requestName}${payload?.tag ? `_${payload.tag}` : ""}`]: requestState === "FAILURE" ? data : null
+		[`${requestName}${payload?.tag ? `_${payload.tag}` : ""}`]: requestState === "FAILURE" ? payload : null
 	};
 }

@@ -15,9 +15,9 @@
  *
  */
 
-import {Pair} from "../../../types";
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
+import {Pair} from "../../../types";
 import {BASE_URL} from "../../../constants";
 
 export const DISCOVER_OAUTH = "DISCOVER_OAUTH";

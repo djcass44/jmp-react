@@ -16,54 +16,51 @@
  */
 
 import React, {ReactNode} from "react";
-import {Card, CardActions, CardContent, makeStyles, Theme} from "@material-ui/core";
+import {
+	Card,
+	ListItem,
+	ListItemAvatar,
+	ListItemSecondaryAction,
+	ListItemText,
+	makeStyles,
+	Theme
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
-		display: 'flex',
-		borderRadius: 12
-	},
-	details: {
-		display: 'flex',
-		flexDirection: 'column',
-	},
-	content: {
-		flex: '1 0 auto',
-	},
-	actions: {
-		float: "right",
-		flexGrow: 1,
-		marginRight: theme.spacing(1.5)
+		marginTop: theme.spacing(1),
+		borderRadius: theme.spacing(1.5)
 	}
 }));
 
 interface UserCardProps {
-	avatar: ReactNode;
-	content: ReactNode;
+	avatar: any;
+	primary?: ReactNode;
+	secondary?: ReactNode
 	actions: ReactNode;
 }
 
-const IdentityCard: React.FC<UserCardProps> = ({avatar, content, actions}) => {
+const IdentityCard: React.FC<UserCardProps> = ({avatar, primary, secondary, actions}) => {
 	// hooks
 	const classes = useStyles();
 
 	return (
-		<div>
-			<Card
-				className={classes.root}
-				elevation={0}>
-				{avatar}
-				<div className={classes.details}>
-					<CardContent className={classes.content}>
-						{content}
-					</CardContent>
-				</div>
-				<CardActions className={classes.actions}>
-					<div style={{width: "100%"}}/>
+		<Card
+			className={classes.root}
+			variant="outlined">
+			<ListItem>
+				<ListItemAvatar>
+					{avatar}
+				</ListItemAvatar>
+				<ListItemText
+					primary={primary}
+					secondary={secondary}
+				/>
+				<ListItemSecondaryAction>
 					{actions}
-				</CardActions>
-			</Card>
-		</div>
+				</ListItemSecondaryAction>
+			</ListItem>
+		</Card>
 	);
 };
 export default IdentityCard;

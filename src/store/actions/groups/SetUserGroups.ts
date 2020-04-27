@@ -15,9 +15,9 @@
  *
  */
 
-import {Group} from "../../../types";
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
+import {Group} from "../../../types";
 import {BASE_URL} from "../../../constants";
 
 export const SET_USER_GROUPS = "SET_USER_GROUPS";

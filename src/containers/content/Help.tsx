@@ -24,11 +24,11 @@ import Icon from "@mdi/react";
 import {mdiChevronDown, mdiChevronUp} from "@mdi/js";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import BrowserGuide from "./help/BrowserGuide";
-import getHelpCardColour from "../../selectors/getHelpCardColour";
 import useTheme from "@material-ui/core/styles/useTheme";
-import {APP_NAME, APP_NOUN} from "../../constants";
 import {useHistory, useLocation} from "react-router";
+import getHelpCardColour from "../../selectors/getHelpCardColour";
+import {APP_NAME, APP_NOUN} from "../../constants";
+import BrowserGuide from "./help/BrowserGuide";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 		borderRadius: 12
 	},
 	itemAction: {
-		pointerEvents: 'none'
+		pointerEvents: "none"
 	}
 }));
 
@@ -148,7 +148,7 @@ const Help: React.FC = () => {
 			return (
 				<div key={i.id}>
 					<ListItem button className={classes.item} value={i.id} onClick={() => toggleExpansion(i.id)}
-					          component={"li"}>
+					          component="li">
 						<ListItemText
 							primary={<span
 								className={classes.title}
@@ -192,7 +192,7 @@ const Help: React.FC = () => {
 				/>
 			</Center>
 			<Center>
-				<img height={192} src={"/draw/undraw_circles_y7s2.svg"} alt={""}/>
+				<img height={192} src="/draw/undraw_circles_y7s2.svg" alt=""/>
 			</Center>
 			<Center>
 				<Typography variant="h4" className={classes.name}>Need a hand?</Typography>

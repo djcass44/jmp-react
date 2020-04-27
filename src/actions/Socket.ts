@@ -22,14 +22,14 @@ let badTicks = 0;
 
 export const connectWebSocket = (dispatch: Dispatch) => {
 	socket = new WebSocket(SOCKET_URL);
-	socket.addEventListener('open', () => {
+	socket.addEventListener("open", () => {
 		badTicks = 0;
 		dispatch({type: WS_BAD_TICK, payload: badTicks});
 		dispatch(removeSnackbar(WS_CLOSE));
 		dispatch(closeSnackbar(WS_CLOSE));
-		dispatch({type: WS_OPEN})
+		dispatch({type: WS_OPEN});
 	});
-	socket.addEventListener('close', () => {
+	socket.addEventListener("close", () => {
 		setTimeout(() => {
 			connectWebSocket(dispatch);
 			dispatch({type: WS_RECONNECT});
@@ -47,7 +47,7 @@ export const connectWebSocket = (dispatch: Dispatch) => {
 			}
 		}, 500);
 	});
-	socket.addEventListener('message', ev => {
+	socket.addEventListener("message", ev => {
 		const data = JSON.parse(ev.data) as Action;
 		checkType(dispatch, data);
 	});

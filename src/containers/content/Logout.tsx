@@ -21,13 +21,13 @@ import {useDispatch} from "react-redux";
 import {Link} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import {CircularProgress, makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
+import {useHistory} from "react-router";
+import Icon from "@mdi/react";
+import {mdiHomeOutline} from "@mdi/js";
 import {APP_NAME} from "../../constants";
 import {oauthLogout} from "../../store/actions/auth/AuthLogout";
 import {clone} from "../../util";
 import {oauth2Logout} from "../../store/actions/auth/OAuth2Logout";
-import {useHistory} from "react-router";
-import Icon from "@mdi/react";
-import {mdiHomeOutline} from "@mdi/js";
 import useAuth from "../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({

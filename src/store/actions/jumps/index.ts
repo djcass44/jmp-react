@@ -15,14 +15,14 @@
  *
  */
 
-import {GetJumpsActionType} from "./GetJumps";
 import {Dispatch} from "redux";
-import {GetSimilarActionType, GetSimilarFailureAction} from "./GetSimilar";
 import {FaviconPayload} from "../../../types";
+import {GET_SIMILAR} from "../../../actions/Jumps";
+import {GetJumpsActionType} from "./GetJumps";
+import {GetSimilarActionType, GetSimilarFailureAction} from "./GetSimilar";
 import {DeleteJumpActionType} from "./DeleteJump";
 import {PutJumpActionType} from "./PutJump";
 import {PatchJumpActionType} from "./PatchJump";
-import {GET_SIMILAR} from "../../../actions/Jumps";
 
 export const SET_JUMP_EXPAND = "SET_JUMP_EXPAND";
 export const SET_JUMP_OFFSET = "SET_JUMP_OFFSET";

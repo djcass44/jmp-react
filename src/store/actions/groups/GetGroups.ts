@@ -15,9 +15,9 @@
  *
  */
 
-import {Group, Page} from "../../../types";
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
+import {Group, Page} from "../../../types";
 import {BASE_URL} from "../../../constants";
 
 export const GROUP_LOAD = "GROUP_LOAD";

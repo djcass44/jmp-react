@@ -15,12 +15,12 @@
  *
  */
 
+import {Dispatch} from "redux";
 import {GetGroupsActionType} from "./GetGroups";
 import {GetUserGroupsActionType} from "./GetUserGroups";
 import {PatchGroupActionType} from "./PatchGroup";
 import {PutGroupActionType} from "./PutGroup";
 import {SetUserGroupsActionType} from "./SetUserGroups";
-import {Dispatch} from "redux";
 
 export const SET_GROUP_OFFSET = "SET_GROUP_OFFSET";
 

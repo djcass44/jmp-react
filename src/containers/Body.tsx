@@ -1,35 +1,35 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
-import Content from "./Content";
-import Nav from "./Nav";
-import AdminPanel from "../components/AdminPanel";
 import {Fade, LinearProgress, makeStyles, Theme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
+import {useLocation} from "react-router";
+import AdminPanel from "../components/AdminPanel";
 import {OAUTH_VERIFY, oauthVerify} from "../store/actions/auth/AuthVerify";
 import {TState} from "../store/reducers";
-import {useLocation} from "react-router";
 import {GET_JUMP} from "../store/actions/jumps/GetJumps";
 import useAuth from "../hooks/useAuth";
+import Nav from "./Nav";
+import Content from "./Content";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	main: {
-		display: 'flex',
-		flexDirection: 'column'
+		display: "flex",
+		flexDirection: "column"
 	},
 	root: {
 		flexGrow: 1,
-		flex: '1 0 100%'
+		flex: "1 0 100%"
 	},
 	hero: {
-		height: '100vh',
+		height: "100vh",
 		// minHeight: '100vh',
-		flex: '0 0 auto',
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'top',
+		flex: "0 0 auto",
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "top",
 		backgroundColor: theme.palette.background.default
 	},
 	hero2: {
-		width: '100%'
+		width: "100%"
 	},
 	progress: {
 		position: "fixed",

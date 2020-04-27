@@ -2,10 +2,10 @@ import React, {useEffect} from "react";
 import Center from "react-center";
 import {Avatar, makeStyles, Paper, Theme, Typography} from "@material-ui/core";
 import {APP_NAME} from "../../constants";
+import useAuth from "../../hooks/useAuth";
 import Auth from "./settings/Auth";
 import General from "./settings/General";
 import Info from "./settings/Info";
-import useAuth from "../../hooks/useAuth";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	name: {

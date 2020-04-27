@@ -16,34 +16,23 @@
  */
 
 import React, {useState} from "react";
-import {makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
-import {User} from "../../../../types";
+import {makeStyles, Typography, useTheme} from "@material-ui/core";
 import {Avatar} from "evergreen-ui";
-import Icon from "@mdi/react";
 import {mdiAccountOutline, mdiAccountSupervisor, mdiDotsVertical} from "@mdi/js";
+import {GenericIconButton} from "jmp-coreui";
 import getIconColour from "../../../../style/getIconColour";
-import IconButton from "@material-ui/core/IconButton";
-import {getProviderData} from "../../../../util";
+import {getProviderData, Provider} from "../../../../util";
+import {SimpleMap, User} from "../../../../types";
 import IdentityCard from "./IdentityCard";
-import {ThemedTooltip} from "jmp-coreui";
 
-const useStyles = makeStyles((theme: Theme) => ({
-	avatar: {
-		margin: 16
-	},
+const useStyles = makeStyles(() => ({
+	avatar: {},
 	displayName: {
 		fontFamily: "Manrope",
 		fontWeight: 600
 	},
 	username: {
 		fontSize: 14
-	},
-	icons: {
-		marginTop: theme.spacing(0.5)
-	},
-	icon: {
-		marginTop: theme.spacing(0.5),
-		marginRight: theme.spacing(0.5)
 	}
 }));
 
@@ -58,43 +47,52 @@ const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}) => {
 	const theme = useTheme();
 
 	// local state
-	const [providers] = useState<any>(getProviderData(theme));
+	const [providers] = useState<SimpleMap<Provider>>(getProviderData(theme));
 
 	const avatar = (<Avatar
 		className={classes.avatar}
 		name={user?.displayName || user?.username || "Anonymous"}
 		src={user?.avatarUrl || undefined}
-		size={72}>
+		size={40}>
 	</Avatar>);
 
-	const content = (<>
+	const primary = (
 		<Typography
 			className={classes.displayName}
 			color="textPrimary">
 			{user.displayName || user.username}
 		</Typography>
-		<Typography
-			className={classes.username}
-			color="textSecondary">
-			@{user.username}
-		</Typography>
-		<div className={classes.icons}>
-			<ThemedTooltip translate className={classes.icon} title={providers[user.source]?.name || user.source}>
-				<Icon path={providers[user.source]?.icon || mdiAccountOutline} size={1}
-				      color={providers[user.source]?.colour || theme.palette.primary.main}/>
-			</ThemedTooltip>
-			{user.admin && <ThemedTooltip translate className={classes.icon} title="This user is an administrator">
-				<Icon path={mdiAccountSupervisor} color={theme.palette.error.main} size={1}/>
-			</ThemedTooltip>}
-		</div>
-	</>);
+	);
 
+	const secondary = `@${user.username}`;
+
+	const source: Provider | null = providers[user.source];
 	const actions = (<>
-		<IconButton centerRipple={false} onClick={(e) => setAnchorEl?.(e.currentTarget)}>
-			<Icon path={mdiDotsVertical} size={1} color={getIconColour(theme)}/>
-		</IconButton>
+		{user.admin && <GenericIconButton
+			title="This user is an administrator"
+			icon={mdiAccountSupervisor}
+			colour={theme.palette.error.main}
+		/>}
+		<GenericIconButton
+			title={source?.name || user.source}
+			icon={source?.icon || mdiAccountOutline}
+			colour={source?.colour || theme.palette.primary.main}
+		/>
+		<GenericIconButton
+			title="Options"
+			icon={mdiDotsVertical}
+			colour={getIconColour(theme)}
+			onClick={e => setAnchorEl?.(e.currentTarget)}
+		/>
 	</>);
 
-	return (<IdentityCard avatar={avatar} content={content} actions={actions}/>);
+	return (
+		<IdentityCard
+			avatar={avatar}
+			primary={primary}
+			secondary={secondary}
+			actions={actions}
+		/>
+	);
 };
 export default UserCard;

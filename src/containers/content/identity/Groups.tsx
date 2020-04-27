@@ -16,11 +16,10 @@
  */
 
 import {useDispatch, useSelector} from "react-redux";
-import {LinearProgress, makeStyles, Theme, Typography, Zoom} from "@material-ui/core";
+import {List, makeStyles, Theme, Typography} from "@material-ui/core";
 import React, {ReactNode, useEffect, useState} from "react";
 import Center from "react-center";
 import Pagination from "material-ui-flat-pagination/lib/Pagination";
-import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
 import {MODAL_GROUP_NEW, setDialog} from "../../../store/actions/Modal";
@@ -30,16 +29,24 @@ import {setGroupOffset} from "../../../store/actions/groups";
 import {TState} from "../../../store/reducers";
 import {GroupsState} from "../../../store/reducers/groups";
 import {UsersState} from "../../../store/reducers/users";
-import GroupCard from "./profile/GroupCard";
 import useAuth from "../../../hooks/useAuth";
+import {pageSize} from "../../../constants";
+import JumpItemSkeleton from "../../../components/content/jmp/JumpItemSkeleton";
+import GroupCard from "./profile/GroupCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
+	root: {
+		marginTop: theme.spacing(1)
+	},
 	title: {
 		fontFamily: "Manrope",
-		fontWeight: 500
+		fontWeight: 400,
+		fontSize: 22,
+		color: theme.palette.text.primary,
+		width: "100%"
 	},
 	progress: {
-		backgroundColor: 'transparent',
+		backgroundColor: "transparent",
 		flexGrow: 1
 	},
 	item: {
@@ -50,8 +57,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 		marginTop: theme.spacing(2)
 	},
 	addButton: {
-		margin: theme.spacing(2),
-		color: theme.palette.success.main
+		fontFamily: "Manrope",
+		fontWeight: 600,
+		minWidth: 128,
+		textTransform: "none"
 	}
 }));
 
@@ -68,10 +77,24 @@ export default () => {
 	const loading = useSelector<TState, boolean>(state => state.loading[GROUP_LOAD] ?? false);
 
 	const [items, setItems] = useState<Array<ReactNode>>([]);
+	const [lData, setLData] = useState<Array<ReactNode>>([]);
 
 	const onSearch = (o: number = offset) => {
-		getGroups(dispatch, headers, search, Number(o / 8) || 0, 8);
+		getGroups(dispatch, headers, search, Number(o / pageSize) || 0, pageSize);
 	};
+
+	useEffect(() => {
+		if (!loading) {
+			setLData([]);
+			return;
+		}
+		const l = [];
+		const size = groups.numberOfElements || 2;
+		for (let i = 0; i < size; i++) {
+			l.push(<JumpItemSkeleton key={i}/>);
+		}
+		setLData(l);
+	}, [loading]);
 
 	useEffect(() => {
 		onSearch();
@@ -80,11 +103,9 @@ export default () => {
 	// hook to rebuild the index when jumps change
 	useEffect(() => {
 		const {content} = groups;
-		setGroupOffset(dispatch, groups.number * 8);
+		setGroupOffset(dispatch, groups.number * pageSize);
 		// Loop-d-loop
-		setItems(content.map(g => <Grid key={g.id} item md={12} lg={6}>
-			<GroupCard group={g} isAdmin={isAdmin}/>
-		</Grid>));
+		setItems(content.map(g => <GroupCard key={g.id} group={g} isAdmin={isAdmin}/>));
 	}, [offset, groups]);
 
 	const onPageChange = (off: number) => {
@@ -92,39 +113,43 @@ export default () => {
 		onSearch(off);
 	};
 
-	const createButton = (
-		<Button
-			className={classes.addButton}
-			disabled={!isLoggedIn}
-			onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, true, null)}
-			variant="outlined">
-			Create
-		</Button>
-	);
-
 	return (
-		<div>
-			<Zoom in={loading}>
-				<LinearProgress className={classes.progress}/>
-			</Zoom>
-			{items.length === 0 ? <Center>{createButton}</Center> : <div>{createButton}</div>}
-			<Grid container spacing={3}>
-				{items}
-			</Grid>
-			<Zoom in={items.length === 0}>
+		<div className={classes.root}>
+			<div style={{display: "flex"}}>
 				<Typography
-					className={`${classes.title} ${classes.nothing}`}
-					align="center"
-					color="primary">
-					No groups could be found
+					className={classes.title}>
+					Groups
 				</Typography>
-			</Zoom>
-			<Zoom in={groups.totalElements > groups.size}>
-				<Center>
-					<Pagination limit={groups.size} offset={offset} total={groups.totalElements}
-					            nextPageLabel="▶" previousPageLabel="◀" onClick={(e, off) => onPageChange(off)}/>
-				</Center>
-			</Zoom>
+				<Button
+					className={classes.addButton}
+					color="primary"
+					disableElevation
+					disabled={!isLoggedIn}
+					onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, true, null)}
+					variant="contained">
+					New group
+				</Button>
+			</div>
+			<List>
+				{lData}
+				{items}
+			</List>
+			{items.length === 0 && <Typography
+				className={`${classes.title} ${classes.nothing}`}
+				align="center"
+				color="primary">
+				No groups could be found
+			</Typography>}
+			{groups.totalElements > groups.size && <Center>
+				<Pagination
+					limit={groups.size}
+					offset={offset}
+					total={groups.totalElements}
+					nextPageLabel="▶"
+					previousPageLabel="◀"
+					onClick={(e, off) => onPageChange(off)}
+				/>
+			</Center>}
 			<CreateGroupDialog/>
 			<GroupEditDialog/>
 		</div>
