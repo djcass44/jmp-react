@@ -24,8 +24,8 @@ interface JumpButtonProps {
 	title: string;
 	focus?: boolean;
 	mouse?: boolean;
-	focusProps?: any;
-	buttonProps: any;
+	focusProps?: object;
+	buttonProps?: object;
 	iconProps: any;
 }
 

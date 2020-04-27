@@ -15,16 +15,24 @@
  */
 
 import {
-	Collapse,
 	ListItem,
 	ListItemSecondaryAction,
 	ListItemText,
 	makeStyles,
+	Popover,
 	Theme,
 	useTheme,
 	withWidth
 } from "@material-ui/core";
-import {mdiCallMerge, mdiChevronDown, mdiChevronUp} from "@mdi/js";
+import {
+	mdiCallMerge,
+	mdiDotsVertical,
+	mdiNetworkStrength1,
+	mdiNetworkStrength2,
+	mdiNetworkStrength3,
+	mdiNetworkStrength4,
+	mdiNetworkStrengthOutline
+} from "@mdi/js";
 import React, {ReactNode, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
@@ -40,6 +48,7 @@ import Domain from "../../../components/widget/Domain";
 import {TState} from "../../../store/reducers";
 import {JumpsState} from "../../../store/reducers/jumps";
 import JumpContent from "./JumpContent";
+import getUsage from "../../../store/selectors/getUsage";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	item: {
@@ -82,9 +91,13 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 	const {expanded} = useSelector<TState, JumpsState>(state => state.jumps);
 	const [mouse, setMouse] = useState<boolean>(false);
 	const {data, loading, error} = usePalette(jump.image || "");
+	const usage = useSelector<TState, number>(state => getUsage(jump, state));
+
+	// local state
+	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
 	// misc data
-	const selected = expanded === jump.id;
+	const selected = expanded === jump.id || anchorEl != null;
 	const smallScreen = isWidthDown("sm", width);
 
 	const getAliases = (): ReactNode | null => {
@@ -121,6 +134,33 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 		onMouseLeave: () => setMouse(false)
 	};
 
+	const getUsageIconProps = (): object => {
+		let color = theme.palette.primary.main;
+		let path = mdiNetworkStrengthOutline;
+		switch (usage) {
+			case 4:
+				color = theme.palette.success.main;
+				path = mdiNetworkStrength4;
+				break;
+			case 3:
+				color = theme.palette.secondary.main;
+				path = mdiNetworkStrength3;
+				break;
+			case 2:
+				color = theme.palette.warning.main;
+				path = mdiNetworkStrength2;
+				break;
+			case 1:
+				color = theme.palette.error.main;
+				path = mdiNetworkStrength1;
+				break;
+		}
+		return {
+			color,
+			path
+		};
+	};
+
 	return (
 		<div>
 			<ListItem
@@ -139,14 +179,11 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 						<JumpButton
 							title="More"
 							buttonProps={{
-								onClick: () => setJumpExpand(dispatch,
-									// collapse if we're already expanded
-									selected ? null : jump.id
-								)
+								onClick: (e: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(e.currentTarget)
 							}}
 							iconProps={{
-								path: selected ? mdiChevronUp : mdiChevronDown,
-								color: theme.palette.primary.main
+								path: mdiDotsVertical,
+								color: theme.palette.text.secondary
 							}}
 							focus={selected || smallScreen}
 							mouse={mouse}
@@ -169,11 +206,36 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 							focusProps={focusProps}
 						/>
 					</div>
+					<div className={classes.action} key="usage">
+						<JumpButton
+							title={`Used ${jump.usage} time(s)`}
+							iconProps={getUsageIconProps()}
+							focus={selected || smallScreen}
+							mouse={mouse}
+							focusProps={focusProps}
+						/>
+					</div>
 				</ListItemSecondaryAction>
 			</ListItem>
-			<Collapse in={selected} unmountOnExit timeout="auto">
-				<JumpContent focusProps={focusProps} jump={jump} palette={data} loading={loading} error={error}/>
-			</Collapse>
+			<Popover
+				anchorEl={anchorEl}
+				onClose={() => setAnchorEl(null)}
+				open={Boolean(anchorEl)}
+				anchorOrigin={{
+					vertical: "bottom",
+					horizontal: "right"
+				}}
+				transformOrigin={{
+					vertical: "top",
+					horizontal: "right"
+				}}>
+				<JumpContent
+					focusProps={focusProps}
+					jump={jump} palette={data}
+					loading={loading}
+					error={error}
+				/>
+			</Popover>
 		</div>
 	);
 };
