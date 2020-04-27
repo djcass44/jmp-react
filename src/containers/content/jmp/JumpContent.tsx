@@ -93,11 +93,11 @@ const JumpContent: React.FC<JumpContentProps> = ({jump, palette, loading = false
 					</Typography>
 				</CardContent>
 			</Card>
-			{<MenuItem
+			<MenuItem
 				disabled={!canCopy}
 				onClick={() => navigator.clipboard.writeText(jump.location).then()}>
 				Copy URL{!canCopy && " - Unsupported"}
-			</MenuItem>}
+			</MenuItem>
 			{(isLoggedIn && hasOwnership) && <MenuItem
 				onClick={() => setDialog(dispatch,
 					MODAL_JUMP_EDIT,

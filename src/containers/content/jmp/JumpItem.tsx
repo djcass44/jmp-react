@@ -94,7 +94,7 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 	const usage = useSelector<TState, number>(state => getUsage(jump, state));
 
 	// local state
-	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
 	// misc data
 	const selected = expanded === jump.id || anchorEl != null;
@@ -161,14 +161,18 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 		};
 	};
 
+	const onContext = (e: React.MouseEvent<HTMLElement>): void => {
+		e.preventDefault();
+		setAnchorEl(e.currentTarget);
+	};
+
 	return (
 		<div>
 			<ListItem
 				className={classes.item}
-				component="li"
 				button
-				value={jump.id}
 				selected={selected}
+				onContextMenu={onContext}
 				onClick={() => setJumpExpand(dispatch, jump.id)}
 				onMouseEnter={() => onMouse(true)}
 				onMouseLeave={() => onMouse(false)}>
