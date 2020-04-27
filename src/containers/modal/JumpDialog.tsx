@@ -57,6 +57,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 		paddingLeft: 12,
 		paddingRight: 12,
 		paddingBottom: 10
+	},
+	textLabel: {
+		color: theme.palette.text.secondary
 	}
 }));
 
@@ -121,6 +124,11 @@ const JumpDialog = () => {
 		setGroups(userGroups.map(g => <MenuItem value={g.id} key={g.id}>{g.name}</MenuItem>));
 	}, [userGroups]);
 
+	useEffect(() => {
+		// reset the selected group if the jump type changes
+		setGroupId("");
+	}, [type]);
+
 	const onSubmit = () => {
 		// ignore the type error below, it's fine
 		const gid = type === 2 ? `?gid=${groupId}` : "";
@@ -132,6 +140,13 @@ const JumpDialog = () => {
 			alias: []
 		}, gid);
 		setSubmit(true);
+	};
+
+	const textLabel = (text: string): ReactNode => {
+		return <span
+			className={classes.textLabel}>
+			{text}
+		</span>;
 	};
 
 	const disabled = (type === 2 && groupId === "") || name.error !== "" || url.error !== "" || loadingGroups || loading || name.value.length === 0 || url.value.length === 0;
@@ -155,7 +170,7 @@ const JumpDialog = () => {
 						autoFocus: true,
 						margin: "dense",
 						id: "name",
-						label: "Name",
+						label: textLabel("Name"),
 						fullWidth: true,
 						variant: "outlined",
 						size: "small"
@@ -169,7 +184,7 @@ const JumpDialog = () => {
 						required: true,
 						margin: "dense",
 						id: "url",
-						label: "URL",
+						label: textLabel("URL"),
 						fullWidth: true,
 						autoComplete: "url",
 						variant: "outlined",
@@ -179,8 +194,8 @@ const JumpDialog = () => {
 				<List>
 					<ListItem className={classes.li}>
 						<ListItemText
-							primary="Choose a type"
-							primaryTypographyProps={{color: "textSecondary"}}
+							primary="Set visibility"
+							primaryTypographyProps={{color: "textPrimary"}}
 							secondary={type === 0 ? "Visible to all" : type === 1 ? "Visible to me" : "Visible to some"}
 							secondaryTypographyProps={{color: "textSecondary"}}
 						/>
@@ -188,7 +203,7 @@ const JumpDialog = () => {
 							<TextField
 								style={{minWidth: 100}}
 								select
-								variant={"outlined"}
+								variant="outlined"
 								size="small"
 								onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setType(Number(e.target.value))}
 								value={type.toString()}>
@@ -203,7 +218,7 @@ const JumpDialog = () => {
 				{type === 2 && userGroups.length > 0 &&
 				<Select
 					fullWidth
-					variant={"outlined"}
+					variant="outlined"
 					value={groupId}
 					inputProps={{name: "group", id: "group"}}
 					onChange={(e: ChangeEvent<{value: unknown}>) => setGroupId(e.target.value as string)}>
