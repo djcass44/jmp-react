@@ -25,21 +25,21 @@ import {
 	withWidth
 } from "@material-ui/core";
 import {mdiCallMerge, mdiChevronDown, mdiChevronUp} from "@mdi/js";
-import React, {useState} from "react";
+import React, {ReactNode, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import Domain from "../../../components/widget/Domain";
 import {Link} from "react-router-dom";
-import {APP_NOUN} from "../../../constants";
-import JumpButton from "../../../components/content/jmp/JumpButton";
-import JumpContent from "./JumpContent";
-import JumpAvatar from "../../../components/content/jmp/JumpAvatar";
 import {usePalette} from "react-palette";
 import {isWidthDown} from "@material-ui/core/withWidth";
+import {Breakpoint} from "@material-ui/core/styles/createBreakpoints";
+import JumpAvatar from "../../../components/content/jmp/JumpAvatar";
 import {setJumpExpand} from "../../../store/actions/jumps";
 import {Jump} from "../../../types";
-import {Breakpoint} from "@material-ui/core/styles/createBreakpoints";
+import JumpButton from "../../../components/content/jmp/JumpButton";
+import {APP_NOUN} from "../../../constants";
+import Domain from "../../../components/widget/Domain";
 import {TState} from "../../../store/reducers";
 import {JumpsState} from "../../../store/reducers/jumps";
+import JumpContent from "./JumpContent";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	item: {
@@ -77,6 +77,8 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 	const classes = useStyles();
 	const theme = useTheme<Theme>();
 	const dispatch = useDispatch();
+
+	// global state
 	const {expanded} = useSelector<TState, JumpsState>(state => state.jumps);
 	const [mouse, setMouse] = useState<boolean>(false);
 	const {data, loading, error} = usePalette(jump.image || "");
@@ -85,9 +87,12 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 	const selected = expanded === jump.id;
 	const smallScreen = isWidthDown("sm", width);
 
-	const getAliases = () => {
-		if (jump.alias == null || jump.alias.length === 0) return "";
-		return `AKA ${jump.alias.map(i => i.name).join(", ")}`;
+	const getAliases = (): ReactNode | null => {
+		if (jump.alias == null || jump.alias.length === 0) return null;
+		return <small
+			className={classes.subtitle}>
+			&nbsp;&bull;&nbsp;AKA&nbsp;{jump.alias.map(i => i.name).join(", ")}
+		</small>;
 	};
 
 	const primary = (
@@ -95,9 +100,7 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 			<span className={classes.title}>
 				{jump.name}
 			</span>
-			{((selected || mouse) && jump.alias && jump.alias.length > 0) && <small className={classes.subtitle}>
-				&nbsp;&bull;&nbsp;{getAliases()}
-			</small>}
+			{(selected || mouse) && getAliases()}
 		</>
 	);
 
@@ -120,11 +123,15 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 
 	return (
 		<div>
-			<ListItem component={"li"} button className={classes.item} value={jump.id}
-			          selected={selected}
-			          onClick={() => setJumpExpand(dispatch, jump.id)}
-			          onMouseEnter={() => onMouse(true)}
-			          onMouseLeave={() => onMouse(false)}>
+			<ListItem
+				className={classes.item}
+				component="li"
+				button
+				value={jump.id}
+				selected={selected}
+				onClick={() => setJumpExpand(dispatch, jump.id)}
+				onMouseEnter={() => onMouse(true)}
+				onMouseLeave={() => onMouse(false)}>
 				<JumpAvatar jump={jump} palette={data} loading={loading} error={error}/>
 				<ListItemText primary={primary} secondary={secondary}/>
 				<ListItemSecondaryAction>
@@ -164,7 +171,7 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 					</div>
 				</ListItemSecondaryAction>
 			</ListItem>
-			<Collapse in={selected} unmountOnExit timeout={"auto"}>
+			<Collapse in={selected} unmountOnExit timeout="auto">
 				<JumpContent focusProps={focusProps} jump={jump} palette={data} loading={loading} error={error}/>
 			</Collapse>
 		</div>
