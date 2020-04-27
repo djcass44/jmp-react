@@ -52,7 +52,7 @@
 		}
 	},
 	"lint-staged": {
-		"**/*.ts?(x)": ["./node_modules/.bin/eslint — fix", "git add"]
+		".ts,.tsx": ["./node_modules/.bin/eslint — fix"]
 	},
 	"eslintConfig": {
 		"extends": "react-app",
