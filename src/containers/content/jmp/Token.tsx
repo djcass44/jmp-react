@@ -22,6 +22,7 @@ import Center from "react-center";
 import {useHistory} from "react-router";
 import {RSAA} from "redux-api-middleware";
 import {Dispatch} from "redux";
+import {ImageMessage} from "jmp-coreui";
 import {TState} from "../../../store/reducers";
 import {GET_TARGET} from "../../../actions/Jumps";
 import {APP_NAME, BASE_URL} from "../../../constants";
@@ -50,9 +51,9 @@ interface DoJumpDTO {
 }
 
 const jumpImages = [
-	"undraw_balloons_vxx5.svg",
-	"undraw_i_can_fly_7egl.svg",
-	"undraw_instant_support_elxh.svg"
+	"/draw/undraw_balloons_vxx5.svg",
+	"/draw/undraw_i_can_fly_7egl.svg",
+	"/draw/undraw_instant_support_elxh.svg"
 ];
 
 const Token: React.FC = () => {
@@ -68,7 +69,6 @@ const Token: React.FC = () => {
 
 	// component state
 	const [failure, setFailure] = useState<Error | string | null>(error);
-	const [image] = useState<string>(jumpImages[Math.floor(Math.random() * jumpImages.length)]);
 
 	/**
 	 * Handle the api response and move us to where we need to go
@@ -129,11 +129,16 @@ const Token: React.FC = () => {
 		<Center className={classes.overlay}>
 			<div>
 				<Center>
-					<img height={256} src={`/draw/${(error || failure) ? "undraw_warning_cyit.svg" : image}`}
-					     alt=""/>
+					<ImageMessage
+						src={(error || failure) ? "/draw/undraw_warning_cyit.svg" : jumpImages}
+						message=""
+						height={256}
+					/>
 				</Center>
 				{loading ?
-					<CircularProgress/>
+					<Center>
+						<CircularProgress/>
+					</Center>
 					:
 					<div>
 						<Typography
