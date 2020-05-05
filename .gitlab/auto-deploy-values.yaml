@@ -1,0 +1,62 @@
+deploymentApiVersion: apps/v1
+podAnnotations:
+  k8s-app: jmp-ui
+security:
+  podContext:
+    fsGroup: 101
+    runAsUser: 101
+    runAsGroup: 101
+  containerContext:
+    runAsNonRoot: true
+    privileged: false
+    allowPrivilegeEscalation: false
+service:
+  externalPort: 8080
+  internalPort: 8080
+ingress:
+  annotations:
+    kubernetes.io/ingress.provider: "nginx"
+    kubernetes.io/ingress.class: "gitlab-nginx"
+  tls:
+    enabled: true
+    secretName: prod-dcas-dev
+livenessProbe:
+  path: "/healthz"
+readinessProbe:
+  path: "/healthz"
+volumes:
+  - name: tmp
+    mountPath: /var/tmp/nginx
+    config:
+      emptyDir: {}
+  - name: tmp2
+    mountPath: /tmp
+    config:
+      emptyDir: {}
+  - name: cache
+    mountPath: /var/cache/nginx
+    config:
+      emptyDir: {}
+postgresql:
+  enabled: false
+resources:
+  requests:
+    memory: 25Mi
+    cpu: 10m
+  limits:
+    memory: 50Mi
+    cpu: 50m
+networkPolicy:
+  enabled: true
+  spec:
+    podSelector:
+      matchLabels:
+        k8s-app: jmp-ui
+    ingress:
+      - from:
+          - podSelector:
+              matchLabels:
+                app: nginx-ingress
+          - namespaceSelector:
+              matchLabels:
+                k8s-name: gitlab
