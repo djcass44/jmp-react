@@ -1,5 +1,7 @@
 #!/bin/bash
 
+id
+
 # Recreate config file
 rm -rf ./env-config.js
 touch ./env-config.js

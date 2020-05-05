@@ -11,17 +11,17 @@ interface WindowEnv {
 
 declare global {
 	interface Window {
-		_env_: WindowEnv;
+		_env_?: WindowEnv;
 	}
 }
 
-export const API_URL = window._env_.JMP_API_URL || "localhost:7000";
-export const APP_NAME = window._env_.JMP_BRAND_NAME || "JMP";
-export const APP_MSG = window._env_.JMP_BRAND_MSG || "";
-export const APP_NOUN = window._env_.JMP_BRAND_NOUN || "Jump";
-export const APP_KEY = window._env_.JMP_BRAND_KEY || "jmp";
+export const API_URL = window._env_?.JMP_API_URL || "localhost:7000";
+export const APP_NAME = window._env_?.JMP_BRAND_NAME || "JMP";
+export const APP_MSG = window._env_?.JMP_BRAND_MSG || "";
+export const APP_NOUN = window._env_?.JMP_BRAND_NOUN || "Jump";
+export const APP_KEY = window._env_?.JMP_BRAND_KEY || "jmp";
 
-const secure = (window._env_.JMP_API_SECURE || "true") === "true";
+const secure = (window._env_?.JMP_API_SECURE || "true") === "true";
 
 export const BASE_URL = `http${secure ? "s" : ""}://${API_URL}`;
 export const SOCKET_URL = `ws${secure ? "s" : ""}://${API_URL}/api/ws2`;
