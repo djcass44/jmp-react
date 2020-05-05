@@ -3,7 +3,7 @@ podAnnotations:
   k8s-app: jmp-ui
 security:
   podContext:
-    fsGroup: 100
+    fsGroup: 101
     runAsUser: 100
     runAsGroup: 101
   containerContext:
