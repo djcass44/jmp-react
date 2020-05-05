@@ -1,4 +1,0 @@
-ingress:
-  hsts: true
-netsec:
-  enabled: true

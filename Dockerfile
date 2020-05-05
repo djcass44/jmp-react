@@ -25,7 +25,7 @@ RUN apk upgrade --no-cache && \
     apk add --no-cache bash
 
 RUN mkdir -p /var/log/nginx && mkdir -p /var/www/html
-COPY .drone/nginx.conf /etc/nginx/nginx.conf
+COPY .gitlab/nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /var/www/html
 

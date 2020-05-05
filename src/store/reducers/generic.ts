@@ -15,7 +15,6 @@
  *
  */
 
-import prefersColorScheme from "prefers-color-scheme";
 import {Action} from "../../types";
 import {GENERIC_FILTER_SET} from "../../actions/Generic";
 import {SET_THEME_MODE} from "../actions/Generic";
@@ -26,7 +25,7 @@ export interface GenericState {
 	version: string;
 }
 
-const wantedTheme = prefersColorScheme();
+const wantedTheme = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
 
 const initialState: GenericState = {
 	themeMode: wantedTheme,
