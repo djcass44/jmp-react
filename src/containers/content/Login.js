@@ -19,7 +19,7 @@ import React, {useEffect, useState} from "react";
 import {Button, Card, CardContent, CircularProgress, Grid, makeStyles, Typography} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
-import {mdiGithub, mdiGoogle, mdiShieldAccount} from "@mdi/js";
+import {mdiGithub, mdiGitlab, mdiGoogle, mdiShieldAccount} from "@mdi/js";
 import {useTheme} from "@material-ui/core/styles";
 import {ValidatedTextField} from "jmp-coreui";
 import {APP_NAME} from "../../constants";
@@ -96,6 +96,7 @@ export default ({history}) => {
 		discoverOAuth(dispatch, "github");
 		discoverOAuth(dispatch, "google");
 		discoverOAuth(dispatch, "keycloak");
+		discoverOAuth(dispatch, "gitlab");
 	}, [dispatch]);
 
 	useEffect(() => {
@@ -203,16 +204,30 @@ export default ({history}) => {
 							<>
 								<p className={classes.oauthMessage}>Alternatively, login with</p>
 								<Center>
-									{providers.get("github") != null &&
-									<SocialButton url={providers.get("github")} name="GitHub" colour="#171516"
-									              icon={mdiGithub}/>}
-									{providers.get("google") != null &&
-									<SocialButton url={providers.get("google")} name="Google" colour="#4285F4"
-									              icon={mdiGoogle}/>}
-									{providers.get("keycloak") != null &&
-									<SocialButton url={providers.get("keycloak")} name="Keycloak"
-									              colour="#568bf4"
-									              icon={mdiShieldAccount}/>}
+									{providers.get("github") != null && <SocialButton
+										url={providers.get("github")}
+										name="GitHub"
+										colour="#171516"
+										icon={mdiGithub}
+									/>}
+									{providers.get("google") != null && <SocialButton
+										url={providers.get("google")}
+										name="Google"
+										colour="#4285F4"
+										icon={mdiGoogle}
+									/>}
+									{providers.get("keycloak") != null && <SocialButton
+										url={providers.get("keycloak")}
+										name="Keycloak"
+										colour="#568bf4"
+										icon={mdiShieldAccount}
+									/>}
+									{providers.get("gitlab") != null && <SocialButton
+										url={providers.get("gitlab")}
+										name="GitLab"
+										colour="#E2432A"
+										icon={mdiGitlab}
+									/>}
 								</Center>
 							</>
 							}

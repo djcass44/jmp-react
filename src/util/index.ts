@@ -15,7 +15,7 @@
  *
  */
 
-import {mdiAccountOutline, mdiDatabase, mdiGithub, mdiGoogle, mdiShieldAccount} from "@mdi/js";
+import {mdiAccountOutline, mdiDatabase, mdiGithub, mdiGitlab, mdiGoogle, mdiShieldAccount} from "@mdi/js";
 import {Theme} from "@material-ui/core";
 import {AuthHeaders, SimpleMap, Token} from "../types";
 
@@ -73,6 +73,11 @@ export const getProviderData = (theme: Theme): SimpleMap<Provider> => {
 			name: "Keycloak (OIDC)",
 			icon: mdiShieldAccount,
 			colour: "#568bf4"
+		},
+		"oauth2/gitlab": {
+			name: "GitLab (OAuth2)",
+			icon: mdiGitlab,
+			colour: "#E2432A"
 		}
 	}
 };
