@@ -32,6 +32,7 @@ import {TState} from "../store/reducers";
 import {AuthState} from "../store/reducers/auth";
 import {setUserSearch} from "../store/actions/users";
 import {UsersState} from "../store/reducers/users";
+import HintTooltip from "../components/widget/HintTooltip";
 import UserMenu from "./content/identity/profile/UserMenu";
 
 const bgTransition = (time: number | string): string => `background-color ${time}ms linear`;
@@ -157,18 +158,31 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 	const {userProfile} = useSelector<TState, AuthState>(state => state.auth);
 	const {search} = useSelector<TState, UsersState>(state => state.users);
 
-	// component state
+	// local state
 	const [showSearch, setShowSearch] = useState<boolean>(true);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [loginUrl, setLoginUrl] = useState("/login");
 	const [localSearch, setLocalSearch] = useState<string>(search);
 
+	const [idle, setIdle] = useState<number>(0);
+	const [idleTimer, setIdleTimer] = useState<number | null>(null);
+
 	useEffect(() => {
+		setIdle(0);
+		if (idleTimer) {
+			window.clearInterval(idleTimer);
+			setIdleTimer(null);
+		}
+		window.setInterval(() => {
+			if (location.pathname !== "/")
+				setIdle(1);
+		}, 30000);
+
 		setShowSearch(searchRoutes.includes(location.pathname));
 		const url = location.pathname + location.search;
 		if (url !== "")
 			setLoginUrl(`/login?target=${url}`);
-	}, [location.key, location.pathname, location.search, searchRoutes]);
+	}, [location.pathname, location.search]);
 
 	const handleMenuClose = () => {
 		setAnchorEl(null);
@@ -183,12 +197,16 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 		<div className={classes.root}>
 			<>
 				<Toolbar className={classes.main}>
-					<MuiAvatar
-						className={classes.avatar}
-						src={`${process.env.PUBLIC_URL}/favicon.png`}
-						alt={`${APP_NAME} logo`}
-						onClick={() => history.push("/")}
-					/>
+					<HintTooltip
+						title="Click to return home."
+						open={location.pathname !== "/" && idle === 1}>
+						<MuiAvatar
+							className={classes.avatar}
+							src={`${process.env.PUBLIC_URL}/favicon.png`}
+							alt={`${APP_NAME} logo`}
+							onClick={() => history.push("/")}
+						/>
+					</HintTooltip>
 					<Typography className={classes.brand} variant="h6" color="textPrimary">
 						{APP_NAME}
 					</Typography>
@@ -212,16 +230,17 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 					<div className={classes.grow}/>
 					<>
 						<div className={classes.sectionDesktop}>
-							{location.pathname !== "/help" &&
-							<IconButton
-								style={{margin: 8}}
-								disabled={loading}
-								component={Link}
-								centerRipple={false}
-								color="inherit"
-								to="/help">
-								<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
-							</IconButton>}
+							{location.pathname !== "/help" && <HintTooltip open={idle === 2} title="Need a hand?">
+								<IconButton
+									style={{margin: 8}}
+									disabled={loading}
+									component={Link}
+									centerRipple={false}
+									color="inherit"
+									to="/help">
+									<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
+								</IconButton>
+							</HintTooltip>}
 						</div>
 						<Avatar
 							name={userProfile?.displayName || userProfile?.username || "Anonymous"}
