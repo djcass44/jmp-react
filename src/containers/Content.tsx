@@ -56,8 +56,8 @@ const Content: React.FC = () => {
 	return (
 		<div className={classes.container}>
 			<Grid container spacing={5} className={classes.centered}>
-				<Grid item xs={false} sm={1} md={3} className={classes.padding}/>
-				<Grid item xs={12} sm={10} md={6}>
+				<Grid item xs={false} sm={1} lg={3} className={classes.padding}/>
+				<Grid item xs={12} sm={10} lg={6}>
 					<Switch>
 						<Route exact path="/" component={Jumps} key="jumps"/>
 						<Route exact path="/identity" component={Identity} key="identity"/>
@@ -71,7 +71,7 @@ const Content: React.FC = () => {
 						<Route component={NotFound} key="notfound"/>
 					</Switch>
 				</Grid>
-				<Grid item xs={false} sm={1} md={3} className={classes.padding}/>
+				<Grid item xs={false} sm={1} lg={3} className={classes.padding}/>
 			</Grid>
 			<JumpEditDialog/>
 			<DeleteDialog/>
