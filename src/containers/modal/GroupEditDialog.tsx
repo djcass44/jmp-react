@@ -67,7 +67,7 @@ export default () => {
 	const [defaultFor, setDefaultFor] = useState(group.defaultFor || "");
 	const [submit, setSubmit] = useState(false);
 
-	const close = () => setDialog(dispatch, MODAL_GROUP_EDIT, false, null);
+	const close = () => dispatch(setDialog(MODAL_GROUP_EDIT, false, null));
 
 	useEffect(() => {
 		if (!loading && submit && error == null)

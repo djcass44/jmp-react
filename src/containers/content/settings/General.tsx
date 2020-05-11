@@ -37,7 +37,7 @@ const General: React.FC = () => {
 		setDark(checked);
 
 		const theme = checked ? "dark" : "light";
-		setThemeMode(dispatch, theme);
+		dispatch(setThemeMode(theme));
 	};
 
 	return (

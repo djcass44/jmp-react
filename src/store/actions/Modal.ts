@@ -15,7 +15,6 @@
  *
  */
 
-import {Dispatch} from "redux";
 import {clone} from "../../util";
 import {Group, Jump, User} from "../../types";
 
@@ -47,13 +46,15 @@ export interface DeleteItemPayload {
 	deletable: boolean;
 }
 
-export const setDelete = (dispatch: Dispatch, open: boolean, payload: DeleteItemPayload) => {
-	setDialog(dispatch, MODAL_DELETE, open, payload);
+export const setDelete = (open: boolean, payload: DeleteItemPayload): SetDialogActionType => {
+	return setDialog(MODAL_DELETE, open, payload);
 };
 
-export const setDialog = (dispatch: Dispatch, name: string, open: boolean, other: any | null) => dispatch({
-	type: SET_DIALOG,
-	payload: {name, open, other: other == null ? null : clone(other)}
-});
+export const setDialog = (name: string, open: boolean, other: any | null): SetDialogActionType => {
+	return {
+		type: SET_DIALOG,
+		payload: {name, open, other: other == null ? null : clone(other)}
+	};
+};
 
 export type ModalActionType = SetDialogActionType;

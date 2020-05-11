@@ -98,7 +98,7 @@ const JumpDialog = () => {
 	const [submit, setSubmit] = useState(false);
 	const [groups, setGroups] = useState<Array<ReactNode>>([]);
 
-	const close = () => setDialog(dispatch, MODAL_JUMP_NEW, false, null);
+	const close = () => dispatch(setDialog(MODAL_JUMP_NEW, false, null));
 
 	useEffect(() => {
 		resetError(dispatch, PUT_JUMP);

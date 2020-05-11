@@ -170,7 +170,7 @@ export default () => {
 				<Button
 					className={classes.button}
 					color="secondary"
-					onClick={() => setDialog(dispatch, MODAL_USER_GROUPS, false, null)}
+					onClick={() => dispatch(setDialog(MODAL_USER_GROUPS, false, null))}
 					disabled={loading}>
 					Done
 				</Button>

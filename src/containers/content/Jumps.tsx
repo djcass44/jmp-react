@@ -194,11 +194,11 @@ export default () => {
 					variant="outlined"
 					aria-label="Add"
 					onClick={
-						() => setDialog(dispatch,
+						() => dispatch(setDialog(
 							MODAL_JUMP_NEW,
 							true,
 							null
-						)
+						))
 					}>
 					Add
 				</Button>

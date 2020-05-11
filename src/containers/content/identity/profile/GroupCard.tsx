@@ -97,7 +97,7 @@ const GroupCard: React.FC<GroupCardProps> = ({group, isAdmin = false}) => {
 			title="Edit group"
 			icon={mdiPencilOutline}
 			colour={getIconColour(theme)}
-			onClick={() => setDialog(dispatch, MODAL_GROUP_EDIT, true, {group})}
+			onClick={() => dispatch(setDialog(MODAL_GROUP_EDIT, true, {group}))}
 		/>}
 	</>);
 

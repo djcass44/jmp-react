@@ -61,14 +61,13 @@ export const Body: React.FC = () => {
 	// hooks
 	const dispatch = useDispatch();
 	const location = useLocation();
-	// @ts-ignore
 	const loading = useSelector<TState, boolean>(state => {
 		return (state.loading[OAUTH_VERIFY] || state.loading[GET_JUMP]) ?? false;
 	});
 	const {headers, refresh} = useAuth();
 
 
-	const [timer, setTimer] = useState<any | null>(null);
+	const [timer, setTimer] = useState<number | null>(null);
 	const [shade, setShade] = useState<boolean>(false);
 
 	/**
@@ -77,9 +76,10 @@ export const Body: React.FC = () => {
 	useEffect(() => {
 		if (!loading) {
 			setShade(false);
-			clearTimeout(timer);
+			if (timer)
+				window.clearTimeout(timer);
 		} else {
-			setTimer(setTimeout(() => setShade(true), 150));
+			setTimer(window.setTimeout(() => setShade(true), 150));
 		}
 	}, [loading]);
 

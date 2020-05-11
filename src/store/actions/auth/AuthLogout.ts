@@ -39,7 +39,14 @@ export const oauthLogout = (dispatch: Dispatch, accessToken: string, headers: an
 			endpoint: `${BASE_URL}/api/auth/logout?accessToken=${accessToken}`,
 			method: "POST",
 			headers,
-			types: [OAUTH_LOGOUT_REQUEST, OAUTH_LOGOUT_SUCCESS, OAUTH_LOGOUT_FAILURE]
+			types: [
+				OAUTH_LOGOUT_REQUEST,
+				OAUTH_LOGOUT_SUCCESS,
+				{
+					type: OAUTH_LOGOUT_FAILURE,
+					meta: "An error occurred trying to logout"
+				}
+			]
 		}
 	});
 };

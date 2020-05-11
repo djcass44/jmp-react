@@ -82,7 +82,7 @@ export default () => {
 	 * Close the dialog and cleanup resources
 	 * @param final: when true, 'other' content is set to null. Only set this to true once the dialog is CLOSED (i.e. not visible to the user)
 	 */
-	const close = (final: boolean = false) => setDialog(dispatch, MODAL_DELETE, false, final ? null : other);
+	const close = (final: boolean = false) => dispatch(setDialog(MODAL_DELETE, false, final ? null : other));
 
 	const onSubmit = () => {
 		// convert to a switch when there's more cases

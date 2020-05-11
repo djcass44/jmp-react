@@ -76,7 +76,7 @@ export default () => {
 	const [alias, setAlias] = useState<Array<string>>([]);
 	const [submit, setSubmit] = useState(false);
 
-	const close = (final: boolean = false) => setDialog(dispatch, MODAL_JUMP_EDIT, false, final ? null : other);
+	const close = (final: boolean = false) => dispatch(setDialog(MODAL_JUMP_EDIT, false, final ? null : other));
 
 	useEffect(() => {
 		if (!loading && submit && error == null)

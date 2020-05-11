@@ -52,7 +52,7 @@ export default () => {
 
 	useEffect(() => {
 		if (!loading && error == null && submit)
-			setDialog(dispatch, MODAL_GROUP_NEW, false, null);
+			dispatch(setDialog(MODAL_GROUP_NEW, false, null));
 	}, [loading, error]);
 
 	const onOpen = () => {
@@ -98,7 +98,7 @@ export default () => {
 				<Button
 					className={classes.button}
 					color="secondary"
-					onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, false, null)}
+					onClick={() => dispatch(setDialog(MODAL_GROUP_NEW, false, null))}
 					disabled={loading}>
 					Cancel
 				</Button>

@@ -45,7 +45,14 @@ export const getProviders = (dispatch: Dispatch, headers: any): void => {
 			endpoint: `${BASE_URL}/api/v2/providers`,
 			method: "GET",
 			headers: headers,
-			types: [GET_PROVIDERS_REQUEST, GET_PROVIDERS_SUCCESS, GET_PROVIDERS_FAILURE]
+			types: [
+				GET_PROVIDERS_REQUEST,
+				GET_PROVIDERS_SUCCESS,
+				{
+					type: GET_PROVIDERS_FAILURE,
+					meta: "An error occurred trying to get providers"
+				}
+			]
 		}
 	});
 };

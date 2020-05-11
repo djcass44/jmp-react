@@ -46,7 +46,14 @@ export const getUserGroups = (dispatch: Dispatch, headers: any, uid: string): vo
 			endpoint: `${BASE_URL}/api/v2/user/groups?uid=${uid}`,
 			method: "GET",
 			headers,
-			types: [GET_USER_GROUPS_REQUEST, GET_USER_GROUPS_SUCCESS, GET_USER_GROUPS_FAILURE]
+			types: [
+				GET_USER_GROUPS_REQUEST,
+				GET_USER_GROUPS_SUCCESS,
+				{
+					type: GET_USER_GROUPS_FAILURE,
+					meta: "Something went wrong"
+				}
+			]
 		}
 	});
 };

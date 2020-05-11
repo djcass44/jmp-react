@@ -20,6 +20,8 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {TState} from "../store/reducers";
+import {SimpleMap} from "../types";
+import {ErrorState} from "../config/types/Feedback";
 
 const useStyles = makeStyles(() => ({
 	root: {
@@ -41,7 +43,8 @@ const Banners: React.FC = () => {
 	const {errors} = useSelector<TState, TState>(state => state);
 	return (
 		<div className={classes.root}>
-			{Object.entries(errors).map(([k, v]) => v && <Alert severity="error">{k}: {v?.message}</Alert>)}
+			{Object.entries(errors as SimpleMap<ErrorState>).map(([k, v]) => v &&
+				<Alert severity="error">{k}: {v?.message}</Alert>)}
 		</div>
 	);
 };
