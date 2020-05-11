@@ -74,7 +74,7 @@ const UserOptionsMenu: React.FC<UserOptionsMenuProps> = ({user, expanded, anchor
 			<MenuItem
 				button
 				onClick={() => {
-					setDialog(dispatch, MODAL_USER_GROUPS, true, {user});
+					dispatch(setDialog(MODAL_USER_GROUPS, true, {user}));
 					close();
 				}}>
 				Modify groups

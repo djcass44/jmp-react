@@ -104,7 +104,7 @@ export default () => {
 
 	useEffect(() => {
 		const {content} = users;
-		setUserOffset(dispatch, users.number * pageSize);
+		dispatch(setUserOffset(users.number * pageSize));
 		// Loop-d-loop
 		setItems(content.map(u => <UserCard key={u.id} user={u} setAnchorEl={e => toggleExpansion(e, u)}/>));
 	}, [users, offset, expanded]);
@@ -116,7 +116,7 @@ export default () => {
 	};
 
 	const onPageChange = (off: number) => {
-		setUserOffset(dispatch, off);
+		dispatch(setUserOffset(off));
 		onSearch(off);
 
 		// reset ui values
@@ -137,7 +137,7 @@ export default () => {
 					color="primary"
 					disableElevation
 					disabled
-					onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, true, null)}
+					onClick={() => dispatch(setDialog(MODAL_GROUP_NEW, true, null))}
 					variant="contained">
 					New user
 				</Button>

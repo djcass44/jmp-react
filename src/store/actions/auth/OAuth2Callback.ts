@@ -46,11 +46,17 @@ export const oauth2Callback = (dispatch: Dispatch, query: string): void => {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/oauth2/callback?${query}`,
 			method: "GET",
-			types: [OAUTH2_CALLBACK_REQUEST, OAUTH2_CALLBACK_SUCCESS, OAUTH2_CALLBACK_FAILURE]
+			types: [
+				OAUTH2_CALLBACK_REQUEST,
+				OAUTH2_CALLBACK_SUCCESS,
+				{
+					type: OAUTH2_CALLBACK_FAILURE,
+					meta: "An error occurred during login"
+				}
+			]
 		}
 	}).then((r) => {
-		const token = r.payload as Token;
-		oauthVerify(dispatch, null, getHeaders(token));
+		oauthVerify(dispatch, null, getHeaders(r.payload as Token));
 	});
 };
 

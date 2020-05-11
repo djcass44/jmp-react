@@ -15,7 +15,6 @@
  *
  */
 
-import {Dispatch} from "redux";
 import {GetGroupsActionType} from "./GetGroups";
 import {GetUserGroupsActionType} from "./GetUserGroups";
 import {PatchGroupActionType} from "./PatchGroup";
@@ -31,10 +30,12 @@ interface SetGroupOffsetActionType {
 	payload: number;
 }
 
-export const setGroupOffset = (dispatch: Dispatch, offset: number) => dispatch({
-	type: SET_GROUP_OFFSET,
-	payload: offset
-});
+export const setGroupOffset = (offset: number) => {
+	return {
+		type: SET_GROUP_OFFSET,
+		payload: offset
+	};
+};
 
 export type GroupsActionType =
 	GetGroupsActionType

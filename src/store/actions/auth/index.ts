@@ -22,11 +22,13 @@ import {GetProvidersActionType} from "./GetProviders";
 import {DiscoverOAuthActionType} from "./DiscoverOAuth";
 import {OAuth2CallbackActionType} from "./OAuth2Callback";
 import {OAuth2LogoutActionType} from "./OAuth2Logout";
+import {AuthRefreshActionType} from "./AuthRefresh";
 
 export type AuthActionType =
 	AuthLogoutActionType
 	| AuthVerifyActionType
 	| AuthRequestActionType
+	| AuthRefreshActionType
 	| GetProvidersActionType
 	| DiscoverOAuthActionType
 	| OAuth2CallbackActionType

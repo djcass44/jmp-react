@@ -17,12 +17,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {ValidatedTextField} from "jmp-coreui";
 import {MODAL_GROUP_EDIT, setDialog} from "../../store/actions/Modal";
 import {defaultState, Modal} from "../../store/reducers/modal";
-import {resetError} from "../../actions/Generic";
 import {GET_PROVIDERS, getProviders} from "../../store/actions/auth/GetProviders";
 import {PATCH_GROUP, patchGroup} from "../../store/actions/groups/PatchGroup";
 import useAuth from "../../hooks/useAuth";
 import {TState} from "../../store/reducers";
 import {AuthState} from "../../store/reducers/auth";
+import {resetError} from "../../store/actions";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -67,7 +67,7 @@ export default () => {
 	const [defaultFor, setDefaultFor] = useState(group.defaultFor || "");
 	const [submit, setSubmit] = useState(false);
 
-	const close = () => setDialog(dispatch, MODAL_GROUP_EDIT, false, null);
+	const close = () => dispatch(setDialog(MODAL_GROUP_EDIT, false, null));
 
 	useEffect(() => {
 		if (!loading && submit && error == null)
@@ -78,7 +78,7 @@ export default () => {
 		setName({...initialName, value: group.name});
 		setIsPublic(group.public || false);
 		setDefaultFor(group.defaultFor || "");
-		resetError(dispatch, PATCH_GROUP);
+		dispatch(resetError(PATCH_GROUP));
 		getProviders(dispatch, headers);
 	};
 

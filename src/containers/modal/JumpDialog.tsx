@@ -23,13 +23,13 @@ import {ValidatedTextField} from "jmp-coreui";
 import {MODAL_JUMP_NEW, setDialog} from "../../store/actions/Modal";
 import {APP_NOUN} from "../../constants";
 import {defaultState, Modal} from "../../store/reducers/modal";
-import {resetError} from "../../actions/Generic";
 import {GET_USER_GROUPS, getUserGroups} from "../../store/actions/groups/GetUserGroups";
 import {PUT_JUMP, putJump} from "../../store/actions/jumps/PutJump";
 import {TState} from "../../store/reducers";
 import {AuthState} from "../../store/reducers/auth";
 import {GroupsState} from "../../store/reducers/groups";
 import useAuth from "../../hooks/useAuth";
+import {resetError} from "../../store/actions";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -98,11 +98,11 @@ const JumpDialog = () => {
 	const [submit, setSubmit] = useState(false);
 	const [groups, setGroups] = useState<Array<ReactNode>>([]);
 
-	const close = () => setDialog(dispatch, MODAL_JUMP_NEW, false, null);
+	const close = () => dispatch(setDialog(MODAL_JUMP_NEW, false, null));
 
 	useEffect(() => {
-		resetError(dispatch, PUT_JUMP);
-		resetError(dispatch, GET_USER_GROUPS);
+		dispatch(resetError(PUT_JUMP));
+		dispatch(resetError(GET_USER_GROUPS));
 		setName(initialName);
 		setUrl(initialUrl);
 		setType(1);

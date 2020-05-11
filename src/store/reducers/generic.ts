@@ -15,9 +15,7 @@
  *
  */
 
-import {Action} from "../../types";
-import {GENERIC_FILTER_SET} from "../../actions/Generic";
-import {SET_THEME_MODE} from "../actions/Generic";
+import {GenericActionType, SET_THEME_MODE} from "../actions/Generic";
 
 export interface GenericState {
 	themeMode: string;
@@ -33,12 +31,10 @@ const initialState: GenericState = {
 	version: ""
 };
 
-export default (state = initialState, action: Action) => {
+export default (state = initialState, action: GenericActionType): GenericState => {
 	switch (action.type) {
 		case SET_THEME_MODE:
 			return {...state, themeMode: action.payload};
-		case GENERIC_FILTER_SET:
-			return {...state, searchFilter: action.payload};
 		default:
 			return state;
 	}

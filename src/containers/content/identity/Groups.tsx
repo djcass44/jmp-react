@@ -103,13 +103,13 @@ export default () => {
 	// hook to rebuild the index when jumps change
 	useEffect(() => {
 		const {content} = groups;
-		setGroupOffset(dispatch, groups.number * pageSize);
+		dispatch(setGroupOffset(groups.number * pageSize));
 		// Loop-d-loop
 		setItems(content.map(g => <GroupCard key={g.id} group={g} isAdmin={isAdmin}/>));
 	}, [offset, groups]);
 
-	const onPageChange = (off: number) => {
-		setGroupOffset(dispatch, off);
+	const onPageChange = (off: number): void => {
+		dispatch(setGroupOffset(off));
 		onSearch(off);
 	};
 
@@ -125,7 +125,7 @@ export default () => {
 					color="primary"
 					disableElevation
 					disabled={!isLoggedIn}
-					onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, true, null)}
+					onClick={() => dispatch(setDialog(MODAL_GROUP_NEW, true, null))}
 					variant="contained">
 					New group
 				</Button>

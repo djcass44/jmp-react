@@ -22,12 +22,16 @@ import Center from "react-center";
 import {mdiGithub, mdiGitlab, mdiGoogle, mdiShieldAccount} from "@mdi/js";
 import {useTheme} from "@material-ui/core/styles";
 import {ValidatedTextField} from "jmp-coreui";
+import {useHistory} from "react-router";
 import {APP_NAME} from "../../constants";
 import SocialButton from "../../components/widget/SocialButton";
 import getIconColour from "../../style/getIconColour";
-import {resetError} from "../../actions/Generic";
 import {OAUTH_REQUEST, oauthRequest} from "../../store/actions/auth/AuthRequest";
 import {discoverOAuth} from "../../store/actions/auth/DiscoverOAuth";
+import {TState} from "../../store/reducers";
+import {AuthState} from "../../store/reducers/auth";
+import {ErrorState} from "../../config/types/Feedback";
+import {resetError} from "../../store/actions";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -75,15 +79,16 @@ const initialPassword = {
 	regex: new RegExp(/^.{8,}$/)
 };
 
-export default ({history}) => {
+export default () => {
 	// hooks
 	const dispatch = useDispatch();
 	const classes = useStyles();
 	const theme = useTheme();
+	const history = useHistory();
 
-	const {isLoggedIn, providers} = useSelector(state => state.auth);
-	const loading = useSelector(state => state.loading[OAUTH_REQUEST]);
-	const error = useSelector(state => state.errors[OAUTH_REQUEST]);
+	const {isLoggedIn, providers} = useSelector<TState, AuthState>(state => state.auth);
+	const loading = useSelector<TState, boolean>(state => state.loading[OAUTH_REQUEST]);
+	const error = useSelector<TState, ErrorState>(state => state.errors[OAUTH_REQUEST]);
 
 	// state hooks
 	const [username, setUsername] = useState(initialUser);
@@ -100,7 +105,7 @@ export default ({history}) => {
 	}, [dispatch]);
 
 	useEffect(() => {
-		if(isLoggedIn === true) {
+		if (isLoggedIn) {
 			// The user is already logged in, we can leave here
 			const url = new URL(window.location.href);
 			const target = url.searchParams.get("target");
@@ -128,7 +133,7 @@ export default ({history}) => {
 		setPage(0);
 		setUsername(initialUser);
 		setPassword(initialPassword);
-		resetError(dispatch, OAUTH_REQUEST);
+		dispatch(resetError(OAUTH_REQUEST));
 	};
 
 	return (
@@ -143,8 +148,12 @@ export default ({history}) => {
 									<Center>
 										<img src={`${process.env.PUBLIC_URL}/jmp2.png`} alt="App icon" height={72}/>
 									</Center>
-									<Typography className={classes.banner} variant="h2"
-									            align="center">{APP_NAME}</Typography>
+									<Typography
+										className={classes.banner}
+										variant="h2"
+										align="center">
+										{APP_NAME}
+									</Typography>
 								</Grid>
 								<Grid item xs={12} sm={9} md={6} lg={4}>
 									<Card style={{padding: 16, borderRadius: 12}}>
@@ -185,23 +194,25 @@ export default ({history}) => {
 										}} className={classes.title} onClick={() => onNext()} variant="contained"
 										        color="primary"
 										        fullWidth size="large" type="submit"
-										        disabled={!valid || page >= 2 || loading === true || isLoggedIn === true}>
+										        disabled={!valid || page >= 2 || loading || isLoggedIn}>
 											Continue
-											{(loading === true || isLoggedIn === true) &&
+											{(loading || isLoggedIn) &&
 											<CircularProgress style={{padding: 4}} size={15} thickness={7}/>}
 										</Button>
 										{error && <Typography style={{padding: 8}} color="error" align="center">
 											{error.toString().startsWith("ApiError: 401") ? "Incorrect username or password" : "Something went wrong"}
 										</Typography>}
-										{(page > 0 || error != null) &&
-										<Button className={classes.resetButton} color="primary"
-										        disabled={loading === true || isLoggedIn === true}
-										        onClick={() => onReset()}>Reset</Button>}
+										{(page > 0 || error != null) && <Button
+											className={classes.resetButton}
+											color="primary"
+											disabled={loading || isLoggedIn}
+											onClick={() => onReset()}>
+											Reset
+										</Button>}
 									</Card>
 								</Grid>
 							</Grid>
-							{providers.size > 0 &&
-							<>
+							{providers.size > 0 && <>
 								<p className={classes.oauthMessage}>Alternatively, login with</p>
 								<Center>
 									{providers.get("github") != null && <SocialButton
@@ -229,8 +240,7 @@ export default ({history}) => {
 										icon={mdiGitlab}
 									/>}
 								</Center>
-							</>
-							}
+							</>}
 						</CardContent>
 					</Grid>
 					<Grid item lg={2} md={false}/>

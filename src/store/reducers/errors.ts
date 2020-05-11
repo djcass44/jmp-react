@@ -16,12 +16,14 @@
  */
 
 import {SimpleMap} from "../../types";
+import {ErrorState} from "../../config/types/Feedback";
 
-const initialState: SimpleMap<string | any | null> = {};
+const initialState: SimpleMap<ErrorState> = {};
 
 interface Action {
 	type: string;
 	payload?: Payload | null;
+	meta?: string;
 }
 
 interface Payload {
@@ -29,13 +31,17 @@ interface Payload {
 }
 
 export default (state = initialState, action: Action) => {
-	const {type, payload} = action;
+	const {type, payload, meta} = action;
 	const matches = /(.*)_(REQUEST|FAILURE|RESET)/.exec(type);
 	// not a *_REQUEST or *_FAILURE action, so we ignore them
 	if (!matches) return state;
 	const [, requestName, requestState] = matches;
+	const response: ErrorState = {
+		payload,
+		message: meta || null
+	};
 	return {
 		...state,
-		[`${requestName}${payload?.tag ? `_${payload.tag}` : ""}`]: requestState === "FAILURE" ? payload : null
+		[`${requestName}${payload?.tag ? `_${payload.tag}` : ""}`]: requestState === "FAILURE" ? response : null
 	};
 }

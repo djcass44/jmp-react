@@ -16,11 +16,11 @@ import ChipInput from "material-ui-chip-input";
 import {APP_NOUN} from "../../constants";
 import {MODAL_JUMP_EDIT, setDialog} from "../../store/actions/Modal";
 import {defaultState, Modal} from "../../store/reducers/modal";
-import {resetError} from "../../actions/Generic";
 import {PATCH_JUMP, patchJump} from "../../store/actions/jumps/PatchJump";
 import {TState} from "../../store/reducers";
 import {Alias} from "../../types";
 import useAuth from "../../hooks/useAuth";
+import {resetError} from "../../store/actions";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -76,7 +76,7 @@ export default () => {
 	const [alias, setAlias] = useState<Array<string>>([]);
 	const [submit, setSubmit] = useState(false);
 
-	const close = (final: boolean = false) => setDialog(dispatch, MODAL_JUMP_EDIT, false, final ? null : other);
+	const close = (final: boolean = false) => dispatch(setDialog(MODAL_JUMP_EDIT, false, final ? null : other));
 
 	useEffect(() => {
 		if (!loading && submit && error == null)
@@ -84,7 +84,7 @@ export default () => {
 	}, [loading, error]);
 
 	const onOpen = () => {
-		resetError(dispatch, PATCH_JUMP);
+		dispatch(resetError(PATCH_JUMP));
 		setName({...initialName, value: jump.name});
 		setUrl({...initialUrl, value: jump.location});
 

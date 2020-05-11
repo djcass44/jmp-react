@@ -15,7 +15,6 @@
  *
  */
 
-import {Dispatch} from "redux";
 import {GetUsersActionType} from "./GetUsers";
 import {PatchUserRoleActionType} from "./PatchUserRole";
 
@@ -34,9 +33,19 @@ interface SetUserSearchActionType {
 	payload: string;
 }
 
-export const setUserOffset = (dispatch: Dispatch, offset: number) => dispatch({type: SET_USER_OFFSET, payload: offset});
+export const setUserOffset = (offset: number): SetUserOffsetActionType => {
+	return {
+		type: SET_USER_OFFSET,
+		payload: offset
+	};
+};
 
-export const setUserSearch = (dispatch: Dispatch, search: string) => dispatch({type: SET_USER_SEARCH, payload: search});
+export const setUserSearch = (search: string): SetUserSearchActionType => {
+	return {
+		type: SET_USER_SEARCH,
+		payload: search
+	};
+};
 
 export type UsersActionType =
 	GetUsersActionType

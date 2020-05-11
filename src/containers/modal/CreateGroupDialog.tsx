@@ -12,11 +12,11 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {ValidatedTextField} from "jmp-coreui";
 import {MODAL_GROUP_NEW, setDialog} from "../../store/actions/Modal";
-import {resetError} from "../../actions/Generic";
 import {PUT_GROUP, putGroup} from "../../store/actions/groups/PutGroup";
 import {defaultState, Modal} from "../../store/reducers/modal";
 import useAuth from "../../hooks/useAuth";
 import {TState} from "../../store/reducers";
+import {resetError} from "../../store/actions";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -52,11 +52,11 @@ export default () => {
 
 	useEffect(() => {
 		if (!loading && error == null && submit)
-			setDialog(dispatch, MODAL_GROUP_NEW, false, null);
+			dispatch(setDialog(MODAL_GROUP_NEW, false, null));
 	}, [loading, error]);
 
 	const onOpen = () => {
-		resetError(dispatch, PUT_GROUP);
+		dispatch(resetError(PUT_GROUP));
 		setName(initialName);
 		setSubmit(false);
 	};
@@ -98,7 +98,7 @@ export default () => {
 				<Button
 					className={classes.button}
 					color="secondary"
-					onClick={() => setDialog(dispatch, MODAL_GROUP_NEW, false, null)}
+					onClick={() => dispatch(setDialog(MODAL_GROUP_NEW, false, null))}
 					disabled={loading}>
 					Cancel
 				</Button>

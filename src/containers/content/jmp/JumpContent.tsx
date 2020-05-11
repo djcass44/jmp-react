@@ -99,16 +99,16 @@ const JumpContent: React.FC<JumpContentProps> = ({jump, palette, loading = false
 				Copy URL{!canCopy && " - Unsupported"}
 			</MenuItem>
 			{(isLoggedIn && hasOwnership) && <MenuItem
-				onClick={() => setDialog(dispatch,
+				onClick={() => dispatch(setDialog(
 					MODAL_JUMP_EDIT,
 					true,
 					{jump}
-				)}>
+				))}>
 				Edit
 			</MenuItem>}
 			{(isLoggedIn && hasOwnership) && <MenuItem
 				className={classes.deleteItem}
-				onClick={() => setDelete(dispatch,
+				onClick={() => dispatch(setDelete(
 					true,
 					{
 						deletable: true,
@@ -119,7 +119,7 @@ const JumpContent: React.FC<JumpContentProps> = ({jump, palette, loading = false
 							`The ${APP_NOUN.toLocaleLowerCase()} is removed and cannot be restored`,
 							"If it was shared to a group or made public, it is now inaccessible to all users"
 						]
-					})}>
+					}))}>
 				Delete
 			</MenuItem>}
 		</div>

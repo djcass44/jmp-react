@@ -15,18 +15,7 @@
  *
  */
 
-export const SET_THEME_MODE = "SET_THEME_MODE";
-
-interface SetThemeModeActionType {
-	type: typeof SET_THEME_MODE;
-	payload: string;
+export interface ErrorState {
+	payload?: any | null;
+	message: string | null;
 }
-
-export const setThemeMode = (theme: string): SetThemeModeActionType => {
-	return {
-		type: SET_THEME_MODE,
-		payload: theme
-	};
-};
-
-export type GenericActionType = SetThemeModeActionType;

@@ -50,7 +50,14 @@ export const getGroups = (dispatch: Dispatch, headers: any, query = "", page = 0
 			endpoint: `${BASE_URL}/api/v2_1/group?${queryString}`,
 			method: "GET",
 			headers,
-			types: [GROUP_LOAD_REQUEST, GROUP_LOAD_SUCCESS, GROUP_LOAD_FAILURE]
+			types: [
+				GROUP_LOAD_REQUEST,
+				GROUP_LOAD_SUCCESS,
+				{
+					type: GROUP_LOAD_FAILURE,
+					meta: "Something went wrong loading groups"
+				}
+			]
 		}
 	});
 };

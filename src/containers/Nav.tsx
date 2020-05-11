@@ -31,6 +31,7 @@ import {APP_MSG, APP_NAME} from "../constants";
 import {TState} from "../store/reducers";
 import {AuthState} from "../store/reducers/auth";
 import {setUserSearch} from "../store/actions/users";
+import {UsersState} from "../store/reducers/users";
 import UserMenu from "./content/identity/profile/UserMenu";
 
 const bgTransition = (time: number | string): string => `background-color ${time}ms linear`;
@@ -154,8 +155,7 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 
 	// global state
 	const {userProfile} = useSelector<TState, AuthState>(state => state.auth);
-	// @ts-ignore
-	const {search} = useSelector(state => state.users);
+	const {search} = useSelector<TState, UsersState>(state => state.users);
 
 	// component state
 	const [showSearch, setShowSearch] = useState<boolean>(true);
@@ -204,9 +204,9 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 								placeholder: "Search...",
 								classes: {root: classes.inputRoot, input: classes.inputInput},
 								onChange: (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => handleSearchChange(e),
-								value: localSearch,
+								value: localSearch
 							}}
-							onDwell={() => setUserSearch(dispatch, localSearch)}
+							onDwell={() => dispatch(setUserSearch(localSearch))}
 						/>
 					</div>}
 					<div className={classes.grow}/>
