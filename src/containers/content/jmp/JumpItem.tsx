@@ -21,8 +21,8 @@ import {
 	makeStyles,
 	Popover,
 	Theme,
-	useTheme,
-	withWidth
+	useMediaQuery,
+	useTheme
 } from "@material-ui/core";
 import {
 	mdiCallMerge,
@@ -37,8 +37,6 @@ import React, {ReactNode, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import {usePalette} from "react-palette";
-import {isWidthDown} from "@material-ui/core/withWidth";
-import {Breakpoint} from "@material-ui/core/styles/createBreakpoints";
 import JumpAvatar from "../../../components/content/jmp/JumpAvatar";
 import {setJumpExpand} from "../../../store/actions/jumps";
 import {Jump} from "../../../types";
@@ -78,10 +76,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface JumpItemProps {
 	jump: Jump;
-	width: Breakpoint;
 }
 
-const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
+const JumpItem: React.FC<JumpItemProps> = ({jump}: JumpItemProps) => {
 	// hooks
 	const classes = useStyles();
 	const theme = useTheme<Theme>();
@@ -98,7 +95,7 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 
 	// misc data
 	const selected = expanded === jump.id || anchorEl != null;
-	const smallScreen = isWidthDown("sm", width);
+	const smallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
 	const getAliases = (): ReactNode | null => {
 		if (jump.alias == null || jump.alias.length === 0) return null;
@@ -210,7 +207,7 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 							focusProps={focusProps}
 						/>
 					</div>
-					<div className={classes.action} key="usage">
+					{!smallScreen && <div className={classes.action} key="usage">
 						<JumpButton
 							title={`Used ${jump.usage} time(s)`}
 							iconProps={getUsageIconProps()}
@@ -218,7 +215,7 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 							mouse={mouse}
 							focusProps={focusProps}
 						/>
-					</div>
+					</div>}
 				</ListItemSecondaryAction>
 			</ListItem>
 			<Popover
@@ -243,4 +240,4 @@ const JumpItem: React.FC<JumpItemProps> = ({jump, width}: JumpItemProps) => {
 		</div>
 	);
 };
-export default withWidth()(JumpItem);
+export default JumpItem;

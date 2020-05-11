@@ -27,12 +27,16 @@ import {ThemedTooltip} from "jmp-coreui";
 import {APP_NAME} from "../../constants";
 
 const useStyles = makeStyles((theme: Theme) => ({
+	title: {
+		color: theme.palette.text.primary,
+		fontFamily: "Manrope",
+		fontWeight: 400,
+		fontSize: 24, marginTop: theme.spacing(2)
+	},
 	subtitle: {
 		textAlign: "center",
-		fontFamily: "Manrope",
-		fontWeight: 500,
-		color: theme.palette.text.primary,
-		marginTop: theme.spacing(2)
+		color: theme.palette.text.secondary,
+		margin: theme.spacing(1)
 	},
 	overlay: {
 		position: "fixed",
@@ -60,11 +64,17 @@ const NotFound: React.FC = () => {
 				<Center>
 					<img height={256} src="/draw/undraw_lost_bqr2.svg" alt=""/>
 				</Center>
-				<Center>
-					<Typography className={classes.subtitle} variant="subtitle1">
-						The page you're looking for doesn't exist or the server refused to disclose it.
-					</Typography>
-				</Center>
+				<Typography
+					className={classes.title}
+					align="center">
+					Page not found.
+				</Typography>
+				<Typography
+					className={classes.subtitle}
+					align="center"
+					variant="subtitle1">
+					The page you're looking for doesn't exist or the server refused to disclose it.
+				</Typography>
 				<Center>
 					<ThemedTooltip translate title="Go back">
 						<IconButton
