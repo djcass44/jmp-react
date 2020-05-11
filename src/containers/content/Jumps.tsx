@@ -107,7 +107,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 		borderRadius: theme.spacing(3),
 		margin: theme.spacing(2),
 		textTransform: "none",
-		color: theme.palette.success.main
+		color: theme.palette.primary.main
 	},
 	skeleton: {
 		marginLeft: theme.spacing(2)
