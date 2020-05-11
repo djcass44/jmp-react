@@ -19,21 +19,23 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import {BrowserRouter} from "react-router-dom";
-import Provider from "react-redux/es/components/Provider";
+import {Provider} from "react-redux";
+import {PersistGate} from "redux-persist/integration/react";
 import * as serviceWorker from "./serviceWorker";
 import {persist, store} from "./store";
 import "typeface-roboto";
 import App from "./App";
-import {PersistGate} from "redux-persist/integration/react";
 
 ReactDOM.render(
-	<Provider store={store}>
-		<PersistGate loading={null} persistor={persist}>
-			<BrowserRouter basename="/">
-				<App/>
-			</BrowserRouter>
-		</PersistGate>
-	</Provider>,
+	<React.StrictMode>
+		<Provider store={store}>
+			<PersistGate loading={null} persistor={persist}>
+				<BrowserRouter>
+					<App/>
+				</BrowserRouter>
+			</PersistGate>
+		</Provider>
+	</React.StrictMode>,
 	document.getElementById("root")
 );
 serviceWorker.unregister();

@@ -18,3 +18,9 @@
 export const request = (action: string): string => `${action}_REQUEST`;
 export const success = (action: string): string => `${action}_SUCCESS`;
 export const failure = (action: string): string => `${action}_FAILURE`;
+
+export const resetError = (action: string) => {
+	return {
+		type: `${action}_RESET`
+	};
+};
