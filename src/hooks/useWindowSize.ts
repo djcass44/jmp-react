@@ -15,19 +15,25 @@
  *
  */
 
-import {Jump} from "../../types";
-import {TState} from "../reducers";
+import {useLayoutEffect, useState} from "react";
 
-export default (jump: Jump, state: TState): number => {
-	const max = Math.max.apply(Math, state.jumps.jumps.content.map(j => j.usage));
+interface WindowDimensions {
+	width: number;
+	height: number;
+}
 
-	if (jump.usage >= max)
-		return 4;
-	else if (jump.usage >= (max * 0.75))
-		return 3;
-	else if (jump.usage >= (max * 0.5))
-		return 2;
-	else if (jump.usage > 0)
-		return 1;
-	return 0;
+export default (): WindowDimensions => {
+	const [size, setSize] = useState<WindowDimensions>({width: 0, height: 0});
+
+	useLayoutEffect(() => {
+		const updateSize = () => {
+			setSize({width: window.innerWidth, height: window.innerHeight});
+		};
+		window.addEventListener("resize", updateSize);
+		return () => {
+			window.removeEventListener("resize", updateSize);
+		};
+	}, []);
+
+	return size;
 }

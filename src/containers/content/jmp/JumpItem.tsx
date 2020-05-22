@@ -24,15 +24,7 @@ import {
 	useMediaQuery,
 	useTheme
 } from "@material-ui/core";
-import {
-	mdiCallMerge,
-	mdiDotsVertical,
-	mdiNetworkStrength1,
-	mdiNetworkStrength2,
-	mdiNetworkStrength3,
-	mdiNetworkStrength4,
-	mdiNetworkStrengthOutline
-} from "@mdi/js";
+import {mdiCallMerge, mdiDotsVertical} from "@mdi/js";
 import React, {ReactNode, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
@@ -45,7 +37,6 @@ import {APP_NOUN} from "../../../constants";
 import Domain from "../../../components/widget/Domain";
 import {TState} from "../../../store/reducers";
 import {JumpsState} from "../../../store/reducers/jumps";
-import getUsage from "../../../store/selectors/getUsage";
 import JumpContent from "./JumpContent";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -88,7 +79,6 @@ const JumpItem: React.FC<JumpItemProps> = ({jump}: JumpItemProps) => {
 	const {expanded} = useSelector<TState, JumpsState>(state => state.jumps);
 	const [mouse, setMouse] = useState<boolean>(false);
 	const {data, loading, error} = usePalette(jump.image || "");
-	const usage = useSelector<TState, number>(state => getUsage(jump, state));
 
 	// local state
 	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -129,33 +119,6 @@ const JumpItem: React.FC<JumpItemProps> = ({jump}: JumpItemProps) => {
 	const focusProps = {
 		onMouseEnter: () => setMouse(true),
 		onMouseLeave: () => setMouse(false)
-	};
-
-	const getUsageIconProps = (): object => {
-		let color = theme.palette.primary.main;
-		let path = mdiNetworkStrengthOutline;
-		switch (usage) {
-			case 4:
-				color = theme.palette.success.main;
-				path = mdiNetworkStrength4;
-				break;
-			case 3:
-				color = theme.palette.secondary.main;
-				path = mdiNetworkStrength3;
-				break;
-			case 2:
-				color = theme.palette.warning.main;
-				path = mdiNetworkStrength2;
-				break;
-			case 1:
-				color = theme.palette.error.main;
-				path = mdiNetworkStrength1;
-				break;
-		}
-		return {
-			color,
-			path
-		};
 	};
 
 	const onContext = (e: React.MouseEvent<HTMLElement>): void => {
@@ -207,15 +170,6 @@ const JumpItem: React.FC<JumpItemProps> = ({jump}: JumpItemProps) => {
 							focusProps={focusProps}
 						/>
 					</div>
-					{!smallScreen && <div className={classes.action} key="usage">
-						<JumpButton
-							title={`Used ${jump.usage} time(s)`}
-							iconProps={getUsageIconProps()}
-							focus={selected || smallScreen}
-							mouse={mouse}
-							focusProps={focusProps}
-						/>
-					</div>}
 				</ListItemSecondaryAction>
 			</ListItem>
 			<Popover

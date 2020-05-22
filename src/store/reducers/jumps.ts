@@ -41,8 +41,8 @@ export interface JumpsState {
 const initialState: JumpsState = {
 	jumps: {
 		content: [],
-		pageable: null,
 		size: 0,
+		totalPages: 0,
 		totalElements: 0,
 		numberOfElements: 0,
 		number: 0

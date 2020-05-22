@@ -30,6 +30,7 @@ const initialState: GroupsState = {
 	groups: {
 		content: [],
 		size: 0,
+		totalPages: 0,
 		totalElements: 0,
 		numberOfElements: 0,
 		number: 0

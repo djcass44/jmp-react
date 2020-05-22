@@ -15,13 +15,15 @@
  *
  */
 
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import {Grid, makeStyles, Theme} from "@material-ui/core";
 import {Route, Switch} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setGridWidth} from "../store/actions/Generic";
+import useWindowSize from "../hooks/useWindowSize";
 import Login from "./content/Login";
 import NotFound from "./content/NotFound";
 import Logout from "./content/Logout";
-import Identity from "./content/Identity";
 import Token from "./content/jmp/Token";
 import Similar from "./content/jmp/Similar";
 import Settings from "./content/Settings";
@@ -31,6 +33,7 @@ import Jumps from "./content/Jumps";
 import JumpEditDialog from "./modal/JumpEditDialog";
 import DeleteDialog from "./modal/DeleteDialog";
 import JumpDialog from "./modal/JumpDialog";
+import Identity from "./content/Identity";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	container: {
@@ -52,12 +55,23 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Content: React.FC = () => {
+	// hooks
 	const classes = useStyles();
+	const dispatch = useDispatch();
+	const dimensions = useWindowSize();
+	const gridRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		if (!gridRef.current)
+			return;
+		dispatch(setGridWidth(gridRef.current.offsetWidth));
+	}, [gridRef, gridRef.current?.offsetWidth, dimensions]);
+
 	return (
 		<div className={classes.container}>
-			<Grid container spacing={5} className={classes.centered}>
-				<Grid item xs={false} sm={1} lg={3} className={classes.padding}/>
-				<Grid item xs={12} sm={10} lg={6}>
+			<Grid container spacing={0} className={classes.centered}>
+				<Grid item xs={false} sm={3} lg={2} className={classes.padding}/>
+				<Grid item xs={12} sm={6} lg={4} ref={gridRef}>
 					<Switch>
 						<Route exact path="/" component={Jumps} key="jumps"/>
 						<Route exact path="/identity" component={Identity} key="identity"/>
@@ -71,7 +85,7 @@ const Content: React.FC = () => {
 						<Route component={NotFound} key="notfound"/>
 					</Switch>
 				</Grid>
-				<Grid item xs={false} sm={1} lg={3} className={classes.padding}/>
+				<Grid item xs={false} sm={3} lg={2} className={classes.padding}/>
 			</Grid>
 			<JumpEditDialog/>
 			<DeleteDialog/>

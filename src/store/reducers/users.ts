@@ -29,6 +29,7 @@ const initialState: UsersState = {
 	users: {
 		content: [],
 		size: 0,
+		totalPages: 0,
 		totalElements: 0,
 		numberOfElements: 0,
 		number: 0

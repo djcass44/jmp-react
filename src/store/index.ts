@@ -18,10 +18,9 @@
 import {applyMiddleware, compose, createStore} from "redux";
 import thunk from "redux-thunk";
 import {apiMiddleware} from "redux-api-middleware";
-import {PersistConfig, persistReducer, persistStore} from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import {persistStore} from "redux-persist";
 import apiDefaultValues from "../config/apiDefaultValues";
-import reducers, {TState} from "./reducers";
+import reducers from "./reducers";
 
 declare global {
 	interface Window {
@@ -29,17 +28,10 @@ declare global {
 	}
 }
 
-const persistConfig: PersistConfig<TState> = {
-	key: "root",
-	storage,
-	whitelist: ["generic"]
-};
-const persistedReducers = persistReducer(persistConfig, reducers);
-
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export const store = createStore(
-	persistedReducers,
+	reducers,
 	composeEnhancers(
 		applyMiddleware(
 			thunk,
