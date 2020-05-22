@@ -29,7 +29,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 		height: 72
 	},
 	iconRoot: {
-		minWidth: 48
+		minWidth: 48,
+		marginRight: theme.spacing(1)
 	}
 }));
 

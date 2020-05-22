@@ -30,25 +30,16 @@ import getIconColour from "../style/getIconColour";
 import {APP_MSG, APP_NAME} from "../constants";
 import {TState} from "../store/reducers";
 import {AuthState} from "../store/reducers/auth";
-import {setUserSearch} from "../store/actions/users";
 import {UsersState} from "../store/reducers/users";
 import HintTooltip from "../components/widget/HintTooltip";
+import {GenericState} from "../store/reducers/generic";
+import {setGenericSearch} from "../store/actions/Generic";
 import UserMenu from "./content/identity/profile/UserMenu";
 
 const bgTransition = (time: number | string): string => `background-color ${time}ms linear`;
 
 const useStyles = makeStyles((theme: Theme) => ({
-	root: {
-		position: "fixed",
-		width: "100%",
-		height: "100%",
-		top: 0,
-		left: 0,
-		right: 0,
-		bottom: 0,
-		backgroundColor: "transparent",
-		pointerEvents: "none"
-	},
+	root: {},
 	main: {
 		pointerEvents: "auto"
 	},
@@ -72,16 +63,28 @@ const useStyles = makeStyles((theme: Theme) => ({
 		fontFamily: "Manrope",
 		pointerEvents: "none"
 	},
+	searchRoot: {
+		position: "fixed",
+		left: 0,
+		right: 0,
+		top: 0,
+		padding: theme.spacing(1.25),
+		display: "flex",
+		justifyContent: "center",
+		pointerEvents: "none",
+		height: 48
+	},
 	search: {
 		position: "relative",
-		borderRadius: theme.shape.borderRadius,
+		borderRadius: theme.spacing(1),
 		color: theme.palette.text.primary,
-		backgroundColor: fade(theme.palette.action.hover, 0.15),
-		"&:hover": {
-			backgroundColor: fade(theme.palette.action.hover, 0.35),
+		backgroundColor: fade(theme.palette.type === "light" ? "#f1f3f4" : "#1c1e1f", 1.0),
+		"&:focus-within": {
+			backgroundColor: fade(theme.palette.background.paper, 1.0),
 			transition: bgTransition(250),
 			webkitTransition: bgTransition(250),
-			msTransition: bgTransition(250)
+			msTransition: bgTransition(250),
+			boxShadow: "0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08)"
 		},
 		transition: bgTransition(150),
 		webkitTransition: bgTransition(150),
@@ -92,8 +95,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 		width: "100%",
 		[theme.breakpoints.up("sm")]: {
 			marginLeft: theme.spacing(3),
-			width: "auto",
+			width: "auto"
 		},
+		pointerEvents: "initial"
 	},
 	searchIcon: {
 		width: theme.spacing(9),
@@ -107,6 +111,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	inputRoot: {
 		color: "inherit",
 		width: "100%",
+		height: "100%"
 	},
 	inputInput: {
 		paddingTop: theme.spacing(1),
@@ -116,8 +121,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 		transition: theme.transitions.create("width"),
 		width: "100%",
 		[theme.breakpoints.up("md")]: {
-			width: 200,
-		},
+			width: 200
+		}
 	},
 	sectionDesktop: {
 		display: "none",
@@ -145,7 +150,8 @@ interface NavProps {
 
 const Nav: React.FC<NavProps> = ({loading = false}) => {
 	const searchRoutes = [
-		"/identity"
+		"/identity",
+		"/"
 	];
 	// hooks
 	const history = useHistory();
@@ -157,10 +163,11 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 	// global state
 	const {userProfile} = useSelector<TState, AuthState>(state => state.auth);
 	const {search} = useSelector<TState, UsersState>(state => state.users);
+	const {gridWidth} = useSelector<TState, GenericState>(state => state.generic);
 
 	// local state
 	const [showSearch, setShowSearch] = useState<boolean>(true);
-	const [anchorEl, setAnchorEl] = useState(null);
+	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 	const [loginUrl, setLoginUrl] = useState("/login");
 	const [localSearch, setLocalSearch] = useState<string>(search);
 
@@ -213,20 +220,6 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 					<Typography className={classes.title} style={{fontWeight: 300}} variant="h6" color="secondary">
 						{APP_MSG}
 					</Typography>
-					{(showSearch && loading !== true) && <div className={classes.search}>
-						<div className={classes.searchIcon}>
-							<Icon path={mdiMagnify} color={theme.palette.text.secondary} size={1}/>
-						</div>
-						<DwellInputBase
-							inputProps={{
-								placeholder: "Search...",
-								classes: {root: classes.inputRoot, input: classes.inputInput},
-								onChange: (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => handleSearchChange(e),
-								value: localSearch
-							}}
-							onDwell={() => dispatch(setUserSearch(localSearch))}
-						/>
-					</div>}
 					<div className={classes.grow}/>
 					<>
 						<div className={classes.sectionDesktop}>
@@ -247,12 +240,31 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 							src={userProfile?.avatarUrl || undefined}
 							size={40}
 							style={{marginTop: 4}}
-							onClick={(e: any) => setAnchorEl(e.currentTarget)}
+							onClick={(e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget)}
 							aria-haspopup="true"
 							aria-owns={anchorEl != null ? "material-appbar" : undefined}
 						/>
 					</>
 				</Toolbar>
+				<div
+					className={classes.searchRoot}>
+					{showSearch && <div
+						className={classes.search}
+						style={{width: gridWidth}}>
+						<div className={classes.searchIcon}>
+							<Icon path={mdiMagnify} color={theme.palette.text.secondary} size={1}/>
+						</div>
+						<DwellInputBase
+							inputProps={{
+								placeholder: "Search...",
+								classes: {root: classes.inputRoot, input: classes.inputInput},
+								onChange: handleSearchChange,
+								value: localSearch
+							}}
+							onDwell={() => dispatch(setGenericSearch(localSearch))}
+						/>
+					</div>}
+				</div>
 			</>
 			<Popover
 				anchorEl={anchorEl}

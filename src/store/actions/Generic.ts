@@ -16,9 +16,21 @@
  */
 
 export const SET_THEME_MODE = "SET_THEME_MODE";
+export const SET_GRID_WIDTH = "SET_GRID_WIDTH";
+export const SET_GENERIC_SEARCH = "SET_GENERIC_SEARCH";
 
 interface SetThemeModeActionType {
 	type: typeof SET_THEME_MODE;
+	payload: string;
+}
+
+interface SetGridWidthActionType {
+	type: typeof SET_GRID_WIDTH;
+	payload: number;
+}
+
+interface SetGenericSearchActionType {
+	type: typeof SET_GENERIC_SEARCH;
 	payload: string;
 }
 
@@ -29,4 +41,18 @@ export const setThemeMode = (theme: string): SetThemeModeActionType => {
 	};
 };
 
-export type GenericActionType = SetThemeModeActionType;
+export const setGridWidth = (width: number): SetGridWidthActionType => {
+	return {
+		type: SET_GRID_WIDTH,
+		payload: width
+	};
+};
+
+export const setGenericSearch = (search: string): SetGenericSearchActionType => {
+	return {
+		type: SET_GENERIC_SEARCH,
+		payload: search
+	};
+};
+
+export type GenericActionType = SetThemeModeActionType | SetGridWidthActionType | SetGenericSearchActionType;

@@ -67,6 +67,7 @@ export const Body: React.FC = () => {
 	const {headers, refresh} = useAuth();
 
 
+	// local state
 	const [timer, setTimer] = useState<number | null>(null);
 	const [shade, setShade] = useState<boolean>(false);
 

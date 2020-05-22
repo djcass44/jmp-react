@@ -5,17 +5,19 @@ body {
 	sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-}
-html,
-body {
-	height: 100%;
-	background-color: #FAFAFA;
+	padding-right: 0 !important; /* stops mui from adding padding when opening a modal */
 }
 
-html[data-theme='dark'],
-body[data-theme='dark'] {
+html {
+	height: 100%;
+	background-color: #FAFAFA;
+	overflow-y: scroll !important; /* always show the scrollbar so the page doesn't shift */
+}
+
+html[data-theme='dark'] {
 	height: 100%;
 	background-color: #1a1b1c;
+	overflow-y: scroll !important;
 }
 
 code {

@@ -15,12 +15,16 @@
  *
  */
 
-import {GenericActionType, SET_THEME_MODE} from "../actions/Generic";
+import {PersistConfig} from "redux-persist/es/types";
+import {persistReducer} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import {GenericActionType, SET_GENERIC_SEARCH, SET_GRID_WIDTH, SET_THEME_MODE} from "../actions/Generic";
 
 export interface GenericState {
 	themeMode: string;
 	searchFilter: string;
 	version: string;
+	gridWidth: number;
 }
 
 const wantedTheme = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
@@ -28,14 +32,25 @@ const wantedTheme = (window.matchMedia && window.matchMedia("(prefers-color-sche
 const initialState: GenericState = {
 	themeMode: wantedTheme,
 	searchFilter: "",
-	version: ""
+	version: "",
+	gridWidth: 0
 };
 
-export default (state = initialState, action: GenericActionType): GenericState => {
+const generic = (state = initialState, action: GenericActionType): GenericState => {
 	switch (action.type) {
 		case SET_THEME_MODE:
 			return {...state, themeMode: action.payload};
+		case SET_GRID_WIDTH:
+			return {...state, gridWidth: action.payload};
+		case SET_GENERIC_SEARCH:
+			return {...state, searchFilter: action.payload};
 		default:
 			return state;
 	}
-}
+};
+const persistConfig: PersistConfig<GenericState> = {
+	key: "jmp-generic",
+	storage,
+	whitelist: ["themeMode"]
+};
+export default persistReducer(persistConfig, generic);

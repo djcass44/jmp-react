@@ -29,7 +29,8 @@ import getAvatarScheme from "../../../style/getAvatarScheme";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	avatar: {
-		margin: theme.spacing(1)
+		margin: theme.spacing(1),
+		marginRight: theme.spacing(2)
 	},
 	image: {
 		margin: theme.spacing(0.5)
@@ -41,9 +42,10 @@ interface JumpAvatarProps {
 	palette: any;
 	loading: boolean;
 	error: Error | null;
+	size?: number;
 }
 
-const JumpAvatar: React.FC<JumpAvatarProps> = ({jump, palette, loading, error}: JumpAvatarProps) => {
+const JumpAvatar: React.FC<JumpAvatarProps> = ({jump, palette, loading, error, size = 40}: JumpAvatarProps) => {
 	// hooks
 	const theme = useTheme<Theme>();
 	const classes = useStyles();
@@ -66,8 +68,9 @@ const JumpAvatar: React.FC<JumpAvatarProps> = ({jump, palette, loading, error}: 
 		fg: scheme[1]
 	};
 	return (
-		<Avatar className={classes.avatar}
-		        style={{backgroundColor: bg || avatar.bg, color: avatarPalette.fg || avatar.fg}}>
+		<Avatar
+			className={classes.avatar}
+			style={{backgroundColor: bg || avatar.bg, color: avatarPalette.fg || avatar.fg, width: size, height: size}}>
 			<Img
 				className={classes.image}
 				src={jump.image}
