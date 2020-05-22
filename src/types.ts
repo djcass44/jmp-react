@@ -75,6 +75,7 @@ export interface Page<T> {
 	pageable?: Pageable | null;
 	size: number; // page size
 	number: number; // page count
+	totalPages: number;
 	totalElements: number; // total items
 	numberOfElements: number; // elements on page
 }

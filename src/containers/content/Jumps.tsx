@@ -19,23 +19,21 @@ import React, {ReactNode, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import List from "@material-ui/core/List";
-import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import Icon from "@mdi/react";
 import {mdiAccountAlertOutline} from "@mdi/js";
 import {ImageMessage, ThemedTooltip} from "jmp-coreui";
+import {Pagination} from "@material-ui/lab";
 import {MODAL_JUMP_NEW, setDialog} from "../../store/actions/Modal";
 import {GET_JUMP, getJumps} from "../../store/actions/jumps/GetJumps";
 import {setJumpExpand, setJumpOffset} from "../../store/actions/jumps";
 import {TState} from "../../store/reducers";
 import {Jump, Page} from "../../types";
-import {JumpsState} from "../../store/reducers/jumps";
 import {APP_NAME, APP_NOUN, pageSize} from "../../constants";
 import JumpItemSkeleton from "../../components/content/jmp/JumpItemSkeleton";
 import useAuth from "../../hooks/useAuth";
 import {GenericState} from "../../store/reducers/generic";
 import JumpItem from "./jmp/JumpItem";
 
-const bgTransition = (time: string | number) => `background-color ${time}ms linear`;
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
 		fontFamily: "Manrope",
@@ -90,7 +88,6 @@ export default () => {
 
 	// global state
 	const pagedJumps = useSelector<TState, Page<Jump>>(state => state.jumps.jumps);
-	const {offset} = useSelector<TState, JumpsState>(state => state.jumps);
 	const {searchFilter} = useSelector<TState, GenericState>(state => state.generic);
 	const {headers, isLoggedIn} = useAuth();
 	const loading = useSelector<TState, boolean>(state => state.loading[GET_JUMP]);
@@ -99,8 +96,8 @@ export default () => {
 	const [data, setData] = useState<Array<ReactNode>>([]);
 	const [lData, setLData] = useState<Array<ReactNode>>([]);
 
-	const onSearch = (o = offset) => {
-		getJumps(dispatch, headers, searchFilter, Number(o / pageSize) || 0, pageSize);
+	const onSearch = (page = 1) => {
+		getJumps(dispatch, headers, searchFilter, page - 1, pageSize);
 	};
 
 	useEffect(() => {
@@ -113,7 +110,7 @@ export default () => {
 		setJumpOffset(dispatch, pagedJumps.number * pageSize);
 		// Loop-d-loop
 		setData(content.map(i => (<JumpItem jump={i} key={i.id}/>)));
-	}, [pagedJumps, offset]);
+	}, [pagedJumps]);
 
 	useEffect(() => {
 		if (!loading)
@@ -126,9 +123,9 @@ export default () => {
 		setLData(l);
 	}, [loading]);
 
-	const onPageChange = (off: number) => {
-		setJumpOffset(dispatch, off);
-		onSearch(off);
+	const onPageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+		setJumpOffset(dispatch, value);
+		onSearch(value);
 		setJumpExpand(dispatch, null);
 	};
 
@@ -173,9 +170,12 @@ export default () => {
 				<Zoom in={pagedJumps.totalElements > pagedJumps.size}>
 					<Center>
 						<Pagination
-							limit={pagedJumps.size} offset={offset} total={pagedJumps.totalElements}
-							nextPageLabel="▶" previousPageLabel="◀"
-							onClick={(e, off) => onPageChange(off)}/>
+							count={pagedJumps.totalPages}
+							page={(pagedJumps.pageable?.pageNumber || 0) + 1}
+							onChange={onPageChange}
+							color="primary"
+							size="small"
+						/>
 					</Center>
 				</Zoom>
 			</div>
