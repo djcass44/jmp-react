@@ -17,15 +17,24 @@
 
 import React, {ChangeEvent, useEffect, useState} from "react";
 import {fade} from "@material-ui/core/styles/colorManipulator";
-import {Avatar as MuiAvatar, IconButton, makeStyles, Popover, Theme, Toolbar, Typography} from "@material-ui/core";
+import {
+	Avatar as MuiAvatar,
+	IconButton,
+	makeStyles,
+	Popover,
+	Theme,
+	Toolbar,
+	Typography,
+	useMediaQuery
+} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, useHistory} from "react-router-dom";
 import Icon from "@mdi/react";
-import {mdiHelpCircleOutline, mdiMagnify} from "@mdi/js";
+import {mdiArrowLeft, mdiHelpCircleOutline, mdiMagnify} from "@mdi/js";
 import {Avatar} from "evergreen-ui";
 import {useTheme} from "@material-ui/core/styles";
 import {useLocation} from "react-router";
-import {DwellInputBase} from "jmp-coreui";
+import {DwellInputBase, GenericIconButton} from "jmp-coreui";
 import getIconColour from "../style/getIconColour";
 import {APP_MSG, APP_NAME} from "../constants";
 import {TState} from "../store/reducers";
@@ -62,6 +71,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 		},
 		fontFamily: "Manrope",
 		pointerEvents: "none"
+	},
+	searchBack: {
+		pointerEvents: "initial"
 	},
 	searchRoot: {
 		position: "fixed",
@@ -159,6 +171,7 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 	const dispatch = useDispatch();
 	const classes = useStyles();
 	const theme = useTheme();
+	const smallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
 	// global state
 	const {userProfile} = useSelector<TState, AuthState>(state => state.auth);
@@ -170,6 +183,7 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 	const [loginUrl, setLoginUrl] = useState("/login");
 	const [localSearch, setLocalSearch] = useState<string>(search);
+	const [overrideSearch, setOverrideSearch] = useState<boolean>(false);
 
 	const [idle, setIdle] = useState<number>(0);
 	const [idleTimer, setIdleTimer] = useState<number | null>(null);
@@ -204,51 +218,66 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 		<div className={classes.root}>
 			<>
 				<Toolbar className={classes.main}>
-					<HintTooltip
-						title="Click to return home."
-						open={location.pathname !== "/" && idle === 1}>
-						<MuiAvatar
-							className={classes.avatar}
-							src={`${process.env.PUBLIC_URL}/favicon.png`}
-							alt={`${APP_NAME} logo`}
-							onClick={() => history.push("/")}
-						/>
-					</HintTooltip>
-					<Typography className={classes.brand} variant="h6" color="textPrimary">
-						{APP_NAME}
-					</Typography>
-					<Typography className={classes.title} style={{fontWeight: 300}} variant="h6" color="secondary">
-						{APP_MSG}
-					</Typography>
-					<div className={classes.grow}/>
-					<>
-						<div className={classes.sectionDesktop}>
-							{location.pathname !== "/help" && <HintTooltip open={idle === 2} title="Need a hand?">
-								<IconButton
-									style={{margin: 8}}
-									disabled={loading}
-									component={Link}
-									centerRipple={false}
-									color="inherit"
-									to="/help">
-									<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
-								</IconButton>
-							</HintTooltip>}
-						</div>
-						<Avatar
-							name={userProfile?.displayName || userProfile?.username || "Anonymous"}
-							src={userProfile?.avatarUrl || undefined}
-							size={40}
-							style={{marginTop: 4}}
-							onClick={(e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget)}
-							aria-haspopup="true"
-							aria-owns={anchorEl != null ? "material-appbar" : undefined}
-						/>
-					</>
+					{!overrideSearch && <>
+						<HintTooltip
+							title="Click to return home."
+							open={location.pathname !== "/" && idle === 1}>
+							<MuiAvatar
+								className={classes.avatar}
+								src={`${process.env.PUBLIC_URL}/favicon.png`}
+								alt={`${APP_NAME} logo`}
+								onClick={() => history.push("/")}
+							/>
+						</HintTooltip>
+						<Typography className={classes.brand} variant="h6" color="textPrimary">
+							{APP_NAME}
+						</Typography>
+						<Typography className={classes.title} style={{fontWeight: 300}} variant="h6" color="secondary">
+							{APP_MSG}
+						</Typography>
+						<div className={classes.grow}/>
+						<>
+							{smallScreen && <GenericIconButton
+								title="Search"
+								icon={mdiMagnify}
+								colour={theme.palette.text.secondary}
+								onClick={() => setOverrideSearch(true)}
+							/>}
+							<div className={classes.sectionDesktop}>
+								{location.pathname !== "/help" && <HintTooltip open={idle === 2} title="Need a hand?">
+									<IconButton
+										style={{margin: 8}}
+										disabled={loading}
+										component={Link}
+										centerRipple={false}
+										color="inherit"
+										to="/help">
+										<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
+									</IconButton>
+								</HintTooltip>}
+							</div>
+							<Avatar
+								name={userProfile?.displayName || userProfile?.username || "Anonymous"}
+								src={userProfile?.avatarUrl || undefined}
+								size={40}
+								style={{marginTop: 4}}
+								onClick={(e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget)}
+								aria-haspopup="true"
+								aria-owns={anchorEl != null ? "material-appbar" : undefined}
+							/>
+						</>
+					</>}
 				</Toolbar>
 				<div
 					className={classes.searchRoot}>
-					{showSearch && <div
+					{smallScreen && overrideSearch && <GenericIconButton
+						className={classes.searchBack}
+						title="Back"
+						icon={mdiArrowLeft}
+						colour={theme.palette.text.secondary}
+						onClick={() => setOverrideSearch(false)}
+					/>}
+					{(showSearch && (!smallScreen || overrideSearch)) && <div
 						className={classes.search}
 						style={{width: gridWidth}}>
 						<div className={classes.searchIcon}>
