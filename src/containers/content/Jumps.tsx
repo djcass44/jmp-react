@@ -14,16 +14,13 @@
  *    limitations under the License.
  */
 
-import {Button, makeStyles, Theme, Typography, useTheme, Zoom} from "@material-ui/core";
+import {makeStyles, Theme, Typography, Zoom} from "@material-ui/core";
 import React, {ReactNode, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import List from "@material-ui/core/List";
-import Icon from "@mdi/react";
-import {mdiAccountAlertOutline} from "@mdi/js";
-import {ImageMessage, ThemedTooltip} from "jmp-coreui";
+import {ImageMessage} from "jmp-coreui";
 import {Pagination} from "@material-ui/lab";
-import {MODAL_JUMP_NEW, setDialog} from "../../store/actions/Modal";
 import {GET_JUMP, getJumps} from "../../store/actions/jumps/GetJumps";
 import {setJumpExpand, setJumpOffset} from "../../store/actions/jumps";
 import {TState} from "../../store/reducers";
@@ -84,12 +81,11 @@ export default () => {
 	// hooks
 	const classes = useStyles();
 	const dispatch = useDispatch();
-	const {palette} = useTheme();
 
 	// global state
 	const pagedJumps = useSelector<TState, Page<Jump>>(state => state.jumps.jumps);
 	const {searchFilter} = useSelector<TState, GenericState>(state => state.generic);
-	const {headers, isLoggedIn} = useAuth();
+	const {headers} = useAuth();
 	const loading = useSelector<TState, boolean>(state => state.loading[GET_JUMP]);
 
 	// local state
@@ -131,54 +127,33 @@ export default () => {
 
 
 	return (
-		<>
-			<Center>
-				<Button
-					className={classes.addButton}
-					disabled={!isLoggedIn}
-					variant="outlined"
-					aria-label="Add"
-					onClick={
-						() => dispatch(setDialog(
-							MODAL_JUMP_NEW,
-							true,
-							null
-						))
-					}>
-					Add
-				</Button>
-				{!isLoggedIn && <ThemedTooltip translate title={`You must be logged in to create ${APP_NOUN}s`}>
-					<Icon path={mdiAccountAlertOutline} color={palette.error.dark} size={1}/>
-				</ThemedTooltip>}
-			</Center>
-			<div>
-				{pagedJumps.numberOfElements > 0 && <Typography
-					className={classes.subheader}
-					color="textPrimary">
-					{APP_NOUN}s
-				</Typography>}
-				<div key="root" style={{borderRadius: 12, marginBottom: 8}}>
-					<List>
-						{!loading && data}
-						{loading && <>
-							{lData}
-						</>}
-						{data.length === 0 && !loading &&
-						<ImageMessage src={emptyImages} message="Nothing could be found"/>}
-					</List>
-				</div>
-				<Zoom in={pagedJumps.totalElements > pagedJumps.size}>
-					<Center>
-						<Pagination
-							count={pagedJumps.totalPages}
-							page={(pagedJumps.pageable?.pageNumber || 0) + 1}
-							onChange={onPageChange}
-							color="primary"
-							size="small"
-						/>
-					</Center>
-				</Zoom>
+		<div>
+			{pagedJumps.numberOfElements > 0 && <Typography
+				className={classes.subheader}
+				color="textPrimary">
+				{APP_NOUN}s
+			</Typography>}
+			<div key="root" style={{borderRadius: 12, marginBottom: 8}}>
+				<List>
+					{!loading && data}
+					{loading && <>
+						{lData}
+					</>}
+					{data.length === 0 && !loading &&
+					<ImageMessage src={emptyImages} message="Nothing could be found"/>}
+				</List>
 			</div>
-		</>
+			<Zoom in={pagedJumps.totalElements > pagedJumps.size}>
+				<Center>
+					<Pagination
+						count={pagedJumps.totalPages}
+						page={(pagedJumps.pageable?.pageNumber || 0) + 1}
+						onChange={onPageChange}
+						color="primary"
+						size="small"
+					/>
+				</Center>
+			</Zoom>
+		</div>
 	);
 };

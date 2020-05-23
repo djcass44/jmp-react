@@ -30,19 +30,20 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {Link, useHistory} from "react-router-dom";
 import Icon from "@mdi/react";
-import {mdiArrowLeft, mdiHelpCircleOutline, mdiMagnify} from "@mdi/js";
+import {mdiArrowLeft, mdiHelpCircleOutline, mdiMagnify, mdiPlus} from "@mdi/js";
 import {Avatar} from "evergreen-ui";
 import {useTheme} from "@material-ui/core/styles";
 import {useLocation} from "react-router";
 import {DwellInputBase, GenericIconButton} from "jmp-coreui";
-import getIconColour from "../style/getIconColour";
-import {APP_MSG, APP_NAME} from "../constants";
+import {APP_MSG, APP_NAME, APP_NOUN} from "../constants";
 import {TState} from "../store/reducers";
 import {AuthState} from "../store/reducers/auth";
 import {UsersState} from "../store/reducers/users";
 import HintTooltip from "../components/widget/HintTooltip";
 import {GenericState} from "../store/reducers/generic";
 import {setGenericSearch} from "../store/actions/Generic";
+import {MODAL_JUMP_NEW, setDialog} from "../store/actions/Modal";
+import useAuth from "../hooks/useAuth";
 import UserMenu from "./content/identity/profile/UserMenu";
 
 const bgTransition = (time: number | string): string => `background-color ${time}ms linear`;
@@ -118,7 +119,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 		pointerEvents: "none",
 		display: "flex",
 		alignItems: "center",
-		justifyContent: "center",
+		justifyContent: "center"
 	},
 	inputRoot: {
 		color: "inherit",
@@ -137,6 +138,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 		}
 	},
 	sectionDesktop: {
+		marginRight: theme.spacing(1),
 		display: "none",
 		[theme.breakpoints.up("md")]: {
 			display: "flex"
@@ -172,6 +174,7 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 	const classes = useStyles();
 	const theme = useTheme();
 	const smallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+	const {isLoggedIn} = useAuth();
 
 	// global state
 	const {userProfile} = useSelector<TState, AuthState>(state => state.auth);
@@ -241,7 +244,23 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 								title="Search"
 								icon={mdiMagnify}
 								colour={theme.palette.text.secondary}
+								disabled={loading}
+								size="small"
 								onClick={() => setOverrideSearch(true)}
+							/>}
+							{location.pathname === "/" && <GenericIconButton
+								title={isLoggedIn ? `New ${APP_NOUN}` : `Login to create ${APP_NOUN}s`}
+								colour={theme.palette.text.secondary}
+								icon={mdiPlus}
+								size="small"
+								disabled={loading || !isLoggedIn}
+								onClick={
+									() => dispatch(setDialog(
+										MODAL_JUMP_NEW,
+										true,
+										null
+									))
+								}
 							/>}
 							<div className={classes.sectionDesktop}>
 								{location.pathname !== "/help" && <HintTooltip open={idle === 2} title="Need a hand?">
@@ -250,9 +269,11 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 										disabled={loading}
 										component={Link}
 										centerRipple={false}
+										size="small"
 										color="inherit"
 										to="/help">
-										<Icon path={mdiHelpCircleOutline} size={1} color={getIconColour(theme)}/>
+										<Icon path={mdiHelpCircleOutline} size={1}
+										      color={theme.palette.text.secondary}/>
 									</IconButton>
 								</HintTooltip>}
 							</div>
