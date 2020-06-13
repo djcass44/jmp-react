@@ -65,9 +65,10 @@ const Info: React.FC = () => {
 					<ListItemAvatar>
 						<Avatar alt="App icon" src="/jmp2.png"/>
 					</ListItemAvatar>
-					<ListItemText primary={
-						<Typography color="textPrimary" variant="h5">{APP_NAME}</Typography>
-					}/>
+					<ListItemText
+						primary={
+							<Typography color="textPrimary" variant="h5">{APP_NAME}</Typography>
+						}/>
 				</ListItem>
 				<Divider/>
 				<ListItem>

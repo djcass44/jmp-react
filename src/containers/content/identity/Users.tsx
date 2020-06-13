@@ -16,10 +16,10 @@
  */
 
 import {useDispatch, useSelector} from "react-redux";
-import {List, makeStyles, Theme, Typography} from "@material-ui/core";
+import {List, makeStyles, Theme, Typography, Zoom} from "@material-ui/core";
+import {Pagination} from "@material-ui/lab";
 import React, {ReactNode, useEffect, useState} from "react";
 import Center from "react-center";
-import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import Button from "@material-ui/core/Button";
 import {getUsers, USER_LOAD} from "../../../store/actions/users/GetUsers";
 import {PATCH_USER_ROLE} from "../../../store/actions/users/PatchUserRole";
@@ -115,9 +115,9 @@ export default () => {
 		setAnchorEl(user === u || e == null ? null : e);
 	};
 
-	const onPageChange = (off: number) => {
-		dispatch(setUserOffset(off));
-		onSearch(off);
+	const onPageChange = (_: React.ChangeEvent<unknown>, value: number) => {
+		dispatch(setUserOffset(value));
+		onSearch(value);
 
 		// reset ui values
 		setUser(null);
@@ -149,16 +149,17 @@ export default () => {
 			{items.length === 0 && <Typography className={`${classes.title} ${classes.nothing}`} color="primary">
 				No users could be found
 			</Typography>}
-			{users.totalElements > users.size && <Center>
-				<Pagination
-					limit={users.size}
-					offset={offset}
-					total={users.totalElements}
-					nextPageLabel="▶"
-					previousPageLabel="◀"
-					onClick={(e, off) => onPageChange(off)}
-				/>
-			</Center>}
+			<Zoom in={users.totalElements > users.size}>
+				<Center>
+					<Pagination
+						count={users.totalPages}
+						page={(users.pageable?.pageNumber || 0) + 1}
+						onChange={onPageChange}
+						color="primary"
+						size="small"
+					/>
+				</Center>
+			</Zoom>
 			<UserOptionsMenu
 				user={user}
 				expanded={expanded}

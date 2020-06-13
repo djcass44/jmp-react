@@ -115,8 +115,9 @@ const Help: React.FC = () => {
 		{
 			id: "reporting-issues",
 			q: "I found a bug",
-			a: <span>Awesome! Create an <a target="_blank" rel="noopener noreferrer"
-			                               href="https://github.com/djcass44/jmp/issues">issue</a> and it will be looked at.</span>
+			a: <span>Awesome! Create an <a
+				target="_blank" rel="noopener noreferrer"
+				href="https://github.com/djcass44/jmp/issues">issue</a> and it will be looked at.</span>
 		},
 		{
 			id: "password-security",
@@ -147,8 +148,9 @@ const Help: React.FC = () => {
 		setData(qna.map(i => {
 			return (
 				<div key={i.id}>
-					<ListItem button className={classes.item} value={i.id} onClick={() => toggleExpansion(i.id)}
-					          component="li">
+					<ListItem
+						button className={classes.item} value={i.id} onClick={() => toggleExpansion(i.id)}
+						component="li">
 						<ListItemText
 							primary={<span
 								className={classes.title}
@@ -157,8 +159,9 @@ const Help: React.FC = () => {
 							</span>}
 						/>
 						<ListItemSecondaryAction className={classes.itemAction}>
-							<Icon path={i.id === expand ? mdiChevronUp : mdiChevronDown} size={1}
-							      color={theme.palette.text.hint}/>
+							<Icon
+								path={i.id === expand ? mdiChevronUp : mdiChevronDown} size={1}
+								color={theme.palette.text.hint}/>
 						</ListItemSecondaryAction>
 					</ListItem>
 					<Collapse in={i.id === expand} unmountOnExit timeout="auto">

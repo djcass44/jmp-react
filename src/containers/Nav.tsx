@@ -272,8 +272,11 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 										size="small"
 										color="inherit"
 										to="/help">
-										<Icon path={mdiHelpCircleOutline} size={1}
-										      color={theme.palette.text.secondary}/>
+										<Icon
+											path={mdiHelpCircleOutline}
+											size={1}
+											color={theme.palette.text.secondary}
+										/>
 									</IconButton>
 								</HintTooltip>}
 							</div>

@@ -78,8 +78,9 @@ const BrowserGuide: React.FC = () => {
 				&emsp;URL = <Code>{BASE_URL}/jmp?query=%s</Code>
 			</span>,
 			info: <Typography variant="subtitle2">Skip setup using the&nbsp;
-				<Link target="_blank" rel="noopener noreferrer"
-				      href="https://chrome.google.com/webstore/detail/jmp/nkhlenilbcdnmekcknikcjoiappodhgm">Chrome
+				<Link
+					target="_blank" rel="noopener noreferrer"
+					href="https://chrome.google.com/webstore/detail/jmp/nkhlenilbcdnmekcknikcjoiappodhgm">Chrome
 					addon!</Link>
 			</Typography>,
 			severity: "info"
@@ -98,8 +99,9 @@ const BrowserGuide: React.FC = () => {
 				&emsp;Location = <Code>{BASE_URL}/jmp?query=%s</Code>
 			</div>,
 			info: <Typography variant="subtitle2">Skip setup using the&nbsp;
-				<Link target="_blank" rel="noopener noreferrer"
-				      href="https://addons.mozilla.org/en-US/firefox/addon/jmp-webext/">Firefox addon!</Link>
+				<Link
+					target="_blank" rel="noopener noreferrer"
+					href="https://addons.mozilla.org/en-US/firefox/addon/jmp-webext/">Firefox addon!</Link>
 			</Typography>,
 			severity: "info"
 		},
@@ -119,8 +121,9 @@ const BrowserGuide: React.FC = () => {
 				&emsp;URL = <Code>{BASE_URL}/jmp?query=%s</Code>
 			</span>,
 			info: <Typography variant="subtitle2">Skip setup using the&nbsp;
-				<Link target="_blank" rel="noopener noreferrer"
-				      href="https://chrome.google.com/webstore/detail/jmp/nkhlenilbcdnmekcknikcjoiappodhgm">Edge
+				<Link
+					target="_blank" rel="noopener noreferrer"
+					href="https://chrome.google.com/webstore/detail/jmp/nkhlenilbcdnmekcknikcjoiappodhgm">Edge
 					addon!</Link>
 			</Typography>,
 			severity: "info"
@@ -146,7 +149,8 @@ const BrowserGuide: React.FC = () => {
 	useEffect(() => {
 		setData(browserData.map(i => (
 			<ThemedTooltip translate title={i.name} key={i.icon}>
-				<IconButton centerRipple={false} style={{color: i.colour}} onClick={() => {
+				<IconButton
+					centerRipple={false} style={{color: i.colour}} onClick={() => {
 					if (selected === i && open) {
 						setOpen(false);
 						return;

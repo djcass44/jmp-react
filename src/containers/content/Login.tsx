@@ -187,14 +187,15 @@ export default () => {
 												fullWidth: true
 											}}
 										/>}
-										<Button style={{
-											marginTop: 8,
-											textTransform: "none",
-											color: getIconColour(theme)
-										}} className={classes.title} onClick={() => onNext()} variant="contained"
-										        color="primary"
-										        fullWidth size="large" type="submit"
-										        disabled={!valid || page >= 2 || loading || isLoggedIn}>
+										<Button
+											style={{
+												marginTop: 8,
+												textTransform: "none",
+												color: getIconColour(theme)
+											}} className={classes.title} onClick={() => onNext()} variant="contained"
+											color="primary"
+											fullWidth size="large" type="submit"
+											disabled={!valid || page >= 2 || loading || isLoggedIn}>
 											Continue
 											{(loading || isLoggedIn) &&
 											<CircularProgress style={{padding: 4}} size={15} thickness={7}/>}

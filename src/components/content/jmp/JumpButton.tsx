@@ -41,7 +41,7 @@ const JumpButton: React.FC<JumpButtonProps> = ({title, focus = false, mouse = tr
 					{...focusProps}
 					{...buttonProps}>
 					{(focus || mouse) ?
-						<Icon size={0.85} {...iconProps} />
+						<Icon size={0.85} {...iconProps}/>
 						:
 						<Icon path={mdiCircleSmall} size={0.85} color={theme.palette.text.secondary}/>
 					}

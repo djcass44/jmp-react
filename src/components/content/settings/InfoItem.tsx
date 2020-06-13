@@ -34,8 +34,9 @@ const InfoItem: React.FC<InfoItemProps> = ({title, error, open = false, icon, co
 	const classes = useStyles();
 	return (
 		<ExpansionPanel defaultExpanded={open}>
-			<ExpansionPanelSummary expandIcon={<Icon path={mdiChevronDown} size={1}/>} aria-controls="panel1bh-content"
-			                       id="panel1bh-header">
+			<ExpansionPanelSummary
+				expandIcon={<Icon path={mdiChevronDown} size={1}/>} aria-controls="panel1bh-content"
+				id="panel1bh-header">
 				{icon}
 				<Typography className={classes.title}>{title}</Typography>
 			</ExpansionPanelSummary>

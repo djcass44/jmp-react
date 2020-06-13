@@ -94,8 +94,9 @@ const Logout: React.FC = () => {
 					If you're not redirected in a few seconds, click below
 				</Center>
 				<Center>
-					<IconButton component={Link} to="/" color="primary" centerRipple={false}
-					            aria-label="Return to home">
+					<IconButton
+						component={Link} to="/" color="primary" centerRipple={false}
+						aria-label="Return to home">
 						<Icon path={mdiHomeOutline} color={theme.palette.text.secondary} size={1}/>
 					</IconButton>
 				</Center>

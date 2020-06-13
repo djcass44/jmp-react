@@ -16,10 +16,10 @@
  */
 
 import {useDispatch, useSelector} from "react-redux";
-import {List, makeStyles, Theme, Typography} from "@material-ui/core";
+import {List, makeStyles, Theme, Typography, Zoom} from "@material-ui/core";
+import {Pagination} from "@material-ui/lab";
 import React, {ReactNode, useEffect, useState} from "react";
 import Center from "react-center";
-import Pagination from "material-ui-flat-pagination/lib/Pagination";
 import Button from "@material-ui/core/Button";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
 import {MODAL_GROUP_NEW, setDialog} from "../../../store/actions/Modal";
@@ -108,9 +108,9 @@ export default () => {
 		setItems(content.map(g => <GroupCard key={g.id} group={g} isAdmin={isAdmin}/>));
 	}, [offset, groups]);
 
-	const onPageChange = (off: number): void => {
-		dispatch(setGroupOffset(off));
-		onSearch(off);
+	const onPageChange = (_: React.ChangeEvent<unknown>, value: number): void => {
+		dispatch(setGroupOffset(value));
+		onSearch(value);
 	};
 
 	return (
@@ -140,16 +140,17 @@ export default () => {
 				color="primary">
 				No groups could be found
 			</Typography>}
-			{groups.totalElements > groups.size && <Center>
-				<Pagination
-					limit={groups.size}
-					offset={offset}
-					total={groups.totalElements}
-					nextPageLabel="▶"
-					previousPageLabel="◀"
-					onClick={(e, off) => onPageChange(off)}
-				/>
-			</Center>}
+			<Zoom in={groups.totalElements > groups.size}>
+				<Center>
+					<Pagination
+						count={groups.totalPages}
+						page={(groups.pageable?.pageNumber || 0) + 1}
+						onChange={onPageChange}
+						color="primary"
+						size="small"
+					/>
+				</Center>
+			</Zoom>
 			<CreateGroupDialog/>
 			<GroupEditDialog/>
 		</div>
