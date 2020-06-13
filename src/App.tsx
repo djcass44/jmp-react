@@ -23,7 +23,7 @@ import {SnackbarProvider} from "notistack";
 import useTheme from "@material-ui/core/styles/useTheme";
 import {closeWebSocket, connectWebSocket} from "./actions/Socket";
 import Body from "./containers/Body";
-import Snackbar from "./containers/Snackbar";
+import Snackbar from "./containers/feedback/Snackbar";
 import {dark, light} from "./style/palette";
 import {TState} from "./store/reducers";
 import {GenericState} from "./store/reducers/generic";

@@ -18,7 +18,7 @@
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
 import {Jump, Page} from "../../../types";
-import {BASE_URL} from "../../../constants";
+import {APP_NOUN, BASE_URL} from "../../../constants";
 
 export const GET_JUMP = "GET_JUMP";
 export const GET_JUMP_REQUEST = "GET_JUMP_REQUEST";
@@ -50,7 +50,10 @@ export const getJumps = (dispatch: Dispatch, headers: any, query = "", page = 0,
 			endpoint: `${BASE_URL}/api/v2/jump?${queryString}`,
 			method: "GET",
 			headers,
-			types: [GET_JUMP_REQUEST, GET_JUMP_SUCCESS, GET_JUMP_FAILURE]
+			types: [GET_JUMP_REQUEST, GET_JUMP_SUCCESS, {
+				type: GET_JUMP_FAILURE,
+				meta: `Failed to load ${APP_NOUN}s`
+			}]
 		}
 	});
 };

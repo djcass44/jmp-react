@@ -16,11 +16,11 @@
  */
 
 import {applyMiddleware, compose, createStore} from "redux";
-import thunk from "redux-thunk";
 import {apiMiddleware} from "redux-api-middleware";
 import {persistStore} from "redux-persist";
 import apiDefaultValues from "../config/apiDefaultValues";
 import reducers from "./reducers";
+import {SnackbarMiddleware} from "./middleware/SnackbarMiddleware";
 
 declare global {
 	interface Window {
@@ -34,9 +34,9 @@ export const store = createStore(
 	reducers,
 	composeEnhancers(
 		applyMiddleware(
-			thunk,
 			apiDefaultValues,
-			apiMiddleware
+			apiMiddleware,
+			SnackbarMiddleware
 		)
 	)
 );

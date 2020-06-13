@@ -51,7 +51,7 @@ export const getUserGroups = (dispatch: Dispatch, headers: any, uid: string): vo
 				GET_USER_GROUPS_SUCCESS,
 				{
 					type: GET_USER_GROUPS_FAILURE,
-					meta: "Something went wrong"
+					meta: `Failed to load groups for user ${uid}`
 				}
 			]
 		}

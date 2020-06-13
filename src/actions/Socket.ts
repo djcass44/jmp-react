@@ -5,7 +5,7 @@ import {SOCKET_UPDATE_USERS} from "../store/actions/users";
 import {getUsers} from "../store/actions/users/GetUsers";
 import {SOCKET_UPDATE_GROUPS} from "../store/actions/groups";
 import {getGroups} from "../store/actions/groups/GetGroups";
-import {SOCKET_URL} from "../constants";
+import {pageSize, SOCKET_URL} from "../constants";
 import {Action} from "../types";
 import {SOCKET_UPDATE_JUMP} from "../store/actions/jumps";
 import {getHeadersFromRaw} from "../util";
@@ -29,12 +29,12 @@ export const connectWebSocket = (dispatch: Dispatch) => {
 		dispatch(closeSnackbar(WS_CLOSE));
 		dispatch({type: WS_OPEN});
 	});
-	socket.addEventListener("close", () => {
+	socket.onclose = (ev: CloseEvent) => {
 		setTimeout(() => {
 			connectWebSocket(dispatch);
 			dispatch({type: WS_RECONNECT});
 		}, 2000);
-		dispatch({type: WS_CLOSE});
+		dispatch({type: WS_CLOSE, payload: ev});
 		setTimeout(() => {
 			badTicks++;
 			dispatch({type: WS_BAD_TICK, payload: badTicks});
@@ -42,11 +42,14 @@ export const connectWebSocket = (dispatch: Dispatch) => {
 				// add a slight delay
 				dispatch(addSnackbar({
 					message: "Trouble reaching servers",
-					options: {key: WS_CLOSE, variant: "warning"}
+					options: {
+						key: WS_CLOSE,
+						variant: "warning"
+					}
 				}));
 			}
 		}, 500);
-	});
+	};
 	socket.addEventListener("message", ev => {
 		const data = JSON.parse(ev.data) as Action;
 		checkType(dispatch, data);
@@ -61,7 +64,7 @@ const checkType = (dispatch: Dispatch, action: Action) => {
 	switch (type) {
 		case SOCKET_UPDATE_JUMP: {
 			const {offset, search} = state.jumps;
-			getJumps(dispatch, headers, search, Number(offset / 8) || 0);
+			getJumps(dispatch, headers, search, Number(offset / pageSize) || 0);
 			break;
 		}
 		case SOCKET_UPDATE_GROUPS: {
