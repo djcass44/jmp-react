@@ -9,7 +9,7 @@ import {SOCKET_URL} from "../constants";
 import {Action} from "../types";
 import {SOCKET_UPDATE_JUMP} from "../store/actions/jumps";
 import {getHeadersFromRaw} from "../util";
-import {addSnackbar, closeSnackbar, removeSnackbar} from "./Snackbar";
+import {addSnackbar, closeSnackbar, removeSnackbar} from "../store/actions/snackbar";
 
 export const WS_OPEN = "WS_OPEN";
 export const WS_RECONNECT = "WS_RECONNECT";

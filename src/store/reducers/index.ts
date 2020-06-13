@@ -16,7 +16,6 @@
  */
 
 import {combineReducers} from "redux";
-import snackbar from "../../reducers/Snackbar";
 import jumps from "./jumps";
 import auth from "./auth";
 import loading from "./loading";
@@ -26,6 +25,7 @@ import groups from "./groups";
 import info from "./info";
 import generic from "./generic";
 import modal from "./modal";
+import snackbar from "./snackbar";
 
 const rootReducers = combineReducers({
 	jumps,
