@@ -18,7 +18,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {List, makeStyles, Theme, Typography, Zoom} from "@material-ui/core";
 import {Pagination} from "@material-ui/lab";
-import React, {ReactNode, useEffect, useState} from "react";
+import React, {ReactNode, useEffect, useMemo, useState} from "react";
 import Center from "react-center";
 import Button from "@material-ui/core/Button";
 import CreateGroupDialog from "../../modal/CreateGroupDialog";
@@ -28,10 +28,10 @@ import {getGroups, GROUP_LOAD} from "../../../store/actions/groups/GetGroups";
 import {setGroupOffset} from "../../../store/actions/groups";
 import {TState} from "../../../store/reducers";
 import {GroupsState} from "../../../store/reducers/groups";
-import {UsersState} from "../../../store/reducers/users";
 import useAuth from "../../../hooks/useAuth";
 import {pageSize} from "../../../constants";
 import JumpItemSkeleton from "../../../components/content/jmp/JumpItemSkeleton";
+import {GenericState} from "../../../store/reducers/generic";
 import GroupCard from "./profile/GroupCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -70,35 +70,31 @@ export default () => {
 	const classes = useStyles();
 
 
-	const {groups} = useSelector<TState, GroupsState>(state => state.groups);
+	const {groups, offset} = useSelector<TState, GroupsState>(state => state.groups);
+	const {searchFilter} = useSelector<TState, GenericState>(state => state.generic);
 	const {headers, isAdmin, isLoggedIn} = useAuth();
-	const {offset, search} = useSelector<TState, UsersState>(state => state.users);
 
 	const loading = useSelector<TState, boolean>(state => state.loading[GROUP_LOAD] ?? false);
 
 	const [items, setItems] = useState<Array<ReactNode>>([]);
-	const [lData, setLData] = useState<Array<ReactNode>>([]);
-
-	const onSearch = (o: number = offset) => {
-		getGroups(dispatch, headers, search, Number(o / pageSize) || 0, pageSize);
-	};
-
-	useEffect(() => {
-		if (!loading) {
-			setLData([]);
-			return;
-		}
+	const loadingItems = useMemo((): Array<ReactNode> => {
+		if (!loading)
+			return [];
 		const l = [];
 		const size = groups.numberOfElements || 2;
 		for (let i = 0; i < size; i++) {
 			l.push(<JumpItemSkeleton key={i}/>);
 		}
-		setLData(l);
+		return l;
 	}, [loading]);
+
+	const onSearch = (o: number = offset) => {
+		getGroups(dispatch, headers, searchFilter, Number(o / pageSize) || 0, pageSize);
+	};
 
 	useEffect(() => {
 		onSearch();
-	}, [headers.Authorization, search]);
+	}, [headers.Authorization, searchFilter]);
 
 	// hook to rebuild the index when jumps change
 	useEffect(() => {
@@ -131,8 +127,8 @@ export default () => {
 				</Button>
 			</div>
 			<List>
-				{lData}
-				{items}
+				{loadingItems}
+				{!loading && items}
 			</List>
 			{items.length === 0 && <Typography
 				className={`${classes.title} ${classes.nothing}`}

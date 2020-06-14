@@ -18,7 +18,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {List, makeStyles, Theme, Typography, Zoom} from "@material-ui/core";
 import {Pagination} from "@material-ui/lab";
-import React, {ReactNode, useEffect, useState} from "react";
+import React, {ReactNode, useEffect, useMemo, useState} from "react";
 import Center from "react-center";
 import Button from "@material-ui/core/Button";
 import {getUsers, USER_LOAD} from "../../../store/actions/users/GetUsers";
@@ -32,6 +32,7 @@ import {User} from "../../../types";
 import useAuth from "../../../hooks/useAuth";
 import {pageSize} from "../../../constants";
 import JumpItemSkeleton from "../../../components/content/jmp/JumpItemSkeleton";
+import {GenericState} from "../../../store/reducers/generic";
 import UserOptionsMenu from "./UserOptionsMenu";
 import UserCard from "./profile/UserCard";
 
@@ -70,37 +71,36 @@ export default () => {
 	const dispatch = useDispatch();
 	const classes = useStyles();
 
-	const {users, offset, search} = useSelector<TState, UsersState>(state => state.users);
+	// global state
+	const {users, offset} = useSelector<TState, UsersState>(state => state.users);
+	const {searchFilter} = useSelector<TState, GenericState>(state => state.generic);
 	const {headers} = useAuth();
 	const loading = useSelector<TState, boolean>(state => state.loading[USER_LOAD] ?? false);
 	const loadingPatch = useSelector<TState, boolean>(state => state.loading[PATCH_USER_ROLE] ?? false);
 
+	// local state
 	const [items, setItems] = useState<Array<ReactNode>>([]);
 	const [expanded, setExpanded] = useState<boolean>(false);
 	const [user, setUser] = useState<User | null>(null);
 	const [anchorEl, setAnchorEl] = useState<EventTarget & HTMLButtonElement | null>(null);
-	const [lData, setLData] = useState<Array<ReactNode>>([]);
-
-	const onSearch = (o: number = offset) => {
-		getUsers(dispatch, headers, search, Number(o / pageSize) || 0, pageSize);
-	};
-
-	useEffect(() => {
-		if (!loading && !loadingPatch) {
-			setLData([]);
-			return;
-		}
+	const loadingItems = useMemo((): Array<ReactNode> => {
+		if (!loading && !loadingPatch)
+			return [];
 		const l = [];
 		const size = users.numberOfElements || 2;
 		for (let i = 0; i < size; i++) {
 			l.push(<JumpItemSkeleton key={i}/>);
 		}
-		setLData(l);
+		return l;
 	}, [loading, loadingPatch]);
+
+	const onSearch = (o: number = offset) => {
+		getUsers(dispatch, headers, searchFilter, Number(o / pageSize) || 0, pageSize);
+	};
 
 	useEffect(() => {
 		onSearch();
-	}, [headers.Authorization, search]);
+	}, [headers.Authorization, searchFilter]);
 
 	useEffect(() => {
 		const {content} = users;
@@ -143,8 +143,8 @@ export default () => {
 				</Button>
 			</div>
 			<List>
-				{lData}
-				{items}
+				{loadingItems}
+				{!(loading || loadingPatch) && items}
 			</List>
 			{items.length === 0 && <Typography className={`${classes.title} ${classes.nothing}`} color="primary">
 				No users could be found
