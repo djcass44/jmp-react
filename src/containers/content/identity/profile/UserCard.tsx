@@ -16,13 +16,13 @@
  */
 
 import React, {useMemo, useState} from "react";
-import {Avatar, makeStyles, Typography, useTheme} from "@material-ui/core";
+import {makeStyles, Typography, useTheme} from "@material-ui/core";
 import {mdiAccountOutline, mdiAccountSupervisor, mdiDotsVertical} from "@mdi/js";
 import {GenericIconButton} from "jmp-coreui";
-import {GetColor} from "@tafalk/material-color-generator";
 import getIconColour from "../../../../style/getIconColour";
-import {getInitials, getProviderData, Provider} from "../../../../util";
+import {getProviderData, Provider} from "../../../../util";
 import {SimpleMap, User} from "../../../../types";
+import UserAvatar from "../../../../components/identity/UserAvatar";
 import IdentityCard from "./IdentityCard";
 
 const useStyles = makeStyles(() => ({
@@ -48,15 +48,12 @@ const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}) => {
 	// local state
 	const [providers] = useState<SimpleMap<Provider>>(getProviderData(theme));
 	const displayName = useMemo(() => user?.displayName || user?.username || "Anonymous", [user]);
-	const displayColour = useMemo(() => `#${GetColor(displayName, theme.palette.type)}`, [displayName, theme.palette.type]);
 
 	const avatar = (
-		<Avatar
-			style={{backgroundColor: displayColour, color: theme.palette.getContrastText(displayColour)}}
-			alt={user?.avatarUrl ? displayName : undefined}
-			src={user?.avatarUrl || undefined}>
-			{getInitials(displayName)}
-		</Avatar>
+		<UserAvatar
+			text={displayName}
+			src={user?.displayName}
+		/>
 	);
 
 	const primary = (

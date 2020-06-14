@@ -16,11 +16,10 @@
  */
 
 import React, {useMemo} from "react";
-import {Avatar, Button, makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
+import {Button, makeStyles, Theme, Typography} from "@material-ui/core";
 import Center from "react-center";
-import {GetColor} from "@tafalk/material-color-generator";
 import {User} from "../../../../types";
-import {getInitials} from "../../../../util";
+import UserAvatar from "../../../../components/identity/UserAvatar";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	avatar: {
@@ -58,22 +57,18 @@ interface UserProfileProps {
 const UserProfile: React.FC<UserProfileProps> = ({user, isAdmin = false, settingsProps}) => {
 	// hooks
 	const classes = useStyles();
-	const theme = useTheme();
 
 	// local state
 	const displayName = useMemo(() => user?.displayName || user?.username || "Anonymous", [user]);
-	const displayColour = useMemo(() => `#${GetColor(displayName, theme.palette.type)}`, [displayName, theme.palette.type]);
 
 	return (
 		<div className={classes.root}>
 			<Center>
-				<Avatar
+				<UserAvatar
 					className={classes.avatar}
-					style={{backgroundColor: displayColour, color: theme.palette.getContrastText(displayColour)}}
-					alt={user?.avatarUrl ? displayName : undefined}
-					src={user?.avatarUrl || undefined}>
-					{getInitials(displayName)}
-				</Avatar>
+					text={displayName}
+					src={user?.displayName}
+				/>
 			</Center>
 			<Typography
 				className={classes.displayName}
