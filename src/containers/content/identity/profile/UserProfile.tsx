@@ -16,8 +16,10 @@
  */
 
 import React, {useMemo} from "react";
-import {Button, makeStyles, Theme, Typography} from "@material-ui/core";
+import {Badge, Button, makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
 import Center from "react-center";
+import Icon from "@mdi/react";
+import {mdiCameraOutline} from "@mdi/js";
 import {User} from "../../../../types";
 import UserAvatar from "../../../../components/identity/UserAvatar";
 
@@ -45,6 +47,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 		fontWeight: 600,
 		fontSize: 13,
 		height: 36
+	},
+	badge: {
+		padding: theme.spacing(0.5),
+		borderRadius: theme.spacing(10),
+		backgroundColor: theme.palette.background.paper
 	}
 }));
 
@@ -57,6 +64,7 @@ interface UserProfileProps {
 const UserProfile: React.FC<UserProfileProps> = ({user, isAdmin = false, settingsProps}) => {
 	// hooks
 	const classes = useStyles();
+	const theme = useTheme();
 
 	// local state
 	const displayName = useMemo(() => user?.displayName || user?.username || "Anonymous", [user]);
@@ -64,11 +72,26 @@ const UserProfile: React.FC<UserProfileProps> = ({user, isAdmin = false, setting
 	return (
 		<div className={classes.root}>
 			<Center>
-				<UserAvatar
-					className={classes.avatar}
-					text={displayName}
-					src={user?.displayName}
-				/>
+				<Badge
+					overlap="circle"
+					anchorOrigin={{
+						vertical: "bottom",
+						horizontal: "right"
+					}}
+					badgeContent={
+						<Icon
+							className={classes.badge}
+							path={mdiCameraOutline}
+							size={0.75}
+							color={theme.palette.text.hint}
+						/>
+					}>
+					<UserAvatar
+						className={classes.avatar}
+						text={displayName}
+						src={user?.displayName}
+					/>
+				</Badge>
 			</Center>
 			<Typography
 				className={classes.displayName}
