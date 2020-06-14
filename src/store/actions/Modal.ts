@@ -46,6 +46,10 @@ export interface DeleteItemPayload {
 	deletable: boolean;
 }
 
+export interface GroupUserModPayload {
+	user: User;
+}
+
 export const setDelete = (open: boolean, payload: DeleteItemPayload): SetDialogActionType => {
 	return setDialog(MODAL_DELETE, open, payload);
 };

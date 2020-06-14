@@ -1,4 +1,4 @@
-import React, {ReactNode, useEffect, useState} from "react";
+import React, {ReactNode, useEffect, useMemo, useState} from "react";
 import {
 	Button,
 	Checkbox,
@@ -17,7 +17,7 @@ import {
 } from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
-import {MODAL_USER_GROUPS, setDialog} from "../../store/actions/Modal";
+import {GroupUserModPayload, MODAL_USER_GROUPS, setDialog} from "../../store/actions/Modal";
 import {defaultState, Modal} from "../../store/reducers/modal";
 import {clone} from "../../util";
 import {GROUP_LOAD} from "../../store/actions/groups/GetGroups";
@@ -55,7 +55,7 @@ interface UserMap {
 	checked: boolean;
 }
 
-export default () => {
+const GroupModDialog: React.FC = () => {
 	// hooks
 	const classes = useStyles();
 	const dispatch = useDispatch();
@@ -66,26 +66,21 @@ export default () => {
 	const loadingChange = useSelector<TState, boolean>(state => state.loading[SET_USER_GROUPS]);
 	const {other, open} = useSelector<TState, Modal>(state => state.modal[MODAL_USER_GROUPS] || defaultState);
 
-	const user = other?.user || {};
+	const user = (other as GroupUserModPayload)?.user || null;
 
-
-	const [usermap, setUsermap] = useState<Array<UserMap>>([]);
+	// local state
 	const [items, setItems] = useState<Array<ReactNode>>([]);
-
-	const updateGroupMappings = () => {
-		const mapping: Array<UserMap> = [];
+	const usermap = useMemo(() => {
+		if (!open)
+			return [];
 		// Check whether the user is in each group and build a mapping array
-		groups.content.forEach(g => {
-			mapping.push({
+		const mapping: Array<UserMap> = groups.content.map(g => {
+			return {
 				group: clone(g),
 				checked: userGroups.some(e => e.name === g.name)
-			});
+			};
 		});
-		setUsermap(mapping);
-	};
-	useEffect(() => {
-		if (open)
-			updateGroupMappings();
+		return mapping;
 	}, [groups, userGroups]);
 
 	useEffect(() => {
@@ -141,7 +136,6 @@ export default () => {
 
 	const onOpen = () => {
 		if (user == null) return;
-		setUsermap([]);
 		getUserGroups(dispatch, headers, user.id);
 	};
 
@@ -178,3 +172,4 @@ export default () => {
 		</Dialog>
 	);
 };
+export default GroupModDialog;

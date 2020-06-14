@@ -1,9 +1,9 @@
-import {DeleteItemPayload, ModalActionType, SET_DIALOG} from "../actions/Modal";
+import {DeleteItemPayload, GroupUserModPayload, ModalActionType, SET_DIALOG} from "../actions/Modal";
 import {SimpleMap} from "../../types";
 
 export interface Modal {
 	open: boolean;
-	other: DeleteItemPayload | any | null;
+	other: DeleteItemPayload | GroupUserModPayload | any | null;
 }
 
 export const defaultState: Modal = {

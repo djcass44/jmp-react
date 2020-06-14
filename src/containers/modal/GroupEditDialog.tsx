@@ -46,7 +46,7 @@ const initialName = {
 	regex: new RegExp("^[a-zA-Z0-9_.-]{4,}$")
 };
 
-export default () => {
+const GroupEditDialog: React.FC = () => {
 	// hooks
 	const dispatch = useDispatch();
 	const classes = useStyles();
@@ -164,3 +164,4 @@ export default () => {
 		</Dialog>
 	);
 };
+export default GroupEditDialog;
