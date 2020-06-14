@@ -22,7 +22,7 @@ import Center from "react-center";
 import {mdiGithub, mdiGitlab, mdiGoogle, mdiShieldAccount} from "@mdi/js";
 import {useTheme} from "@material-ui/core/styles";
 import {ValidatedTextField} from "jmp-coreui";
-import {useHistory} from "react-router";
+import {useHistory} from "react-router-dom";
 import {APP_NAME} from "../../constants";
 import SocialButton from "../../components/widget/SocialButton";
 import getIconColour from "../../style/getIconColour";

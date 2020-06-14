@@ -15,26 +15,16 @@
  *
  */
 
-import React, {ChangeEvent, useEffect, useState} from "react";
+import React, {ChangeEvent, useEffect, useMemo, useState} from "react";
 import {fade} from "@material-ui/core/styles/colorManipulator";
-import {
-	Avatar as MuiAvatar,
-	IconButton,
-	makeStyles,
-	Popover,
-	Theme,
-	Toolbar,
-	Typography,
-	useMediaQuery
-} from "@material-ui/core";
+import {Avatar, IconButton, makeStyles, Popover, Theme, Toolbar, Typography, useMediaQuery} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {Link, useHistory} from "react-router-dom";
+import {Link, useHistory, useLocation} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHelpCircleOutline, mdiMagnify, mdiPlus} from "@mdi/js";
-import {Avatar} from "evergreen-ui";
 import {useTheme} from "@material-ui/core/styles";
-import {useLocation} from "react-router";
 import {DwellInputBase, GenericIconButton} from "jmp-coreui";
+import {GetColor} from "@tafalk/material-color-generator";
 import {APP_MSG, APP_NAME, APP_NOUN} from "../constants";
 import {TState} from "../store/reducers";
 import {AuthState} from "../store/reducers/auth";
@@ -44,6 +34,7 @@ import {GenericState} from "../store/reducers/generic";
 import {setGenericSearch} from "../store/actions/Generic";
 import {MODAL_JUMP_NEW, setDialog} from "../store/actions/Modal";
 import useAuth from "../hooks/useAuth";
+import {getInitials} from "../util";
 import UserMenu from "./content/identity/profile/UserMenu";
 
 const bgTransition = (time: number | string): string => `background-color ${time}ms linear`;
@@ -187,6 +178,8 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 	const [loginUrl, setLoginUrl] = useState("/login");
 	const [localSearch, setLocalSearch] = useState<string>(search);
 	const [overrideSearch, setOverrideSearch] = useState<boolean>(false);
+	const displayName = useMemo(() => userProfile?.displayName || userProfile?.username || "Anonymous", [userProfile]);
+	const displayColour = useMemo(() => `#${GetColor(displayName, theme.palette.type)}`, [displayName, theme.palette.type]);
 
 	const [idle, setIdle] = useState<number>(0);
 	const [idleTimer, setIdleTimer] = useState<number | null>(null);
@@ -225,7 +218,7 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 						<HintTooltip
 							title="Click to return home."
 							open={location.pathname !== "/" && idle === 1}>
-							<MuiAvatar
+							<Avatar
 								className={classes.avatar}
 								src={`${process.env.PUBLIC_URL}/favicon.png`}
 								alt={`${APP_NAME} logo`}
@@ -281,14 +274,17 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 								</HintTooltip>}
 							</div>
 							<Avatar
-								name={userProfile?.displayName || userProfile?.username || "Anonymous"}
+								style={{
+									backgroundColor: displayColour,
+									color: theme.palette.getContrastText(displayColour)
+								}}
+								alt={userProfile?.avatarUrl ? displayName : undefined}
 								src={userProfile?.avatarUrl || undefined}
-								size={40}
-								style={{marginTop: 4}}
 								onClick={(e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget)}
-								aria-haspopup="true"
 								aria-owns={anchorEl != null ? "material-appbar" : undefined}
-							/>
+								aria-haspopup="true">
+								{getInitials(displayName)}
+							</Avatar>
 						</>
 					</>}
 				</Toolbar>

@@ -19,7 +19,7 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {CircularProgress, makeStyles, Theme, Typography} from "@material-ui/core";
 import Center from "react-center";
-import {useHistory} from "react-router";
+import {useHistory} from "react-router-dom";
 import {RSAA} from "redux-api-middleware";
 import {Dispatch} from "redux";
 import {ImageMessage} from "jmp-coreui";

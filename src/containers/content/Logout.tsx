@@ -18,10 +18,9 @@
 import React, {useEffect} from "react";
 import Center from "react-center";
 import {useDispatch} from "react-redux";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import {CircularProgress, makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
-import {useHistory} from "react-router";
 import Icon from "@mdi/react";
 import {mdiHomeOutline} from "@mdi/js";
 import {APP_NAME} from "../../constants";

@@ -16,13 +16,11 @@
  */
 
 import React, {useEffect} from "react";
-import {IconButton, makeStyles, Theme, Typography} from "@material-ui/core";
-import {useTheme} from "@material-ui/core/styles";
+import {IconButton, makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
 import Center from "react-center";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHomeOutline} from "@mdi/js";
-import {useHistory} from "react-router";
 import {ThemedTooltip} from "jmp-coreui";
 import {APP_NAME} from "../../constants";
 

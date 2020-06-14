@@ -1,7 +1,7 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
 import {Fade, LinearProgress, makeStyles, Theme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {useLocation} from "react-router";
+import {useLocation} from "react-router-dom";
 import AdminPanel from "../components/AdminPanel";
 import {OAUTH_VERIFY, oauthVerify} from "../store/actions/auth/AuthVerify";
 import {TState} from "../store/reducers";

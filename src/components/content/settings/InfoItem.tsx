@@ -6,7 +6,6 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Icon from "@mdi/react";
 import {mdiChevronDown} from "@mdi/js";
 import {makeStyles, Theme} from "@material-ui/core";
-import Banner from "../../widget/Banner";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -24,13 +23,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface InfoItemProps {
 	title: ReactNode;
-	error?: Error | null;
 	open?: boolean;
 	icon: ReactNode;
 	content: ReactNode;
 }
 
-const InfoItem: React.FC<InfoItemProps> = ({title, error, open = false, icon, content}: InfoItemProps) => {
+const InfoItem: React.FC<InfoItemProps> = ({title, open = false, icon, content}: InfoItemProps) => {
 	const classes = useStyles();
 	return (
 		<ExpansionPanel defaultExpanded={open}>
@@ -41,8 +39,10 @@ const InfoItem: React.FC<InfoItemProps> = ({title, error, open = false, icon, co
 				<Typography className={classes.title}>{title}</Typography>
 			</ExpansionPanelSummary>
 			<ExpansionPanelDetails>
-				<Banner label={error} open={error != null}/>
-				<div className={classes.content}>{content}</div>
+				<div
+					className={classes.content}>
+					{content}
+				</div>
 			</ExpansionPanelDetails>
 		</ExpansionPanel>
 	);

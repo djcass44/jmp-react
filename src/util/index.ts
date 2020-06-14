@@ -32,6 +32,19 @@ export const plural = (count: number, text: string): string => {
 		return `${text}s`;
 };
 
+export const getInitials = (str: string): string => {
+	let text = str;
+	// handle usernames such as oauth2/john.doe
+	if (str.includes("/")) {
+		text = str.split("/")[1];
+	}
+	let separator = " ";
+	if (!str.includes(" ")) {
+		separator = ".";
+	}
+	return text.split(separator).map(s => s[0].toLocaleUpperCase()).join("");
+};
+
 export const getHeaders = (token: Token): AuthHeaders => getHeadersFromRaw(token.request, token.source || null);
 
 export const getHeadersFromRaw = (request: string | null, source: string | null): AuthHeaders => {

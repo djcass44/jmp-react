@@ -20,7 +20,7 @@ import Center from "react-center";
 import {makeStyles, Theme, Typography} from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {useDispatch, useSelector} from "react-redux";
-import {useHistory, useLocation} from "react-router";
+import {useHistory, useLocation} from "react-router-dom";
 import {APP_NAME} from "../../constants";
 import {TState} from "../../store/reducers";
 import {OAUTH2_CALLBACK, oauth2Callback} from "../../store/actions/auth/OAuth2Callback";

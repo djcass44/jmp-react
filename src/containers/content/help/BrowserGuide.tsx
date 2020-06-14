@@ -18,11 +18,9 @@
 import React, {ReactNode, useEffect, useState} from "react";
 import {mdiAppleSafari, mdiFirefox, mdiGoogleChrome, mdiMicrosoftEdge, mdiMicrosoftInternetExplorer} from "@mdi/js";
 import Icon from "@mdi/react";
-import {Collapse, IconButton, makeStyles, Theme, Typography} from "@material-ui/core";
-import Link from "@material-ui/core/Link";
+import {Collapse, IconButton, Link, makeStyles, Theme, Typography} from "@material-ui/core";
 import {Alert} from "@material-ui/lab";
-import {Code} from "evergreen-ui";
-import {ThemedTooltip} from "jmp-coreui";
+import {Code, ThemedTooltip} from "jmp-coreui";
 import {APP_KEY, APP_NAME, BASE_URL} from "../../../constants";
 
 const useStyles = makeStyles((theme: Theme) => ({

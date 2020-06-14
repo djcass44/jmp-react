@@ -15,18 +15,17 @@
  *
  */
 
-import React, {useState} from "react";
-import {makeStyles, Typography, useTheme} from "@material-ui/core";
-import {Avatar} from "evergreen-ui";
+import React, {useMemo, useState} from "react";
+import {Avatar, makeStyles, Typography, useTheme} from "@material-ui/core";
 import {mdiAccountOutline, mdiAccountSupervisor, mdiDotsVertical} from "@mdi/js";
 import {GenericIconButton} from "jmp-coreui";
+import {GetColor} from "@tafalk/material-color-generator";
 import getIconColour from "../../../../style/getIconColour";
-import {getProviderData, Provider} from "../../../../util";
+import {getInitials, getProviderData, Provider} from "../../../../util";
 import {SimpleMap, User} from "../../../../types";
 import IdentityCard from "./IdentityCard";
 
 const useStyles = makeStyles(() => ({
-	avatar: {},
 	displayName: {
 		fontFamily: "Manrope",
 		fontWeight: 600
@@ -48,13 +47,17 @@ const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}) => {
 
 	// local state
 	const [providers] = useState<SimpleMap<Provider>>(getProviderData(theme));
+	const displayName = useMemo(() => user?.displayName || user?.username || "Anonymous", [user]);
+	const displayColour = useMemo(() => `#${GetColor(displayName, theme.palette.type)}`, [displayName, theme.palette.type]);
 
-	const avatar = (<Avatar
-		className={classes.avatar}
-		name={user?.displayName || user?.username || "Anonymous"}
-		src={user?.avatarUrl || undefined}
-		size={40}>
-	</Avatar>);
+	const avatar = (
+		<Avatar
+			style={{backgroundColor: displayColour, color: theme.palette.getContrastText(displayColour)}}
+			alt={user?.avatarUrl ? displayName : undefined}
+			src={user?.avatarUrl || undefined}>
+			{getInitials(displayName)}
+		</Avatar>
+	);
 
 	const primary = (
 		<Typography
@@ -63,8 +66,6 @@ const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}) => {
 			{user.displayName || user.username}
 		</Typography>
 	);
-
-	const secondary = `@${user.username}`;
 
 	const source: Provider | null = providers[user.source];
 	const actions = (<>
@@ -90,7 +91,7 @@ const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}) => {
 		<IdentityCard
 			avatar={avatar}
 			primary={primary}
-			secondary={secondary}
+			secondary={user.displayName !== user.username && `@${user.username}`}
 			actions={actions}
 		/>
 	);

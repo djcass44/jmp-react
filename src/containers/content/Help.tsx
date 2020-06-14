@@ -25,7 +25,7 @@ import {mdiChevronDown, mdiChevronUp} from "@mdi/js";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import useTheme from "@material-ui/core/styles/useTheme";
-import {useHistory, useLocation} from "react-router";
+import {useHistory, useLocation} from "react-router-dom";
 import getHelpCardColour from "../../selectors/getHelpCardColour";
 import {APP_NAME, APP_NOUN} from "../../constants";
 import BrowserGuide from "./help/BrowserGuide";
