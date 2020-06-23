@@ -16,12 +16,11 @@
  */
 
 import React, {useEffect} from "react";
-import {IconButton, makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
+import {IconButton, makeStyles, Theme, Tooltip, Typography, useTheme} from "@material-ui/core";
 import Center from "react-center";
 import {Link, useHistory} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHomeOutline} from "@mdi/js";
-import {ThemedTooltip} from "jmp-coreui";
 import {APP_NAME} from "../../constants";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -74,7 +73,7 @@ const NotFound: React.FC = () => {
 					The page you're looking for doesn't exist or the server refused to disclose it.
 				</Typography>
 				<Center>
-					<ThemedTooltip translate title="Go back">
+					<Tooltip title="Go back">
 						<IconButton
 							color="secondary"
 							centerRipple={false}
@@ -82,8 +81,8 @@ const NotFound: React.FC = () => {
 							onClick={() => history.goBack()}>
 							<Icon path={mdiArrowLeft} size={1} color={theme.palette.secondary.main}/>
 						</IconButton>
-					</ThemedTooltip>
-					<ThemedTooltip translate title="Return to home">
+					</Tooltip>
+					<Tooltip title="Return to home">
 						<IconButton
 							component={Link}
 							to="/"
@@ -92,7 +91,7 @@ const NotFound: React.FC = () => {
 							aria-label="Return to home">
 							<Icon path={mdiHomeOutline} size={1} color={theme.palette.primary.main}/>
 						</IconButton>
-					</ThemedTooltip>
+					</Tooltip>
 				</Center>
 			</div>
 		</Center>

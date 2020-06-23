@@ -52,7 +52,7 @@ const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}) => {
 	const avatar = (
 		<UserAvatar
 			text={displayName}
-			src={user?.displayName}
+			src={user?.avatarUrl}
 		/>
 	);
 

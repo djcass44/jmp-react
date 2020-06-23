@@ -1,17 +1,9 @@
 variables:
-  AUTO_DEVOPS_CHART: harbor-library/auto-deploy-app
-  AUTO_DEVOPS_CHART_REPOSITORY: https://harbor.v2.dcas.dev/chartrepo/library
-  AUTO_DEVOPS_CHART_REPOSITORY_NAME: harbor-library
-  AUTO_DEVOPS_POSTGRES_CHANNEL: '2'
   CODE_QUALITY_DISABLED: 'true'
   TEST_DISABLED: 'true'
   POSTGRES_ENABLED: 'false'
-  POSTGRES_VERSION: '12.2'
-  HELM_UPGRADE_EXTRA_ARGS: "--atomic"
-  KANIKO_CACHE: 'true'
   KANIKO_BUILD_ARGS: "NPM_REGISTRY=prism.dcas.dev/npm"
   STAGING_ENABLED: 'true'
-  ROLLOUT_RESOURCE_TYPE: 'deployment'
 
 include:
   - remote: 'https://gitlab.dcas.dev/open-source/gitlab-ci-templates/-/raw/master/auto/Auto-UI.gitlab-ci.yml'

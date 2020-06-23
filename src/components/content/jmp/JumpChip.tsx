@@ -16,14 +16,13 @@
  */
 
 import React from "react";
-import {Avatar, Chip, makeStyles, Theme, useTheme} from "@material-ui/core";
+import {Avatar, Chip, makeStyles, Theme, Tooltip, useTheme} from "@material-ui/core";
 import Img from "react-image";
 import {Skeleton} from "@material-ui/lab";
 import Icon from "@mdi/react";
 import {Link} from "react-router-dom";
 import {usePalette} from "react-palette";
 import {mdiAccountCircleOutline, mdiAccountGroupOutline, mdiEarth} from "@mdi/js";
-import {ThemedTooltip} from "jmp-coreui";
 import {Jump} from "../../../types";
 import getAvatarFromPalette from "../../../selectors/getAvatarFromPalette";
 import getHelpCardColour from "../../../selectors/getHelpCardColour";
@@ -75,8 +74,7 @@ const JumpChip: React.FC<JumpChipProps> = ({jump}) => {
 	};
 
 	return (
-		<ThemedTooltip
-			translate
+		<Tooltip
 			disableFocusListener
 			title={jump.location}
 			placement="bottom"
@@ -97,7 +95,7 @@ const JumpChip: React.FC<JumpChipProps> = ({jump}) => {
 				to={`/jmp?query=${jump.name}&id=${jump.id}`}
 				style={{backgroundColor: bg || avatar.bg, color: avatar.fg}}
 				className={classes.chip}/>
-		</ThemedTooltip>
+		</Tooltip>
 	);
 };
 export default JumpChip;

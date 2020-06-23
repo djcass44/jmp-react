@@ -273,7 +273,7 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 							</div>
 							<UserAvatar
 								text={displayName}
-								src={userProfile?.displayName}
+								src={userProfile?.avatarUrl}
 								setAnchorEl={setAnchorEl}
 							/>
 						</>

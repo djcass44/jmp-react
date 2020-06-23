@@ -89,7 +89,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user, isAdmin = false, setting
 					<UserAvatar
 						className={classes.avatar}
 						text={displayName}
-						src={user?.displayName}
+						src={user?.avatarUrl}
 					/>
 				</Badge>
 			</Center>

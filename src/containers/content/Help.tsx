@@ -165,12 +165,11 @@ const Help: React.FC = () => {
 						</ListItemSecondaryAction>
 					</ListItem>
 					<Collapse in={i.id === expand} unmountOnExit timeout="auto">
-						<Typography
+						<div
 							className={classes.content}
-							style={card}
-							variant="body1">
+							style={card}>
 							{i.a}
-						</Typography>
+						</div>
 					</Collapse>
 				</div>
 			);
