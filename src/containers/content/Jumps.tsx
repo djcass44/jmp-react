@@ -72,9 +72,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const emptyImages = [
-	"/draw/undraw_no_data_qbuo.svg",
-	"/draw/undraw_lost_bqr2.svg",
-	"/draw/undraw_empty_xct9.svg"
+	`${process.env.PUBLIC_URL}/draw/undraw_no_data_qbuo.svg`,
+	`${process.env.PUBLIC_URL}/draw/undraw_lost_bqr2.svg`,
+	`${process.env.PUBLIC_URL}/draw/undraw_empty_xct9.svg`
 ];
 
 export default () => {

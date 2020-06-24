@@ -55,7 +55,7 @@ const Identity: React.FC = () => {
 				/>
 			</Center>
 			<Center>
-				<img height={192} src="/draw/undraw_Group_chat_unwm.svg" alt=""/>
+				<img height={192} src={`${process.env.PUBLIC_URL}/draw/undraw_Group_chat_unwm.svg`} alt=""/>
 			</Center>
 			<Center>
 				<Typography variant="h4" className={classes.name}>Users &amp; Groups</Typography>
