@@ -98,7 +98,7 @@ export default () => {
 			{!loading && <Center>
 				<img
 					height={256}
-					src={`/draw/undraw_${similar.length === 0 ? "empty_xct9.svg" : similar.length > 0 ? "road_sign_mfpo.svg" : "warning_cyit.svg"}`}
+					src={`${process.env.PUBLIC_URL}/draw/undraw_${similar.length === 0 ? "empty_xct9.svg" : similar.length > 0 ? "road_sign_mfpo.svg" : "warning_cyit.svg"}`}
 					alt=""
 				/>
 			</Center>}

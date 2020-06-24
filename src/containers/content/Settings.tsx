@@ -44,7 +44,7 @@ const Settings: React.FC = () => {
 				/>
 			</Center>
 			<Center>
-				<img height={192} src="/draw/undraw_preferences_uuo2.svg" alt=""/>
+				<img height={192} src={`${process.env.PUBLIC_URL}/draw/undraw_preferences_uuo2.svg`} alt=""/>
 			</Center>
 			<Center>
 				<Typography variant="h4" className={classes.name}>Settings</Typography>
