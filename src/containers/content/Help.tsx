@@ -194,7 +194,7 @@ const Help: React.FC = () => {
 				/>
 			</Center>
 			<Center>
-				<img height={192} src="/draw/undraw_circles_y7s2.svg" alt=""/>
+				<img height={192} src={`${process.env.PUBLIC_URL}/draw/undraw_circles_y7s2.svg`} alt=""/>
 			</Center>
 			<Center>
 				<Typography variant="h4" className={classes.name}>Need a hand?</Typography>

@@ -51,9 +51,9 @@ interface DoJumpDTO {
 }
 
 const jumpImages = [
-	"/draw/undraw_balloons_vxx5.svg",
-	"/draw/undraw_i_can_fly_7egl.svg",
-	"/draw/undraw_instant_support_elxh.svg"
+	`${process.env.PUBLIC_URL}/draw/undraw_balloons_vxx5.svg`,
+	`${process.env.PUBLIC_URL}/draw/undraw_i_can_fly_7egl.svg`,
+	`${process.env.PUBLIC_URL}/draw/undraw_instant_support_elxh.svg`
 ];
 
 const Token: React.FC = () => {
@@ -130,7 +130,7 @@ const Token: React.FC = () => {
 			<div>
 				<Center>
 					<ImageMessage
-						src={(error || failure) ? "/draw/undraw_warning_cyit.svg" : jumpImages}
+						src={(error || failure) ? `${process.env.PUBLIC_URL}/draw/undraw_warning_cyit.svg` : jumpImages}
 						message=""
 						height={256}
 					/>

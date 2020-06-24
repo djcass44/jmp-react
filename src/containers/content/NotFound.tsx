@@ -59,7 +59,7 @@ const NotFound: React.FC = () => {
 		<Center className={classes.overlay}>
 			<div style={{pointerEvents: "initial"}}>
 				<Center>
-					<img height={256} src="/draw/undraw_lost_bqr2.svg" alt=""/>
+					<img height={256} src={`${process.env.PUBLIC_URL}/draw/undraw_lost_bqr2.svg`} alt=""/>
 				</Center>
 				<Typography
 					className={classes.title}
