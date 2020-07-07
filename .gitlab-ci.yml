@@ -1,5 +1,4 @@
 variables:
-  CODE_QUALITY_DISABLED: 'true'
   TEST_DISABLED: 'true'
   POSTGRES_ENABLED: 'false'
   KANIKO_BUILD_ARGS: "NPM_REGISTRY=prism.dcas.dev/npm"
