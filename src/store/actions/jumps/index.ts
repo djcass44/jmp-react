@@ -16,9 +16,8 @@
  */
 
 import {FaviconPayload} from "../../../types";
-import {GET_SIMILAR} from "../../../actions/Jumps";
 import {GetJumpsActionType} from "./GetJumps";
-import {GetSimilarActionType, GetSimilarFailureAction} from "./GetSimilar";
+import {GET_SIMILAR_FAILURE, GetSimilarActionType, GetSimilarFailureAction} from "./GetSimilar";
 import {DeleteJumpActionType} from "./DeleteJump";
 import {PutJumpActionType} from "./PutJump";
 import {PatchJumpActionType} from "./PatchJump";
@@ -53,7 +52,7 @@ interface SocketUpdateActionType {
 
 export const getSimilarFail = (error: any): GetSimilarFailureAction => {
 	return {
-		type: `${GET_SIMILAR}_FAILURE`,
+		type: GET_SIMILAR_FAILURE,
 		payload: error,
 		error: true
 	};
