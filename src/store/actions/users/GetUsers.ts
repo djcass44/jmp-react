@@ -16,14 +16,14 @@
  */
 
 import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
+import {RSAA, RSAAAction} from "redux-api-middleware";
 import {Page, User} from "../../../types";
 import {BASE_URL} from "../../../constants";
 
 export const USER_LOAD = "USER_LOAD";
-export const USER_LOAD_REQUEST = `${USER_LOAD}_REQUEST`;
-export const USER_LOAD_SUCCESS = `${USER_LOAD}_SUCCESS`;
-export const USER_LOAD_FAILURE = `${USER_LOAD}_FAILURE`;
+export const USER_LOAD_REQUEST = "USER_LOAD_REQUEST";
+export const USER_LOAD_SUCCESS = "USER_LOAD_SUCCESS";
+export const USER_LOAD_FAILURE = "USER_LOAD_FAILURE";
 
 
 interface GetUsersRequestAction {
@@ -41,19 +41,19 @@ interface GetUsersFailureAction {
 	payload: Error;
 }
 
-export const getUsers = (dispatch: Dispatch, headers: any, query = "", page = 0, size = 8): void => {
+export const getUsers = (headers: any, query = "", page = 0, size = 8): RSAAAction => {
 	let queryString = `page=${page}&size=${size}`;
 	if (query.length > 0) {
 		queryString += `&query=${query}`;
 	}
-	dispatch({
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/user?${queryString}`,
 			method: "GET",
 			headers,
 			types: [USER_LOAD_REQUEST, USER_LOAD_SUCCESS, USER_LOAD_FAILURE]
 		}
-	});
+	};
 };
 
 export type GetUsersActionType = GetUsersRequestAction | GetUsersSuccessAction | GetUsersFailureAction;

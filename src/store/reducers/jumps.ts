@@ -56,21 +56,21 @@ const initialState: JumpsState = {
 export default (state = initialState, action: JumpsActionType): JumpsState => {
 	switch (action.type) {
 		case SET_JUMP_EXPAND: {
-			const {payload} = (action as SetJumpExpandActionType);
+			const {payload} = action;
 			return {...state, expanded: state.expanded === payload ? null : payload};
 		}
 		case SET_JUMP_OFFSET:
-			return {...state, offset: (action as SetJumpOffsetActionType).payload};
+			return {...state, offset: action.payload};
 		case SET_JUMP_SEARCH:
-			return {...state, search: (action as SetJumpSearchActionType).payload};
+			return {...state, search: action.payload};
 		case GET_JUMP_SUCCESS: {
-			const act = (action as GetJumpsSuccessAction);
+			const act = action;
 			return {...state, jumps: act.payload, offset: act.payload.pageable?.offset || 0};
 		}
 		case GET_SIMILAR_SUCCESS:
-			return {...state, similar: (action as GetSimilarSuccessAction).payload};
+			return {...state, similar: action.payload};
 		case SOCKET_UPDATE_TITLE: {
-			const payload = action.payload as FaviconPayload;
+			const {payload} = action;
 			const idx = idxFromId(state.jumps.content, payload.id);
 			if (idx < 0) {
 				return state;
@@ -80,7 +80,7 @@ export default (state = initialState, action: JumpsActionType): JumpsState => {
 			return {...state, jumps};
 		}
 		case SOCKET_UPDATE_FAVICON: {
-			const payload = action.payload as FaviconPayload;
+			const {payload} = action;
 			const idx = idxFromId(state.jumps.content, payload.id);
 			if (idx > 0) {
 				return state;
@@ -94,7 +94,7 @@ export default (state = initialState, action: JumpsActionType): JumpsState => {
 	}
 }
 
-const idxFromId = (jumps: Array<Jump>, id: number) => {
+const idxFromId = (jumps: Array<Jump>, id: number): number => {
 	for (let i = 0; i < jumps.length; i++) {
 		if (jumps[i].id === id) return i;
 	}

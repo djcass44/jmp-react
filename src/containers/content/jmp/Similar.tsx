@@ -68,9 +68,9 @@ export default () => {
 		const url = new URL(window.location.href);
 		const query = url.searchParams.get("query");
 		if (query != null && query !== "")
-			getSimilar(dispatch, headers, query);
+			dispatch(getSimilar(headers, query));
 		else
-			getSimilarFail(dispatch, "You must specify a query!");
+			dispatch(getSimilarFail("You must specify a query!"));
 	};
 	useEffect(() => {
 		window.document.title = `Similar - ${APP_NAME}`;

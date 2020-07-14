@@ -25,7 +25,7 @@ const initialState: SnackbarState = {
 	notify: []
 };
 
-export default (state = initialState, action: SnackbarActionType) => {
+export default (state = initialState, action: SnackbarActionType): SnackbarState => {
 	switch (action.type) {
 		case ADD_SNACKBAR:
 			return {...state, notify: [...state.notify, action.payload]};
