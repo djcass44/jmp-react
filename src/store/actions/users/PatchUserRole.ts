@@ -16,13 +16,13 @@
  */
 
 import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
+import {RSAA, RSAAAction} from "redux-api-middleware";
 import {BASE_URL} from "../../../constants";
 
 export const PATCH_USER_ROLE = "PATCH_USER_ROLE";
-export const PATCH_USER_ROLE_REQUEST = `${PATCH_USER_ROLE}_REQUEST`;
-export const PATCH_USER_ROLE_SUCCESS = `${PATCH_USER_ROLE}_SUCCESS`;
-export const PATCH_USER_ROLE_FAILURE = `${PATCH_USER_ROLE}_FAILURE`;
+export const PATCH_USER_ROLE_REQUEST = "PATCH_USER_ROLE_REQUEST";
+export const PATCH_USER_ROLE_SUCCESS = "PATCH_USER_ROLE_SUCCESS";
+export const PATCH_USER_ROLE_FAILURE = "PATCH_USER_ROLE_FAILURE";
 
 
 interface PatchUserRoleRequestAction {
@@ -40,15 +40,15 @@ interface PatchUserRoleFailureAction {
 	payload: Error;
 }
 
-export const patchUserRole = (dispatch: Dispatch, headers: any, uid: string, admin = false): void => {
-	dispatch({
+export const patchUserRole = (headers: any, uid: string, admin = false): RSAAAction => {
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/user?uid=${uid}&admin=${admin}`,
 			method: "PATCH",
 			headers,
 			types: [PATCH_USER_ROLE_REQUEST, PATCH_USER_ROLE_SUCCESS, PATCH_USER_ROLE_FAILURE]
 		}
-	});
+	};
 };
 
 export type PatchUserRoleActionType =

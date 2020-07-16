@@ -39,7 +39,7 @@ const initialState: GroupsState = {
 	offset: 0
 };
 
-export default (state = initialState, action: GroupsActionType) => {
+export default (state = initialState, action: GroupsActionType): GroupsState => {
 	switch (action.type) {
 		case GROUP_LOAD_SUCCESS:
 			return {...state, groups: action.payload};

@@ -15,11 +15,9 @@
  *
  */
 
-import {Dispatch} from "redux";
 import {FaviconPayload} from "../../../types";
-import {GET_SIMILAR} from "../../../actions/Jumps";
 import {GetJumpsActionType} from "./GetJumps";
-import {GetSimilarActionType, GetSimilarFailureAction} from "./GetSimilar";
+import {GET_SIMILAR_FAILURE, GetSimilarActionType, GetSimilarFailureAction} from "./GetSimilar";
 import {DeleteJumpActionType} from "./DeleteJump";
 import {PutJumpActionType} from "./PutJump";
 import {PatchJumpActionType} from "./PatchJump";
@@ -52,27 +50,27 @@ interface SocketUpdateActionType {
 	payload: FaviconPayload;
 }
 
-export const getSimilarFail = (dispatch: Dispatch, error: any): GetSimilarFailureAction => dispatch({
-	type: `${GET_SIMILAR}_FAILURE`,
-	payload: error,
-	error: true
-});
+export const getSimilarFail = (error: any): GetSimilarFailureAction => {
+	return {
+		type: GET_SIMILAR_FAILURE,
+		payload: error,
+		error: true
+	};
+}
 
-export const setJumpExpand = (dispatch: Dispatch, id: number | null): SetJumpExpandActionType => dispatch({
-	type: SET_JUMP_EXPAND,
-	payload: id
-});
+export const setJumpExpand = (id: number | null): SetJumpExpandActionType => {
+	return {
+		type: SET_JUMP_EXPAND,
+		payload: id
+	};
+}
 
-export const setJumpOffset = (dispatch: Dispatch, offset: number): SetJumpOffsetActionType => dispatch({
-	type: SET_JUMP_OFFSET,
-	payload: offset
-});
-
-export const setJumpSearch = (dispatch: Dispatch, search: string): SetJumpSearchActionType => dispatch({
-	type: SET_JUMP_SEARCH,
-	payload: search
-});
-
+export const setJumpOffset = (offset: number): SetJumpOffsetActionType => {
+	return {
+		type: SET_JUMP_OFFSET,
+		payload: offset
+	};
+}
 export type JumpsActionType =
 	GetJumpsActionType
 	| DeleteJumpActionType

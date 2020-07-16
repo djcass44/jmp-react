@@ -15,15 +15,14 @@
  *
  */
 
-import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
+import {RSAA, RSAAAction} from "redux-api-middleware";
 import {Jump} from "../../../types";
 import {BASE_URL} from "../../../constants";
 
 export const GET_SIMILAR = "GET_SIMILAR";
-export const GET_SIMILAR_REQUEST = `${GET_SIMILAR}_REQUEST`;
-export const GET_SIMILAR_SUCCESS = `${GET_SIMILAR}_SUCCESS`;
-export const GET_SIMILAR_FAILURE = `${GET_SIMILAR}_FAILURE`;
+export const GET_SIMILAR_REQUEST = "GET_SIMILAR_REQUEST";
+export const GET_SIMILAR_SUCCESS = "GET_SIMILAR_SUCCESS";
+export const GET_SIMILAR_FAILURE = "GET_SIMILAR_FAILURE";
 
 interface GetSimilarRequestAction {
 	type: typeof GET_SIMILAR_REQUEST;
@@ -38,17 +37,18 @@ export interface GetSimilarSuccessAction {
 export interface GetSimilarFailureAction {
 	type: typeof GET_SIMILAR_FAILURE;
 	payload: Error;
+	error?: boolean;
 }
 
-export const getSimilar = (dispatch: Dispatch, headers: any, query: string): void => {
-	dispatch({
+export const getSimilar = (headers: any, query: string): RSAAAction => {
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/similar/${query}`,
 			method: "GET",
 			headers,
 			types: [GET_SIMILAR_REQUEST, GET_SIMILAR_SUCCESS, GET_SIMILAR_FAILURE]
 		}
-	});
+	};
 };
 
 export type GetSimilarActionType = GetSimilarRequestAction | GetSimilarSuccessAction | GetSimilarFailureAction;

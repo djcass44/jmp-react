@@ -103,7 +103,7 @@ export default () => {
 
 	useEffect(() => {
 		const {content} = pagedJumps;
-		setJumpOffset(dispatch, pagedJumps.number * pageSize);
+		dispatch(setJumpOffset(pagedJumps.number * pageSize));
 		// Loop-d-loop
 		setData(content.map(i => (<JumpItem jump={i} key={i.id}/>)));
 	}, [pagedJumps]);
@@ -120,9 +120,9 @@ export default () => {
 	}, [loading]);
 
 	const onPageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-		setJumpOffset(dispatch, value);
+		dispatch(setJumpOffset(value));
 		onSearch(value);
-		setJumpExpand(dispatch, null);
+		dispatch(setJumpExpand(null));
 	};
 
 
