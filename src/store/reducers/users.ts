@@ -38,7 +38,7 @@ const initialState: UsersState = {
 	search: ""
 };
 
-export default (state = initialState, action: UsersActionType) => {
+export default (state = initialState, action: UsersActionType): UsersState => {
 	switch (action.type) {
 		case USER_LOAD_SUCCESS:
 			return {...state, users: action.payload};

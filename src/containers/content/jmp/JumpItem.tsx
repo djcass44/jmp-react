@@ -133,7 +133,7 @@ const JumpItem: React.FC<JumpItemProps> = ({jump}: JumpItemProps) => {
 				button
 				selected={selected}
 				onContextMenu={onContext}
-				onClick={() => setJumpExpand(dispatch, jump.id)}
+				onClick={() => dispatch(setJumpExpand(jump.id))}
 				onMouseEnter={() => onMouse(true)}
 				onMouseLeave={() => onMouse(false)}>
 				<JumpAvatar jump={jump} palette={data} loading={loading} error={error || null}/>

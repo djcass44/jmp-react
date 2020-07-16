@@ -72,7 +72,7 @@ const checkType = (dispatch: Dispatch, action: Action) => {
 			break;
 		}
 		case SOCKET_UPDATE_USERS: {
-			getUsers(dispatch, headers);
+			dispatch(getUsers(headers));
 			break;
 		}
 		default:

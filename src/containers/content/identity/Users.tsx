@@ -95,7 +95,7 @@ export default () => {
 	}, [loading, loadingPatch]);
 
 	const onSearch = (o: number = offset) => {
-		getUsers(dispatch, headers, searchFilter, Number(o / pageSize) || 0, pageSize);
+		dispatch(getUsers(headers, searchFilter, Number(o / pageSize) || 0, pageSize));
 	};
 
 	useEffect(() => {

@@ -40,8 +40,8 @@ const UserOptionsMenu: React.FC<UserOptionsMenuProps> = ({user, expanded, anchor
 	if (user == null)
 		return null;
 
-	const handlePatchUser = (admin: boolean) => {
-		patchUserRole(dispatch, headers, user.id, admin);
+	const handlePatchUser = (admin: boolean): void => {
+		dispatch(patchUserRole(headers, user.id, admin));
 		close();
 	};
 
