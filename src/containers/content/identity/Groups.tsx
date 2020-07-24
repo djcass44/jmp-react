@@ -32,8 +32,8 @@ import useAuth from "../../../hooks/useAuth";
 import {pageSize} from "../../../constants";
 import JumpItemSkeleton from "../../../components/content/jmp/JumpItemSkeleton";
 import {GenericState} from "../../../store/reducers/generic";
-import GroupCard from "./profile/GroupCard";
 import useLoading from "../../../hooks/useLoading";
+import GroupCard from "./profile/GroupCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {

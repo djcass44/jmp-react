@@ -29,8 +29,8 @@ import {APP_NAME, APP_NOUN, pageSize} from "../../constants";
 import JumpItemSkeleton from "../../components/content/jmp/JumpItemSkeleton";
 import useAuth from "../../hooks/useAuth";
 import {GenericState} from "../../store/reducers/generic";
-import JumpItem from "./jmp/JumpItem";
 import useLoading from "../../hooks/useLoading";
+import JumpItem from "./jmp/JumpItem";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {

@@ -83,8 +83,11 @@ const Callback: React.FC = () => {
 				:
 				<div>
 					<Center>
-						<Typography className={classes.subtitle}
-						            variant="subtitle1">{error.message || error.payload?.response?.error || "Something went wrong"}</Typography>
+						<Typography
+							className={classes.subtitle}
+							variant="subtitle1">
+							{error.message || error.payload?.response?.error || "Something went wrong"}
+						</Typography>
 					</Center>
 				</div>
 			}

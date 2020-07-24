@@ -6,9 +6,9 @@ import AdminPanel from "../components/AdminPanel";
 import {OAUTH_VERIFY, oauthVerify} from "../store/actions/auth/AuthVerify";
 import {GET_JUMP} from "../store/actions/jumps/GetJumps";
 import useAuth from "../hooks/useAuth";
+import useLoading from "../hooks/useLoading";
 import Nav from "./Nav";
 import Content from "./Content";
-import useLoading from "../hooks/useLoading";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	main: {
