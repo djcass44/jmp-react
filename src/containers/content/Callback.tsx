@@ -24,6 +24,8 @@ import {useHistory, useLocation} from "react-router-dom";
 import {APP_NAME} from "../../constants";
 import {TState} from "../../store/reducers";
 import {OAUTH2_CALLBACK, oauth2Callback} from "../../store/actions/auth/OAuth2Callback";
+import useLoading from "../../hooks/useLoading";
+import {ErrorState} from "../../config/types/Feedback";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	subtitle: {
@@ -50,8 +52,8 @@ const Callback: React.FC = () => {
 	const history = useHistory();
 	const location = useLocation();
 
-	const loading = useSelector<TState, boolean>(state => state.loading[OAUTH2_CALLBACK] || false);
-	const error = useSelector<TState, any | null>(state => state.errors[OAUTH2_CALLBACK]);
+	const loading = useLoading([OAUTH2_CALLBACK]);
+	const error = useSelector<TState, ErrorState | null>(state => state.errors[OAUTH2_CALLBACK]);
 
 	useEffect(() => {
 		window.document.title = `Callback - ${APP_NAME}`;
@@ -81,7 +83,11 @@ const Callback: React.FC = () => {
 				:
 				<div>
 					<Center>
-						<Typography className={classes.subtitle} variant="subtitle1">{error.toString()}</Typography>
+						<Typography
+							className={classes.subtitle}
+							variant="subtitle1">
+							{error.message || error.payload?.response?.error || "Something went wrong"}
+						</Typography>
 					</Center>
 				</div>
 			}

@@ -33,6 +33,7 @@ import useAuth from "../../../hooks/useAuth";
 import {pageSize} from "../../../constants";
 import JumpItemSkeleton from "../../../components/content/jmp/JumpItemSkeleton";
 import {GenericState} from "../../../store/reducers/generic";
+import useLoading from "../../../hooks/useLoading";
 import UserOptionsMenu from "./UserOptionsMenu";
 import UserCard from "./profile/UserCard";
 
@@ -75,8 +76,8 @@ export default () => {
 	const {users, offset} = useSelector<TState, UsersState>(state => state.users);
 	const {searchFilter} = useSelector<TState, GenericState>(state => state.generic);
 	const {headers} = useAuth();
-	const loading = useSelector<TState, boolean>(state => state.loading[USER_LOAD] ?? false);
-	const loadingPatch = useSelector<TState, boolean>(state => state.loading[PATCH_USER_ROLE] ?? false);
+	const loading = useLoading([USER_LOAD]);
+	const loadingPatch = useLoading([PATCH_USER_ROLE]);
 
 	// local state
 	const [items, setItems] = useState<Array<ReactNode>>([]);

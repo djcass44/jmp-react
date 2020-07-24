@@ -23,7 +23,7 @@ import {AuthHeaders, SimpleMap, Token} from "../types";
  * Converts an object to JSON and back
  * Fastest way to clone an object in JS
  */
-export const clone = (obj: any): any => JSON.parse(JSON.stringify(obj));
+export const clone = <T>(obj: T): T => JSON.parse(JSON.stringify(obj)) as T;
 
 export const plural = (count: number, text: string): string => {
 	if (count === 1)

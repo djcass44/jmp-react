@@ -6,6 +6,7 @@ import StatusIcon from "../../../components/widget/StatusIcon";
 import {TState} from "../../../store/reducers";
 import {GET_INFO_STAT, getInfoHealth} from "../../../store/actions/info/GetInfoHealth";
 import useAuth from "../../../hooks/useAuth";
+import useLoading from "../../../hooks/useLoading";
 
 interface StatusProps {
 	showReload?: boolean;
@@ -16,7 +17,7 @@ const Status: React.FC<StatusProps> = ({showReload = false}) => {
 	const dispatch = useDispatch();
 
 	// global state
-	const loading = useSelector<TState, boolean>(state => state.loading[GET_INFO_STAT] ?? false);
+	const loading = useLoading([GET_INFO_STAT]);
 	const {components} = useSelector<TState, any>(state => state.info.status);
 	const {headers} = useAuth();
 
