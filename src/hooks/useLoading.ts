@@ -15,19 +15,9 @@
  *
  */
 
-export interface ErrorState {
-	payload?: ErrorPayload | null;
-	message: string | null;
-}
+import {useSelector} from "react-redux";
+import {TState} from "../store/reducers";
 
-export interface ErrorPayload {
-	name: string;
-	status: number;
-	statusText: string;
-	message: string;
-	tag?: string;
-	response?: {
-		error: string;
-		message: string;
-	}
+export default (actions: Array<string>): boolean => {
+	return useSelector<TState, boolean>(state => Object.entries(state.loading).some(([k, v]) => actions.includes(k) && v));
 }

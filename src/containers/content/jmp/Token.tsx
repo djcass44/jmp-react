@@ -27,6 +27,7 @@ import {TState} from "../../../store/reducers";
 import {GET_TARGET} from "../../../actions/Jumps";
 import {APP_NAME, BASE_URL} from "../../../constants";
 import useAuth from "../../../hooks/useAuth";
+import useLoading from "../../../hooks/useLoading";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	text: {
@@ -64,7 +65,7 @@ const Token: React.FC = () => {
 
 	// global state
 	const {headers} = useAuth();
-	const loading = useSelector<TState, boolean>(state => state.loading[GET_TARGET] ?? false);
+	const loading = useLoading([GET_TARGET]);
 	const error = useSelector<TState, Error | null>(state => state.errors[GET_TARGET]);
 
 	// component state

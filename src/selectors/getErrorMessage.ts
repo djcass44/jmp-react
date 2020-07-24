@@ -14,11 +14,12 @@
  *    limitations under the License.
  */
 
+import {ErrorState} from "../config/types/Feedback";
+
 /**
  * Try to extract the actual message as best we can.
- * @param error: the error object. May be null or contain who-knows-what
+ * @param error: the error object
  */
-export default (error: object | null) => {
-	if(error == null) return "No information could be provided";
-	else return error.toString() || "No information could be provided";
+export default (error: ErrorState): string => {
+	return error.message || error.payload?.response?.error || error.payload?.response?.message || "Something went wrong";
 }

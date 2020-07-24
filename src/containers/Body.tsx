@@ -1,14 +1,14 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
 import {Fade, LinearProgress, makeStyles, Theme} from "@material-ui/core";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {useLocation} from "react-router-dom";
 import AdminPanel from "../components/AdminPanel";
 import {OAUTH_VERIFY, oauthVerify} from "../store/actions/auth/AuthVerify";
-import {TState} from "../store/reducers";
 import {GET_JUMP} from "../store/actions/jumps/GetJumps";
 import useAuth from "../hooks/useAuth";
 import Nav from "./Nav";
 import Content from "./Content";
+import useLoading from "../hooks/useLoading";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	main: {
@@ -61,9 +61,7 @@ export const Body: React.FC = () => {
 	// hooks
 	const dispatch = useDispatch();
 	const location = useLocation();
-	const loading = useSelector<TState, boolean>(state => {
-		return (state.loading[OAUTH_VERIFY] || state.loading[GET_JUMP]) ?? false;
-	});
+	const loading = useLoading([OAUTH_VERIFY, GET_JUMP]);
 	const {headers, refresh} = useAuth();
 
 

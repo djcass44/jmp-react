@@ -33,6 +33,7 @@ import {pageSize} from "../../../constants";
 import JumpItemSkeleton from "../../../components/content/jmp/JumpItemSkeleton";
 import {GenericState} from "../../../store/reducers/generic";
 import GroupCard from "./profile/GroupCard";
+import useLoading from "../../../hooks/useLoading";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
@@ -74,7 +75,7 @@ export default () => {
 	const {searchFilter} = useSelector<TState, GenericState>(state => state.generic);
 	const {headers, isAdmin, isLoggedIn} = useAuth();
 
-	const loading = useSelector<TState, boolean>(state => state.loading[GROUP_LOAD] ?? false);
+	const loading = useLoading([GROUP_LOAD]);
 
 	const [items, setItems] = useState<Array<ReactNode>>([]);
 	const loadingItems = useMemo((): Array<ReactNode> => {
