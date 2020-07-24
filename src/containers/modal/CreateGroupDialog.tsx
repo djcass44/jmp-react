@@ -17,6 +17,9 @@ import {defaultState, Modal} from "../../store/reducers/modal";
 import useAuth from "../../hooks/useAuth";
 import {TState} from "../../store/reducers";
 import {resetError} from "../../store/actions";
+import useLoading from "../../hooks/useLoading";
+import {ErrorState} from "../../config/types/Feedback";
+import getErrorMessage from "../../selectors/getErrorMessage";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -43,8 +46,8 @@ export default () => {
 	// global state
 	const {open} = useSelector<TState, Modal>(state => state.modal[MODAL_GROUP_NEW] || defaultState);
 	const {headers} = useAuth();
-	const loading = useSelector<TState, boolean>(state => state.loading[PUT_GROUP]);
-	const error = useSelector<TState, any | null>(state => state.errors[PUT_GROUP]);
+	const loading = useLoading([PUT_GROUP]);
+	const error = useSelector<TState, ErrorState | null>(state => state.errors[PUT_GROUP]);
 
 	// local state
 	const [name, setName] = useState(initialName);
@@ -92,7 +95,7 @@ export default () => {
 						variant: "outlined"
 					}}
 				/>
-				{error && <Typography variant="caption" color="error">{error.toString()}</Typography>}
+				{error && <Typography variant="caption" color="error">{getErrorMessage(error)}</Typography>}
 			</DialogContent>
 			<DialogActions>
 				<Button

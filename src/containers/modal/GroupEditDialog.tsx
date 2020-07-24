@@ -23,6 +23,9 @@ import useAuth from "../../hooks/useAuth";
 import {TState} from "../../store/reducers";
 import {AuthState} from "../../store/reducers/auth";
 import {resetError} from "../../store/actions";
+import useLoading from "../../hooks/useLoading";
+import {ErrorState} from "../../config/types/Feedback";
+import getErrorMessage from "../../selectors/getErrorMessage";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -53,9 +56,9 @@ const GroupEditDialog: React.FC = () => {
 	const {headers} = useAuth();
 
 	// selectors
-	const loading = useSelector<TState, boolean>(state => state.loading[PATCH_GROUP]);
-	const loading2 = useSelector<TState, boolean>(state => state.loading[GET_PROVIDERS]);
-	const error = useSelector<TState, any | null>(state => state.errors[PATCH_GROUP]);
+	const loading = useLoading([PATCH_GROUP]);
+	const loading2 = useLoading([GET_PROVIDERS]);
+	const error = useSelector<TState, ErrorState | null>(state => state.errors[PATCH_GROUP]);
 	const {allProviders} = useSelector<TState, AuthState>(state => state.auth);
 	const {other, open} = useSelector<TState, Modal>(state => state.modal[MODAL_GROUP_EDIT] || defaultState);
 
@@ -144,7 +147,7 @@ const GroupEditDialog: React.FC = () => {
 					onChange={(e) => setDefaultFor(e.target.value)}>
 					{allProviders.map(i => <MenuItem key={i.first} value={i.first}>{i.first}</MenuItem>)}
 				</TextField>}
-				{error && <Typography variant="caption" color="error">{error.toString()}</Typography>}
+				{error && <Typography variant="caption" color="error">{getErrorMessage(error)}</Typography>}
 			</DialogContent>
 			<DialogActions>
 				<Button

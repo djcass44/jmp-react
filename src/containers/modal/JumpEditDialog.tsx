@@ -21,6 +21,7 @@ import {TState} from "../../store/reducers";
 import {Alias} from "../../types";
 import useAuth from "../../hooks/useAuth";
 import {resetError} from "../../store/actions";
+import useLoading from "../../hooks/useLoading";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -63,7 +64,7 @@ export default () => {
 	const dispatch = useDispatch();
 
 	// global state
-	const loading = useSelector<TState, boolean>(state => state.loading[PATCH_JUMP]);
+	const loading = useLoading([PATCH_JUMP]);
 	const error = useSelector<TState, any | null>(state => state.errors[PATCH_JUMP]);
 	const {headers} = useAuth();
 	const {other, open} = useSelector<TState, Modal>(state => state.modal[MODAL_JUMP_EDIT] || defaultState);

@@ -32,6 +32,7 @@ import {TState} from "../../store/reducers";
 import {AuthState} from "../../store/reducers/auth";
 import {ErrorState} from "../../config/types/Feedback";
 import {resetError} from "../../store/actions";
+import useLoading from "../../hooks/useLoading";
 
 const useStyles = makeStyles(theme => ({
 	title: {
@@ -87,8 +88,8 @@ export default () => {
 	const history = useHistory();
 
 	const {isLoggedIn, providers} = useSelector<TState, AuthState>(state => state.auth);
-	const loading = useSelector<TState, boolean>(state => state.loading[OAUTH_REQUEST]);
-	const error = useSelector<TState, ErrorState>(state => state.errors[OAUTH_REQUEST]);
+	const loading = useLoading([OAUTH_REQUEST]);
+	const error = useSelector<TState, ErrorState | null>(state => state.errors[OAUTH_REQUEST]);
 
 	// state hooks
 	const [username, setUsername] = useState(initialUser);
@@ -201,7 +202,7 @@ export default () => {
 											<CircularProgress style={{padding: 4}} size={15} thickness={7}/>}
 										</Button>
 										{error && <Typography style={{padding: 8}} color="error" align="center">
-											{error.toString().startsWith("ApiError: 401") ? "Incorrect username or password" : "Something went wrong"}
+											{error.payload?.status || Infinity < 500 ? "Incorrect username or password" : "Something went wrong"}
 										</Typography>}
 										{(page > 0 || error != null) && <Button
 											className={classes.resetButton}

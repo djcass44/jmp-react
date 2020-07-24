@@ -16,18 +16,14 @@
  */
 
 import {SimpleMap} from "../../types";
-import {ErrorState} from "../../config/types/Feedback";
+import {ErrorPayload, ErrorState} from "../../config/types/Feedback";
 
 const initialState: SimpleMap<ErrorState> = {};
 
 interface Action {
 	type: string;
-	payload?: Payload | null;
+	payload?: ErrorPayload | null;
 	meta?: string;
-}
-
-interface Payload {
-	tag: string;
 }
 
 export default (state = initialState, action: Action) => {

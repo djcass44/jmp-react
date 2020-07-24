@@ -29,6 +29,7 @@ import {APP_NAME, APP_NOUN, pageSize} from "../../constants";
 import JumpItemSkeleton from "../../components/content/jmp/JumpItemSkeleton";
 import useAuth from "../../hooks/useAuth";
 import {GenericState} from "../../store/reducers/generic";
+import useLoading from "../../hooks/useLoading";
 import JumpItem from "./jmp/JumpItem";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -86,7 +87,7 @@ export default () => {
 	const pagedJumps = useSelector<TState, Page<Jump>>(state => state.jumps.jumps);
 	const {searchFilter} = useSelector<TState, GenericState>(state => state.generic);
 	const {headers} = useAuth();
-	const loading = useSelector<TState, boolean>(state => state.loading[GET_JUMP]);
+	const loading = useLoading([GET_JUMP]);
 
 	// local state
 	const [data, setData] = useState<Array<ReactNode>>([]);

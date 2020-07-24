@@ -28,6 +28,8 @@ import {Jump} from "../../../types";
 import {getSimilarFail} from "../../../store/actions/jumps";
 import JumpChip from "../../../components/content/jmp/JumpChip";
 import useAuth from "../../../hooks/useAuth";
+import useLoading from "../../../hooks/useLoading";
+import {ErrorState} from "../../../config/types/Feedback";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -57,8 +59,8 @@ export default () => {
 
 	// global state
 	const {headers} = useAuth();
-	const loading = useSelector<TState, boolean>(state => state.loading[GET_SIMILAR] ?? false);
-	const error = useSelector<TState, any | null>(state => state.errors[GET_SIMILAR]);
+	const loading = useLoading([GET_SIMILAR]);
+	const error = useSelector<TState, ErrorState | null>(state => state.errors[GET_SIMILAR]);
 	const {similar} = useSelector<TState, JumpsState>(state => state.jumps);
 
 	// local state

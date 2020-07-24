@@ -27,6 +27,7 @@ import useAuth from "../../hooks/useAuth";
 import {TState} from "../../store/reducers";
 import {GroupsState} from "../../store/reducers/groups";
 import {Group} from "../../types";
+import useLoading from "../../hooks/useLoading";
 
 const useStyles = makeStyles(() => ({
 	title: {
@@ -62,8 +63,8 @@ const GroupModDialog: React.FC = () => {
 
 	const {headers} = useAuth();
 	const {groups, userGroups} = useSelector<TState, GroupsState>(state => state.groups);
-	const loading = useSelector<TState, boolean>(state => state.loading[GROUP_LOAD] || state.loading[GET_USER_GROUPS]);
-	const loadingChange = useSelector<TState, boolean>(state => state.loading[SET_USER_GROUPS]);
+	const loading = useLoading([GROUP_LOAD, GET_USER_GROUPS]);
+	const loadingChange = useLoading([SET_USER_GROUPS]);
 	const {other, open} = useSelector<TState, Modal>(state => state.modal[MODAL_USER_GROUPS] || defaultState);
 
 	const user = (other as GroupUserModPayload)?.user || null;

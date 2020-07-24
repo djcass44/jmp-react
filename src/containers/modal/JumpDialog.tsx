@@ -30,6 +30,7 @@ import {AuthState} from "../../store/reducers/auth";
 import {GroupsState} from "../../store/reducers/groups";
 import useAuth from "../../hooks/useAuth";
 import {resetError} from "../../store/actions";
+import useLoading from "../../hooks/useLoading";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	title: {
@@ -80,8 +81,8 @@ const JumpDialog = () => {
 	const classes = useStyles();
 
 	// global state
-	const loadingGroups = useSelector<TState, boolean>(state => state.loading[GET_USER_GROUPS]);
-	const loading = useSelector<TState, boolean>(state => state.loading[PUT_JUMP]);
+	const loadingGroups = useLoading([GET_USER_GROUPS]);
+	const loading = useLoading([PUT_JUMP]);
 	const error = useSelector<TState, any | null>(state => state.errors[PUT_JUMP]);
 	const {headers, isAdmin, isLoggedIn} = useAuth();
 	const {userProfile} = useSelector<TState, AuthState>(state => state.auth);

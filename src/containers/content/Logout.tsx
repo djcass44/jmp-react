@@ -64,14 +64,16 @@ const Logout: React.FC = () => {
 
 	useEffect(() => {
 		window.document.title = `Logout - ${APP_NAME}`;
+		if (request == null || headers == null) return;
 		// copy the request/headers because they will be wiped by a logout request
 		const r2 = clone(request);
 		const h2 = clone(headers);
 		// Log the user out
 		if (source?.startsWith("oauth2/")) {
 			oauth2Logout(dispatch, r2, source, h2);
-		} else
+		} else {
 			oauthLogout(dispatch, r2, h2);
+		}
 	}, []);
 
 	useEffect(() => {
