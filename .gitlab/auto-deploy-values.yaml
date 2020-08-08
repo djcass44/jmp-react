@@ -12,7 +12,7 @@ security:
   containerContext:
     runAsNonRoot: true
     privileged: false
-    readOnlyRootFilesystem: true
+    readOnlyRootFilesystem: false
     allowPrivilegeEscalation: false
 service:
   externalPort: 8080
