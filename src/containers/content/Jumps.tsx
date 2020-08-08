@@ -78,7 +78,7 @@ const emptyImages = [
 	`${process.env.PUBLIC_URL}/draw/undraw_empty_xct9.svg`
 ];
 
-export default () => {
+export default (): JSX.Element => {
 	// hooks
 	const classes = useStyles();
 	const dispatch = useDispatch();

@@ -12,7 +12,7 @@ interface StatusProps {
 	showReload?: boolean;
 }
 
-const Status: React.FC<StatusProps> = ({showReload = false}) => {
+const Status: React.FC<StatusProps> = ({showReload = false}): JSX.Element => {
 	// hooks
 	const dispatch = useDispatch();
 
@@ -25,7 +25,7 @@ const Status: React.FC<StatusProps> = ({showReload = false}) => {
 		handleReload();
 	}, []);
 
-	const handleReload = () => getInfoHealth(dispatch, headers);
+	const handleReload = () => dispatch(getInfoHealth(headers));
 
 	return (
 		<>
@@ -59,7 +59,7 @@ const Status: React.FC<StatusProps> = ({showReload = false}) => {
 					disabled={loading}
 					variant="outlined"
 					color="primary"
-					onClick={() => handleReload()}>
+					onClick={handleReload}>
 					Reload
 				</Button>}
 			</div>

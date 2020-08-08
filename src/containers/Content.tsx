@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-const Content: React.FC = () => {
+const Content: React.FC = (): JSX.Element => {
 	// hooks
 	const classes = useStyles();
 	const dispatch = useDispatch();

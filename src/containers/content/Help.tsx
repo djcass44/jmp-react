@@ -68,7 +68,7 @@ interface QnA {
 	a: string | ReactNode;
 }
 
-const Help: React.FC = () => {
+const Help: React.FC = (): JSX.Element => {
 	// hooks
 	const classes = useStyles();
 	const theme = useTheme<Theme>();

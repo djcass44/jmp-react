@@ -12,6 +12,7 @@ security:
   containerContext:
     runAsNonRoot: true
     privileged: false
+    readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
 service:
   externalPort: 8080
@@ -29,7 +30,7 @@ readinessProbe:
   path: "/healthz"
 volumes:
   - name: tmp
-    mountPath: /var/tmp/nginx
+    mountPath: /var/run
     config:
       emptyDir: {}
   - name: tmp2
@@ -37,11 +38,9 @@ volumes:
     config:
       emptyDir: {}
   - name: cache
-    mountPath: /var/cache/nginx
+    mountPath: /var/cache
     config:
       emptyDir: {}
-postgresql:
-  enabled: false
 resources:
   requests:
     memory: 25Mi

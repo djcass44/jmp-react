@@ -22,7 +22,7 @@ import {setThemeMode} from "../../../store/actions/Generic";
 import {TState} from "../../../store/reducers";
 import {GenericState} from "../../../store/reducers/generic";
 
-const General: React.FC = () => {
+const General: React.FC = (): JSX.Element => {
 	// hooks
 	const dispatch = useDispatch();
 

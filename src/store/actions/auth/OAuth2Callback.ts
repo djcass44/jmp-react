@@ -15,12 +15,9 @@
  *
  */
 
-import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
+import {RSAA, RSAAAction} from "redux-api-middleware";
 import {Token} from "../../../types";
 import {BASE_URL} from "../../../constants";
-import {getHeaders} from "../../../util";
-import {oauthVerify} from "./AuthVerify";
 
 export const OAUTH2_CALLBACK = "OAUTH2_CALLBACK";
 export const OAUTH2_CALLBACK_REQUEST = "OAUTH2_CALLBACK_REQUEST";
@@ -41,8 +38,8 @@ interface OAuth2CallbackFailureAction {
 	payload: Error;
 }
 
-export const oauth2Callback = (dispatch: Dispatch, query: string): void => {
-	dispatch({
+export const oauth2Callback = (query: string): RSAAAction => {
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/oauth2/callback?${query}`,
 			method: "GET",
@@ -55,9 +52,7 @@ export const oauth2Callback = (dispatch: Dispatch, query: string): void => {
 				}
 			]
 		}
-	}).then((r) => {
-		oauthVerify(dispatch, null, getHeaders(r.payload as Token));
-	});
+	};
 };
 
 export type OAuth2CallbackActionType =

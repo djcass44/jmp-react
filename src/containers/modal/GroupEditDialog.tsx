@@ -82,7 +82,7 @@ const GroupEditDialog: React.FC = () => {
 		setIsPublic(group.public || false);
 		setDefaultFor(group.defaultFor || "");
 		dispatch(resetError(PATCH_GROUP));
-		getProviders(dispatch, headers);
+		dispatch(getProviders(headers));
 	};
 
 	const onSubmit = () => {

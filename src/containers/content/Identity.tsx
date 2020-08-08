@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-const Identity: React.FC = () => {
+const Identity: React.FC = (): JSX.Element => {
 	useEffect(() => {
 		window.document.title = `Identity - ${APP_NAME}`;
 	}, []);

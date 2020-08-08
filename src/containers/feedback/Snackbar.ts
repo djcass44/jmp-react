@@ -22,7 +22,7 @@ import {TState} from "../../store/reducers";
 import {SnackbarState} from "../../store/reducers/snackbar";
 import {closeSnackbar, removeSnackbar} from "../../store/actions/snackbar";
 
-const Snackbar: React.FC = () => {
+const Snackbar: React.FC = (): null => {
 	// hooks
 	const {notify} = useSelector<TState, SnackbarState>(state => state.snackbar);
 	const dispatch = useDispatch();

@@ -80,7 +80,7 @@ const initialPassword = {
 	regex: new RegExp(/^.{8,}$/)
 };
 
-export default () => {
+export default (): JSX.Element => {
 	// hooks
 	const dispatch = useDispatch();
 	const classes = useStyles();

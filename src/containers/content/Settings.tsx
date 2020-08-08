@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	},
 }));
 
-const Settings: React.FC = () => {
+const Settings: React.FC = (): JSX.Element => {
 	const classes = useStyles();
 
 	useEffect(() => {

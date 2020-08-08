@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-export const Body: React.FC = () => {
+export const Body: React.FC = (): JSX.Element => {
 	// hooks
 	const dispatch = useDispatch();
 	const location = useLocation();
@@ -78,7 +78,7 @@ export const Body: React.FC = () => {
 			if (timer)
 				window.clearTimeout(timer);
 		} else {
-			setTimer(window.setTimeout(() => setShade(true), 150));
+			setTimer(window.setTimeout(() => setShade(true), 300));
 		}
 	}, [loading]);
 

@@ -15,8 +15,7 @@
  *
  */
 
-import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
+import {RSAA, RSAAAction} from "redux-api-middleware";
 import {BASE_URL} from "../../../constants";
 
 export const GET_INFO_STAT = "GET_INFO_STAT";
@@ -39,15 +38,15 @@ interface GetInfoHealthFailureAction {
 	payload: Error;
 }
 
-export const getInfoHealth = (dispatch: Dispatch, headers: any): void => {
-	dispatch({
+export const getInfoHealth = (headers: any): RSAAAction => {
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/actuator/health`,
 			method: "GET",
 			headers,
 			types: [GET_INFO_STAT_REQUEST, GET_INFO_STAT_SUCCESS, GET_INFO_STAT_FAILURE]
 		}
-	});
+	};
 };
 
 export type GetInfoHealthActionType =

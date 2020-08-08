@@ -21,6 +21,7 @@ import Center from "react-center";
 import {Link, useHistory} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHomeOutline} from "@mdi/js";
+import {GenericIconButton} from "jmp-coreui";
 import {APP_NAME} from "../../constants";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-const NotFound: React.FC = () => {
+const NotFound: React.FC = (): JSX.Element => {
 	const classes = useStyles();
 	const theme = useTheme<Theme>();
 	const history = useHistory();
@@ -73,15 +74,12 @@ const NotFound: React.FC = () => {
 					The page you're looking for doesn't exist or the server refused to disclose it.
 				</Typography>
 				<Center>
-					<Tooltip title="Go back">
-						<IconButton
-							color="secondary"
-							centerRipple={false}
-							aria-label="Go back"
-							onClick={() => history.goBack()}>
-							<Icon path={mdiArrowLeft} size={1} color={theme.palette.secondary.main}/>
-						</IconButton>
-					</Tooltip>
+					<GenericIconButton
+						title="Go back"
+						icon={mdiArrowLeft}
+						colour={theme.palette.secondary.main}
+						onClick={() => history.goBack()}
+					/>
 					<Tooltip title="Return to home">
 						<IconButton
 							component={Link}

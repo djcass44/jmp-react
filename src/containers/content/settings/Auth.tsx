@@ -28,7 +28,7 @@ import {getProviders} from "../../../store/actions/auth/GetProviders";
 import {getProviderData, plural} from "../../../util";
 import useAuth from "../../../hooks/useAuth";
 
-const Auth: React.FC = () => {
+const Auth: React.FC = (): JSX.Element => {
 	// hooks
 	const dispatch = useDispatch();
 	const theme = useTheme();
@@ -43,8 +43,8 @@ const Auth: React.FC = () => {
 	const [providers] = useState<any>(getProviderData(theme));
 
 	useEffect(() => {
-		getProviders(dispatch, headers);
-	}, [dispatch, headers.Authorization]);
+		dispatch(getProviders(headers));
+	}, [headers.Authorization]);
 
 	useEffect(() => {
 		setData(allProviders.map(i => (

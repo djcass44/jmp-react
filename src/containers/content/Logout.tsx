@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-const Logout: React.FC = () => {
+const Logout: React.FC = (): JSX.Element => {
 	// hooks
 	const dispatch = useDispatch();
 	const classes = useStyles();

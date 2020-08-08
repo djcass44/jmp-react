@@ -15,8 +15,7 @@
  */
 
 import {makeStyles, Theme} from "@material-ui/core";
-import * as React from "react";
-import {useTheme} from "@material-ui/core/styles";
+import React, {ReactNode} from "react";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	https: {
@@ -35,16 +34,23 @@ interface DomainProps {
 	text: string;
 }
 
-const Domain: React.FC<DomainProps> = ({text}: DomainProps) => {
-	const theme = useTheme<Theme>();
-	const classes = useStyles(theme);
+const Domain: React.FC<DomainProps> = ({text}): JSX.Element => {
+	const classes = useStyles();
 
-	const highlighted = (url: string) => {
+	const highlighted = (url: string): ReactNode => {
 		const split = url.split("://");
 		const scheme = split[0];
 		const domain = split[1];
-		return (<span className={(classes as any)[scheme]}>{scheme}://<span
-			className={classes.secondaryText}>{domain}</span></span>);
+		let c = classes.http;
+		if (scheme === "https")
+			c = classes.https;
+		return (<span className={c}>
+			{scheme}://
+			<span
+				className={classes.secondaryText}>
+				{domain}
+			</span>
+		</span>);
 	};
 	return (<span>{highlighted(text)}</span>);
 };

@@ -26,6 +26,10 @@ import {TState} from "../../store/reducers";
 import {OAUTH2_CALLBACK, oauth2Callback} from "../../store/actions/auth/OAuth2Callback";
 import useLoading from "../../hooks/useLoading";
 import {ErrorState} from "../../config/types/Feedback";
+import getErrorMessage from "../../selectors/getErrorMessage";
+import {oauthVerify} from "../../store/actions/auth/AuthVerify";
+import {getHeaders} from "../../util";
+import {Token} from "../../types";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	subtitle: {
@@ -46,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-const Callback: React.FC = () => {
+const Callback: React.FC = (): JSX.Element => {
 	const dispatch = useDispatch();
 	const classes = useStyles();
 	const history = useHistory();
@@ -59,7 +63,9 @@ const Callback: React.FC = () => {
 		window.document.title = `Callback - ${APP_NAME}`;
 		// Get the list of parameters
 		const params = new URLSearchParams(location.search);
-		oauth2Callback(dispatch, `code=${params.get("code")}&state=${params.get("state")}`);
+		dispatch(oauth2Callback(`code=${params.get("code")}&state=${params.get("state")}`)).then((r) => {
+			oauthVerify(dispatch, null, getHeaders(r.payload as Token));
+		});
 	}, [dispatch]);
 
 	useEffect(() => {
@@ -86,7 +92,7 @@ const Callback: React.FC = () => {
 						<Typography
 							className={classes.subtitle}
 							variant="subtitle1">
-							{error.message || error.payload?.response?.error || "Something went wrong"}
+							{getErrorMessage(error)}
 						</Typography>
 					</Center>
 				</div>

@@ -15,8 +15,7 @@
  *
  */
 
-import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
+import {RSAA, RSAAAction} from "redux-api-middleware";
 import {Pair} from "../../../types";
 import {BASE_URL} from "../../../constants";
 
@@ -39,8 +38,8 @@ interface GetProvidersFailureAction {
 	payload: Error;
 }
 
-export const getProviders = (dispatch: Dispatch, headers: any): void => {
-	dispatch({
+export const getProviders = (headers: any): RSAAAction => {
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/providers`,
 			method: "GET",
@@ -54,7 +53,7 @@ export const getProviders = (dispatch: Dispatch, headers: any): void => {
 				}
 			]
 		}
-	});
+	};
 };
 
 export type GetProvidersActionType = GetProvidersRequestAction | GetProvidersSuccessAction | GetProvidersFailureAction;

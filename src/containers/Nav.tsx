@@ -39,7 +39,6 @@ import UserMenu from "./content/identity/profile/UserMenu";
 const bgTransition = (time: number | string): string => `background-color ${time}ms linear`;
 
 const useStyles = makeStyles((theme: Theme) => ({
-	root: {},
 	main: {
 		pointerEvents: "auto"
 	},
@@ -152,11 +151,12 @@ interface NavProps {
 	loading?: boolean;
 }
 
-const Nav: React.FC<NavProps> = ({loading = false}) => {
-	const searchRoutes = [
-		"/identity",
-		"/"
-	];
+const SEARCH_ROUTES = [
+	"/identify",
+	"/"
+];
+
+const Nav: React.FC<NavProps> = ({loading = false}): JSX.Element => {
 	// hooks
 	const history = useHistory();
 	const location = useLocation();
@@ -193,7 +193,7 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 				setIdle(1);
 		}, 30000);
 
-		setShowSearch(searchRoutes.includes(location.pathname));
+		setShowSearch(SEARCH_ROUTES.includes(location.pathname));
 		const url = location.pathname + location.search;
 		if (url !== "")
 			setLoginUrl(`/login?target=${url}`);
@@ -209,7 +209,7 @@ const Nav: React.FC<NavProps> = ({loading = false}) => {
 	};
 
 	return (
-		<div className={classes.root}>
+		<div>
 			<>
 				<Toolbar className={classes.main}>
 					{!overrideSearch && <>

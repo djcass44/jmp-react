@@ -28,7 +28,7 @@ import {dark, light} from "./style/palette";
 import {TState} from "./store/reducers";
 import {GenericState} from "./store/reducers/generic";
 
-const App: React.FC = () => {
+const App: React.FC = (): JSX.Element => {
 	const dispatch = useDispatch();
 	const {palette} = useTheme();
 
