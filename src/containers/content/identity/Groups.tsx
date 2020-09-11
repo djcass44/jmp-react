@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-export default () => {
+export default (): JSX.Element => {
 	// hooks
 	const dispatch = useDispatch();
 	const classes = useStyles();
@@ -90,7 +90,7 @@ export default () => {
 	}, [loading]);
 
 	const onSearch = (o: number = offset) => {
-		getGroups(dispatch, headers, searchFilter, Number(o / pageSize) || 0, pageSize);
+		dispatch(getGroups(headers, searchFilter, Number(o / pageSize) || 0, pageSize));
 	};
 
 	useEffect(() => {

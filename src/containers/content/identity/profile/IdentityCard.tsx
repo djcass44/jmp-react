@@ -40,7 +40,7 @@ interface UserCardProps {
 	actions: ReactNode;
 }
 
-const IdentityCard: React.FC<UserCardProps> = ({avatar, primary, secondary, actions}) => {
+const IdentityCard: React.FC<UserCardProps> = ({avatar, primary, secondary, actions}): JSX.Element => {
 	// hooks
 	const classes = useStyles();
 

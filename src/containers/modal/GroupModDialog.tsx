@@ -87,7 +87,7 @@ const GroupModDialog: React.FC = () => {
 	useEffect(() => {
 		if (loadingChange || user == null)
 			return;
-		getUserGroups(dispatch, headers, user.id);
+		dispatch(getUserGroups(headers, user.id));
 	}, [loadingChange]);
 
 	useEffect(() => {
@@ -105,7 +105,7 @@ const GroupModDialog: React.FC = () => {
 			else
 				rm.push(item.group.id);
 			const payload = new GroupModPayload(add, rm);
-			setUserGroups(dispatch, headers, user.id, JSON.stringify(payload));
+			dispatch(setUserGroups(headers, user.id, JSON.stringify(payload)));
 		};
 
 		const onChecked = (index: number): void => {
@@ -137,7 +137,7 @@ const GroupModDialog: React.FC = () => {
 
 	const onOpen = () => {
 		if (user == null) return;
-		getUserGroups(dispatch, headers, user.id);
+		dispatch(getUserGroups(headers, user.id));
 	};
 
 	return (

@@ -30,7 +30,7 @@ interface UserOptionsMenuProps {
 	close: () => void;
 }
 
-const UserOptionsMenu: React.FC<UserOptionsMenuProps> = ({user, expanded, anchorEl, close}) => {
+const UserOptionsMenu: React.FC<UserOptionsMenuProps> = ({user, expanded, anchorEl, close}): JSX.Element | null => {
 	// hooks
 	const dispatch = useDispatch();
 

@@ -16,6 +16,7 @@
  */
 
 import * as React from "react";
+import {useMemo} from "react";
 import {Button, makeStyles, Theme} from "@material-ui/core";
 import Icon from "@mdi/react";
 import {useTheme} from "@material-ui/core/styles";
@@ -46,10 +47,12 @@ interface SocialButtonProps {
 	icon: string;
 }
 
-const SocialButton: React.FC<SocialButtonProps> = ({url, colour, name, icon}: SocialButtonProps) => {
+const SocialButton: React.FC<SocialButtonProps> = ({url, colour, name, icon}: SocialButtonProps): JSX.Element => {
 	const {palette} = useTheme();
 	const classes = useStyles();
-	const variant = palette.type === "dark" ? "contained" : "text";
+
+	const variant = useMemo(() => palette.type === "dark" ? "contained" : "text", [palette.type]);
+
 	return (
 		<Button href={url} className={classes.button} variant={variant}>
 			<Icon className={classes.icon} path={icon} size="1.5rem" color={colour}/>

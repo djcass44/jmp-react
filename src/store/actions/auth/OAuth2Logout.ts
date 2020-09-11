@@ -15,10 +15,9 @@
  *
  */
 
-import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
+import {RSAA, RSAAAction} from "redux-api-middleware";
 import {Token} from "../../../types";
-import {BASE_URL} from "../../../constants";
+import {BASE_URL, METHOD_POST} from "../../../constants";
 
 export const OAUTH2_LOGOUT = "OAUTH2_LOGOUT";
 export const OAUTH2_LOGOUT_REQUEST = "OAUTH2_LOGOUT_REQUEST";
@@ -39,16 +38,13 @@ interface OAuth2LogoutFailureAction {
 	payload: Error;
 }
 
-export const oauth2Logout = (dispatch: Dispatch, accessToken: string, source: string, headers: any): void => {
-	let sourceName = source;
+export const oauth2Logout = (accessToken: string, source: string, headers: Record<string, string>): RSAAAction => {
 	// strip the leading 'oauth2/'
-	if (sourceName.startsWith("oauth2/")) {
-		sourceName = sourceName.split("/")[1];
-	}
-	dispatch({
+	const sourceName = source.startsWith("oauth2/") ? source.split("/")[1] : source;
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/oauth2/logout/${sourceName}?accessToken=${accessToken}`,
-			method: "POST",
+			method: METHOD_POST,
 			headers,
 			types: [
 				OAUTH2_LOGOUT_REQUEST,
@@ -59,7 +55,7 @@ export const oauth2Logout = (dispatch: Dispatch, accessToken: string, source: st
 				}
 			]
 		}
-	});
+	};
 };
 
 export type OAuth2LogoutActionType = OAuth2LogoutRequestAction | OAuth2LogoutSuccessAction | OAuth2LogoutFailureAction;

@@ -99,10 +99,10 @@ export default (): JSX.Element => {
 	// lifecycle hooks
 	useEffect(() => {
 		window.document.title = `Login - ${APP_NAME}`;
-		discoverOAuth(dispatch, "github");
-		discoverOAuth(dispatch, "google");
-		discoverOAuth(dispatch, "keycloak");
-		discoverOAuth(dispatch, "gitlab");
+		dispatch(discoverOAuth("github"));
+		dispatch(discoverOAuth("google"));
+		dispatch(discoverOAuth("keycloak"));
+		dispatch(discoverOAuth("gitlab"));
 	}, [dispatch]);
 
 	useEffect(() => {

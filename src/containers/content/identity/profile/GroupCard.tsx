@@ -23,9 +23,9 @@ import {useDispatch} from "react-redux";
 import {GenericIconButton} from "jmp-coreui";
 import getAvatarScheme from "../../../../style/getAvatarScheme";
 import {MODAL_GROUP_EDIT, setDialog} from "../../../../store/actions/Modal";
-import {getProviderData} from "../../../../util";
+import {getProviderData, Provider} from "../../../../util";
 import getIconColour from "../../../../style/getIconColour";
-import {Group} from "../../../../types";
+import {Group, SimpleMap} from "../../../../types";
 import IdentityCard from "./IdentityCard";
 
 const useStyles = makeStyles(() => ({
@@ -44,14 +44,14 @@ interface GroupCardProps {
 	isAdmin?: boolean;
 }
 
-const GroupCard: React.FC<GroupCardProps> = ({group, isAdmin = false}) => {
+const GroupCard: React.FC<GroupCardProps> = ({group, isAdmin = false}): JSX.Element => {
 	// hooks
 	const classes = useStyles();
 	const theme = useTheme();
 	const dispatch = useDispatch();
 
 	// local state
-	const [providers] = useState<any>(getProviderData(theme));
+	const [providers] = useState<SimpleMap<Provider>>(getProviderData(theme));
 
 	// get the colour scheme
 	const scheme = getAvatarScheme(theme, 2);

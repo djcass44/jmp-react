@@ -46,7 +46,7 @@ const Info: React.FC = (): JSX.Element => {
 	}, [systemInfo]);
 
 	useEffect(() => {
-		getInfoSystem(dispatch, headers);
+		dispatch(getInfoSystem(headers));
 	}, [headers.Authorization]);
 
 	return (

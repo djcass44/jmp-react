@@ -28,7 +28,7 @@ interface InfoItemProps {
 	content: ReactNode;
 }
 
-const InfoItem: React.FC<InfoItemProps> = ({title, open = false, icon, content}: InfoItemProps) => {
+const InfoItem: React.FC<InfoItemProps> = ({title, open = false, icon, content}: InfoItemProps): JSX.Element => {
 	const classes = useStyles();
 	return (
 		<ExpansionPanel defaultExpanded={open}>

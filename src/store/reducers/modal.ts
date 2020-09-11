@@ -13,7 +13,7 @@ export const defaultState: Modal = {
 
 const initialState: SimpleMap<Modal> = {};
 
-export default (state = initialState, action: ModalActionType) => {
+export default (state = initialState, action: ModalActionType): SimpleMap<Modal> => {
 	if (action.type === SET_DIALOG) {
 		const {name, open, other} = action.payload;
 		return {...state, [name]: {open, other}};

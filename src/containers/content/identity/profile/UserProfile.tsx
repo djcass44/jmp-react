@@ -61,7 +61,7 @@ interface UserProfileProps {
 	settingsProps?: object;
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({user, isAdmin = false, settingsProps}) => {
+const UserProfile: React.FC<UserProfileProps> = ({user, isAdmin = false, settingsProps}): JSX.Element => {
 	// hooks
 	const classes = useStyles();
 	const theme = useTheme();

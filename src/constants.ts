@@ -25,3 +25,9 @@ const secure = (window._env_?.JMP_API_SECURE || "true") === "true";
 
 export const BASE_URL = `http${secure ? "s" : ""}://${API_URL}`;
 export const SOCKET_URL = `ws${secure ? "s" : ""}://${API_URL}/api/ws2`;
+
+export const METHOD_GET = "GET";
+export const METHOD_POST = "POST";
+export const METHOD_PATCH = "PATCH";
+export const METHOD_PUT = "PUT";
+export const METHOD_DELETE = "DELETE";

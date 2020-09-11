@@ -18,7 +18,7 @@ interface StatusIconProps {
 	loading?: boolean;
 }
 
-const StatusIcon: React.FC<StatusIconProps> = ({active = null, title, icon, loading = false}) => {
+const StatusIcon: React.FC<StatusIconProps> = ({active = null, title, icon, loading = false}): JSX.Element => {
 	// hooks
 	const classes = useStyles();
 	const {palette} = useTheme();

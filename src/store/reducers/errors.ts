@@ -18,7 +18,7 @@
 import {SimpleMap} from "../../types";
 import {ErrorPayload, ErrorState} from "../../config/types/Feedback";
 
-const initialState: SimpleMap<ErrorState> = {};
+const initialState: SimpleMap<ErrorState | null> = {};
 
 interface Action {
 	type: string;
@@ -26,7 +26,7 @@ interface Action {
 	meta?: string;
 }
 
-export default (state = initialState, action: Action) => {
+export default (state = initialState, action: Action): SimpleMap<ErrorState | null> => {
 	const {type, payload, meta} = action;
 	const matches = /(.*)_(REQUEST|FAILURE|RESET)/.exec(type);
 	// not a *_REQUEST or *_FAILURE action, so we ignore them

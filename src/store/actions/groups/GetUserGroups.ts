@@ -15,10 +15,9 @@
  *
  */
 
-import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
+import {RSAA, RSAAAction} from "redux-api-middleware";
 import {Group} from "../../../types";
-import {BASE_URL} from "../../../constants";
+import {BASE_URL, METHOD_GET} from "../../../constants";
 
 export const GET_USER_GROUPS = "GET_USER_GROUPS";
 export const GET_USER_GROUPS_REQUEST = "GET_USER_GROUPS_REQUEST";
@@ -40,11 +39,11 @@ interface GetUserGroupsFailureAction {
 	payload: Error;
 }
 
-export const getUserGroups = (dispatch: Dispatch, headers: any, uid: string): void => {
-	dispatch({
+export const getUserGroups = (headers: Record<string, string>, uid: string): RSAAAction => {
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/user/groups?uid=${uid}`,
-			method: "GET",
+			method: METHOD_GET,
 			headers,
 			types: [
 				GET_USER_GROUPS_REQUEST,
@@ -55,7 +54,7 @@ export const getUserGroups = (dispatch: Dispatch, headers: any, uid: string): vo
 				}
 			]
 		}
-	});
+	};
 };
 
 export type GetUserGroupsActionType =

@@ -15,9 +15,8 @@
  *
  */
 
-import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
-import {BASE_URL} from "../../../constants";
+import {RSAA, RSAAAction} from "redux-api-middleware";
+import {BASE_URL, METHOD_POST} from "../../../constants";
 
 export const OAUTH_LOGOUT = "OAUTH_LOGOUT";
 export const OAUTH_LOGOUT_REQUEST = "OAUTH_LOGOUT_REQUEST";
@@ -33,11 +32,11 @@ interface AuthLogoutFailureAction {
 	payload: Error;
 }
 
-export const oauthLogout = (dispatch: Dispatch, accessToken: string, headers: any): void => {
-	dispatch({
+export const oauthLogout = (accessToken: string, headers: Record<string, string>): RSAAAction => {
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/auth/logout?accessToken=${accessToken}`,
-			method: "POST",
+			method: METHOD_POST,
 			headers,
 			types: [
 				OAUTH_LOGOUT_REQUEST,
@@ -48,7 +47,7 @@ export const oauthLogout = (dispatch: Dispatch, accessToken: string, headers: an
 				}
 			]
 		}
-	});
+	};
 };
 
 export type AuthLogoutActionType = AuthLogoutAction | AuthLogoutFailureAction;

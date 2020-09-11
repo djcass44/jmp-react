@@ -17,7 +17,7 @@
 
 import {RSAA, RSAAAction} from "redux-api-middleware";
 import {Token} from "../../../types";
-import {BASE_URL} from "../../../constants";
+import {BASE_URL, METHOD_GET} from "../../../constants";
 
 export const OAUTH2_CALLBACK = "OAUTH2_CALLBACK";
 export const OAUTH2_CALLBACK_REQUEST = "OAUTH2_CALLBACK_REQUEST";
@@ -42,7 +42,7 @@ export const oauth2Callback = (query: string): RSAAAction => {
 	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/oauth2/callback?${query}`,
-			method: "GET",
+			method: METHOD_GET,
 			types: [
 				OAUTH2_CALLBACK_REQUEST,
 				OAUTH2_CALLBACK_SUCCESS,

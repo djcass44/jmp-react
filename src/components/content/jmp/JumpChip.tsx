@@ -46,7 +46,7 @@ interface JumpChipProps {
 	jump: Jump;
 }
 
-const JumpChip: React.FC<JumpChipProps> = ({jump}) => {
+const JumpChip: React.FC<JumpChipProps> = ({jump}): JSX.Element => {
 	// hooks
 	const theme = useTheme();
 	const classes = useStyles();

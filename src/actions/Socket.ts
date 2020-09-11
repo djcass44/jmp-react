@@ -20,7 +20,7 @@ export const WS_BAD_TICK = "WS_BAD_TICK";
 let socket: WebSocket | null = null;
 let badTicks = 0;
 
-export const connectWebSocket = (dispatch: Dispatch) => {
+export const connectWebSocket = (dispatch: Dispatch): void => {
 	socket = new WebSocket(SOCKET_URL);
 	socket.addEventListener("open", () => {
 		badTicks = 0;
@@ -56,7 +56,7 @@ export const connectWebSocket = (dispatch: Dispatch) => {
 	});
 };
 
-const checkType = (dispatch: Dispatch, action: Action) => {
+const checkType = (dispatch: Dispatch, action: Action): void => {
 	const {type, payload} = action;
 	// get values we need from the state
 	const state = store.getState();
@@ -64,11 +64,11 @@ const checkType = (dispatch: Dispatch, action: Action) => {
 	switch (type) {
 		case SOCKET_UPDATE_JUMP: {
 			const {offset, search} = state.jumps;
-			getJumps(dispatch, headers, search, Number(offset / pageSize) || 0);
+			dispatch(getJumps(headers, search, Number(offset / pageSize) || 0));
 			break;
 		}
 		case SOCKET_UPDATE_GROUPS: {
-			getGroups(dispatch, headers);
+			dispatch(getGroups(headers));
 			break;
 		}
 		case SOCKET_UPDATE_USERS: {
@@ -80,7 +80,7 @@ const checkType = (dispatch: Dispatch, action: Action) => {
 	}
 };
 
-export const closeWebSocket = (dispatch: Dispatch) => {
+export const closeWebSocket = (dispatch: Dispatch): void => {
 	socket?.close();
 	dispatch({type: WS_CLOSE_USER});
 };

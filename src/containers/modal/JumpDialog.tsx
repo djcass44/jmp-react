@@ -113,7 +113,7 @@ const JumpDialog = () => {
 
 	useEffect(() => {
 		if (open && isLoggedIn && uid)
-			getUserGroups(dispatch, headers, uid);
+			dispatch(getUserGroups(headers, uid));
 	}, [uid, open, isLoggedIn]);
 
 	useEffect(() => {
@@ -133,13 +133,13 @@ const JumpDialog = () => {
 	const onSubmit = () => {
 		// ignore the type error below, it's fine
 		const gid = type === 2 ? `?gid=${groupId}` : "";
-		putJump(dispatch, headers, {
+		dispatch(putJump(headers, {
 			id: 0,
 			name: name.value,
 			location: url.value,
 			personal: type,
 			alias: []
-		}, gid);
+		}, gid));
 		setSubmit(true);
 	};
 

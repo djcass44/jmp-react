@@ -28,7 +28,7 @@ interface JumpButtonProps {
 	iconProps: any;
 }
 
-const JumpButton: React.FC<JumpButtonProps> = ({title, focus = false, mouse = true, focusProps, buttonProps, iconProps}: JumpButtonProps) => {
+const JumpButton: React.FC<JumpButtonProps> = ({title, focus = false, mouse = true, focusProps, buttonProps, iconProps}: JumpButtonProps): JSX.Element => {
 	const theme = useTheme<Theme>();
 	return (
 		<div>

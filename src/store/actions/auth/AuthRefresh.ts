@@ -40,7 +40,7 @@ interface AuthRefreshFailureAction {
 	payload: Error;
 }
 
-export const oauthRefresh = (dispatch: Dispatch, refresh: string, headers: any): void => {
+export const oauthRefresh = (dispatch: Dispatch, refresh: string, headers: Record<string, string>): void => {
 	// don't refresh if there's no token
 	if (refresh === "")
 		return;
@@ -48,7 +48,7 @@ export const oauthRefresh = (dispatch: Dispatch, refresh: string, headers: any):
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/auth/refresh?refreshToken=${refresh}`,
 			method: "GET",
-			headers: headers,
+			headers,
 			types: [OAUTH_REFRESH_REQUEST, OAUTH_REFRESH_SUCCESS, OAUTH_REFRESH_FAILURE]
 		}
 	}).then((r) => {

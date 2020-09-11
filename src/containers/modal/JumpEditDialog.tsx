@@ -120,13 +120,13 @@ export default () => {
 				});
 			}
 		});
-		patchJump(dispatch, headers, {
+		dispatch(patchJump(headers, {
 			id: jump.id,
 			name: name.value,
 			location: url.value,
 			personal: jump.public ? 0 : jump.ownerGroup == null ? 1 : 2,
 			alias: aliases
-		});
+		}));
 		setSubmit(true);
 	};
 

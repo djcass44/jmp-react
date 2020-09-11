@@ -70,9 +70,9 @@ const Logout: React.FC = (): JSX.Element => {
 		const h2 = clone(headers);
 		// Log the user out
 		if (source?.startsWith("oauth2/")) {
-			oauth2Logout(dispatch, r2, source, h2);
+			dispatch(oauth2Logout(r2, source, h2));
 		} else {
-			oauthLogout(dispatch, r2, h2);
+			dispatch(oauthLogout(r2, h2));
 		}
 	}, []);
 

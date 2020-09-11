@@ -138,7 +138,7 @@ interface Browser {
 	severity: "info" | "error" | "success" | "warning" | undefined;
 }
 
-const BrowserGuide: React.FC = () => {
+const BrowserGuide: React.FC = (): JSX.Element => {
 	const classes = useStyles();
 	const [selected, setSelected] = useState<Browser | null>(null);
 	const [open, setOpen] = useState<boolean>(false);

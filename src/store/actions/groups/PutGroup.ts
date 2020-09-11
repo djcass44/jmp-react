@@ -15,9 +15,8 @@
  *
  */
 
-import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
-import {BASE_URL} from "../../../constants";
+import {RSAA, RSAAAction} from "redux-api-middleware";
+import {BASE_URL, METHOD_PUT} from "../../../constants";
 
 export const PUT_GROUP = "PUT_GROUP";
 export const PUT_GROUP_REQUEST = "PUT_GROUP_REQUEST";
@@ -39,11 +38,11 @@ interface PutGroupFailureAction {
 	payload: Error;
 }
 
-export const putGroup = (dispatch: Dispatch, headers: any, name: string): void => {
-	dispatch({
+export const putGroup = (headers: Record<string, string>, name: string): RSAAAction => {
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2_1/group`,
-			method: "PUT",
+			method: METHOD_PUT,
 			headers,
 			body: JSON.stringify({
 				name,
@@ -52,7 +51,7 @@ export const putGroup = (dispatch: Dispatch, headers: any, name: string): void =
 			}),
 			types: [PUT_GROUP_REQUEST, PUT_GROUP_SUCCESS, PUT_GROUP_FAILURE]
 		}
-	});
+	};
 };
 
 export type PutGroupActionType = PutGroupRequestAction | PutGroupSuccessAction | PutGroupFailureAction;

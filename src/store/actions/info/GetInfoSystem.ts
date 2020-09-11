@@ -15,9 +15,8 @@
  *
  */
 
-import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
-import {BASE_URL} from "../../../constants";
+import {RSAA, RSAAAction} from "redux-api-middleware";
+import {BASE_URL, METHOD_GET} from "../../../constants";
 import {SystemInfo} from "../../../config/types/SystemInfo";
 
 export const GET_INFO_SYS = "GET_INFO_SYS";
@@ -40,15 +39,15 @@ interface GetInfoSystemFailureAction {
 	payload: Error;
 }
 
-export const getInfoSystem = (dispatch: Dispatch, headers: any): void => {
-	dispatch({
+export const getInfoSystem = (headers: Record<string, string>): RSAAAction => {
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/actuator/info`,
-			method: "GET",
+			method: METHOD_GET,
 			headers,
 			types: [GET_INFO_SYS_REQUEST, GET_INFO_SYS_SUCCESS, GET_INFO_SYS_FAILURE]
 		}
-	});
+	};
 };
 
 export type GetInfoSystemActionType =

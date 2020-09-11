@@ -65,7 +65,7 @@ export default () => {
 	};
 
 	const handleSubmit = () => {
-		putGroup(dispatch, headers, name.value);
+		dispatch(putGroup(headers, name.value));
 		setSubmit(true);
 	};
 

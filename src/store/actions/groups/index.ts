@@ -30,7 +30,7 @@ interface SetGroupOffsetActionType {
 	payload: number;
 }
 
-export const setGroupOffset = (offset: number) => {
+export const setGroupOffset = (offset: number): SetGroupOffsetActionType => {
 	return {
 		type: SET_GROUP_OFFSET,
 		payload: offset

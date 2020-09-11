@@ -19,7 +19,7 @@ import React, {ChangeEvent, useEffect, useMemo, useState} from "react";
 import {fade} from "@material-ui/core/styles/colorManipulator";
 import {Avatar, IconButton, makeStyles, Popover, Theme, Toolbar, Typography, useMediaQuery} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {Link, useHistory, useLocation} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHelpCircleOutline, mdiMagnify, mdiPlus} from "@mdi/js";
 import {useTheme} from "@material-ui/core/styles";
@@ -163,7 +163,6 @@ const SEARCH_ROUTES = [
 
 const Nav: React.FC<NavProps> = ({loading = false}: NavProps): JSX.Element => {
 	// hooks
-	const history = useHistory();
 	const location = useLocation();
 	const dispatch = useDispatch();
 	const classes = useStyles();
@@ -213,8 +212,6 @@ const Nav: React.FC<NavProps> = ({loading = false}: NavProps): JSX.Element => {
 		setLocalSearch(s);
 	};
 
-	const onHome = (): void => history.push("/");
-
 	return (
 		<div>
 			<>
@@ -227,13 +224,20 @@ const Nav: React.FC<NavProps> = ({loading = false}: NavProps): JSX.Element => {
 								className={classes.avatar}
 								src={`${process.env.PUBLIC_URL}/favicon.png`}
 								alt={`${APP_NAME} logo`}
-								onClick={onHome}
+								component={Link}
+								to="/"
 							/>
 						</HintTooltip>
-						<Typography className={classes.brand} variant="h6" color="textPrimary">
+						<Typography
+							className={classes.brand}
+							variant="h6"
+							color="textPrimary">
 							{APP_NAME}
 						</Typography>
-						<Typography className={classes.title} style={{fontWeight: 300}} variant="h6" color="secondary">
+						<Typography
+							className={classes.title}
+							variant="h6"
+							color="textSecondary">
 							{APP_MSG}
 						</Typography>
 						<div className={classes.grow}/>

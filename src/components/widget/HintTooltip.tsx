@@ -44,7 +44,7 @@ interface HintTooltipProps {
 	open?: boolean;
 }
 
-const HintTooltip: React.FC<HintTooltipProps> = ({className, title, children, open}) => {
+const HintTooltip: React.FC<HintTooltipProps> = ({className, title, children, open}): JSX.Element => {
 	const classes = useStyles();
 	return (
 		<Tooltip

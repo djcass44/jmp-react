@@ -34,7 +34,7 @@ const oppositeType = (type: "light" | "dark"): "light" | "dark" => {
 		return "light";
 };
 
-const UserAvatar: React.FC<UserAvatarProps> = ({className, text, src, setAnchorEl}) => {
+const UserAvatar: React.FC<UserAvatarProps> = ({className, text, src, setAnchorEl}): JSX.Element => {
 	// hooks
 	const theme = useTheme();
 

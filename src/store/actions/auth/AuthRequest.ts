@@ -18,7 +18,7 @@
 import {Dispatch} from "redux";
 import {RSAA} from "redux-api-middleware";
 import {Token} from "../../../types";
-import {BASE_URL} from "../../../constants";
+import {BASE_URL, METHOD_POST} from "../../../constants";
 import {oauthVerify} from "./AuthVerify";
 import {OAUTH_REFRESH_SUCCESS} from "./AuthRefresh";
 
@@ -45,7 +45,7 @@ export const oauthRequest = (dispatch: Dispatch, data: any): void => {
 	dispatch({
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/auth/login`,
-			method: "POST",
+			method: METHOD_POST,
 			body: JSON.stringify(data),
 			types: [OAUTH_REQUEST_REQUEST, OAUTH_REQUEST_SUCCESS, OAUTH_REQUEST_FAILURE]
 		}

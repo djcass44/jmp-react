@@ -45,7 +45,7 @@ interface JumpAvatarProps {
 	size?: number;
 }
 
-const JumpAvatar: React.FC<JumpAvatarProps> = ({jump, palette, loading, error, size = 40}: JumpAvatarProps) => {
+const JumpAvatar: React.FC<JumpAvatarProps> = ({jump, palette, loading, error, size = 40}: JumpAvatarProps): JSX.Element => {
 	// hooks
 	const theme = useTheme<Theme>();
 	const classes = useStyles();

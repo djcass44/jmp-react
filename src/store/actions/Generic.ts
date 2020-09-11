@@ -15,9 +15,17 @@
  *
  */
 
+import {RSAA, RSAAAction} from "redux-api-middleware";
+import {BASE_URL, METHOD_GET} from "../../constants";
+
 export const SET_THEME_MODE = "SET_THEME_MODE";
 export const SET_GRID_WIDTH = "SET_GRID_WIDTH";
 export const SET_GENERIC_SEARCH = "SET_GENERIC_SEARCH";
+
+export const GET_TARGET = "GET_TARGET";
+export const GET_TARGET_REQUEST = "GET_TARGET_REQUEST";
+export const GET_TARGET_SUCCESS = "GET_TARGET_SUCCESS";
+export const GET_TARGET_FAILURE = "GET_TARGET_FAILURE";
 
 interface SetThemeModeActionType {
 	type: typeof SET_THEME_MODE;
@@ -32,6 +40,22 @@ interface SetGridWidthActionType {
 interface SetGenericSearchActionType {
 	type: typeof SET_GENERIC_SEARCH;
 	payload: string;
+}
+
+interface GetTargetRequestActionType {
+	type: typeof GET_TARGET_REQUEST;
+}
+
+interface GetTargetSuccessActionType {
+	type: typeof GET_TARGET_SUCCESS;
+	payload: {
+		found: boolean;
+		location: string;
+	};
+}
+
+interface GetTargetFailureActionType {
+	type: typeof GET_TARGET_FAILURE;
 }
 
 export const setThemeMode = (theme: string): SetThemeModeActionType => {
@@ -55,4 +79,20 @@ export const setGenericSearch = (search: string): SetGenericSearchActionType => 
 	};
 };
 
-export type GenericActionType = SetThemeModeActionType | SetGridWidthActionType | SetGenericSearchActionType;
+export const getTarget = (path: string, query: string, headers: Record<string, string>): RSAAAction => {
+	return {
+		[RSAA]: {
+			endpoint: `${BASE_URL}/api/v2/jump/${encodeURIComponent(btoa(path))}${query}`,
+			method: METHOD_GET,
+			headers,
+			types: [GET_TARGET_REQUEST, GET_TARGET_SUCCESS, GET_TARGET_FAILURE]
+		}
+	};
+};
+
+export type GenericActionType = SetThemeModeActionType
+	| SetGridWidthActionType
+	| SetGenericSearchActionType
+	| GetTargetRequestActionType
+	| GetTargetSuccessActionType
+	| GetTargetFailureActionType;

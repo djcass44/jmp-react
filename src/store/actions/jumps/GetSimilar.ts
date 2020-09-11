@@ -17,7 +17,7 @@
 
 import {RSAA, RSAAAction} from "redux-api-middleware";
 import {Jump} from "../../../types";
-import {BASE_URL} from "../../../constants";
+import {BASE_URL, METHOD_GET} from "../../../constants";
 
 export const GET_SIMILAR = "GET_SIMILAR";
 export const GET_SIMILAR_REQUEST = "GET_SIMILAR_REQUEST";
@@ -40,11 +40,11 @@ export interface GetSimilarFailureAction {
 	error?: boolean;
 }
 
-export const getSimilar = (headers: any, query: string): RSAAAction => {
+export const getSimilar = (headers: Record<string, string>, query: string): RSAAAction => {
 	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/similar/${query}`,
-			method: "GET",
+			method: METHOD_GET,
 			headers,
 			types: [GET_SIMILAR_REQUEST, GET_SIMILAR_SUCCESS, GET_SIMILAR_FAILURE]
 		}

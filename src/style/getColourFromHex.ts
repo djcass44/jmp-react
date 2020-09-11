@@ -14,8 +14,12 @@
  *    limitations under the License.
  */
 
-export default (hex, alpha = 1) => {
-	if (hex == null) return null;
-	const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
+export default (hex: string | null, alpha = 1): string | null => {
+	if (hex == null)
+		return null;
+	const colour = hex.match(/\w\w/g)?.map(x => parseInt(x, 16));
+	if (colour == null)
+		return null;
+	const [r, g, b] = colour;
 	return `rgba(${r},${g},${b},${alpha})`;
 };

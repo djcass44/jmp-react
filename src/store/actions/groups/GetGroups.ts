@@ -15,10 +15,9 @@
  *
  */
 
-import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
+import {RSAA, RSAAAction} from "redux-api-middleware";
 import {Group, Page} from "../../../types";
-import {BASE_URL} from "../../../constants";
+import {BASE_URL, METHOD_GET} from "../../../constants";
 
 export const GROUP_LOAD = "GROUP_LOAD";
 export const GROUP_LOAD_REQUEST = "GROUP_LOAD_REQUEST";
@@ -40,15 +39,15 @@ interface GetGroupsFailureAction {
 	payload: Error;
 }
 
-export const getGroups = (dispatch: Dispatch, headers: any, query = "", page = 0, size = 8): void => {
+export const getGroups = (headers: Record<string, string>, query = "", page = 0, size = 8): RSAAAction => {
 	let queryString = `page=${page}&size=${size}`;
 	if (query.length > 0) {
 		queryString += `&query=${query}`;
 	}
-	dispatch({
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2_1/group?${queryString}`,
-			method: "GET",
+			method: METHOD_GET,
 			headers,
 			types: [
 				GROUP_LOAD_REQUEST,
@@ -59,7 +58,7 @@ export const getGroups = (dispatch: Dispatch, headers: any, query = "", page = 0
 				}
 			]
 		}
-	});
+	};
 };
 
 export type GetGroupsActionType = GetGroupsRequestAction | GetGroupsSuccessAction | GetGroupsFailureAction;

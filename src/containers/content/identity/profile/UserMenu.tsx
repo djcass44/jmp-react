@@ -60,7 +60,7 @@ interface UserMenuProps {
 	onClose: () => void;
 }
 
-const UserMenu: React.FC<UserMenuProps> = ({user, loginUrl, onClose}) => {
+const UserMenu: React.FC<UserMenuProps> = ({user, loginUrl, onClose}): JSX.Element => {
 	// hooks
 	const classes = useStyles();
 	const theme = useTheme();
@@ -122,7 +122,7 @@ const UserMenu: React.FC<UserMenuProps> = ({user, loginUrl, onClose}) => {
 				className={classes.info}
 				color="textSecondary"
 				align="center"
-				onClick={() => onPrivacyClicked()}>
+				onClick={onPrivacyClicked}>
 				Privacy info&nbsp;&bull;&nbsp;Help
 			</Typography>
 		</div>

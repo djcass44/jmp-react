@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-export default () => {
+export default (): JSX.Element => {
 	// hooks
 	const dispatch = useDispatch();
 	const classes = useStyles();
@@ -95,7 +95,7 @@ export default () => {
 		return l;
 	}, [loading, loadingPatch]);
 
-	const onSearch = (o: number = offset) => {
+	const onSearch = (o: number = offset): void => {
 		dispatch(getUsers(headers, searchFilter, Number(o / pageSize) || 0, pageSize));
 	};
 
@@ -116,7 +116,7 @@ export default () => {
 		setAnchorEl(user === u || e == null ? null : e);
 	};
 
-	const onPageChange = (_: React.ChangeEvent<unknown>, value: number) => {
+	const onPageChange = (_: React.ChangeEvent<unknown>, value: number): void => {
 		dispatch(setUserOffset(value));
 		onSearch(value);
 

@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-const JumpItemSkeleton: React.FC = () => {
+const JumpItemSkeleton: React.FC = (): JSX.Element => {
 	const classes = useStyles();
 	return (
 		<div className={classes.root}>

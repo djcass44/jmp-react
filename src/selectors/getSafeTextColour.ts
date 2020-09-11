@@ -1,7 +1,8 @@
 import {Theme} from "@material-ui/core";
 
-export default (theme: Theme, color: string | null, fallback?: string | null) => {
-	if (color == null) return fallback || theme.palette.text.primary;
+export default (theme: Theme, color: string | null, fallback?: string | null): string => {
+	if (color == null)
+		return fallback || theme.palette.text.primary;
 	try {
 		return theme.palette.getContrastText(color);
 	} catch (e) {

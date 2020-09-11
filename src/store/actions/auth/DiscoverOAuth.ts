@@ -15,8 +15,7 @@
  *
  */
 
-import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
+import {RSAA, RSAAAction} from "redux-api-middleware";
 import {Pair} from "../../../types";
 import {BASE_URL} from "../../../constants";
 
@@ -39,14 +38,14 @@ interface DiscoverOAuthFailureAction {
 	payload: Error;
 }
 
-export const discoverOAuth = (dispatch: Dispatch, name: string): void => {
-	dispatch({
+export const discoverOAuth = (name: string): RSAAAction => {
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/oauth2/${name}`,
 			method: "GET",
 			types: [DISCOVER_OAUTH_REQUEST, DISCOVER_OAUTH_SUCCESS, DISCOVER_OAUTH_FAILURE]
 		}
-	});
+	};
 };
 
 export type DiscoverOAuthActionType =

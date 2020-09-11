@@ -40,7 +40,7 @@ interface UserCardProps {
 	setAnchorEl?: (e: EventTarget & HTMLButtonElement) => void;
 }
 
-const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}) => {
+const UserCard: React.FC<UserCardProps> = ({user, setAnchorEl}): JSX.Element => {
 	// hooks
 	const classes = useStyles();
 	const theme = useTheme();

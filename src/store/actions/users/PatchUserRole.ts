@@ -15,9 +15,8 @@
  *
  */
 
-import {Dispatch} from "redux";
 import {RSAA, RSAAAction} from "redux-api-middleware";
-import {BASE_URL} from "../../../constants";
+import {BASE_URL, METHOD_PATCH} from "../../../constants";
 
 export const PATCH_USER_ROLE = "PATCH_USER_ROLE";
 export const PATCH_USER_ROLE_REQUEST = "PATCH_USER_ROLE_REQUEST";
@@ -40,11 +39,11 @@ interface PatchUserRoleFailureAction {
 	payload: Error;
 }
 
-export const patchUserRole = (headers: any, uid: string, admin = false): RSAAAction => {
+export const patchUserRole = (headers: Record<string, string>, uid: string, admin = false): RSAAAction => {
 	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/user?uid=${uid}&admin=${admin}`,
-			method: "PATCH",
+			method: METHOD_PATCH,
 			headers,
 			types: [PATCH_USER_ROLE_REQUEST, PATCH_USER_ROLE_SUCCESS, PATCH_USER_ROLE_FAILURE]
 		}

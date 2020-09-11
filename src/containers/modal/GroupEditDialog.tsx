@@ -86,12 +86,12 @@ const GroupEditDialog: React.FC = () => {
 	};
 
 	const onSubmit = () => {
-		patchGroup(dispatch, headers, {
+		dispatch(patchGroup(headers, {
 			...group,
 			name: name.value,
 			public: isPublic,
 			defaultFor: isPublic !== true && defaultFor
-		});
+		}));
 		setSubmit(true);
 	};
 

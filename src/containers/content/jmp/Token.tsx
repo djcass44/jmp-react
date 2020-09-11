@@ -20,14 +20,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {CircularProgress, makeStyles, Theme, Typography} from "@material-ui/core";
 import Center from "react-center";
 import {useHistory} from "react-router-dom";
-import {RSAA} from "redux-api-middleware";
 import {Dispatch} from "redux";
 import {ImageMessage} from "jmp-coreui";
 import {TState} from "../../../store/reducers";
-import {GET_TARGET} from "../../../actions/Jumps";
-import {APP_NAME, BASE_URL} from "../../../constants";
+import {APP_NAME} from "../../../constants";
 import useAuth from "../../../hooks/useAuth";
 import useLoading from "../../../hooks/useLoading";
+import {GET_TARGET, getTarget} from "../../../store/actions/Generic";
+import {ErrorState} from "../../../config/types/Feedback";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	text: {
@@ -66,10 +66,10 @@ const Token: React.FC = () => {
 	// global state
 	const {headers} = useAuth();
 	const loading = useLoading([GET_TARGET]);
-	const error = useSelector<TState, Error | null>(state => state.errors[GET_TARGET]);
+	const error = useSelector<TState, ErrorState | null>(state => state.errors[GET_TARGET]);
 
 	// component state
-	const [failure, setFailure] = useState<Error | string | null>(error);
+	const [failure, setFailure] = useState<ErrorState | string | null>(error);
 
 	/**
 	 * Handle the api response and move us to where we need to go
@@ -86,23 +86,12 @@ const Token: React.FC = () => {
 	};
 
 	/**
-	 * Make the api call to get our target.
-	 * This isn't using redux because of a "race-condition" where target isn't the expected value until too late
-	 * @param d: dispatch
+	 * Make the api call to get our target
 	 * @param path: the path (jump name)
 	 * @param query: the query parameters to tack onto the end of the get request
 	 */
-	const getTarget = (d: Dispatch, path: string, query: string): void => {
-		dispatch({
-			[RSAA]: {
-				endpoint: `${BASE_URL}/api/v2/jump/${encodeURIComponent(btoa(path))}${query}`,
-				method: "GET",
-				headers: headers as any,
-				types: [`${GET_TARGET}_REQUEST`, `${GET_TARGET}_SUCCESS`, `${GET_TARGET}_FAILURE`]
-			}
-		}).then(r => {
-			handleTargetResponse(r.payload as DoJumpDTO);
-		});
+	const getAndFollowTarget = (path: string, query: string): void => {
+		dispatch(getTarget(path, query, headers)).then(r => handleTargetResponse(r.payload));
 	};
 
 	const jumpUser = () => {
@@ -114,12 +103,13 @@ const Token: React.FC = () => {
 			if (id != null && id !== "")
 				query = `?id=${id}`;
 			// find out were we are going
-			getTarget(dispatch, path, query);
+			getAndFollowTarget(path, query);
 		} else {
 			setFailure("You must specify a query!");
 		}
 	};
-	// initial hook run on start (componentdidmount)
+
+
 	useEffect(() => {
 		window.document.title = `${APP_NAME}`;
 		window.setTimeout(() => jumpUser(), 100);

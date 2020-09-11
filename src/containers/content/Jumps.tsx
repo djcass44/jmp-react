@@ -94,7 +94,7 @@ export default (): JSX.Element => {
 	const [lData, setLData] = useState<Array<ReactNode>>([]);
 
 	const onSearch = (page = 1) => {
-		getJumps(dispatch, headers, searchFilter, page - 1, pageSize);
+		dispatch(getJumps(headers, searchFilter, page - 1, pageSize));
 	};
 
 	useEffect(() => {

@@ -15,9 +15,8 @@
  *
  */
 
-import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
-import {BASE_URL} from "../../../constants";
+import {RSAA, RSAAAction} from "redux-api-middleware";
+import {BASE_URL, METHOD_DELETE} from "../../../constants";
 
 export const DELETE_JUMP = "DELETE_JUMP";
 export const DELETE_JUMP_REQUEST = "DELETE_JUMP_REQUEST";
@@ -39,15 +38,15 @@ interface DeleteJumpFailureAction {
 	payload: Error;
 }
 
-export const deleteJump = (dispatch: Dispatch, headers: any, id: string): void => {
-	dispatch({
+export const deleteJump = (headers: Record<string, string>, id: string): RSAAAction => {
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/jump/${id}`,
-			method: "DELETE",
+			method: METHOD_DELETE,
 			headers,
 			types: [DELETE_JUMP_REQUEST, DELETE_JUMP_SUCCESS, DELETE_JUMP_FAILURE]
 		}
-	});
+	};
 };
 
 export type DeleteJumpActionType = DeleteJumpRequestAction | DeleteJumpSuccessAction | DeleteJumpFailureAction;

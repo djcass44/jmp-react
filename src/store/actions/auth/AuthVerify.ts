@@ -40,7 +40,7 @@ interface AuthVerifyFailureAction {
 	payload: Error;
 }
 
-export const oauthVerify = (dispatch: Dispatch, refresh: string | null, headers: any): void => {
+export const oauthVerify = (dispatch: Dispatch, refresh: string | null, headers: Record<string, string>): void => {
 	dispatch({
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/user/me`,

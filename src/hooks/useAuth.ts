@@ -17,11 +17,10 @@
 
 import {useSelector} from "react-redux";
 import {TState} from "../store/reducers";
-import {AuthHeaders} from "../types";
 import {getHeadersFromRaw} from "../util";
 
 export interface HeaderHook {
-	headers: AuthHeaders;
+	headers: Record<string, string>;
 	isAdmin: boolean;
 	request: string | null;
 	refresh: string | null;
@@ -35,7 +34,11 @@ export interface HeaderHook {
  */
 const getHeaders = (state: TState): HeaderHook => {
 	const {request, source, isLoggedIn, refresh, isAdmin} = state.auth;
-	const headers = getHeadersFromRaw(request, source);
+	const h = getHeadersFromRaw(request, source);
+	const headers: Record<string, string> = {
+		"Authorization": h.Authorization || "",
+		"X-Auth-Source": h["X-Auth-Source"] || ""
+	};
 	return {
 		headers,
 		isLoggedIn,

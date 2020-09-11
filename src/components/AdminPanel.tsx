@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	}
 }));
 
-const AdminPanel: React.FC = () => {
+const AdminPanel: React.FC = (): JSX.Element | null => {
 	const {isAdmin} = useAuth();
 	const classes = useStyles();
 

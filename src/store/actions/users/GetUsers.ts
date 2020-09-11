@@ -15,10 +15,9 @@
  *
  */
 
-import {Dispatch} from "redux";
 import {RSAA, RSAAAction} from "redux-api-middleware";
 import {Page, User} from "../../../types";
-import {BASE_URL} from "../../../constants";
+import {BASE_URL, METHOD_GET} from "../../../constants";
 
 export const USER_LOAD = "USER_LOAD";
 export const USER_LOAD_REQUEST = "USER_LOAD_REQUEST";
@@ -41,7 +40,7 @@ interface GetUsersFailureAction {
 	payload: Error;
 }
 
-export const getUsers = (headers: any, query = "", page = 0, size = 8): RSAAAction => {
+export const getUsers = (headers: Record<string, string>, query = "", page = 0, size = 8): RSAAAction => {
 	let queryString = `page=${page}&size=${size}`;
 	if (query.length > 0) {
 		queryString += `&query=${query}`;
@@ -49,7 +48,7 @@ export const getUsers = (headers: any, query = "", page = 0, size = 8): RSAAActi
 	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/user?${queryString}`,
-			method: "GET",
+			method: METHOD_GET,
 			headers,
 			types: [USER_LOAD_REQUEST, USER_LOAD_SUCCESS, USER_LOAD_FAILURE]
 		}

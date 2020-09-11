@@ -16,11 +16,12 @@
  */
 
 
+import {Action} from "redux";
 import {SimpleMap} from "../../types";
 
 const initialState: SimpleMap<boolean> = {};
 
-export default (state = initialState, action: { type: string; }) => {
+export default (state = initialState, action: Action): SimpleMap<boolean> => {
 	const {type} = action;
 	const matches = /(.*)_(REQUEST|SUCCESS|FAILURE)/.exec(type);
 

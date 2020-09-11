@@ -1,6 +1,6 @@
 import {Theme} from "@material-ui/core";
 
-export default (theme: Theme, type: number) => {
+export default (theme: Theme, type: number): string[] => {
 	const {palette} = theme;
 	if (palette.type === "dark") {
 		switch (type) {

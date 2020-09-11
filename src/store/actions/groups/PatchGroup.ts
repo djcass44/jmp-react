@@ -15,9 +15,8 @@
  *
  */
 
-import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
-import {BASE_URL} from "../../../constants";
+import {RSAA, RSAAAction} from "redux-api-middleware";
+import {BASE_URL, METHOD_PATCH} from "../../../constants";
 import {Group} from "../../../types";
 
 export const PATCH_GROUP = "PATCH_GROUP";
@@ -40,16 +39,16 @@ interface PatchGroupFailureAction {
 	payload: Error;
 }
 
-export const patchGroup = (dispatch: Dispatch, headers: any, group: Group): void => {
-	dispatch({
+export const patchGroup = (headers: Record<string, string>, group: Group): RSAAAction => {
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2_1/group`,
-			method: "PATCH",
+			method: METHOD_PATCH,
 			headers,
 			body: JSON.stringify(group),
 			types: [PATCH_GROUP_REQUEST, PATCH_GROUP_SUCCESS, PATCH_GROUP_FAILURE]
 		}
-	});
+	};
 };
 
 export type PatchGroupActionType = PatchGroupRequestAction | PatchGroupSuccessAction | PatchGroupFailureAction;

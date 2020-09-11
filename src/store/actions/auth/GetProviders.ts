@@ -38,12 +38,12 @@ interface GetProvidersFailureAction {
 	payload: Error;
 }
 
-export const getProviders = (headers: any): RSAAAction => {
+export const getProviders = (headers: Record<string, string>): RSAAAction => {
 	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/providers`,
 			method: "GET",
-			headers: headers,
+			headers,
 			types: [
 				GET_PROVIDERS_REQUEST,
 				GET_PROVIDERS_SUCCESS,

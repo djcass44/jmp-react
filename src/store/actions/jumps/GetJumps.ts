@@ -15,10 +15,9 @@
  *
  */
 
-import {Dispatch} from "redux";
-import {RSAA} from "redux-api-middleware";
+import {RSAA, RSAAAction} from "redux-api-middleware";
 import {Jump, Page} from "../../../types";
-import {APP_NOUN, BASE_URL} from "../../../constants";
+import {APP_NOUN, BASE_URL, METHOD_GET} from "../../../constants";
 
 export const GET_JUMP = "GET_JUMP";
 export const GET_JUMP_REQUEST = "GET_JUMP_REQUEST";
@@ -40,22 +39,22 @@ interface GetJumpsFailureAction {
 	payload: Error;
 }
 
-export const getJumps = (dispatch: Dispatch, headers: any, query = "", page = 0, size = 8): void => {
+export const getJumps = (headers: Record<string, string>, query = "", page = 0, size = 8): RSAAAction => {
 	let queryString = `page=${page}&size=${size}`;
 	if (query.length > 0) {
 		queryString += `&query=${query}`;
 	}
-	dispatch({
+	return {
 		[RSAA]: {
 			endpoint: `${BASE_URL}/api/v2/jump?${queryString}`,
-			method: "GET",
+			method: METHOD_GET,
 			headers,
 			types: [GET_JUMP_REQUEST, GET_JUMP_SUCCESS, {
 				type: GET_JUMP_FAILURE,
 				meta: `Failed to load ${APP_NOUN}s`
 			}]
 		}
-	});
+	};
 };
 
 export type GetJumpsActionType = GetJumpsRequestAction | GetJumpsSuccessAction | GetJumpsFailureAction;

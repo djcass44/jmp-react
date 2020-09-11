@@ -87,7 +87,7 @@ export default () => {
 	const onSubmit = () => {
 		// convert to a switch when there's more cases
 		if (deletable === true) {
-			deleteJump(dispatch, headers, other.item.id);
+			dispatch(deleteJump(headers, other.item.id));
 		}
 		close();
 	};

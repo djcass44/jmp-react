@@ -38,12 +38,8 @@ const Domain: React.FC<DomainProps> = ({text}): JSX.Element => {
 	const classes = useStyles();
 
 	const highlighted = (url: string): ReactNode => {
-		const split = url.split("://");
-		const scheme = split[0];
-		const domain = split[1];
-		let c = classes.http;
-		if (scheme === "https")
-			c = classes.https;
+		const [scheme, domain] = url.split("://");
+		const c = scheme === "https" ? classes.https : classes.http;
 		return (<span className={c}>
 			{scheme}://
 			<span

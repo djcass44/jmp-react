@@ -17,7 +17,7 @@
 
 import {mdiAccountOutline, mdiDatabase, mdiGithub, mdiGitlab, mdiGoogle, mdiShieldAccount} from "@mdi/js";
 import {Theme} from "@material-ui/core";
-import {AuthHeaders, SimpleMap, Token} from "../types";
+import {SimpleMap, Token} from "../types";
 
 /**
  * Converts an object to JSON and back
@@ -33,21 +33,15 @@ export const plural = (count: number, text: string): string => {
 };
 
 export const getInitials = (str: string): string => {
-	let text = str;
 	// handle usernames such as oauth2/john.doe
-	if (str.includes("/")) {
-		text = str.split("/")[1];
-	}
-	let separator = " ";
-	if (!str.includes(" ")) {
-		separator = ".";
-	}
+	const text = str.includes("/") ? str.split("/")[1] : str;
+	const separator = !str.includes(" ") ? "." : " ";
 	return text.split(separator).map(s => s[0].toLocaleUpperCase()).join("");
 };
 
-export const getHeaders = (token: Token): AuthHeaders => getHeadersFromRaw(token.request, token.source || null);
+export const getHeaders = (token: Token): Record<string, string> => getHeadersFromRaw(token.request, token.source || null);
 
-export const getHeadersFromRaw = (request: string | null, source: string | null): AuthHeaders => {
+export const getHeadersFromRaw = (request: string | null, source: string | null): Record<string, string> => {
 	return {
 		"Authorization": request ? `Bearer ${request}` : "",
 		"X-Auth-Source": source || ""
