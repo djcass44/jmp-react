@@ -122,7 +122,7 @@ const Token: React.FC = () => {
 	// initial hook run on start (componentdidmount)
 	useEffect(() => {
 		window.document.title = `${APP_NAME}`;
-		setTimeout(() => jumpUser(), 100);
+		window.setTimeout(() => jumpUser(), 100);
 	}, []);
 
 	const message = (error != null || failure != null) ? (error?.toString() || failure) : "Jumping... You can close this window if it stays open";

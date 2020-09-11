@@ -40,7 +40,11 @@ const bgTransition = (time: number | string): string => `background-color ${time
 
 const useStyles = makeStyles((theme: Theme) => ({
 	main: {
-		pointerEvents: "auto"
+		pointerEvents: "auto",
+		position: "fixed",
+		left: 0,
+		right: 0,
+		top: 0
 	},
 	grow: {
 		flexGrow: 1
@@ -66,6 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 		pointerEvents: "initial"
 	},
 	searchRoot: {
+		zIndex: theme.zIndex.appBar,
 		position: "fixed",
 		left: 0,
 		right: 0,
@@ -156,7 +161,7 @@ const SEARCH_ROUTES = [
 	"/"
 ];
 
-const Nav: React.FC<NavProps> = ({loading = false}): JSX.Element => {
+const Nav: React.FC<NavProps> = ({loading = false}: NavProps): JSX.Element => {
 	// hooks
 	const history = useHistory();
 	const location = useLocation();
@@ -199,14 +204,16 @@ const Nav: React.FC<NavProps> = ({loading = false}): JSX.Element => {
 			setLoginUrl(`/login?target=${url}`);
 	}, [location.pathname, location.search]);
 
-	const handleMenuClose = () => {
+	const handleMenuClose = (): void => {
 		setAnchorEl(null);
 	};
 
-	const handleSearchChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+	const handleSearchChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
 		const s = e.target.value.toLowerCase();
 		setLocalSearch(s);
 	};
+
+	const onHome = (): void => history.push("/");
 
 	return (
 		<div>
@@ -220,7 +227,7 @@ const Nav: React.FC<NavProps> = ({loading = false}): JSX.Element => {
 								className={classes.avatar}
 								src={`${process.env.PUBLIC_URL}/favicon.png`}
 								alt={`${APP_NAME} logo`}
-								onClick={() => history.push("/")}
+								onClick={onHome}
 							/>
 						</HintTooltip>
 						<Typography className={classes.brand} variant="h6" color="textPrimary">
@@ -311,7 +318,7 @@ const Nav: React.FC<NavProps> = ({loading = false}): JSX.Element => {
 				anchorOrigin={{vertical: "top", horizontal: "right"}}
 				transformOrigin={{vertical: "top", horizontal: "right"}}
 				open={anchorEl != null && !loading}
-				onClose={() => handleMenuClose()}>
+				onClose={handleMenuClose}>
 				<UserMenu
 					user={userProfile}
 					loginUrl={loginUrl}
