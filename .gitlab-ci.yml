@@ -8,13 +8,9 @@ variables:
   stage: deploy
   dependencies: [ ]
   before_script:
-    - git remote set-url origin https://${CI_PUSH_USER}:${CI_PUSH_TOKEN}@${CI_SERVER_HOST}:${CI_SERVER_PORT}/${CI_PROJECT_PATH}.git
-    - git config --global user.email "${GITLAB_USER_EMAIL}"
-    - git config --global user.name "${GITLAB_USER_ID}"
-  script:
-    - git checkout -B master
     - wget https://f002.backblazeb2.com/file/dcas-artifacts/open-source-auto-release/auto-release
     - chmod +x auto-release
+  script:
     - ./auto-release -path $CI_PROJECT_DIR -debug
 
 auto-release maven:
