@@ -4,5 +4,48 @@ variables:
   STAGING_ENABLED: 'true'
   A11Y_ENABLED: 'true'
 
+.auto-release_tempate: &auto-release_template
+  stage: deploy
+  dependencies: [ ]
+  before_script:
+    - git remote set-url origin https://USERNAME:${CI_PUSH_TOKEN}@${CI_SERVER_HOST}:${CI_SERVER_PORT}/${CI_PROJECT_PATH}.git
+    - git config --global user.email "${GITLAB_USER_EMAIL}"
+    - git config --global user.name "${GITLAB_USER_ID}"
+  script:
+    - git checkout -B master
+    - wget https://f002.backblazeb2.com/file/dcas-artifacts/open-source-auto-release/auto-release
+    - chmod +x auto-release
+    - ./auto-release -path $CI_PROJECT_DIR -debug
+
+auto-release maven:
+  <<: *auto-release_template
+  image: castive/maven
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "master"'
+      when: never
+    - if: '$RELEASE_DISABLED || $CI_DEPLOY_FREEZE == "true"'
+      when: never
+    - exists:
+        - pom.xml
+        - pom.atom
+        - pom.clj
+        - pom.groovy
+        - pom.rb
+        - pom.scala
+        - pom.yaml
+        - pom.yml
+
+auto-release node:
+  <<: *auto-release_template
+  image: castive/node
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "master"'
+      when: never
+    - if: '$RELEASE_DISABLED || $CI_DEPLOY_FREEZE == "true"'
+      when: never
+    - exists:
+        - package.json
+        - package-lock.json
+
 include:
   - remote: 'https://gitlab.dcas.dev/open-source/gitlab-ci-templates/-/raw/master/auto/Auto-UI.gitlab-ci.yml'
