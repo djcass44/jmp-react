@@ -15,6 +15,7 @@ variables:
     - wget https://f002.backblazeb2.com/file/dcas-artifacts/open-source-auto-release/auto-release
     - chmod +x auto-release
   script:
+    - git remote set-url origin "ssh://git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git"
     - git checkout -B master
     - ./auto-release -path $CI_PROJECT_DIR -debug
     - git push -u origin master
