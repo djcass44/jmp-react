@@ -3,52 +3,7 @@ variables:
   KANIKO_BUILD_ARGS: "NPM_REGISTRY=prism.dcas.dev/npm"
   STAGING_ENABLED: 'true'
   A11Y_ENABLED: 'true'
-
-.auto-release_tempate: &auto-release_template
-  stage: deploy
-  dependencies: [ ]
-  before_script:
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-    - mkdir -p ~/.ssh
-    - ssh-keyscan -H "${CI_SERVER_HOST}" > ~/.ssh/known_hosts
-    - wget https://f002.backblazeb2.com/file/dcas-artifacts/open-source-auto-release/auto-release
-    - chmod +x auto-release
-  script:
-    - git remote set-url origin "ssh://git@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git"
-    - git checkout -B master
-    - ./auto-release -path $CI_PROJECT_DIR -debug
-    - git push -u origin master
-
-auto-release maven:
-  <<: *auto-release_template
-  image: castive/maven
-  rules:
-    - if: '$CI_COMMIT_BRANCH != "master"'
-      when: never
-    - if: '$RELEASE_DISABLED || $CI_DEPLOY_FREEZE == "true"'
-      when: never
-    - exists:
-        - pom.xml
-        - pom.atom
-        - pom.clj
-        - pom.groovy
-        - pom.rb
-        - pom.scala
-        - pom.yaml
-        - pom.yml
-
-auto-release node:
-  <<: *auto-release_template
-  image: castive/node
-  rules:
-    - if: '$CI_COMMIT_BRANCH != "master"'
-      when: never
-    - if: '$RELEASE_DISABLED || $CI_DEPLOY_FREEZE == "true"'
-      when: never
-    - exists:
-        - package.json
-        - package-lock.json
+  AUTO_RELEASE_DISABLED: 'false'
 
 include:
   - remote: 'https://gitlab.dcas.dev/open-source/gitlab-ci-templates/-/raw/master/auto/Auto-UI.gitlab-ci.yml'
