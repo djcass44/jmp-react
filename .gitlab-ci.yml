@@ -9,13 +9,15 @@ variables:
   dependencies: [ ]
   before_script:
     - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - echo "Using private key $SSH_PRIVATE_KEY"
+    - chmod 400 $SSH_PRIVATE_KEY
+    - ssh-add $SSH_PRIVATE_KEY
     - mkdir -p ~/.ssh
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - ssh-keyscan -H "${CI_SERVER_HOST}:${CI_SERVER_PORT}" > ~/.ssh/known_hosts
     - wget https://f002.backblazeb2.com/file/dcas-artifacts/open-source-auto-release/auto-release
     - chmod +x auto-release
   script:
-    - git fetch origin && git checkout origin/master
+    - git checkout -B master
     - ./auto-release -path $CI_PROJECT_DIR -debug
     - git push -u origin master
 
