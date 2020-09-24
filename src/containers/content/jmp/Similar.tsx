@@ -16,11 +16,12 @@
  */
 
 import {useDispatch, useSelector} from "react-redux";
-import {CircularProgress, makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
+import {Chip, CircularProgress, makeStyles, Theme, Typography, useTheme} from "@material-ui/core";
 import React, {ReactNode, useEffect, useMemo} from "react";
 import Center from "react-center";
 import Icon from "@mdi/react";
-import {mdiMagnify} from "@mdi/js";
+import {mdiArrowRight, mdiMagnify} from "@mdi/js";
+import {Link} from "react-router-dom";
 import getErrorMessage from "../../../selectors/getErrorMessage";
 import {APP_NAME} from "../../../constants";
 import {GET_SIMILAR, getSimilar} from "../../../store/actions/jumps/GetSimilar";
@@ -58,7 +59,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 		margin: theme.spacing(3)
 	},
 	searchText: {
-		color: theme.palette.text.secondary
+		color: theme.palette.text.secondary,
+		marginBottom: theme.spacing(3)
 	}
 }));
 
@@ -121,6 +123,23 @@ const Similar: React.FC = (): JSX.Element => {
 						variant="h6">
 						{error == null ? status : getErrorMessage(error)}
 					</Typography>
+				</Center>
+				<Center>
+					<Chip
+						icon={<Icon path={mdiArrowRight} color={theme.palette.primary.main} size={0.85}/>}
+						component={Link}
+						to="/"
+						variant="outlined"
+						label={
+							<Typography
+								className={classes.title}
+								style={{fontSize: 12, fontWeight: "bold"}}
+								color="textSecondary">
+								Explore jumps
+							</Typography>
+						}
+						clickable
+					/>
 				</Center>
 			</>}
 			{loading && <Center>
