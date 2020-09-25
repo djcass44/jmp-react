@@ -21,6 +21,7 @@ import {GET_SIMILAR_FAILURE, GetSimilarActionType, GetSimilarFailureAction} from
 import {DeleteJumpActionType} from "./DeleteJump";
 import {PutJumpActionType} from "./PutJump";
 import {PatchJumpActionType} from "./PatchJump";
+import {GetTopPicksActionType} from "./GetTopPicks";
 
 export const SET_JUMP_EXPAND = "SET_JUMP_EXPAND";
 export const SET_JUMP_OFFSET = "SET_JUMP_OFFSET";
@@ -72,7 +73,8 @@ export const setJumpOffset = (offset: number): SetJumpOffsetActionType => {
 	};
 }
 export type JumpsActionType =
-	GetJumpsActionType
+	GetTopPicksActionType
+	| GetJumpsActionType
 	| DeleteJumpActionType
 	| PutJumpActionType
 	| PatchJumpActionType

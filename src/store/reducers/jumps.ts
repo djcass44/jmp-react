@@ -15,20 +15,19 @@
  *
  */
 
-import {FaviconPayload, Jump, Page} from "../../types";
+import {Jump, Page} from "../../types";
 import {
 	JumpsActionType,
 	SET_JUMP_EXPAND,
 	SET_JUMP_OFFSET,
 	SET_JUMP_SEARCH,
-	SetJumpExpandActionType,
-	SetJumpOffsetActionType,
-	SetJumpSearchActionType,
 	SOCKET_UPDATE_FAVICON,
 	SOCKET_UPDATE_TITLE
 } from "../actions/jumps";
-import {GET_JUMP_SUCCESS, GetJumpsSuccessAction} from "../actions/jumps/GetJumps";
-import {GET_SIMILAR_SUCCESS, GetSimilarSuccessAction} from "../actions/jumps/GetSimilar";
+import {GET_JUMP_SUCCESS} from "../actions/jumps/GetJumps";
+import {GET_SIMILAR_SUCCESS} from "../actions/jumps/GetSimilar";
+import {getEmptyPage} from "../../util";
+import {GET_TOP_PICKS_SUCCESS} from "../actions/jumps/GetTopPicks";
 
 export interface JumpsState {
 	jumps: Page<Jump>;
@@ -36,21 +35,16 @@ export interface JumpsState {
 	expanded?: number | null;
 	offset: number;
 	search: string;
+	topPicks: Page<Jump>;
 }
 
 const initialState: JumpsState = {
-	jumps: {
-		content: [],
-		size: 0,
-		totalPages: 0,
-		totalElements: 0,
-		numberOfElements: 0,
-		number: 0
-	},
+	jumps: getEmptyPage(),
 	similar: [],
 	expanded: null,
 	offset: 0,
-	search: ""
+	search: "",
+	topPicks: getEmptyPage()
 };
 
 export default (state = initialState, action: JumpsActionType): JumpsState => {
@@ -87,8 +81,10 @@ export default (state = initialState, action: JumpsActionType): JumpsState => {
 			}
 			const {jumps} = state;
 			jumps.content[idx].image = payload.url;
-			return {...state, jumps}
+			return {...state, jumps};
 		}
+		case GET_TOP_PICKS_SUCCESS:
+			return {...state, topPicks: action.payload};
 		default:
 			return state;
 	}

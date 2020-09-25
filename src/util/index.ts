@@ -17,7 +17,7 @@
 
 import {mdiAccountOutline, mdiDatabase, mdiGithub, mdiGitlab, mdiGoogle, mdiShieldAccount} from "@mdi/js";
 import {Theme} from "@material-ui/core";
-import {SimpleMap, Token} from "../types";
+import {Page, SimpleMap, Token} from "../types";
 
 /**
  * Converts an object to JSON and back
@@ -87,4 +87,15 @@ export const getProviderData = (theme: Theme): SimpleMap<Provider> => {
 			colour: "#E2432A"
 		}
 	}
+};
+
+export const getEmptyPage = <T>(): Page<T> => {
+	return {
+		content: [],
+		size: 0,
+		totalPages: 0,
+		totalElements: 0,
+		numberOfElements: 0,
+		number: 0
+	};
 };

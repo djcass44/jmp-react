@@ -14,22 +14,26 @@
  *    limitations under the License.
  */
 
-import {makeStyles, Theme, Typography, Zoom} from "@material-ui/core";
-import React, {ReactNode, useEffect, useState} from "react";
+import {Card, Divider, makeStyles, Theme, Typography, useTheme, Zoom} from "@material-ui/core";
+import React, {ReactNode, useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
 import List from "@material-ui/core/List";
 import {ImageMessage} from "jmp-coreui";
-import {Pagination} from "@material-ui/lab";
+import {Alert, AlertTitle, Pagination} from "@material-ui/lab";
 import {GET_JUMP, getJumps} from "../../store/actions/jumps/GetJumps";
 import {setJumpExpand, setJumpOffset} from "../../store/actions/jumps";
 import {TState} from "../../store/reducers";
-import {Jump, Page} from "../../types";
 import {APP_NAME, APP_NOUN, pageSize} from "../../constants";
 import JumpItemSkeleton from "../../components/content/jmp/JumpItemSkeleton";
 import useAuth from "../../hooks/useAuth";
 import {GenericState} from "../../store/reducers/generic";
 import useLoading from "../../hooks/useLoading";
+import {JumpsState} from "../../store/reducers/jumps";
+import {GET_TOP_PICKS, getTopPicks} from "../../store/actions/jumps/GetTopPicks";
+import getErrorMessage from "../../selectors/getErrorMessage";
+import {ErrorState} from "../../config/types/Feedback";
+import TopPick from "../../components/content/jmp/TopPick";
 import JumpItem from "./jmp/JumpItem";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -69,6 +73,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 		fontSize: 18,
 		padding: theme.spacing(1),
 		paddingLeft: theme.spacing(3)
+	},
+	picksCard: {
+		margin: theme.spacing(3),
+		borderRadius: theme.spacing(1)
 	}
 }));
 
@@ -82,43 +90,47 @@ export default (): JSX.Element => {
 	// hooks
 	const classes = useStyles();
 	const dispatch = useDispatch();
+	const theme = useTheme();
 
 	// global state
-	const pagedJumps = useSelector<TState, Page<Jump>>(state => state.jumps.jumps);
+	const {jumps, topPicks} = useSelector<TState, JumpsState>(state => state.jumps);
 	const {searchFilter} = useSelector<TState, GenericState>(state => state.generic);
-	const {headers} = useAuth();
+	const {headers, isLoggedIn} = useAuth();
 	const loading = useLoading([GET_JUMP]);
+	const topPicksError = useSelector<TState, ErrorState | null>(state => state.errors[GET_TOP_PICKS]);
 
 	// local state
-	const [data, setData] = useState<Array<ReactNode>>([]);
-	const [lData, setLData] = useState<Array<ReactNode>>([]);
+	const [showTopPicks, setShowTopPicks] = useState(true);
+	const data: Array<ReactNode> = useMemo(() => {
+		const {content} = jumps;
+		dispatch(setJumpOffset(jumps.number * pageSize));
+		// Loop-d-loop
+		return content.map(i => (<JumpItem jump={i} key={i.id}/>));
+	}, [jumps]);
+
+	const lData: Array<ReactNode> = useMemo(() => {
+		if (!loading)
+			return [];
+		const l = [];
+		const size = jumps.numberOfElements || pageSize;
+		for (let i = 0; i < size; i++) {
+			l.push(<JumpItemSkeleton key={i}/>);
+		}
+		return l;
+	}, [loading]);
 
 	const onSearch = (page = 1) => {
+		setShowTopPicks(searchFilter.length === 0);
+		if (searchFilter.length === 0 && isLoggedIn) {
+			dispatch(getTopPicks(headers, 2));
+		}
 		dispatch(getJumps(headers, searchFilter, page - 1, pageSize));
 	};
 
 	useEffect(() => {
 		window.document.title = APP_NAME;
 		onSearch();
-	}, [headers.Authorization, searchFilter]);
-
-	useEffect(() => {
-		const {content} = pagedJumps;
-		dispatch(setJumpOffset(pagedJumps.number * pageSize));
-		// Loop-d-loop
-		setData(content.map(i => (<JumpItem jump={i} key={i.id}/>)));
-	}, [pagedJumps]);
-
-	useEffect(() => {
-		if (!loading)
-			setLData([]);
-		const l = [];
-		const size = pagedJumps.numberOfElements || pageSize;
-		for (let i = 0; i < size; i++) {
-			l.push(<JumpItemSkeleton key={i}/>);
-		}
-		setLData(l);
-	}, [loading]);
+	}, [headers.Authorization, isLoggedIn, searchFilter]);
 
 	const onPageChange = (event: React.ChangeEvent<unknown>, value: number) => {
 		dispatch(setJumpOffset(value));
@@ -129,7 +141,32 @@ export default (): JSX.Element => {
 
 	return (
 		<div>
-			{pagedJumps.numberOfElements > 0 && <Typography
+			{showTopPicks && isLoggedIn && <>
+				{(topPicks.numberOfElements > 0 || topPicksError != null) && <Typography
+					className={classes.subheader}
+					color="textPrimary">
+					Top picks
+				</Typography>}
+				{(topPicks.numberOfElements > 0 && topPicksError == null) && <Card
+					className={classes.picksCard}
+					variant="outlined">
+					<List>
+						{topPicks.content.map((j, idx) => <>
+							<TopPick key={j.id} jump={j}/>
+							{idx < (topPicks.numberOfElements - 1) && <Divider/>}
+						</>)}
+					</List>
+				</Card>}
+				{topPicksError != null && <Alert
+					className={classes.picksCard}
+					severity="error">
+					<AlertTitle>
+						Something went wrong loading top picks
+					</AlertTitle>
+					{getErrorMessage(topPicksError)}
+				</Alert>}
+			</>}
+			{jumps.numberOfElements > 0 && <Typography
 				className={classes.subheader}
 				color="textPrimary">
 				{APP_NOUN}s
@@ -144,11 +181,11 @@ export default (): JSX.Element => {
 					<ImageMessage src={emptyImages} message="Nothing could be found"/>}
 				</List>
 			</div>
-			<Zoom in={pagedJumps.totalElements > pagedJumps.size}>
+			<Zoom in={jumps.totalElements > jumps.size}>
 				<Center>
 					<Pagination
-						count={pagedJumps.totalPages}
-						page={(pagedJumps.pageable?.pageNumber || 0) + 1}
+						count={jumps.totalPages}
+						page={(jumps.pageable?.pageNumber || 0) + 1}
 						onChange={onPageChange}
 						color="primary"
 						size="small"

@@ -43,9 +43,10 @@ interface JumpAvatarProps {
 	loading: boolean;
 	error: Error | null;
 	size?: number;
+	iconSize?: number;
 }
 
-const JumpAvatar: React.FC<JumpAvatarProps> = ({jump, palette, loading, error, size = 40}: JumpAvatarProps): JSX.Element => {
+const JumpAvatar: React.FC<JumpAvatarProps> = ({jump, palette, loading, error, size = 40, iconSize = 1}: JumpAvatarProps): JSX.Element => {
 	// hooks
 	const theme = useTheme<Theme>();
 	const classes = useStyles();
@@ -58,8 +59,9 @@ const JumpAvatar: React.FC<JumpAvatarProps> = ({jump, palette, loading, error, s
 		try {
 			bg = getColourFromHex(avatarPalette.bg, 0.2);
 		} catch (e) {
+			// this will probably only be thrown by firefox, so just swallow it
 			console.error(e);
-		} // this will probably only be thrown by firefox, so just swallow it
+		}
 	}
 	const scheme = getAvatarScheme(theme, personal);
 	const avatar = {
@@ -75,10 +77,10 @@ const JumpAvatar: React.FC<JumpAvatarProps> = ({jump, palette, loading, error, s
 				className={classes.image}
 				src={jump.image}
 				loader={
-					<Skeleton animation="wave" variant="circle" width={32} height={32}/>
+					<Skeleton animation="wave" variant="circle" width={iconSize * 32} height={iconSize * 32}/>
 				}
 				unloader={
-					<Icon path={avatar.icon} color={avatar.fg} size={1}/>
+					<Icon path={avatar.icon} color={avatar.fg} size={iconSize}/>
 				}
 			/>
 		</Avatar>
