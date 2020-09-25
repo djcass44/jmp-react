@@ -17,7 +17,7 @@
 
 import {useDispatch, useSelector} from "react-redux";
 import {List, makeStyles, Theme, Typography, Zoom} from "@material-ui/core";
-import {Pagination} from "@material-ui/lab";
+import {Alert, Pagination} from "@material-ui/lab";
 import React, {ReactNode, useEffect, useMemo, useState} from "react";
 import Center from "react-center";
 import Button from "@material-ui/core/Button";
@@ -32,8 +32,8 @@ import {User} from "../../../types";
 import useAuth from "../../../hooks/useAuth";
 import {pageSize} from "../../../constants";
 import JumpItemSkeleton from "../../../components/content/jmp/JumpItemSkeleton";
-import {GenericState} from "../../../store/reducers/generic";
 import useLoading from "../../../hooks/useLoading";
+import usePathVar from "../../../hooks/usePathVar";
 import UserOptionsMenu from "./UserOptionsMenu";
 import UserCard from "./profile/UserCard";
 
@@ -74,7 +74,7 @@ export default (): JSX.Element => {
 
 	// global state
 	const {users, offset} = useSelector<TState, UsersState>(state => state.users);
-	const {searchFilter} = useSelector<TState, GenericState>(state => state.generic);
+	const searchFilter = usePathVar();
 	const {headers} = useAuth();
 	const loading = useLoading([USER_LOAD]);
 	const loadingPatch = useLoading([PATCH_USER_ROLE]);
@@ -147,9 +147,10 @@ export default (): JSX.Element => {
 				{loadingItems}
 				{!(loading || loadingPatch) && items}
 			</List>
-			{items.length === 0 && <Typography className={`${classes.title} ${classes.nothing}`} color="primary">
-				No users could be found
-			</Typography>}
+			{items.length === 0 && !loading && <Alert
+				severity="info">
+				No groups could be found
+			</Alert>}
 			<Zoom in={users.totalElements > users.size}>
 				<Center>
 					<Pagination

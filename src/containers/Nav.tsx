@@ -19,7 +19,7 @@ import React, {ChangeEvent, useEffect, useMemo, useState} from "react";
 import {fade} from "@material-ui/core/styles/colorManipulator";
 import {Avatar, IconButton, makeStyles, Popover, Theme, Toolbar, Typography, useMediaQuery} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useHistory, useLocation} from "react-router-dom";
 import Icon from "@mdi/react";
 import {mdiArrowLeft, mdiHelpCircleOutline, mdiMagnify, mdiPlus} from "@mdi/js";
 import {useTheme} from "@material-ui/core/styles";
@@ -30,7 +30,6 @@ import {AuthState} from "../store/reducers/auth";
 import {UsersState} from "../store/reducers/users";
 import HintTooltip from "../components/widget/HintTooltip";
 import {GenericState} from "../store/reducers/generic";
-import {setGenericSearch} from "../store/actions/Generic";
 import {MODAL_JUMP_NEW, setDialog} from "../store/actions/Modal";
 import useAuth from "../hooks/useAuth";
 import UserAvatar from "../components/identity/UserAvatar";
@@ -156,14 +155,10 @@ interface NavProps {
 	loading?: boolean;
 }
 
-const SEARCH_ROUTES = [
-	"/identify",
-	"/"
-];
-
 const Nav: React.FC<NavProps> = ({loading = false}: NavProps): JSX.Element => {
 	// hooks
 	const location = useLocation();
+	const history = useHistory();
 	const dispatch = useDispatch();
 	const classes = useStyles();
 	const theme = useTheme();
@@ -197,7 +192,7 @@ const Nav: React.FC<NavProps> = ({loading = false}: NavProps): JSX.Element => {
 				setIdle(1);
 		}, 30000);
 
-		setShowSearch(SEARCH_ROUTES.includes(location.pathname));
+		setShowSearch(new RegExp(/^\/($|identity\/?|search\/?)/).test(location.pathname));
 		const url = location.pathname + location.search;
 		if (url !== "")
 			setLoginUrl(`/login?target=${url}`);
@@ -210,6 +205,11 @@ const Nav: React.FC<NavProps> = ({loading = false}: NavProps): JSX.Element => {
 	const handleSearchChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
 		const s = e.target.value.toLowerCase();
 		setLocalSearch(s);
+	};
+
+	const onSearch = (): void => {
+		const prefix = location.pathname.startsWith("/identity") ? "identity" : "search";
+		history.push(localSearch !== "" ? `/${prefix}/${localSearch}` : prefix === "search" ? "/" : `/${prefix}`);
 	};
 
 	return (
@@ -312,7 +312,7 @@ const Nav: React.FC<NavProps> = ({loading = false}: NavProps): JSX.Element => {
 								onChange: handleSearchChange,
 								value: localSearch
 							}}
-							onDwell={() => dispatch(setGenericSearch(localSearch))}
+							onDwell={onSearch}
 						/>
 					</div>}
 				</div>

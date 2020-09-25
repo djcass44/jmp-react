@@ -37,11 +37,6 @@ interface SetGridWidthActionType {
 	payload: number;
 }
 
-interface SetGenericSearchActionType {
-	type: typeof SET_GENERIC_SEARCH;
-	payload: string;
-}
-
 interface GetTargetRequestActionType {
 	type: typeof GET_TARGET_REQUEST;
 }
@@ -71,14 +66,6 @@ export const setGridWidth = (width: number): SetGridWidthActionType => {
 		payload: width
 	};
 };
-
-export const setGenericSearch = (search: string): SetGenericSearchActionType => {
-	return {
-		type: SET_GENERIC_SEARCH,
-		payload: search
-	};
-};
-
 export const getTarget = (path: string, query: string, headers: Record<string, string>): RSAAAction => {
 	return {
 		[RSAA]: {
@@ -92,7 +79,6 @@ export const getTarget = (path: string, query: string, headers: Record<string, s
 
 export type GenericActionType = SetThemeModeActionType
 	| SetGridWidthActionType
-	| SetGenericSearchActionType
 	| GetTargetRequestActionType
 	| GetTargetSuccessActionType
 	| GetTargetFailureActionType;

@@ -18,11 +18,10 @@
 import {PersistConfig} from "redux-persist/es/types";
 import {persistReducer} from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import {GenericActionType, SET_GENERIC_SEARCH, SET_GRID_WIDTH, SET_THEME_MODE} from "../actions/Generic";
+import {GenericActionType, SET_GRID_WIDTH, SET_THEME_MODE} from "../actions/Generic";
 
 export interface GenericState {
 	themeMode: string;
-	searchFilter: string;
 	version: string;
 	gridWidth: number;
 }
@@ -31,7 +30,6 @@ const wantedTheme = (window.matchMedia && window.matchMedia("(prefers-color-sche
 
 const initialState: GenericState = {
 	themeMode: wantedTheme,
-	searchFilter: "",
 	version: "",
 	gridWidth: 0
 };
@@ -42,8 +40,6 @@ const generic = (state = initialState, action: GenericActionType): GenericState 
 			return {...state, themeMode: action.payload};
 		case SET_GRID_WIDTH:
 			return {...state, gridWidth: action.payload};
-		case SET_GENERIC_SEARCH:
-			return {...state, searchFilter: action.payload};
 		default:
 			return state;
 	}

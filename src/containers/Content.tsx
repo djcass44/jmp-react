@@ -75,7 +75,8 @@ const Content: React.FC = (): JSX.Element => {
 				<Grid item xs={12} sm={6} lg={4} ref={gridRef}>
 					<Switch>
 						<Route exact path="/" component={Jumps} key="jumps"/>
-						<Route exact path="/identity" component={Identity} key="identity"/>
+						<Route path="/search" component={Jumps}/>
+						<Route path="/identity" component={Identity} key="identity"/>
 						<Route exact path="/jmp" component={Token} key="token"/>
 						<Route exact path="/similar" component={Similar} key="similar"/>
 						<Route exact path="/login" component={Login} key="login"/>

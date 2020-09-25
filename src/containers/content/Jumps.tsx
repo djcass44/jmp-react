@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-import {Card, Divider, makeStyles, Theme, Typography, useTheme, Zoom} from "@material-ui/core";
+import {Card, Divider, makeStyles, Theme, Typography, Zoom} from "@material-ui/core";
 import React, {ReactNode, useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Center from "react-center";
@@ -27,13 +27,13 @@ import {TState} from "../../store/reducers";
 import {APP_NAME, APP_NOUN, pageSize} from "../../constants";
 import JumpItemSkeleton from "../../components/content/jmp/JumpItemSkeleton";
 import useAuth from "../../hooks/useAuth";
-import {GenericState} from "../../store/reducers/generic";
 import useLoading from "../../hooks/useLoading";
 import {JumpsState} from "../../store/reducers/jumps";
 import {GET_TOP_PICKS, getTopPicks} from "../../store/actions/jumps/GetTopPicks";
 import getErrorMessage from "../../selectors/getErrorMessage";
 import {ErrorState} from "../../config/types/Feedback";
 import TopPick from "../../components/content/jmp/TopPick";
+import usePathVar from "../../hooks/usePathVar";
 import JumpItem from "./jmp/JumpItem";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -90,11 +90,10 @@ export default (): JSX.Element => {
 	// hooks
 	const classes = useStyles();
 	const dispatch = useDispatch();
-	const theme = useTheme();
 
 	// global state
 	const {jumps, topPicks} = useSelector<TState, JumpsState>(state => state.jumps);
-	const {searchFilter} = useSelector<TState, GenericState>(state => state.generic);
+	const searchFilter = usePathVar();
 	const {headers, isLoggedIn} = useAuth();
 	const loading = useLoading([GET_JUMP]);
 	const topPicksError = useSelector<TState, ErrorState | null>(state => state.errors[GET_TOP_PICKS]);

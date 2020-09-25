@@ -17,7 +17,7 @@
 
 import {useDispatch, useSelector} from "react-redux";
 import {List, makeStyles, Theme, Typography, Zoom} from "@material-ui/core";
-import {Pagination} from "@material-ui/lab";
+import {Alert, Pagination} from "@material-ui/lab";
 import React, {ReactNode, useEffect, useMemo, useState} from "react";
 import Center from "react-center";
 import Button from "@material-ui/core/Button";
@@ -31,8 +31,8 @@ import {GroupsState} from "../../../store/reducers/groups";
 import useAuth from "../../../hooks/useAuth";
 import {pageSize} from "../../../constants";
 import JumpItemSkeleton from "../../../components/content/jmp/JumpItemSkeleton";
-import {GenericState} from "../../../store/reducers/generic";
 import useLoading from "../../../hooks/useLoading";
+import usePathVar from "../../../hooks/usePathVar";
 import GroupCard from "./profile/GroupCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -72,7 +72,7 @@ export default (): JSX.Element => {
 
 
 	const {groups, offset} = useSelector<TState, GroupsState>(state => state.groups);
-	const {searchFilter} = useSelector<TState, GenericState>(state => state.generic);
+	const searchFilter = usePathVar();
 	const {headers, isAdmin, isLoggedIn} = useAuth();
 
 	const loading = useLoading([GROUP_LOAD]);
@@ -131,12 +131,10 @@ export default (): JSX.Element => {
 				{loadingItems}
 				{!loading && items}
 			</List>
-			{items.length === 0 && <Typography
-				className={`${classes.title} ${classes.nothing}`}
-				align="center"
-				color="primary">
+			{items.length === 0 && !loading && <Alert
+				severity="info">
 				No groups could be found
-			</Typography>}
+			</Alert>}
 			<Zoom in={groups.totalElements > groups.size}>
 				<Center>
 					<Pagination
