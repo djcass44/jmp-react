@@ -149,7 +149,7 @@ export default (): JSX.Element => {
 			</List>
 			{items.length === 0 && !loading && <Alert
 				severity="info">
-				No groups could be found
+				No users could be found
 			</Alert>}
 			<Zoom in={users.totalElements > users.size}>
 				<Center>
