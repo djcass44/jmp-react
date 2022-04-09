@@ -16,7 +16,7 @@
 		"@types/redux-api-middleware": "^3.2.2",
 		"jmp-coreui": "^0.1.9",
 		"material-ui-chip-input": "^2.0.0-beta.2",
-		"moment": "^2.27.0",
+		"moment": "^2.29.2",
 		"notistack": "^0.9.17",
 		"react": "^16.13.1",
 		"react-center": "^1.1.1",
